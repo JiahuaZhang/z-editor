@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BaseEditor, Editor, Element, Transforms, createEditor } from 'slate';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import { renderElement } from '~/components/slate/element/block';
+import { CodeBlockType, toCodeLines } from '~/components/slate/plugin/code';
 import { withCommon } from '~/components/slate/plugin/common';
 import { handleEmbed } from '~/components/slate/plugin/embed';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
@@ -66,27 +67,45 @@ const initialValue = [
     checked: true,
     children: [{ text: 'Slide to the left.' }],
   },
-  // {
-  //   type: CodeBlockType,
-  //   language: 'jsx',
-  //   children: toCodeLines(`// Add the initial value.
-  //   const initialValue = [
-  //     {
-  //       type: 'paragraph',
-  //       children: [{ text: 'A line of text in a paragraph.' }]
-  //     }
-  //   ]
+  {
+    type: CodeBlockType,
+    language: 'jsx',
+    children: toCodeLines(`// Add the initial value.
+    const initialValue = [
+      {
+        type: 'paragraph',
+        children: [{ text: 'A line of text in a paragraph.' }]
+      }
+    ]
 
-  //   const App = () => {
-  //     const [editor] = useState(() => withReact(createEditor()))
+    const App = () => {
+      const [editor] = useState(() => withReact(createEditor()))
 
-  //     return (
-  //       <Slate editor={editor} initialValue={initialValue}>
-  //         <Editable />
-  //       </Slate>
-  //     )
-  //   }`),
-  // },
+      return (
+        <Slate editor={editor} initialValue={initialValue}>
+          <Editable />
+        </Slate>
+      )
+    }`),
+  },
+  {
+    type: CodeBlockType,
+    language: 'typescript',
+    children: toCodeLines(`// TypeScript users only add this code
+    import { BaseEditor, Descendant } from 'slate'
+    import { ReactEditor } from 'slate-react'
+    
+    type CustomElement = { type: 'paragraph'; children: CustomText[] }
+    type CustomText = { text: string }
+    
+    declare module 'slate' {
+      interface CustomTypes {
+        Editor: BaseEditor & ReactEditor
+        Element: CustomElement
+        Text: CustomText
+      }
+    }`),
+  },
   {
     type: 'twitter',
     url: 'https://twitter.com/bboczeng/status/1704506963864740350',
@@ -276,9 +295,6 @@ export const MySlate = () => {
 
 export const Route = () => {
   return <MySlate />;
-  // return <ClientOnly>
-  //   {() => <MySlate />}
-  // </ClientOnly>;
 };
 
 export default Route;

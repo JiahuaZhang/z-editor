@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { BaseEditor, Editor, Element, Transforms, createEditor } from 'slate';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import { renderElement } from '~/components/slate/element/block';
-import { CodeBlockType, toCodeLines } from '~/components/slate/plugin/code';
+import { renderLeaf } from '~/components/slate/element/leaf';
+import { CodeBlockType, CodePlugin, toCodeLines, useDecorate } from '~/components/slate/plugin/code';
 import { withCommon } from '~/components/slate/plugin/common';
 import { handleEmbed } from '~/components/slate/plugin/embed';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
@@ -17,17 +18,6 @@ declare module 'slate' {
     Text: CustomText;
   }
 }
-
-const CustomLeaf = (props: any) => {
-  return <span
-    {...props.attributes}
-    style={{ fontWeight: props.leaf.bold ? 'bold' : 'normal' }}
-  >
-    {props.children}
-  </span>;
-};
-
-const renderLeaf = (props: any) => <CustomLeaf {...props} />;
 
 const CustomEditor = {
   isBoldMarkActive(editor: Editor) {
@@ -87,6 +77,10 @@ const initialValue = [
         </Slate>
       )
     }`),
+  },
+  {
+    type: 'paragraph',
+    children: [{ text: '' }],
   },
   {
     type: CodeBlockType,
@@ -226,15 +220,12 @@ const initialValue = [
   {
     type: 'blockquote',
     children: [{ text: 'A line of text in a blockquote' }],
-  },
-  {
-    type: 'code',
-    children: [{ text: 'fn main() {\n    // code\n}' }],
-  },
+  }
 ];
 
 export const MySlate = () => {
   const [editor] = useState(() => withMarkdownShortcuts(withCommon(withReact(createEditor()))));
+  const decorate = useDecorate(editor);
 
   return <div >
     <Slate
@@ -252,6 +243,7 @@ export const MySlate = () => {
         // }
       }}
     >
+      <CodePlugin />
       <Editable
         className='m-4 border-2 border-orange-200 p-2'
         onPaste={event => {
@@ -263,6 +255,7 @@ export const MySlate = () => {
         // need to wrap useCallback?
         renderElement={renderElement}
         renderLeaf={renderLeaf}
+        decorate={decorate}
         onKeyDown={event => {
           if (!event.ctrlKey) return;
 

@@ -1,4 +1,5 @@
-import { Editor, Range, Element, Transforms, Node, BaseElement } from 'slate';
+import { Editor, Range, Element, Transforms, Node } from 'slate';
+import { CodeBlockType } from './code';
 
 const SHORTCUTS = {
   '*': 'list-item',
@@ -11,6 +12,7 @@ const SHORTCUTS = {
   '####': 'h4',
   '#####': 'h5',
   '######': 'h6',
+  '```': CodeBlockType
 };
 
 export const withMarkdownShortcuts = (editor: Editor) => {
@@ -51,7 +53,7 @@ export const withMarkdownShortcuts = (editor: Editor) => {
 
     if (type === 'list-item') {
       Transforms.wrapNodes(editor,
-        { type: 'bullet-list', children: [] } as BaseElement,
+        { type: 'bullet-list', children: [] } as Element,
         { match: n => !Editor.isEditor(n) && Element.isElement(n) && (n as any).type === 'list-item' });
     }
 

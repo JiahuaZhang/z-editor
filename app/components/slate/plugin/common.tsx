@@ -1,7 +1,8 @@
 import { Editor, Node, Transforms } from 'slate';
+import { insertBreak as insertCodeBreak } from './code';
 import { EMBED_TYPES } from './embed';
 
-const AUTO_ESCAPE_TYPE = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'code'];
+const AUTO_ESCAPE_TYPE = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
 
 export const withCommon = (editor: Editor) => {
   const { insertBreak, isVoid } = editor;
@@ -15,11 +16,13 @@ export const withCommon = (editor: Editor) => {
     const [block] = ancestor;
     if (!('type' in block)) return insertBreak();
 
-    if (!AUTO_ESCAPE_TYPE.includes((block as any).type)) {
-      return insertBreak();
+    if (insertCodeBreak(editor)) return;
+
+    if (AUTO_ESCAPE_TYPE.includes(block.type)) {
+      return Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }] } as Node);
     }
 
-    Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }] } as Node);
+    return insertBreak();
   };
 
   editor.isVoid = (node) => {

@@ -3,10 +3,12 @@ import { BaseEditor, Editor, Element, Transforms, createEditor } from 'slate';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import { renderElement } from '~/components/slate/element/block';
 import { renderLeaf } from '~/components/slate/element/leaf';
-import { CodeBlockType, CodePlugin, toCodeLines, useDecorate } from '~/components/slate/plugin/code';
+import { CodeBlockType, CodePlugin, toCodeLines, useDecorate, links } from '~/components/slate/plugin/code';
 import { withCommon } from '~/components/slate/plugin/common';
 import { handleEmbed } from '~/components/slate/plugin/embed';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
+
+export { links };
 
 type CustomElement = { type: 'paragraph' | string; children: CustomText[]; };
 type CustomText = { text: string; };

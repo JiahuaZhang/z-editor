@@ -52,7 +52,6 @@ export const CodeBlock = ({ children, element, ...rest }: RenderElementProps) =>
         const path = ReactEditor.findPath(editor, element);
         Transforms.setNodes(editor, { language: event.target.value } as any, { at: path });
       }}
-      defaultValue='typescript'
     >
       {codeLanguages.map(([value, label]) => <option value={value} key={value}>{label}</option>)}
     </select>
@@ -60,11 +59,8 @@ export const CodeBlock = ({ children, element, ...rest }: RenderElementProps) =>
   </div>;
 };
 
-export const CodeLeaf = ({ children, leaf, ...rest }: RenderLeafProps) => {
-  const { attributes } = rest;
-  const { text, ...other } = leaf;
-
-  return <span {...attributes} className={Object.keys(other).join(' ')} >
+export const CodeLeaf = ({ children, leaf: { text, ...rest }, attributes }: RenderLeafProps) => {
+  return <span {...attributes} className={Object.keys(rest).join(' ')} >
     {children}
   </span>;
 };

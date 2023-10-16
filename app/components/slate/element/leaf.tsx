@@ -6,6 +6,6 @@ export const renderLeaf = (props: RenderLeafProps) => {
     case CodeLineType:
       return <CodeLeaf {...props} />;
     default:
-      return <span> {props.children} </span>;
+      return <span {...props.attributes} >{props.children}</span>;
   }
 };

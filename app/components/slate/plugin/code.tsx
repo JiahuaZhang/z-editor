@@ -9,7 +9,6 @@ import 'prismjs/components/prism-python.js';
 import 'prismjs/components/prism-sql.js';
 import 'prismjs/components/prism-tsx.js';
 import 'prismjs/components/prism-typescript.js';
-import { useCallback } from 'react';
 import { Descendant, Editor, Element, Node, NodeEntry, Path, Range, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, RenderLeafProps, useSlate, useSlateStatic } from 'slate-react';
 import prismCSS from './code.prism.css';
@@ -121,7 +120,8 @@ export const useDecorate = (editor: Editor) => {
     return [];
   };
 
-  return useCallback(fn, [(editor as any).nodeToDecorations]);
+  // return useCallback(fn, [(editor as any).nodeToDecorations]);
+  return fn;
 };
 
 export const CodePlugin = () => {

@@ -1,6 +1,11 @@
 import { RenderLeafProps } from 'slate-react';
-import { CodeLeaf } from '../plugin/code';
+import { CodeLeaf, CodeLineType } from '../plugin/code';
 
 export const renderLeaf = (props: RenderLeafProps) => {
-  return <CodeLeaf {...props} />;
+  switch (props.children.props.parent.type) {
+    case CodeLineType:
+      return <CodeLeaf {...props} />;
+    default:
+      return <span> {props.children} </span>;
+  }
 };

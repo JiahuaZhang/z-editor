@@ -1,5 +1,5 @@
-import { Editor, Range, Element, Transforms, Node } from 'slate';
-import { CodeBlockType } from './code';
+import { Editor, Element, Node, Range, Transforms } from 'slate';
+import { insertText as insertCodeText } from './code';
 
 const SHORTCUTS = {
   '*': 'list-item',
@@ -12,7 +12,6 @@ const SHORTCUTS = {
   '####': 'h4',
   '#####': 'h5',
   '######': 'h6',
-  '```': CodeBlockType
 };
 
 export const withMarkdownShortcuts = (editor: Editor) => {
@@ -34,6 +33,15 @@ export const withMarkdownShortcuts = (editor: Editor) => {
     const start = Editor.start(editor, path);
     const range = { anchor, focus: start };
     const beforeText = Editor.string(editor, range);
+
+    const codeNode = insertCodeText(beforeText);
+    if (codeNode) {
+      Transforms.select(editor, range);
+      if (!Range.isCollapsed(range)) {
+        Transforms.delete(editor);
+      }
+      return Transforms.setNodes(editor, codeNode);
+    }
 
     if (!(beforeText in SHORTCUTS)) {
       return insertText(text);

@@ -15,7 +15,6 @@ import { ReactEditor, RenderElementProps, RenderLeafProps, useSlate, useSlateSta
 import prismCSS from './code.prism.css';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: prismCSS }];
-
 export { Prism };
 export const CodeBlockType = 'code-block';
 export const CodeLineType = 'code-line';
@@ -33,6 +32,9 @@ const codeLanguages = [
   ['tsx', 'TSX',],
   ['typescript', 'TypeScript',],
 ];
+
+const SupportedCodeLanguage = codeLanguages.map(([lang]) => lang);
+
 export const CodeBlock = ({ children, element, ...rest }: RenderElementProps) => {
   const { language } = element as any;
   const editor = useSlateStatic();
@@ -61,7 +63,6 @@ export const CodeBlock = ({ children, element, ...rest }: RenderElementProps) =>
 export const CodeLeaf = ({ children, leaf, ...rest }: RenderLeafProps) => {
   const { attributes } = rest;
   const { text, ...other } = leaf;
-  console.log(children);
 
   return <span {...attributes} className={Object.keys(other).join(' ')} >
     {children}
@@ -72,6 +73,19 @@ export const toChildren = (content: string) => [{ text: content }];
 export const toCodeLines = (content: string): Element[] => content
   .split('\n')
   .map(line => ({ type: CodeLineType, children: toChildren(line) }));
+
+export const insertText = (text: string) => {
+  if (text === '```') {
+    return { type: CodeBlockType, language: 'typescript' } as Partial<Node>;
+  } else if (text.startsWith('```')) {
+    const language = text.replace('```', '');
+    if (SupportedCodeLanguage.includes(language)) {
+      return { type: CodeBlockType, language } as Partial<Node>;
+    }
+  }
+
+  return false;
+};
 
 export const insertBreak = (editor: Editor) => {
   const ancestor = editor.above();
@@ -149,13 +163,11 @@ type CodeBlockElement = {
   children: Descendant[];
 } & Node;
 
-const getChildNodeToDecorations = ([block, blockPath]: NodeEntry<
-  CodeBlockElement
->) => {
+const getChildNodeToDecorations = ([block, blockPath]: NodeEntry<CodeBlockElement>) => {
   const nodeToDecorations = new Map<Element, Range[]>();
 
   const text = block.children.map(line => Node.string(line)).join('\n');
-  const language = block.language;
+  const language = block.language ?? 'typescript';
   const tokens = Prism.tokenize(text, Prism.languages[language]);
 
   const normalizedTokens = normalizeTokens(tokens); // make tokens flat and grouped by line

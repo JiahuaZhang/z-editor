@@ -5,7 +5,7 @@ import { EMBED_TYPES } from './embed';
 const AUTO_ESCAPE_TYPE = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
 
 export const withCommon = (editor: Editor) => {
-  const { insertBreak, isVoid } = editor;
+  const { insertBreak, insertSoftBreak, isVoid } = editor;
 
   editor.insertBreak = () => {
     const ancestor = editor.above();
@@ -23,6 +23,22 @@ export const withCommon = (editor: Editor) => {
     }
 
     return insertBreak();
+  };
+
+  editor.insertSoftBreak = () => {
+    const ancestor = editor.above();
+    if (!ancestor) {
+      return insertSoftBreak();
+    }
+
+    const [block] = ancestor;
+    if (!('type' in block)) return insertSoftBreak();
+
+
+    if (block.type === 'check-list-item') {
+      return Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }] } as Node);
+    }
+    return insertSoftBreak();
   };
 
   editor.isVoid = (node) => {

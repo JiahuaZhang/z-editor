@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { BaseEditor, Editor, Element, Transforms, createEditor } from 'slate';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import { renderElement } from '~/components/slate/element/block';
-import { renderLeaf } from '~/components/slate/element/leaf';
+import { dummyData as leafDummyData, renderLeaf } from '~/components/slate/element/leaf';
 import { CodeBlockType, CodePlugin, toCodeLines, useDecorate, links } from '~/components/slate/plugin/code';
 import { withCommon } from '~/components/slate/plugin/common';
 import { handleEmbed } from '~/components/slate/plugin/embed';
@@ -54,6 +54,7 @@ const CustomEditor = {
 };
 
 const initialValue = [
+  ...leafDummyData,
   {
     type: 'check-list-item',
     checked: true,

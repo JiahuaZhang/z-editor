@@ -83,8 +83,9 @@ export const renderEmbed = (props: RenderElementProps) => {
     case 'tiktok':
       return <TikTok {...props} />;
     case 'twitter':
-      return null;
+      return <Twitter {...props} />;
   }
+  return null;
 };
 
 const handleYouTube = (text: string, editor: Editor) => {

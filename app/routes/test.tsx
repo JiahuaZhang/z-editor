@@ -3,8 +3,8 @@ import { BaseEditor, Editor, Element, Transforms, createEditor } from 'slate';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import { renderElement } from '~/components/slate/element/block';
 import { dummyData as leafDummyData, renderLeaf } from '~/components/slate/element/leaf';
-import { CodeBlockType, CodePlugin, toCodeLines, useDecorate, links } from '~/components/slate/plugin/code';
-import { withCommon } from '~/components/slate/plugin/common';
+import { CodeBlockType, CodePlugin, links, toCodeLines, useDecorate } from '~/components/slate/plugin/code';
+import { onDOMBeforeInput as commonOnDOMBeforeInput, withCommon } from '~/components/slate/plugin/common';
 import { handleEmbed } from '~/components/slate/plugin/embed';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
@@ -91,10 +91,10 @@ const initialValue = [
     children: toCodeLines(`// TypeScript users only add this code
     import { BaseEditor, Descendant } from 'slate'
     import { ReactEditor } from 'slate-react'
-    
+
     type CustomElement = { type: 'paragraph'; children: CustomText[] }
     type CustomText = { text: string }
-    
+
     declare module 'slate' {
       interface CustomTypes {
         Editor: BaseEditor & ReactEditor
@@ -259,30 +259,33 @@ export const MySlate = () => {
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         decorate={decorate}
-        onKeyDown={event => {
-          if (!event.ctrlKey) return;
+        // onKeyDown={event => {
+        //   if (!event.ctrlKey) return;
 
-          switch (event.key) {
-            case '`':
-              event.preventDefault();
-              CustomEditor.toggleCodeBlock(editor);
-              // const [match] = Editor.nodes(editor, {
-              //   match: n => n.type === 'code',
-              // });
-              // Transforms.setNodes(
-              //   editor,
-              //   { type: match ? 'paragraph' : 'code' },
-              //   { match: n => Element.isElement(n) && Editor.isBlock(editor, n) }
-              // );
-              break;
-            case 'b':
-              event.preventDefault();
-              // Editor.addMark(editor, 'bold', true);
-              CustomEditor.toggleBoldMark(editor);
-              break;
-            default:
-              break;
-          }
+        //   switch (event.key) {
+        //     case '`':
+        //       event.preventDefault();
+        //       CustomEditor.toggleCodeBlock(editor);
+        //       const [match] = Editor.nodes(editor, {
+        //         match: n => n.type === 'code',
+        //       });
+        //       Transforms.setNodes(
+        //         editor,
+        //         { type: match ? 'paragraph' : 'code' },
+        //         { match: n => Element.isElement(n) && Editor.isBlock(editor, n) }
+        //       );
+        //       break;
+        //     case 'b':
+        //       event.preventDefault();
+        //       Editor.addMark(editor, 'bold', true);
+        //       CustomEditor.toggleBoldMark(editor);
+        //       break;
+        //     default:
+        //       break;
+        //   }
+        // }}
+        onDOMBeforeInput={event => {
+          commonOnDOMBeforeInput(editor, event);
         }}
       />
     </Slate>

@@ -18,6 +18,7 @@
     "prismjs": "^1.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.11.0",
     "react-social-media-embed": "^2.3.6",
     "slate": "^0.94.1",
     "slate-react": "^0.99.0"

@@ -6,6 +6,7 @@ import { dummyData as leafDummyData, renderLeaf } from '~/components/slate/eleme
 import { CodeBlockType, CodePlugin, links, toCodeLines, useDecorate } from '~/components/slate/plugin/code';
 import { onDOMBeforeInput as commonOnDOMBeforeInput, withCommon } from '~/components/slate/plugin/common';
 import { handleEmbed } from '~/components/slate/plugin/embed';
+import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
 export { links };
@@ -246,6 +247,7 @@ export const MySlate = () => {
         // }
       }}
     >
+      <FloatingToolbar />
       <CodePlugin />
       <Editable
         className='m-4 border-2 border-orange-200 p-2'

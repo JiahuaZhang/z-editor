@@ -8,10 +8,12 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import stylesheet from '~/tailwind.css';
+import reset from '@unocss/reset/tailwind.css';
+import unocss from '~/styles/uno.css';
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: stylesheet },
+  { rel: "stylesheet", href: reset },
+  { rel: "stylesheet", href: unocss },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 

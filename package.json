@@ -4,8 +4,10 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "remix build",
-    "dev": "remix dev --manual",
+    "build": "npm run build:css && remix build",
+    "build:css": "unocss './app/**/*.{ts,tsx}' --out-file ./app/styles/uno.css",
+    "dev": "concurrently \"remix dev --manual\" \"npm run dev:css\"",
+    "dev:css": "npm run build:css -- --watch",
     "start": "remix-serve ./build/index.js",
     "typecheck": "tsc"
   },
@@ -14,6 +16,7 @@
     "@remix-run/node": "^2.0.1",
     "@remix-run/react": "^2.0.1",
     "@remix-run/serve": "^2.0.1",
+    "@unocss/reset": "^0.56.5",
     "isbot": "^3.6.8",
     "prismjs": "^1.29.0",
     "react": "^18.2.0",
@@ -29,9 +32,10 @@
     "@types/prismjs": "^1.26.1",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "concurrently": "^8.2.2",
     "eslint": "^8.38.0",
-    "tailwindcss": "^3.3.3",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "unocss": "^0.56.5"
   },
   "engines": {
     "node": ">=18.0.0"

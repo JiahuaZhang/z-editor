@@ -4,37 +4,61 @@ import { CodeBlock, CodeBlockType } from '../plugin/code';
 import { renderEmbed } from '../plugin/embed';
 
 const H1 = ({ children, ...rest }: RenderElementProps) => {
-  return <h1 className="text-4xl font-bold leading-tight text-blue-950" {...rest.attributes}>
+  return <h1
+    un-text='4xl blue-950'
+    un-font='bold'
+    un-leading='tight'
+    {...rest.attributes}>
     {children}
   </h1>;
 };
 
 const H2 = ({ children, ...rest }: RenderElementProps) => {
-  return <h2 className="text-3xl font-bold leading-tight text-blue-900" {...rest.attributes}>
+  return <h2
+    un-text='3xl blue-900'
+    un-font='bold'
+    un-leading='tight'
+    {...rest.attributes}>
     {children}
   </h2>;
 };
 
 const H3 = ({ children, ...rest }: RenderElementProps) => {
-  return <h3 className="text-2xl font-bold leading-tight text-blue-800" {...rest.attributes}>
+  return <h3
+    un-text='2xl blue-800'
+    un-font='bold'
+    un-leading='tight'
+    {...rest.attributes}>
     {children}
   </h3>;
 };
 
 const H4 = ({ children, ...rest }: RenderElementProps) => {
-  return <h4 className="text-xl font-semibold leading-tight text-blue-700" {...rest.attributes}>
+  return <h4
+    un-text='xl blue-700'
+    un-font='bold'
+    un-leading='tight'
+    {...rest.attributes}>
     {children}
   </h4>;
 };
 
 const H5 = ({ children, ...rest }: RenderElementProps) => {
-  return <h5 className="text-lg font-semibold leading-tight text-blue-600" {...rest.attributes}>
+  return <h5
+    un-text='lg blue-600'
+    un-font='bold'
+    un-leading='tight'
+    {...rest.attributes}>
     {children}
   </h5>;
 };
 
 const H6 = ({ children, ...rest }: RenderElementProps) => {
-  return <h6 className="text-base font-medium leading-tight text-blue-500" {...rest.attributes}>
+  return <h6
+    un-text='base blue-500'
+    un-font='bold'
+    un-leading='tight'
+    {...rest.attributes}>
     {children}
   </h6>;
 };
@@ -46,7 +70,11 @@ const Paragraph = ({ children, ...rest }: RenderElementProps) => {
 };
 
 const Blockquote = ({ children, ...rest }: RenderElementProps) => {
-  return <blockquote className="border-l-4 border-gray-400 pl-4 italic text-gray-700"
+  return <blockquote
+    un-text='gray-700'
+    un-border='l-4 gray-400'
+    un-p='l-4'
+    un-font='italic'
     {...rest.attributes} >
     {children}
   </blockquote>;
@@ -59,11 +87,15 @@ const CheckListItem = ({ children, element, ...rest }: RenderElementProps) => {
 
   return (
     <div
-      className='flex items-center'
+      un-flex='~ items-center'
       {...rest}
     >
       <input
-        className='rounded h-4 w-4 accent-blue-500 cursor-pointer'
+        un-border='rounded'
+        un-h='4'
+        un-w='4'
+        un-accent='blue-500'
+        un-cursor='pointer'
         type="checkbox"
         checked={checked}
         onChange={event => {
@@ -73,13 +105,17 @@ const CheckListItem = ({ children, element, ...rest }: RenderElementProps) => {
         }}
       />
       <span
-        className={`flex-1 ml-2 cursor-text ${checked && 'text-gray-500 italic line-through'}`}
+        un-flex='1'
+        un-m='l-2'
+        un-text={`${checked && 'gray-500'}`}
+        un-font={`${checked && 'italic'}`}
+        un-decoration={`${checked && 'line-through'}`}
         contentEditable={!readOnly}
         suppressContentEditableWarning
       >
         {children}
       </span>
-    </div>
+    </div >
   );
 };
 

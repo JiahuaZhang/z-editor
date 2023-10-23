@@ -7,14 +7,22 @@ export const EMBED_TYPES = ['youtube', 'facebook', 'instagram', 'linkedIn', 'pin
 const YouTube = ({ children, element, ...rest }: RenderElementProps) => {
   const { id } = element as any;
   return <div
-    className='relative w-full max-w-[1280px] pb-[39.54%] mx-auto'
+    un-position='relative'
+    un-w='full'
+    un-max-w='[1280px]'
+    un-p='b-[39.54%]'
+    un-mx='auto'
     contentEditable={false}
     {...rest}
   >
     <iframe
       src={`https://www.youtube.com/embed/${id!}`}
       aria-label="Youtube video"
-      className='absolute top-0 left-0 w-full h-full'
+      un-position='absolute'
+      un-top='0'
+      un-left='0'
+      un-w='full'
+      un-h='full'
     />
     {children}
   </div>;
@@ -22,7 +30,7 @@ const YouTube = ({ children, element, ...rest }: RenderElementProps) => {
 
 const Facebook = ({ children, element, ...rest }: RenderElementProps) => {
   const { url } = element as any;
-  return <div className='flex justify-center' {...rest} >
+  return <div un-flex='~ justify-center'{...rest} >
     <FacebookEmbed url={url!} />
     {children}
   </div>;
@@ -30,7 +38,7 @@ const Facebook = ({ children, element, ...rest }: RenderElementProps) => {
 
 const Instagram = ({ children, element, ...rest }: RenderElementProps) => {
   const { url } = element as any;
-  return <div className='flex justify-center' {...rest}>
+  return <div un-flex='~ justify-center' {...rest}>
     <InstagramEmbed url={url!} width={500} />
     {children}
   </div>;
@@ -38,7 +46,7 @@ const Instagram = ({ children, element, ...rest }: RenderElementProps) => {
 
 const LinkedIn = ({ children, element, ...rest }: RenderElementProps) => {
   const { url } = element as any;
-  return <div className='flex justify-center' {...rest}>
+  return <div un-flex='~ justify-center' {...rest}>
     <LinkedInEmbed url={url!} width={500} />
     {children}
   </div>;
@@ -46,7 +54,7 @@ const LinkedIn = ({ children, element, ...rest }: RenderElementProps) => {
 
 const Pinterest = ({ children, element, ...rest }: RenderElementProps) => {
   const { url } = element as any;
-  return <div className='flex justify-center' {...rest}>
+  return <div un-flex='~ justify-center' {...rest}>
     <PinterestEmbed url={url!} height={540} />
     {children}
   </div>;
@@ -54,7 +62,7 @@ const Pinterest = ({ children, element, ...rest }: RenderElementProps) => {
 
 const TikTok = ({ children, element, ...rest }: RenderElementProps) => {
   const { url } = element as any;
-  return <div className='flex justify-center' {...rest}>
+  return <div un-flex='~ justify-center' {...rest}>
     <TikTokEmbed url={url!} />
     {children}
   </div>;
@@ -62,7 +70,7 @@ const TikTok = ({ children, element, ...rest }: RenderElementProps) => {
 
 const Twitter = ({ children, element, ...rest }: RenderElementProps) => {
   const { url } = element as any;
-  return <div className='flex justify-center' {...rest}>
+  return <div un-flex='~ justify-center' {...rest}>
     <TwitterEmbed url={url!} width={400} />
     {children}
   </div>;

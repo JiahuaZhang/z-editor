@@ -39,13 +39,23 @@ export const CodeBlock = ({ children, element, ...rest }: RenderElementProps) =>
   const editor = useSlateStatic();
 
   return <div
-    className='font-mono text-base leading-5 mt-0 py-1.5 px-3 relative bg-gray-100 border-2 border-zinc-200 rounded'
+    un-font='mono leading-5'
+    un-text='base'
+    un-mt='0'
+    un-py='1.5'
+    un-px='3'
+    un-position='relative'
+    un-bg='gray-100'
+    un-border='2 zinc-200 rounded'
     spellCheck={false}
     {...rest}
   >
     <select
       contentEditable={false}
-      className='absolute right-1.5 top-1.5 z-10'
+      un-position='absolute'
+      un-right='1.5'
+      un-top='1.5'
+      un-z='10'
       value={language}
       onChange={event => {
         const path = ReactEditor.findPath(editor, element);

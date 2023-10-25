@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run build:css && remix build",
     "build:css": "unocss './app/**/*.{ts,tsx}' --out-file ./app/styles/uno.css",
-    "dev": "concurrently \"remix dev --manual\" \"npm run dev:css\"",
+    "dev": "concurrently \"npm run dev:css\" \"remix dev --manual\"",
     "dev:css": "npm run build:css -- --watch",
     "start": "remix-serve ./build/index.js",
     "typecheck": "tsc"
@@ -21,12 +21,18 @@
     "prismjs": "^1.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.11.0",
     "react-social-media-embed": "^2.3.6",
     "slate": "^0.94.1",
     "slate-react": "^0.99.0"
   },
   "devDependencies": {
+    "@iconify-json/carbon": "^1.1.21",
+    "@iconify-json/logos": "^1.1.37",
+    "@iconify-json/mdi": "^1.1.54",
+    "@iconify-json/ph": "^1.1.6",
+    "@iconify-json/radix-icons": "^1.1.11",
+    "@iconify-json/tabler": "^1.1.95",
+    "@iconify-json/twemoji": "^1.1.12",
     "@remix-run/dev": "^2.0.1",
     "@remix-run/eslint-config": "^2.0.1",
     "@types/prismjs": "^1.26.1",
@@ -35,7 +41,7 @@
     "concurrently": "^8.2.2",
     "eslint": "^8.38.0",
     "typescript": "^5.1.6",
-    "unocss": "^0.56.5"
+    "unocss": "^0.57.1"
   },
   "engines": {
     "node": ">=18.0.0"

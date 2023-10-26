@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { ClientOnly } from "remix-utils/client-only";
 
 export const FloatingToolbar = () => {
-  const [isClient, setIsClient] = useState(false);
   const content = <div
     className=''
     un-position='absolute'
@@ -24,7 +23,7 @@ export const FloatingToolbar = () => {
       un-color='white' />
   </div>;
 
-  useEffect(() => setIsClient(true), []);
-
-  return isClient && createPortal(content, document.body);
+  return <ClientOnly>
+    {() => createPortal(content, document.body)}
+  </ClientOnly>;
 };

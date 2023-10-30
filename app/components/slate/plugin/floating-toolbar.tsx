@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { ClientOnly } from "remix-utils/client-only";
 import { Editor, Range } from 'slate';
 import { useFocused, useSlate } from 'slate-react';
+import { isMarkActive, toggleMark } from './common';
 
 export const FloatingToolbar = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -46,24 +47,34 @@ export const FloatingToolbar = () => {
   const Toolbar = () => <div
     ref={ref}
     un-position='absolute'
-    un-bg='gray-7'
-    un-border='rounded'
+    un-border='rounded 1 black'
     un-text='2xl'
     un-flex='~'
     un-p='x-2 y-1'
     un-opacity='0'
-    un-transition='opacity 200'
+    un-transition='opacity 750'
+    onMouseDown={e => e.preventDefault()}
   >
-    <div className='i-radix-icons:font-bold'
-      un-color='white'
-    />
-    <div className='i-radix-icons:font-italic'
-      un-color='white' />
-    <div className='i-tabler:underline'
-      un-color='white' />
+    <FormatButton format='bold' />
+    <FormatButton format='italic' />
+    <FormatButton format='underline' />
   </div>;
 
   return <ClientOnly>
     {() => createPortal(<Toolbar />, document.body)}
   </ClientOnly>;
+};
+
+const icons = {
+  bold: 'i-radix-icons:font-bold',
+  italic: 'i-radix-icons:font-italic',
+  underline: 'i-tabler:underline',
+};
+const FormatButton = ({ format }: { format: 'bold' | 'italic' | 'underline'; }) => {
+  const editor = useSlate();
+  return <div className={icons[format]}
+    un-color={`${isMarkActive(editor, format) ? 'blue' : ''}`}
+    onClick={() => toggleMark(editor, format)}
+    un-cursor='pointer'
+  />;
 };

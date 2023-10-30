@@ -4,12 +4,12 @@ import { EMBED_TYPES } from './embed';
 
 const AUTO_ESCAPE_TYPE = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
 
-const isMarkActive = (editor: Editor, format: 'bold' | 'italic' | 'underline') => {
+export const isMarkActive = (editor: Editor, format: 'bold' | 'italic' | 'underline') => {
   const marks = Editor.marks(editor);
   return marks ? (marks as any)[format] === true : false;
 };
 
-const toggleMark = (editor: Editor, format: 'bold' | 'italic' | 'underline') => {
+export const toggleMark = (editor: Editor, format: 'bold' | 'italic' | 'underline') => {
   const { selection } = editor;
   if (!selection || Range.isCollapsed(selection)) return false;
 

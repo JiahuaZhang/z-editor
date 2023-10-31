@@ -1,5 +1,5 @@
 import { FacebookEmbed, InstagramEmbed, LinkedInEmbed, PinterestEmbed, TikTokEmbed, TwitterEmbed } from 'react-social-media-embed';
-import { Editor, Transforms } from 'slate';
+import { Editor, Node, Transforms } from 'slate';
 import { RenderElementProps } from 'slate-react';
 
 export const EMBED_TYPES = ['youtube', 'facebook', 'instagram', 'linkedIn', 'pinterest', 'tiktok', 'twitter'];
@@ -30,7 +30,10 @@ const YouTube = ({ children, element, ...rest }: RenderElementProps) => {
 
 const Facebook = ({ children, element, ...rest }: RenderElementProps) => {
   const { url } = element as any;
-  return <div un-flex='~ justify-center'{...rest} >
+  return <div
+    contentEditable={false}
+    un-flex='~ justify-center'
+    {...rest} >
     <FacebookEmbed url={url!} />
     {children}
   </div>;
@@ -38,7 +41,10 @@ const Facebook = ({ children, element, ...rest }: RenderElementProps) => {
 
 const Instagram = ({ children, element, ...rest }: RenderElementProps) => {
   const { url } = element as any;
-  return <div un-flex='~ justify-center' {...rest}>
+  return <div
+    contentEditable={false}
+    un-flex='~ justify-center'
+    {...rest}>
     <InstagramEmbed url={url!} width={500} />
     {children}
   </div>;
@@ -46,7 +52,10 @@ const Instagram = ({ children, element, ...rest }: RenderElementProps) => {
 
 const LinkedIn = ({ children, element, ...rest }: RenderElementProps) => {
   const { url } = element as any;
-  return <div un-flex='~ justify-center' {...rest}>
+  return <div
+    contentEditable={false}
+    un-flex='~ justify-center'
+    {...rest}>
     <LinkedInEmbed url={url!} width={500} />
     {children}
   </div>;
@@ -54,7 +63,10 @@ const LinkedIn = ({ children, element, ...rest }: RenderElementProps) => {
 
 const Pinterest = ({ children, element, ...rest }: RenderElementProps) => {
   const { url } = element as any;
-  return <div un-flex='~ justify-center' {...rest}>
+  return <div
+    contentEditable={false}
+    un-flex='~ justify-center'
+    {...rest}>
     <PinterestEmbed url={url!} height={540} />
     {children}
   </div>;
@@ -62,7 +74,10 @@ const Pinterest = ({ children, element, ...rest }: RenderElementProps) => {
 
 const TikTok = ({ children, element, ...rest }: RenderElementProps) => {
   const { url } = element as any;
-  return <div un-flex='~ justify-center' {...rest}>
+  return <div
+    contentEditable={false}
+    un-flex='~ justify-center'
+    {...rest}>
     <TikTokEmbed url={url!} />
     {children}
   </div>;
@@ -70,7 +85,10 @@ const TikTok = ({ children, element, ...rest }: RenderElementProps) => {
 
 const Twitter = ({ children, element, ...rest }: RenderElementProps) => {
   const { url } = element as any;
-  return <div un-flex='~ justify-center' {...rest}>
+  return <div
+    contentEditable={false}
+    un-flex='~ justify-center'
+    {...rest}>
     <TwitterEmbed url={url!} width={400} />
     {children}
   </div>;
@@ -104,7 +122,7 @@ const handleYouTube = (text: string, editor: Editor) => {
 
   const [_, id] = matches;
   Transforms.insertNodes(
-    editor, [{ type: 'youtube', id, children: [{ text: '' }] } as any]
+    editor, [{ type: 'youtube', id, children: [{ text: '' }] } as Node]
   );
   return true;
 };
@@ -116,7 +134,7 @@ const handleFacebook = (text: string, editor: Editor) => {
   if (!matches) { return false; }
 
   Transforms.insertNodes(
-    editor, [{ type: 'facebook', url: text, children: [{ text: '' }] } as any]
+    editor, [{ type: 'facebook', url: text, children: [{ text: '' }] } as Node]
   );
   return true;
 };
@@ -128,7 +146,7 @@ const handleInstagram = (text: string, editor: Editor) => {
   if (!matches) { return false; }
 
   Transforms.insertNodes(
-    editor, [{ type: 'instagram', url: text, children: [{ text: '' }] } as any]
+    editor, [{ type: 'instagram', url: text, children: [{ text: '' }] } as Node]
   );
   return true;
 };
@@ -140,7 +158,7 @@ const handleLinkedIn = (text: string, editor: Editor) => {
   if (!matches) { return false; }
 
   Transforms.insertNodes(
-    editor, [{ type: 'linkedin', url: text, children: [{ text: '' }] } as any]
+    editor, [{ type: 'linkedin', url: text, children: [{ text: '' }] } as Node]
   );
   return true;
 };
@@ -152,7 +170,7 @@ const handlePinterest = (text: string, editor: Editor) => {
   if (!matches) { return false; }
 
   Transforms.insertNodes(
-    editor, [{ type: 'pinterest', url: text, children: [{ text: '' }] } as any]
+    editor, [{ type: 'pinterest', url: text, children: [{ text: '' }] } as Node]
   );
   return true;
 };
@@ -164,7 +182,7 @@ const handleTikTok = (text: string, editor: Editor) => {
   if (!matches) { return false; }
 
   Transforms.insertNodes(
-    editor, [{ type: 'tiktok', url: text, children: [{ text: '' }] } as any]
+    editor, [{ type: 'tiktok', url: text, children: [{ text: '' }] } as Node]
   );
   return true;
 };
@@ -176,7 +194,7 @@ const handleTwitter = (text: string, editor: Editor) => {
   if (!matches) { return false; }
 
   Transforms.insertNodes(
-    editor, [{ type: 'twitter', url: text, children: [{ text: '' }] } as any]
+    editor, [{ type: 'twitter', url: text, children: [{ text: '' }] } as Node]
   );
   return true;
 };

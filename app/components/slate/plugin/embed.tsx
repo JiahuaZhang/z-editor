@@ -185,3 +185,66 @@ export const handleEmbed = (text: string, editor: Editor) => {
   return [handleYouTube, handleFacebook, handleInstagram, handleLinkedIn, handlePinterest, handleTikTok, handleTwitter]
     .some(fn => fn(text, editor));
 };
+
+export const dummyData = [
+  {
+    type: 'twitter',
+    url: 'https://twitter.com/bboczeng/status/1704506963864740350',
+    children: [{ text: '' }]
+  },
+  {
+    type: 'tiktok',
+    url: 'https://www.tiktok.com/@gemdzq/video/7273529185589562625?lang=en',
+    children: [{ text: '' }]
+  },
+  {
+    type: 'tiktok',
+    url: 'https://www.tiktok.com/@naho_nishikawaka/video/7252313395729353992?lang=en',
+    children: [{ text: '' }]
+  },
+  {
+    type: 'pinterest',
+    url: 'https://www.pinterest.co.uk/pin/345721708908845555/',
+    children: [{ text: '' }]
+  },
+  {
+    type: 'linkedin',
+    url: 'https://www.linkedin.com/embed/feed/update/urn:li:share:6898694772484112384',
+    children: [{ text: '' }]
+  },
+  {
+    type: 'linkedin',
+    url: 'https://www.linkedin.com/embed/feed/update/urn:li:share:7109495184224124928',
+    children: [{ text: '' }]
+  },
+  {
+    type: 'instagram',
+    url: 'https://www.instagram.com/p/CxVSMw7I__x/',
+    children: [{ text: '' }]
+  },
+  {
+    type: 'instagram',
+    url: 'https://www.instagram.com/p/CUbHfhpswxt/',
+    children: [{ text: '' }]
+  },
+  {
+    type: 'facebook',
+    url: 'https://www.facebook.com/andrewismusic/posts/451971596293956',
+    children: [{ text: '' }]
+  },
+  {
+    type: 'facebook',
+    url: 'https://www.facebook.com/photo/?fbid=779946203929812&set=a.537750521482716',
+    children: [{ text: '' }]
+  },
+  {
+    type: 'check-list-item',
+    checked: true,
+    children: [{ text: 'Slide to the right.' }],
+  },
+  {
+    type: 'youtube',
+    id: 'gwOhmYGihUw',
+    children: [{ text: '' }]
+  },
+];

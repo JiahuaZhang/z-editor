@@ -146,3 +146,72 @@ export const renderElement = (props: RenderElementProps) => {
   const embed = renderEmbed(props);
   return embed || <Paragraph {...props} />;
 };
+
+export const dummyData = [
+  {
+    type: 'check-list-item',
+    checked: true,
+    children: [{ text: 'Slide to the left.' }],
+  },
+  {
+    type: 'check-list-item',
+    checked: false,
+    children: [{ text: 'Criss-cross.' }],
+  },
+  {
+    type: 'check-list-item',
+    checked: true,
+    children: [{ text: 'Criss-cross!' }],
+  },
+  {
+    type: 'check-list-item',
+    checked: false,
+    children: [{ text: 'Cha cha real smooth…' }],
+  },
+  {
+    type: 'check-list-item',
+    checked: false,
+    children: [{ text: "Let's go to work!" }],
+  },
+  {
+    type: 'check-list-item',
+    checked: false,
+    children: [{ text: "" }],
+  },
+  {
+    type: 'paragraph',
+    children: [{ text: 'Try it out for yourself!' }],
+  },
+  {
+    type: 'h1',
+    children: [{ text: 'Heading 1 here' }],
+  },
+  {
+    type: 'h2',
+    children: [{ text: 'Heading 2 here' }],
+  },
+  {
+    type: 'h3',
+    children: [{ text: 'Heading 3 here' }],
+  },
+  {
+    type: 'h4',
+    children: [{ text: 'Heading 4 here' }],
+  },
+  {
+    type: 'h5',
+    children: [{ text: 'Heading 5 here' }],
+  },
+  {
+    type: 'h6',
+    children: [{ text: 'Heading 6 here' }],
+  },
+  {
+    type: 'paragraph',
+    children: [{ text: 'A line of text in a paragraph' }],
+  },
+  {
+    type: 'blockquote',
+    children: [{ text: 'A line of text in a blockquote' }],
+  }
+];

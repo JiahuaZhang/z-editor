@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { BaseEditor, Editor, Element, Transforms, createEditor } from 'slate';
 import { withHistory } from 'slate-history';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
-import { renderElement } from '~/components/slate/element/block';
+import { dummyData as blockDummyData, renderElement } from '~/components/slate/element/block';
 import { dummyData as leafDummyData, renderLeaf } from '~/components/slate/element/leaf';
-import { CodeBlockType, CodePlugin, links, toCodeLines, useDecorate } from '~/components/slate/plugin/code';
+import { CodePlugin, dummyData as codeDummyData, links, useDecorate } from '~/components/slate/plugin/code';
 import { onDOMBeforeInput as commonOnDOMBeforeInput, withCommon } from '~/components/slate/plugin/common';
-import { handleEmbed } from '~/components/slate/plugin/embed';
+import { dummyData as embedDummyData, handleEmbed } from '~/components/slate/plugin/embed';
 import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
@@ -56,176 +56,10 @@ const CustomEditor = {
 };
 
 const initialValue = [
+  ...blockDummyData,
   ...leafDummyData,
-  {
-    type: 'check-list-item',
-    checked: true,
-    children: [{ text: 'Slide to the left.' }],
-  },
-  {
-    type: CodeBlockType,
-    language: 'jsx',
-    children: toCodeLines(`// Add the initial value.
-    const initialValue = [
-      {
-        type: 'paragraph',
-        children: [{ text: 'A line of text in a paragraph.' }]
-      }
-    ]
-
-    const App = () => {
-      const [editor] = useState(() => withReact(createEditor()))
-
-      return (
-        <Slate editor={editor} initialValue={initialValue}>
-          <Editable />
-        </Slate>
-      )
-    }`),
-  },
-  {
-    type: 'paragraph',
-    children: [{ text: '' }],
-  },
-  {
-    type: CodeBlockType,
-    language: 'typescript',
-    children: toCodeLines(`// TypeScript users only add this code
-    import { BaseEditor, Descendant } from 'slate'
-    import { ReactEditor } from 'slate-react'
-
-    type CustomElement = { type: 'paragraph'; children: CustomText[] }
-    type CustomText = { text: string }
-
-    declare module 'slate' {
-      interface CustomTypes {
-        Editor: BaseEditor & ReactEditor
-        Element: CustomElement
-        Text: CustomText
-      }
-    }`),
-  },
-  {
-    type: 'twitter',
-    url: 'https://twitter.com/bboczeng/status/1704506963864740350',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'tiktok',
-    url: 'https://www.tiktok.com/@gemdzq/video/7273529185589562625?lang=en',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'tiktok',
-    url: 'https://www.tiktok.com/@naho_nishikawaka/video/7252313395729353992?lang=en',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'pinterest',
-    url: 'https://www.pinterest.co.uk/pin/345721708908845555/',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'linkedin',
-    url: 'https://www.linkedin.com/embed/feed/update/urn:li:share:6898694772484112384',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'linkedin',
-    url: 'https://www.linkedin.com/embed/feed/update/urn:li:share:7109495184224124928',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'instagram',
-    url: 'https://www.instagram.com/p/CxVSMw7I__x/',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'instagram',
-    url: 'https://www.instagram.com/p/CUbHfhpswxt/',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'facebook',
-    url: 'https://www.facebook.com/andrewismusic/posts/451971596293956',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'facebook',
-    url: 'https://www.facebook.com/photo/?fbid=779946203929812&set=a.537750521482716',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'check-list-item',
-    checked: true,
-    children: [{ text: 'Slide to the right.' }],
-  },
-  {
-    type: 'youtube',
-    id: 'gwOhmYGihUw',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'check-list-item',
-    checked: false,
-    children: [{ text: 'Criss-cross.' }],
-  },
-  {
-    type: 'check-list-item',
-    checked: true,
-    children: [{ text: 'Criss-cross!' }],
-  },
-  {
-    type: 'check-list-item',
-    checked: false,
-    children: [{ text: 'Cha cha real smooth…' }],
-  },
-  {
-    type: 'check-list-item',
-    checked: false,
-    children: [{ text: "Let's go to work!" }],
-  },
-  {
-    type: 'check-list-item',
-    checked: false,
-    children: [{ text: "" }],
-  },
-  {
-    type: 'paragraph',
-    children: [{ text: 'Try it out for yourself!' }],
-  },
-  {
-    type: 'h1',
-    children: [{ text: 'Heading 1 here' }],
-  },
-  {
-    type: 'h2',
-    children: [{ text: 'Heading 2 here' }],
-  },
-  {
-    type: 'h3',
-    children: [{ text: 'Heading 3 here' }],
-  },
-  {
-    type: 'h4',
-    children: [{ text: 'Heading 4 here' }],
-  },
-  {
-    type: 'h5',
-    children: [{ text: 'Heading 5 here' }],
-  },
-  {
-    type: 'h6',
-    children: [{ text: 'Heading 6 here' }],
-  },
-  {
-    type: 'paragraph',
-    children: [{ text: 'A line of text in a paragraph' }],
-  },
-  {
-    type: 'blockquote',
-    children: [{ text: 'A line of text in a blockquote' }],
-  }
+  ...codeDummyData,
+  ...embedDummyData,
 ];
 
 export const MySlate = () => {

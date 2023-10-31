@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BaseEditor, Editor, Element, Transforms, createEditor } from 'slate';
+import { withHistory } from 'slate-history';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import { renderElement } from '~/components/slate/element/block';
 import { dummyData as leafDummyData, renderLeaf } from '~/components/slate/element/leaf';
@@ -228,7 +229,7 @@ const initialValue = [
 ];
 
 export const MySlate = () => {
-  const [editor] = useState(() => withMarkdownShortcuts(withCommon(withReact(createEditor()))));
+  const [editor] = useState(() => withMarkdownShortcuts(withCommon(withHistory(withReact(createEditor())))));
   const decorate = useDecorate(editor);
 
   return <div >

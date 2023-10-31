@@ -24,6 +24,7 @@
     "react-social-media-embed": "^2.3.6",
     "remix-utils": "^7.1.0",
     "slate": "^0.94.1",
+    "slate-history": "^0.100.0",
     "slate-react": "^0.99.0"
   },
   "devDependencies": {

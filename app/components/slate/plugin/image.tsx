@@ -10,18 +10,15 @@ export const ImageBlock = ({ children, element, attributes }: RenderElementProps
   const { url, data } = element as any;
 
   if (url) {
-    return <div
-      {...attributes}>
+    return <div {...attributes}>
       {children}
       <div
+        contentEditable={false}
         un-position='relative'
       >
         <img
-          contentEditable={false}
           src={url}
           un-block='~'
-          // un-w='100%'
-          // un-h='20em'
           un-shadow={`${isSelected && isFocused && '[0_0_0_3px_#b4d5ff]'}`}
         />
       </div>

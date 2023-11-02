@@ -1,6 +1,7 @@
 import { Editor, Node, Range, Transforms } from 'slate';
 import { CodeBlockType, CodeLineType, insertBreak as insertCodeBreak } from './code';
 import { EMBED_TYPES } from './embed';
+import { ImageType } from './image';
 
 const AUTO_ESCAPE_TYPE = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
 
@@ -81,7 +82,7 @@ export const withCommon = (editor: Editor) => {
   };
 
   editor.isVoid = (node) => {
-    return EMBED_TYPES.includes((node as any).type) || isVoid(node);
+    return [ImageType, ...EMBED_TYPES].includes((node as any).type) || isVoid(node);
   };
 
   return editor;

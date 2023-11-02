@@ -34,7 +34,7 @@ const codeLanguages = [
 
 const SupportedCodeLanguage = codeLanguages.map(([lang]) => lang);
 
-export const CodeBlock = ({ children, element, ...rest }: RenderElementProps) => {
+export const CodeBlock = ({ children, element, attributes }: RenderElementProps) => {
   const { language } = element as any;
   const editor = useSlateStatic();
 
@@ -48,7 +48,7 @@ export const CodeBlock = ({ children, element, ...rest }: RenderElementProps) =>
     un-bg='gray-100'
     un-border='2 zinc-200 rounded'
     spellCheck={false}
-    {...rest}
+    {...attributes}
   >
     <select
       contentEditable={false}

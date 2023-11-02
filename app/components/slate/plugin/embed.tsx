@@ -4,7 +4,12 @@ import { RenderElementProps } from 'slate-react';
 
 export const EMBED_TYPES = ['youtube', 'facebook', 'instagram', 'linkedIn', 'pinterest', 'tiktok', 'twitter'];
 
-const YouTube = ({ children, element, ...rest }: RenderElementProps) => {
+// todo:
+// need to have properly ui when element is selected
+// can use arrow to navigate to element
+// can delete element using delete key
+
+const YouTube = ({ children, element, attributes }: RenderElementProps) => {
   const { id } = element as any;
   return <div
     un-position='relative'
@@ -13,7 +18,7 @@ const YouTube = ({ children, element, ...rest }: RenderElementProps) => {
     un-p='b-[39.54%]'
     un-mx='auto'
     contentEditable={false}
-    {...rest}
+    {...attributes}
   >
     <iframe
       src={`https://www.youtube.com/embed/${id!}`}
@@ -28,67 +33,67 @@ const YouTube = ({ children, element, ...rest }: RenderElementProps) => {
   </div>;
 };
 
-const Facebook = ({ children, element, ...rest }: RenderElementProps) => {
+const Facebook = ({ children, element, attributes }: RenderElementProps) => {
   const { url } = element as any;
   return <div
     contentEditable={false}
     un-flex='~ justify-center'
-    {...rest} >
+    {...attributes} >
     <FacebookEmbed url={url!} />
     {children}
   </div>;
 };
 
-const Instagram = ({ children, element, ...rest }: RenderElementProps) => {
+const Instagram = ({ children, element, attributes }: RenderElementProps) => {
   const { url } = element as any;
   return <div
     contentEditable={false}
     un-flex='~ justify-center'
-    {...rest}>
+    {...attributes}>
     <InstagramEmbed url={url!} width={500} />
     {children}
   </div>;
 };
 
-const LinkedIn = ({ children, element, ...rest }: RenderElementProps) => {
+const LinkedIn = ({ children, element, attributes }: RenderElementProps) => {
   const { url } = element as any;
   return <div
     contentEditable={false}
     un-flex='~ justify-center'
-    {...rest}>
+    {...attributes}>
     <LinkedInEmbed url={url!} width={500} />
     {children}
   </div>;
 };
 
-const Pinterest = ({ children, element, ...rest }: RenderElementProps) => {
+const Pinterest = ({ children, element, attributes }: RenderElementProps) => {
   const { url } = element as any;
   return <div
     contentEditable={false}
     un-flex='~ justify-center'
-    {...rest}>
+    {...attributes}>
     <PinterestEmbed url={url!} height={540} />
     {children}
   </div>;
 };
 
-const TikTok = ({ children, element, ...rest }: RenderElementProps) => {
+const TikTok = ({ children, element, attributes }: RenderElementProps) => {
   const { url } = element as any;
   return <div
     contentEditable={false}
     un-flex='~ justify-center'
-    {...rest}>
+    {...attributes}>
     <TikTokEmbed url={url!} />
     {children}
   </div>;
 };
 
-const Twitter = ({ children, element, ...rest }: RenderElementProps) => {
+const Twitter = ({ children, element, attributes }: RenderElementProps) => {
   const { url } = element as any;
   return <div
     contentEditable={false}
     un-flex='~ justify-center'
-    {...rest}>
+    {...attributes}>
     <TwitterEmbed url={url!} width={400} />
     {children}
   </div>;

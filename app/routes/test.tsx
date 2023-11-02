@@ -8,6 +8,7 @@ import { CodePlugin, dummyData as codeDummyData, links, useDecorate } from '~/co
 import { onDOMBeforeInput as commonOnDOMBeforeInput, withCommon } from '~/components/slate/plugin/common';
 import { dummyData as embedDummyData, handleEmbed } from '~/components/slate/plugin/embed';
 import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
+import { dummyData as imageDummyData } from '~/components/slate/plugin/image';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
 export { links };
@@ -57,6 +58,7 @@ const CustomEditor = {
 
 const initialValue = [
   ...blockDummyData,
+  ...imageDummyData,
   ...leafDummyData,
   ...codeDummyData,
   ...embedDummyData,

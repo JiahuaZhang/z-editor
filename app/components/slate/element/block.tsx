@@ -2,85 +2,86 @@ import { Element, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useReadOnly, useSlateStatic } from 'slate-react';
 import { CodeBlock, CodeBlockType } from '../plugin/code';
 import { renderEmbed } from '../plugin/embed';
+import { ImageBlock, ImageType } from '../plugin/image';
 
-const H1 = ({ children, ...rest }: RenderElementProps) => {
+const H1 = ({ children, attributes }: RenderElementProps) => {
   return <h1
     un-text='4xl blue-950'
     un-font='bold'
     un-leading='tight'
-    {...rest.attributes}>
+    {...attributes}>
     {children}
   </h1>;
 };
 
-const H2 = ({ children, ...rest }: RenderElementProps) => {
+const H2 = ({ children, attributes }: RenderElementProps) => {
   return <h2
     un-text='3xl blue-900'
     un-font='bold'
     un-leading='tight'
-    {...rest.attributes}>
+    {...attributes}>
     {children}
   </h2>;
 };
 
-const H3 = ({ children, ...rest }: RenderElementProps) => {
+const H3 = ({ children, attributes }: RenderElementProps) => {
   return <h3
     un-text='2xl blue-800'
     un-font='bold'
     un-leading='tight'
-    {...rest.attributes}>
+    {...attributes}>
     {children}
   </h3>;
 };
 
-const H4 = ({ children, ...rest }: RenderElementProps) => {
+const H4 = ({ children, attributes }: RenderElementProps) => {
   return <h4
     un-text='xl blue-700'
     un-font='bold'
     un-leading='tight'
-    {...rest.attributes}>
+    {...attributes}>
     {children}
   </h4>;
 };
 
-const H5 = ({ children, ...rest }: RenderElementProps) => {
+const H5 = ({ children, attributes }: RenderElementProps) => {
   return <h5
     un-text='lg blue-600'
     un-font='bold'
     un-leading='tight'
-    {...rest.attributes}>
+    {...attributes}>
     {children}
   </h5>;
 };
 
-const H6 = ({ children, ...rest }: RenderElementProps) => {
+const H6 = ({ children, attributes }: RenderElementProps) => {
   return <h6
     un-text='base blue-500'
     un-font='bold'
     un-leading='tight'
-    {...rest.attributes}>
+    {...attributes}>
     {children}
   </h6>;
 };
 
-const Paragraph = ({ children, ...rest }: RenderElementProps) => {
-  return <p {...rest.attributes} >
+const Paragraph = ({ children, attributes }: RenderElementProps) => {
+  return <p {...attributes} >
     {children}
   </p>;
 };
 
-const Blockquote = ({ children, ...rest }: RenderElementProps) => {
+const Blockquote = ({ children, attributes }: RenderElementProps) => {
   return <blockquote
     un-text='gray-700'
     un-border='l-4 gray-400'
     un-p='l-4'
     un-font='italic'
-    {...rest.attributes} >
+    {...attributes} >
     {children}
   </blockquote>;
 };
 
-const CheckListItem = ({ children, element, ...rest }: RenderElementProps) => {
+const CheckListItem = ({ children, element, attributes }: RenderElementProps) => {
   const editor = useSlateStatic();
   const readOnly = useReadOnly();
   const { checked } = element as any;
@@ -88,7 +89,7 @@ const CheckListItem = ({ children, element, ...rest }: RenderElementProps) => {
   return (
     <div
       un-flex='~ items-center'
-      {...rest}
+      {...attributes}
     >
       <input
         un-border='rounded'
@@ -139,6 +140,8 @@ export const renderElement = (props: RenderElementProps) => {
       return <CheckListItem {...props} />;
     case CodeBlockType:
       return <CodeBlock {...props} />;
+    case ImageType:
+      return <ImageBlock {...props} />;
     case 'p':
       return <Paragraph {...props} />;
   }

@@ -1,10 +1,9 @@
+import { Editor, Transforms } from 'slate';
 import { RenderElementProps, useFocused, useSelected } from 'slate-react';
 
 export const ImageType = 'image';
 
 export const ImageBlock = ({ children, element, attributes }: RenderElementProps) => {
-  // const editor = useSlateStatic();
-  // const readOnly = useReadOnly();
   const isSelected = useSelected();
   const isFocused = useFocused();
   const { url, data } = element as any;
@@ -27,6 +26,19 @@ export const ImageBlock = ({ children, element, attributes }: RenderElementProps
   }
 
   return null;
+};
+
+export const onKeyDown = (event: React.KeyboardEvent, editor: Editor) => {
+  if (event.key !== 'Enter') return false;
+
+  const [match] = Editor.nodes(editor, {
+    match: n => (n as any)?.type === ImageType,
+  });
+  if (!match) return false;
+
+  event.preventDefault();
+  Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }], });
+  return true;
 };
 
 // image extentions

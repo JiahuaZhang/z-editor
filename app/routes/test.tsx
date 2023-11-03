@@ -8,7 +8,7 @@ import { CodePlugin, dummyData as codeDummyData, links, useDecorate } from '~/co
 import { onDOMBeforeInput as commonOnDOMBeforeInput, withCommon } from '~/components/slate/plugin/common';
 import { dummyData as embedDummyData, handleEmbed } from '~/components/slate/plugin/embed';
 import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
-import { dummyData as imageDummyData } from '~/components/slate/plugin/image';
+import { dummyData as imageDummyData, onKeyDown as onKeyDownForImage } from '~/components/slate/plugin/image';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
 export { links };
@@ -87,7 +87,14 @@ export const MySlate = () => {
       <FloatingToolbar />
       <CodePlugin />
       <Editable
-        className='m-4 border-2 border-orange-200 p-2'
+        un-m='4'
+        un-border='2 orange-200'
+        un-p='2'
+        onKeyDown={event => {
+          if (onKeyDownForImage(event, editor)) {
+            return;
+          }
+        }}
         onPaste={event => {
           const text = event.clipboardData.getData('text/plain');
           if (handleEmbed(text, editor)) {

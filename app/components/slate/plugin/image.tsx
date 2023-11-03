@@ -15,6 +15,7 @@ export const ImageBlock = ({ children, element, attributes }: RenderElementProps
       <div
         contentEditable={false}
         un-position='relative'
+        un-z={`${isSelected && isFocused && '1'}`}
       >
         <img
           src={url}

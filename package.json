@@ -17,6 +17,7 @@
     "@remix-run/react": "^2.0.1",
     "@remix-run/serve": "^2.0.1",
     "@unocss/reset": "^0.56.5",
+    "antd": "^5.11.0",
     "isbot": "^3.6.8",
     "prismjs": "^1.29.0",
     "react": "^18.2.0",

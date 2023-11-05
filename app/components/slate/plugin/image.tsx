@@ -1,4 +1,4 @@
-import { Editor, Transforms } from 'slate';
+import { Editor, NodeEntry, Range, Transforms } from 'slate';
 import { RenderElementProps, useFocused, useSelected } from 'slate-react';
 
 export const ImageType = 'image';
@@ -29,16 +29,40 @@ export const ImageBlock = ({ children, element, attributes }: RenderElementProps
 };
 
 export const onKeyDown = (event: React.KeyboardEvent, editor: Editor) => {
-  if (event.key !== 'Enter') return false;
+  if (event.key === 'Enter') {
+    const [match] = Editor.nodes(editor, {
+      match: n => (n as any)?.type === ImageType,
+    });
 
-  const [match] = Editor.nodes(editor, {
-    match: n => (n as any)?.type === ImageType,
-  });
-  if (!match) return false;
+    if (match) {
+      event.preventDefault();
+      Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }], });
+      return true;
+    }
+  } else if (event.key === 'Backspace') {
+    const { selection } = editor;
+    if (selection && Range.isCollapsed(selection)) {
+      const [match] = Editor.nodes(editor, {
+        match: n => (n as any)?.type === 'paragraph',
+        mode: 'highest',
+      });
 
-  event.preventDefault();
-  Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }], });
-  return true;
+      if (match) {
+        const [_paragraph, path] = match;
+
+        if (Editor.string(editor, path) === '' && Editor.previous(editor, { at: path })) {
+          const [previousNode, previousPath] = Editor.previous(editor, { at: path }) as NodeEntry;
+          if ((previousNode as any)?.type === ImageType) {
+            event.preventDefault();
+            Transforms.removeNodes(editor, { at: path });
+            Transforms.select(editor, previousPath);
+            return true;
+          }
+        }
+      }
+    }
+  }
+  return false;
 };
 
 // image extentions

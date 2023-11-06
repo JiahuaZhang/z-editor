@@ -45,7 +45,7 @@ export const onDOMBeforeInput = (editor: Editor, event: InputEvent) => {
 };
 
 export const withCommon = (editor: Editor) => {
-  const { insertBreak, insertSoftBreak, isVoid } = editor;
+  const { insertBreak, insertData, insertSoftBreak, isVoid } = editor;
 
   editor.insertBreak = () => {
     const ancestor = editor.above();
@@ -63,6 +63,30 @@ export const withCommon = (editor: Editor) => {
     }
 
     return insertBreak();
+  };
+
+  editor.insertData = (data) => {
+    const { files } = data;
+
+    if (!files || files.length === 0) return insertData(data);
+
+    for (const file of files) {
+      if (file.type.includes('image')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const data = reader.result as string;
+
+          Transforms.insertNodes(
+            editor, {
+              type: ImageType,
+              url: data,
+              children: [{ text: '' }],
+            } as Node
+          );
+        };
+        reader.readAsDataURL(file);
+      }
+    }
   };
 
   editor.insertSoftBreak = () => {

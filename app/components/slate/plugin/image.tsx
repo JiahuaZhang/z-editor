@@ -1,3 +1,5 @@
+import { Image } from 'antd';
+import { useRef, useState } from 'react';
 import { Editor, NodeEntry, Range, Transforms } from 'slate';
 import { RenderElementProps, useFocused, useSelected } from 'slate-react';
 
@@ -6,22 +8,28 @@ export const ImageType = 'image';
 export const ImageBlock = ({ children, element, attributes }: RenderElementProps) => {
   const isSelected = useSelected();
   const isFocused = useFocused();
+  const ref = useRef<HTMLDivElement>(null);
   const { url, data } = element as any;
+  const [preview, setPreview] = useState({ visible: false });
 
   if (url) {
-    return <div {...attributes}>
+    return <div
+      {...attributes}
+      ref={ref}
+    >
       {children}
-      <div
-        contentEditable={false}
-        un-position='relative'
-        un-z={`${isSelected && isFocused && '1'}`}
-      >
-        <img
-          src={url}
-          un-block='~'
-          un-shadow={`${isSelected && isFocused && '[0_0_0_3px_#b4d5ff]'}`}
-        />
-      </div>
+      <Image
+        src={url}
+        un-cursor='pointer'
+        un-shadow={`${isSelected && isFocused && '[0_0_0_3px_#b4d5ff]'}`}
+        preview={{
+          ...preview,
+          onVisibleChange: () => setPreview({ visible: false }),
+          mask: null,
+          getContainer: () => ref.current!
+        }}
+        onDoubleClick={() => setPreview({ visible: true })}
+      />
     </div>;
   }
 

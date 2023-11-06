@@ -53,6 +53,7 @@ export const FloatingToolbar = () => {
     un-p='x-2 y-1'
     un-opacity='0'
     un-transition='opacity 750'
+    un-bg='white'
     onMouseDown={e => e.preventDefault()}
   >
     <FormatButton format='bold' />

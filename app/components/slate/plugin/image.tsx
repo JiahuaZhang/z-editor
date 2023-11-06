@@ -1,13 +1,14 @@
 import { Image } from 'antd';
 import { useRef, useState } from 'react';
 import { Editor, NodeEntry, Range, Transforms } from 'slate';
-import { RenderElementProps, useFocused, useSelected } from 'slate-react';
+import { ReactEditor, RenderElementProps, useFocused, useSelected, useSlateStatic } from 'slate-react';
 
 export const ImageType = 'image';
 
 export const ImageBlock = ({ children, element, attributes }: RenderElementProps) => {
   const isSelected = useSelected();
   const isFocused = useFocused();
+  const editor = useSlateStatic();
   const ref = useRef<HTMLDivElement>(null);
   const { url } = element as any;
   const [preview, setPreview] = useState({ visible: false });
@@ -18,6 +19,11 @@ export const ImageBlock = ({ children, element, attributes }: RenderElementProps
   >
     {children}
     <Image
+      onClick={event => {
+        event.stopPropagation();
+        const path = ReactEditor.findPath(editor, element);
+        Transforms.select(editor, path);
+      }}
       src={url}
       un-cursor='pointer'
       un-shadow={`${isSelected && isFocused && '[0_0_0_3px_#b4d5ff]'}`}

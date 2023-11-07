@@ -1,6 +1,6 @@
 import { Image } from 'antd';
 import { useRef, useState } from 'react';
-import { Editor, NodeEntry, Range, Transforms } from 'slate';
+import { Editor, Node, NodeEntry, Range, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useFocused, useSelected, useSlateStatic } from 'slate-react';
 
 export const ImageType = 'image';
@@ -37,6 +37,17 @@ export const ImageBlock = ({ children, element, attributes }: RenderElementProps
     />
   </div>;
 };
+
+export const fileToImageNode = (file: File) => new Promise<Node>((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => resolve({
+    type: ImageType,
+    url: reader.result,
+    children: [{ text: '' }],
+  } as Node);
+  reader.onerror = error => reject(error);
+});
 
 export const onKeyDown = (event: React.KeyboardEvent, editor: Editor) => {
   if (event.key === 'Enter') {

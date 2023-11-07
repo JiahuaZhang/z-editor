@@ -1,7 +1,7 @@
 import { Editor, Node, Range, Transforms } from 'slate';
 import { CodeBlockType, CodeLineType, insertBreak as insertCodeBreak } from './code';
 import { EMBED_TYPES } from './embed';
-import { ImageType } from './image';
+import { ImageType, fileToImageNode } from './image';
 
 const AUTO_ESCAPE_TYPE = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
 
@@ -65,25 +65,14 @@ export const withCommon = (editor: Editor) => {
     return insertBreak();
   };
 
-  editor.insertData = (data) => {
+  editor.insertData = async (data) => {
     const { files } = data;
 
     if (!files || files.length === 0) return insertData(data);
 
     for (const file of files) {
       if (file.type.includes('image')) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const url = reader.result as string;
-          Transforms.insertNodes(
-            editor, {
-              type: ImageType,
-              url,
-              children: [{ text: '' }],
-            } as Node
-          );
-        };
-        reader.readAsDataURL(file);
+        Transforms.insertNodes(editor, await fileToImageNode(file));
       }
     }
   };

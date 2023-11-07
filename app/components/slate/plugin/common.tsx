@@ -74,12 +74,11 @@ export const withCommon = (editor: Editor) => {
       if (file.type.includes('image')) {
         const reader = new FileReader();
         reader.onload = () => {
-          const data = reader.result as string;
-
+          const url = reader.result as string;
           Transforms.insertNodes(
             editor, {
               type: ImageType,
-              url: data,
+              url,
               children: [{ text: '' }],
             } as Node
           );

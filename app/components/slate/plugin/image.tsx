@@ -1,6 +1,6 @@
 import { Image } from 'antd';
 import { useRef, useState } from 'react';
-import { Editor, Node, NodeEntry, Range, Transforms } from 'slate';
+import { Editor, Node, NodeEntry, Path, Range, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useFocused, useSelected, useSlateStatic } from 'slate-react';
 
 export const ImageType = 'image';
@@ -13,7 +13,32 @@ export const ImageBlock = ({ children, element, attributes }: RenderElementProps
   const { url } = element as any;
   const [preview, setPreview] = useState({ visible: false });
 
+  const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+
+    if (!ref.current) return;
+
+    const getInsertPath = () => {
+      const rect = ref.current!.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const path = ReactEditor.findPath(editor, element);
+      const insertBefore = event.clientX < centerX || event.clientY < centerY;
+      return insertBefore ? path : Path.next(path);
+    };
+
+    const { files } = event.dataTransfer;
+    if (files.length > 0) {
+      for (const file of files) {
+        if (file.type.startsWith('image/')) {
+          Transforms.insertNodes(editor, await fileToImageNode(file), { at: getInsertPath() });
+        }
+      }
+    }
+  };
+
   return <div
+    onDrop={handleDrop}
     {...attributes}
     ref={ref}
   >

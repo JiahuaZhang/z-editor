@@ -1,0 +1,1 @@
+export const isUrl = (input: string) => /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(input);

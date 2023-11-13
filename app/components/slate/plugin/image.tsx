@@ -2,6 +2,7 @@ import { Image } from 'antd';
 import { useRef, useState } from 'react';
 import { Editor, Node, NodeEntry, Path, Range, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useFocused, useSelected, useSlateStatic } from 'slate-react';
+import { isUrl } from '../util';
 
 export const ImageType = 'image';
 
@@ -38,6 +39,7 @@ export const ImageBlock = ({ children, element, attributes }: RenderElementProps
   };
 
   return <div
+    contentEditable={false}
     onDrop={handleDrop}
     {...attributes}
     ref={ref}
@@ -111,8 +113,33 @@ export const onKeyDown = (event: React.KeyboardEvent, editor: Editor) => {
   return false;
 };
 
-// image extentions
-["ase", "art", "bmp", "blp", "cd5", "cit", "cpt", "cr2", "cut", "dds", "dib", "djvu", "egt", "exif", "gif", "gpl", "grf", "icns", "ico", "iff", "jng", "jpeg", "jpg", "jfif", "jp2", "jps", "lbm", "max", "miff", "mng", "msp", "nitf", "ota", "pbm", "pc1", "pc2", "pc3", "pcf", "pcx", "pdn", "pgm", "PI1", "PI2", "PI3", "pict", "pct", "pnm", "pns", "ppm", "psb", "psd", "pdd", "psp", "px", "pxm", "pxr", "qfx", "raw", "rle", "sct", "sgi", "rgb", "int", "bw", "tga", "tiff", "tif", "vtf", "xbm", "xcf", "xpm", "3dv", "amf", "ai", "awg", "cgm", "cdr", "cmx", "dxf", "e2d", "egt", "eps", "fs", "gbr", "odg", "svg", "stl", "vrml", "x3d", "sxd", "v2d", "vnd", "wmf", "emf", "art", "xar", "png", "webp", "jxr", "hdp", "wdp", "cur", "ecw", "iff", "lbm", "liff", "nrrd", "pam", "pcx", "pgf", "sgi", "rgb", "rgba", "bw", "int", "inta", "sid", "ras", "sun", "tga"];
+const extensions = ["ase", "art", "bmp", "blp", "cd5", "cit", "cpt", "cr2", "cut", "dds", "dib", "djvu", "egt", "exif", "gif", "gpl", "grf", "icns", "ico", "iff", "jng", "jpeg", "jpg", "jfif", "jp2", "jps", "lbm", "max", "miff", "mng", "msp", "nitf", "ota", "pbm", "pc1", "pc2", "pc3", "pcf", "pcx", "pdn", "pgm", "PI1", "PI2", "PI3", "pict", "pct", "pnm", "pns", "ppm", "psb", "psd", "pdd", "psp", "px", "pxm", "pxr", "qfx", "raw", "rle", "sct", "sgi", "rgb", "int", "bw", "tga", "tiff", "tif", "vtf", "xbm", "xcf", "xpm", "3dv", "amf", "ai", "awg", "cgm", "cdr", "cmx", "dxf", "e2d", "egt", "eps", "fs", "gbr", "odg", "svg", "stl", "vrml", "x3d", "sxd", "v2d", "vnd", "wmf", "emf", "art", "xar", "png", "webp", "jxr", "hdp", "wdp", "cur", "ecw", "iff", "lbm", "liff", "nrrd", "pam", "pcx", "pgf", "sgi", "rgb", "rgba", "bw", "int", "inta", "sid", "ras", "sun", "tga"];
+
+export const handlePasteOnImageUrl = (url: string, editor: Editor) => {
+  if (!isUrl(url)) return false;
+
+  const extention = new URL(url).pathname.split('.').pop() || '';
+  if (extensions.includes(extention)) {
+    Transforms.insertNodes(editor, { type: ImageType, url, children: [{ text: '' }] } as Node);
+    return true;
+  }
+
+  // todo: strange bug
+  // for async checking, event.preventDefault won't be working as expected
+  // seems like onPaste hanlder won't wait at all...
+  // if (await isImageUrl(url)) {
+  //   Transforms.insertNodes(editor, { type: ImageType, url, children: [{ text: '' }] } as Node);
+  //   return true;
+  // }
+
+  return false;
+};
+
+const isImageUrl = async (url: string) => {
+  const response = await fetch(url, { method: 'HEAD' });
+  const contentType = response.headers.get('content-type');
+  return contentType && contentType.startsWith('image/');
+};
 
 export const dummyData = [
   {

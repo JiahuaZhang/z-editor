@@ -199,7 +199,7 @@ const handleTwitter = (text: string, editor: Editor) => {
   if (!matches) { return false; }
 
   Transforms.insertNodes(
-    editor, [{ type: 'twitter', url: text, children: [{ text: '' }] } as Node]
+    editor, { type: 'twitter', url: text, children: [{ text: '' }] } as Node
   );
   return true;
 };
@@ -212,7 +212,7 @@ export const handleEmbed = (text: string, editor: Editor) => {
 export const dummyData = [
   {
     type: 'twitter',
-    url: 'https://twitter.com/bboczeng/status/1704506963864740350',
+    url: 'https://twitter.com/jakobsonradical/status/1723845444097204256',
     children: [{ text: '' }]
   },
   {

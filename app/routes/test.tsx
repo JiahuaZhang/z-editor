@@ -8,7 +8,7 @@ import { CodePlugin, dummyData as codeDummyData, links, useDecorate } from '~/co
 import { onDOMBeforeInput as commonOnDOMBeforeInput, withCommon } from '~/components/slate/plugin/common';
 import { dummyData as embedDummyData, handleEmbed } from '~/components/slate/plugin/embed';
 import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
-import { dummyData as imageDummyData, onKeyDown as onKeyDownForImage } from '~/components/slate/plugin/image';
+import { handlePasteOnImageUrl, dummyData as imageDummyData, onKeyDown as onKeyDownForImage } from '~/components/slate/plugin/image';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
 export { links };
@@ -97,7 +97,7 @@ export const MySlate = () => {
         }}
         onPaste={event => {
           const text = event.clipboardData.getData('text/plain');
-          if (handleEmbed(text, editor)) {
+          if (handleEmbed(text, editor) || handlePasteOnImageUrl(text, editor)) {
             event.preventDefault();
           }
         }}

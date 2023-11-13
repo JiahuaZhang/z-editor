@@ -5,5 +5,6 @@ export default defineConfig({
     presetUno(),
     presetAttributify(),
     presetIcons({ extraProperties: { display: 'inline-block' } }),
-    presetTypography()],
+    presetTypography()
+  ],
 })

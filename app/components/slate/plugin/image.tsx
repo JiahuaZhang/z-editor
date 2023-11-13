@@ -6,6 +6,8 @@ import { isUrl } from '../util';
 
 export const ImageType = 'image';
 
+const UnoStaticTrick = () => <div un-shadow='[0_0_0_3px_#b4d5ff]' ></div>;
+
 export const ImageBlock = ({ children, element, attributes }: RenderElementProps) => {
   const isSelected = useSelected();
   const isFocused = useFocused();

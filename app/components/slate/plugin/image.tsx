@@ -41,13 +41,13 @@ export const ImageBlock = ({ children, element, attributes }: RenderElementProps
   };
 
   return <div
-    contentEditable={false}
     onDrop={handleDrop}
     {...attributes}
     ref={ref}
   >
     {children}
     <Image
+      contentEditable={false}
       onClick={event => {
         event.stopPropagation();
         const path = ReactEditor.findPath(editor, element);

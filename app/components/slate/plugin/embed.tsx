@@ -1,35 +1,38 @@
 import { FacebookEmbed, InstagramEmbed, LinkedInEmbed, PinterestEmbed, TikTokEmbed, TwitterEmbed } from 'react-social-media-embed';
 import { Editor, Node, Transforms } from 'slate';
-import { RenderElementProps } from 'slate-react';
+import { RenderElementProps, useFocused, useSelected } from 'slate-react';
 
 export const EMBED_TYPES = ['youtube', 'facebook', 'instagram', 'linkedIn', 'pinterest', 'tiktok', 'twitter'];
 
-// todo:
-// need to have properly ui when element is selected
-// can use arrow to navigate to element
-// can delete element using delete key
+const UnoStaticTrick = () => <div un-shadow='[0_0_0_3px_#b4d5ff]' ></div>;
 
 const YouTube = ({ children, element, attributes }: RenderElementProps) => {
+  const isSelected = useSelected();
+  const isFocused = useFocused();
   const { id } = element as any;
-  return <div
-    un-position='relative'
-    un-w='full'
-    un-max-w='[1280px]'
-    un-p='b-[39.54%]'
-    un-mx='auto'
-    contentEditable={false}
-    {...attributes}
-  >
-    <iframe
-      src={`https://www.youtube.com/embed/${id!}`}
-      aria-label="Youtube video"
-      un-position='absolute'
-      un-top='0'
-      un-left='0'
-      un-w='full'
-      un-h='full'
-    />
+
+  return <div {...attributes}>
     {children}
+    <div
+      contentEditable={false}
+      un-position='relative'
+      un-w='[calc(100%-2rem)]'
+      un-max-w='[1280px]'
+      un-p='b-[39.54%]'
+      un-mx='auto'
+      un-my='4'
+    >
+      <iframe
+        un-shadow={`${isSelected && isFocused && '[0_0_0_3px_#b4d5ff]'}`}
+        src={`https://www.youtube.com/embed/${id!}`}
+        aria-label="Youtube video"
+        un-position='absolute'
+        un-top='0'
+        un-left='0'
+        un-w='full'
+        un-h='full'
+      />
+    </div>
   </div>;
 };
 
@@ -210,64 +213,64 @@ export const handleEmbed = (text: string, editor: Editor) => {
 };
 
 export const dummyData = [
-  {
-    type: 'twitter',
-    url: 'https://twitter.com/jakobsonradical/status/1723845444097204256',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'tiktok',
-    url: 'https://www.tiktok.com/@gemdzq/video/7273529185589562625?lang=en',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'tiktok',
-    url: 'https://www.tiktok.com/@naho_nishikawaka/video/7252313395729353992?lang=en',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'pinterest',
-    url: 'https://www.pinterest.co.uk/pin/345721708908845555/',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'linkedin',
-    url: 'https://www.linkedin.com/embed/feed/update/urn:li:share:6898694772484112384',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'linkedin',
-    url: 'https://www.linkedin.com/embed/feed/update/urn:li:share:7109495184224124928',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'instagram',
-    url: 'https://www.instagram.com/p/CxVSMw7I__x/',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'instagram',
-    url: 'https://www.instagram.com/p/CUbHfhpswxt/',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'facebook',
-    url: 'https://www.facebook.com/andrewismusic/posts/451971596293956',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'facebook',
-    url: 'https://www.facebook.com/photo/?fbid=779946203929812&set=a.537750521482716',
-    children: [{ text: '' }]
-  },
-  {
-    type: 'check-list-item',
-    checked: true,
-    children: [{ text: 'Slide to the right.' }],
-  },
+  // {
+  //   type: 'twitter',
+  //   url: 'https://twitter.com/jakobsonradical/status/1723845444097204256',
+  //   children: [{ text: '' }]
+  // },
+  // {
+  //   type: 'tiktok',
+  //   url: 'https://www.tiktok.com/@gemdzq/video/7273529185589562625?lang=en',
+  //   children: [{ text: '' }]
+  // },
+  // {
+  //   type: 'tiktok',
+  //   url: 'https://www.tiktok.com/@naho_nishikawaka/video/7252313395729353992?lang=en',
+  //   children: [{ text: '' }]
+  // },
+  // {
+  //   type: 'pinterest',
+  //   url: 'https://www.pinterest.co.uk/pin/345721708908845555/',
+  //   children: [{ text: '' }]
+  // },
+  // {
+  //   type: 'linkedin',
+  //   url: 'https://www.linkedin.com/embed/feed/update/urn:li:share:6898694772484112384',
+  //   children: [{ text: '' }]
+  // },
+  // {
+  //   type: 'linkedin',
+  //   url: 'https://www.linkedin.com/embed/feed/update/urn:li:share:7109495184224124928',
+  //   children: [{ text: '' }]
+  // },
+  // {
+  //   type: 'instagram',
+  //   url: 'https://www.instagram.com/p/CxVSMw7I__x/',
+  //   children: [{ text: '' }]
+  // },
+  // {
+  //   type: 'instagram',
+  //   url: 'https://www.instagram.com/p/CUbHfhpswxt/',
+  //   children: [{ text: '' }]
+  // },
+  // {
+  //   type: 'facebook',
+  //   url: 'https://www.facebook.com/andrewismusic/posts/451971596293956',
+  //   children: [{ text: '' }]
+  // },
+  // {
+  //   type: 'facebook',
+  //   url: 'https://www.facebook.com/photo/?fbid=779946203929812&set=a.537750521482716',
+  //   children: [{ text: '' }]
+  // },
+  // {
+  //   type: 'check-list-item',
+  //   checked: true,
+  //   children: [{ text: 'Slide to the right.' }],
+  // },
   {
     type: 'youtube',
     id: 'gwOhmYGihUw',
     children: [{ text: '' }]
   },
-];
+];;

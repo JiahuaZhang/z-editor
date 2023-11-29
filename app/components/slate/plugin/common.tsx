@@ -2,6 +2,7 @@ import { Editor, Node, Range, Transforms } from 'slate';
 import { CodeBlockType, CodeLineType, insertBreak as insertCodeBreak } from './code';
 import { EMBED_TYPES } from './embed';
 import { ImageType, fileToImageNode } from './image';
+import { LINK_TYPE, TAG_TYPE } from './inline';
 
 const AUTO_ESCAPE_TYPE = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
 
@@ -45,7 +46,7 @@ export const onDOMBeforeInput = (editor: Editor, event: InputEvent) => {
 };
 
 export const withCommon = (editor: Editor) => {
-  const { insertBreak, insertData, insertSoftBreak, isVoid } = editor;
+  const { insertBreak, insertData, insertSoftBreak, isVoid, isInline } = editor;
 
   editor.insertBreak = () => {
     const ancestor = editor.above();
@@ -94,7 +95,11 @@ export const withCommon = (editor: Editor) => {
   };
 
   editor.isVoid = (node) => {
-    return [ImageType, ...EMBED_TYPES].includes((node as any).type) || isVoid(node);
+    return [ImageType, ...EMBED_TYPES].includes(node.type) || isVoid(node);
+  };
+
+  editor.isInline = node => {
+    return [LINK_TYPE, TAG_TYPE].includes(node.type) || isInline(node);
   };
 
   return editor;

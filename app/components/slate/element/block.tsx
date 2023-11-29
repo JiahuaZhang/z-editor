@@ -3,6 +3,7 @@ import { ReactEditor, RenderElementProps, useReadOnly, useSlateStatic } from 'sl
 import { CodeBlock, CodeBlockType } from '../plugin/code';
 import { renderEmbed } from '../plugin/embed';
 import { ImageBlock, ImageType } from '../plugin/image';
+import { LINK_TYPE, Link, TAG_TYPE, Tag } from '../plugin/inline';
 
 const H1 = ({ children, attributes }: RenderElementProps) => {
   return <h1
@@ -142,6 +143,10 @@ export const renderElement = (props: RenderElementProps) => {
       return <CodeBlock {...props} />;
     case ImageType:
       return <ImageBlock {...props} />;
+    case LINK_TYPE:
+      return <Link {...props} />;
+    case TAG_TYPE:
+      return <Tag {...props} />;
     case 'p':
       return <Paragraph {...props} />;
   }

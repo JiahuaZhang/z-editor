@@ -87,6 +87,7 @@ export const MySlate = () => {
       <FloatingToolbar />
       <CodePlugin />
       <Editable
+        spellCheck={false}
         un-m='4'
         un-border='2 orange-200'
         un-p='2'

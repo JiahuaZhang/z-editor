@@ -15,6 +15,11 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
   const ref = useRef<HTMLInputElement>(null);
   const editor = useSlateStatic();
 
+  useEffect(() => {
+    setNewUrl(url);
+    setNewText(text);
+  }, [url, text]);
+
   const updateLink = (url: string, text: string) => {
     const path = ReactEditor.findPath(editor, element);
     Transforms.removeNodes(editor, { at: path });
@@ -163,7 +168,6 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
     onOpenChange={setIsOpen}
   >
     <a
-      contentEditable={false}
       un-text='blue-600 hover:blue-800 visited:purple-600'
       un-cursor='pointer'
       {...attributes}

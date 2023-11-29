@@ -31,6 +31,7 @@
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.21",
     "@iconify-json/logos": "^1.1.37",
+    "@iconify-json/material-symbols-light": "^1.1.2",
     "@iconify-json/mdi": "^1.1.54",
     "@iconify-json/ph": "^1.1.6",
     "@iconify-json/radix-icons": "^1.1.11",

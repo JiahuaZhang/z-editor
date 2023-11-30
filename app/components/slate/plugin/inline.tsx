@@ -1,6 +1,6 @@
 import { Popover } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import { Transforms } from 'slate';
+import { Node, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 
 // inline element: link/url, tag
@@ -22,8 +22,8 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
 
   const updateLink = (url: string, text: string) => {
     const path = ReactEditor.findPath(editor, element);
-    Transforms.removeNodes(editor, { at: path });
-    Transforms.insertNodes(editor, { type: LINK_TYPE, url, children: [{ text }] } as any, { at: path });
+    Transforms.setNodes(editor, { url } as Partial<Node>, { at: path });
+    Transforms.insertText(editor, text, { at: path });
   };
 
   useEffect(() => {
@@ -52,7 +52,22 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
       <a href={url} target='_blank' >
         <i className='i-tabler:external-link' un-cursor='pointer' />
       </a>
-      <i className='i-mdi:link-variant-off' un-cursor='pointer' un-hover='text-red-6' />
+      <i className='i-mdi:link-variant-off'
+        un-cursor='pointer'
+        un-hover='text-red-6'
+        un-focus='text-red-6'
+        tabIndex={0}
+        onClick={() => {
+          Transforms.unwrapNodes(editor, { at: ReactEditor.findPath(editor, element) });
+        }}
+        onKeyDown={event => {
+          if (['Enter', ' '].includes(event.key)) {
+            Transforms.unwrapNodes(editor, { at: ReactEditor.findPath(editor, element) });
+            // todo: put focus back to end of current element
+            // similar for click event?
+          }
+        }}
+      />
     </div>
 
     <label

@@ -49,8 +49,17 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
       un-grid-flow='col'
       un-justify-between='~'
     >
-      <a href={url} target='_blank' >
-        <i className='i-tabler:external-link' un-cursor='pointer' />
+      <a href={url} target='_blank'  >
+        <i className='i-tabler:external-link'
+          un-cursor='pointer'
+          un-focus='text-blue-4'
+          tabIndex={0}
+          onKeyDown={event => {
+            if (['Enter', ' '].includes(event.key)) {
+              window.open(url, '_blank');
+            }
+          }}
+        />
       </a>
       <i className='i-mdi:link-variant-off'
         un-cursor='pointer'

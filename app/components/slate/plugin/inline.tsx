@@ -29,6 +29,8 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
   useEffect(() => {
     if (isOpen) {
       Promise.resolve().then(() => ref?.current?.focus());
+    } else {
+      ReactEditor.focus(editor);
     }
   }, [isOpen]);
 
@@ -42,6 +44,8 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
     document.addEventListener('keydown', handleEsc);
     return () => document.removeEventListener('keydown', handleEsc);
   }, []);
+
+  useEffect(() => () => ReactEditor.focus(editor), []);
 
   const content = <div un-text='lg'>
     <div
@@ -72,8 +76,6 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
         onKeyDown={event => {
           if (['Enter', ' '].includes(event.key)) {
             Transforms.unwrapNodes(editor, { at: ReactEditor.findPath(editor, element) });
-            // todo: put focus back to end of current element
-            // similar for click event?
           }
         }}
       />
@@ -142,8 +144,6 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
             if (['Enter', ' '].includes(event.key)) {
               event.preventDefault();
               setIsOpen(false);
-              // todo: put focus back to end of current element
-              // similar for click event?
             }
           }}
           onClick={() => setIsOpen(false)}

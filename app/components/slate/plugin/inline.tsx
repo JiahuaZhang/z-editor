@@ -1,6 +1,6 @@
 import { Popover } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import { Node, Transforms } from 'slate';
+import { Node, Transforms, Text, Editor } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 
 // inline element: link/url, tag
@@ -23,7 +23,17 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
   const updateLink = (url: string, text: string) => {
     const path = ReactEditor.findPath(editor, element);
     Transforms.setNodes(editor, { url } as Partial<Node>, { at: path });
-    Transforms.insertText(editor, text, { at: path });
+
+    const linkEntry = Editor.above(editor, { match: n => (n as any).type === LINK_TYPE });
+    if (linkEntry) {
+      const [_, path] = linkEntry;
+      const textNodePath = path.concat(0);
+      const textNodeRange = Editor.range(editor, textNodePath);
+      Transforms.select(editor, textNodeRange);
+      Transforms.insertText(editor, text);
+    }
+
+    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -75,6 +85,7 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
         }}
         onKeyDown={event => {
           if (['Enter', ' '].includes(event.key)) {
+            event.preventDefault();
             Transforms.unwrapNodes(editor, { at: ReactEditor.findPath(editor, element) });
           }
         }}
@@ -98,6 +109,7 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
         onChange={evengt => setNewUrl(evengt.target.value)}
         onKeyDown={event => {
           if (event.key === 'Enter') {
+            event.preventDefault();
             updateLink(newUrl, newText);
           }
         }}
@@ -124,6 +136,7 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
         onChange={evengt => setNewText(evengt.target.value)}
         onKeyDown={event => {
           if (event.key === 'Enter') {
+            event.preventDefault();
             updateLink(newUrl, newText);
           }
         }}
@@ -225,6 +238,13 @@ export const dummyData = [
       {
         type: TAG_TYPE,
         children: [{ text: 'react' }],
-      },]
+      },
+      { text: ' ' },
+      {
+        type: LINK_TYPE,
+        url: 'https://apple.com',
+        children: [{ text: 'apple' }],
+      },
+    ]
   }
 ];

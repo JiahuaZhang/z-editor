@@ -9,6 +9,7 @@ import { onDOMBeforeInput as commonOnDOMBeforeInput, withCommon } from '~/compon
 import { dummyData as embedDummyData, handleEmbed } from '~/components/slate/plugin/embed';
 import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
 import { handlePasteOnImageUrl, dummyData as imageDummyData, onKeyDown as onKeyDownForImage } from '~/components/slate/plugin/image';
+import { dummyData as inlineDummyData } from '~/components/slate/plugin/inline';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
 export { links };
@@ -58,10 +59,11 @@ const CustomEditor = {
 
 const initialValue = [
   ...blockDummyData,
+  ...inlineDummyData,
   ...imageDummyData,
-  ...leafDummyData,
   ...codeDummyData,
   ...embedDummyData,
+  ...leafDummyData,
 ];
 
 export const MySlate = () => {
@@ -74,6 +76,7 @@ export const MySlate = () => {
       initialValue={initialValue}
       onChange={value => {
         // console.log('onchange!');
+        // console.log(value);
 
         // const isAstChange = editor.operations.some(op => 'set_selection' != op.type);
 

@@ -19,6 +19,7 @@
     "@unocss/reset": "^0.56.5",
     "antd": "^5.11.0",
     "isbot": "^3.6.8",
+    "jotai": "^2.6.0",
     "prismjs": "^1.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -26,7 +27,7 @@
     "remix-utils": "^7.1.0",
     "slate": "^0.101.1",
     "slate-history": "^0.100.0",
-    "slate-react": "^0.101.1"
+    "slate-react": "^0.101.3"
   },
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.21",

@@ -1,6 +1,9 @@
 import { Popover } from 'antd';
+import { atom, useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
-import { Node, Transforms, Text, Editor } from 'slate';
+import { createPortal } from 'react-dom';
+import { ClientOnly } from 'remix-utils/client-only';
+import { Editor, Node, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 
 // inline element: link/url, tag
@@ -97,6 +100,7 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
       un-items='center'
       un-grid-flow='col'
       un-gap='1'
+      un-focus-within='[&>i]:text-blue-4'
     >
       <i className='i-mdi:link-variant' un-cursor='pointer' un-hover='text-blue-4' />
       <input
@@ -124,6 +128,7 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
       un-grid-flow='col'
       un-gap='1'
       un-mb='2'
+      un-focus-within='[&>i]:text-blue-4'
     >
       <i className='i-radix-icons:text-align-left' un-cursor='pointer' un-hover='text-blue-4' />
       <input
@@ -224,6 +229,137 @@ export const Tag = ({ children, attributes }: RenderElementProps) => {
 //   description?: string;
 //   decoration?: { [key: string]: string; };
 // };
+
+export const isFloatingLinkOpenAtom = atom(false);
+const LinkPanel = () => {
+  const [isFloatingLinkOpen, setIsFloatingLinkOpen] = useAtom(isFloatingLinkOpenAtom);
+  const ref = useRef<HTMLInputElement>(null);
+  const editor = useSlateStatic();
+
+  useEffect(() => {
+    if (!isFloatingLinkOpen) return;
+    ref.current?.focus();
+  }, [isFloatingLinkOpen]);
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (isFloatingLinkOpen && event.key === 'Escape') {
+        setIsFloatingLinkOpen(false);
+        ReactEditor.focus(editor);
+      }
+    };
+
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, []);
+
+  return <div
+    un-position='fixed'
+    un-top='1/2'
+    un-left='1/2'
+    un-transform='~'
+    un-translate='x--1/2 y--1/2'
+    un-bg='white'
+    un-border='rounded 2 blue-4'
+    un-px='8'
+    un-py='6'
+  >
+    <form un-space='y-2'>
+      <label
+        un-grid='~'
+        un-items='center'
+        un-grid-flow='col'
+        un-gap='1'
+        un-focus-within='[&>i]:text-blue-4'
+      >
+        <i className='i-mdi:link-variant'
+          un-cursor='pointer'
+          un-hover='text-blue-4'
+          un-focus-within='text-blue-4'
+        />
+        <input ref={ref}
+          type="text"
+          placeholder="url"
+          un-outline='none'
+          un-border='2px solid focus:blue-5 rounded'
+          un-shadow='focus:[0_0_5px_#007bff]'
+          un-px='2'
+          un-py='1'
+          onKeyDown={event => {
+            if (event.key === 'Enter') {
+              console.log('smart submit url');
+            }
+          }}
+        />
+      </label>
+      <label
+        un-grid='~'
+        un-items='center'
+        un-grid-flow='col'
+        un-gap='1'
+        un-focus-within='[&>i]:text-blue-4'
+      >
+        <i className='i-radix-icons:text-align-left' un-cursor='pointer' un-hover='text-blue-4' />
+        <input type="text" placeholder="text"
+          un-outline='none'
+          un-border='2px solid focus:blue-5 rounded'
+          un-shadow='focus:[0_0_5px_#007bff]'
+          un-px='2'
+          un-py='1'
+          onKeyDown={event => {
+            if (event.key === 'Enter') {
+              console.log('smart submit text');
+            }
+          }}
+        />
+      </label>
+      <div un-grid='~ justify-between'
+        un-auto-flow='col'
+      >
+        <button type='button'
+          un-focus-visible='outline-none [&>i]:text-red-4'
+          onClick={event => {
+            console.log('smart close');
+          }}
+          onKeyDown={event => {
+            if (['Enter', 'Space'].includes(event.key)) {
+              console.log('smart close');
+            }
+          }}
+        >
+          <i className='i-carbon:close-outline'
+            un-cursor='pointer'
+            un-hover='text-orange-4'
+            un-text='hover:red-4 focus:red-4 3xl' />
+        </button>
+        <button type='button'
+          un-focus-visible='outline-none [&>i]:text-green-4'
+          onClick={event => {
+            console.log('smart submit');
+          }}
+          onKeyDown={event => {
+            if (['Enter', 'Space'].includes(event.key)) {
+              console.log('smart submit');
+            }
+          }}
+        >
+          <i className='i-material-symbols-light:check'
+            un-cursor='pointer'
+            un-hover='text-orange-4'
+            un-text='hover:green-4 focus:green-4 3xl'
+          />
+        </button>
+      </div>
+    </form>
+  </div>;
+};
+
+export const LinkPlugin = () => {
+  const isFloatingLinkOpen = useAtomValue(isFloatingLinkOpenAtom);
+  return <ClientOnly>
+    {() => createPortal(isFloatingLinkOpen && <LinkPanel />, document.body)}
+  </ClientOnly>;
+};
 
 export const dummyData = [
   {

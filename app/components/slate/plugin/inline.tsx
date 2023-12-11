@@ -235,6 +235,8 @@ const LinkPanel = () => {
   const [isFloatingLinkOpen, setIsFloatingLinkOpen] = useAtom(isFloatingLinkOpenAtom);
   const ref = useRef<HTMLInputElement>(null);
   const editor = useSlateStatic();
+  const [url, setUrl] = useState('');
+  const [text, setText] = useState('');
 
   useEffect(() => {
     if (!isFloatingLinkOpen) return;
@@ -252,6 +254,17 @@ const LinkPanel = () => {
     document.addEventListener('keydown', handleEsc);
     return () => document.removeEventListener('keydown', handleEsc);
   }, []);
+
+  const submit = () => {
+    setIsFloatingLinkOpen(false);
+    ReactEditor.focus(editor);
+    const link = {
+      type: LINK_TYPE,
+      url,
+      children: [{ text }],
+    };
+    Transforms.insertNodes(editor, link);
+  };
 
   return <div
     un-position='fixed'
@@ -285,9 +298,12 @@ const LinkPanel = () => {
           un-shadow='focus:[0_0_5px_#007bff]'
           un-px='2'
           un-py='1'
+          value={url}
+          onChange={e => setUrl(e.target.value)}
           onKeyDown={event => {
             if (event.key === 'Enter') {
-              console.log('smart submit url');
+              event.preventDefault();
+              submit();
             }
           }}
         />
@@ -306,9 +322,12 @@ const LinkPanel = () => {
           un-shadow='focus:[0_0_5px_#007bff]'
           un-px='2'
           un-py='1'
+          value={text}
+          onChange={e => setText(e.target.value)}
           onKeyDown={event => {
             if (event.key === 'Enter') {
-              console.log('smart submit text');
+              event.preventDefault();
+              submit();
             }
           }}
         />
@@ -318,12 +337,15 @@ const LinkPanel = () => {
       >
         <button type='button'
           un-focus-visible='outline-none [&>i]:text-red-4'
-          onClick={event => {
-            console.log('smart close');
+          onClick={() => {
+            setIsFloatingLinkOpen(false);
+            ReactEditor.focus(editor);
           }}
           onKeyDown={event => {
             if (['Enter', 'Space'].includes(event.key)) {
-              console.log('smart close');
+              event.preventDefault();
+              setIsFloatingLinkOpen(false);
+              ReactEditor.focus(editor);
             }
           }}
         >
@@ -334,20 +356,20 @@ const LinkPanel = () => {
         </button>
         <button type='button'
           un-focus-visible='outline-none [&>i]:text-green-4'
-          onClick={event => {
-            console.log('smart submit');
-          }}
+          onClick={submit}
           onKeyDown={event => {
             if (['Enter', 'Space'].includes(event.key)) {
-              console.log('smart submit');
+              event.preventDefault();
+              submit();
             }
           }}
         >
-          <i className='i-material-symbols-light:check'
-            un-cursor='pointer'
-            un-hover='text-orange-4'
-            un-text='hover:green-4 focus:green-4 3xl'
-          />
+          {url !== '' && text !== ''
+            && <i className='i-material-symbols-light:check'
+              un-cursor='pointer'
+              un-hover='text-orange-4'
+              un-text='hover:green-4 focus:green-4 3xl'
+            />}
         </button>
       </div>
     </form>

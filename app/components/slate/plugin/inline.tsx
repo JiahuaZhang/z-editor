@@ -278,9 +278,7 @@ const LinkPanel = () => {
       children: [{ text }],
     };
 
-    const [entry] = Editor.nodes(editor, {
-      match: n => [CodeBlockType].includes((n as any).type) || Editor.isVoid(editor, n as any),
-    });
+    const [entry] = Editor.nodes(editor, { match: n => Editor.isVoid(editor, n as any) });
     if (entry) {
       const [, path] = entry;
       const paragraph = {

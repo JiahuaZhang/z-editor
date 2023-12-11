@@ -3,8 +3,9 @@ import { atom, useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ClientOnly } from 'remix-utils/client-only';
-import { Editor, Node, Transforms } from 'slate';
+import { Editor, Node, Path, Range, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
+import { CodeBlockType } from './code';
 
 // inline element: link/url, tag
 export const LINK_TYPE = 'link';
@@ -240,6 +241,14 @@ const LinkPanel = () => {
 
   useEffect(() => {
     if (!isFloatingLinkOpen) return;
+
+    const { selection } = editor;
+    if (selection && Range.isExpanded(selection)) {
+      const selectedText = Editor.string(editor, selection);
+      setUrl(selectedText);
+      setText(selectedText);
+    }
+
     ref.current?.focus();
   }, [isFloatingLinkOpen]);
 
@@ -258,12 +267,31 @@ const LinkPanel = () => {
   const submit = () => {
     setIsFloatingLinkOpen(false);
     ReactEditor.focus(editor);
+
+    if (editor.selection && Range.isExpanded(editor.selection)) {
+      Transforms.delete(editor);
+    }
+
     const link = {
       type: LINK_TYPE,
       url,
       children: [{ text }],
     };
-    Transforms.insertNodes(editor, link);
+
+    const [entry] = Editor.nodes(editor, {
+      match: n => [CodeBlockType].includes((n as any).type) || Editor.isVoid(editor, n as any),
+    });
+    if (entry) {
+      const [, path] = entry;
+      const paragraph = {
+        type: 'paragraph',
+        children: [link],
+      };
+      Transforms.insertNodes(editor, paragraph as any, { at: Path.next(path) });
+    } else {
+      Transforms.insertNodes(editor, link);
+    }
+
   };
 
   return <div

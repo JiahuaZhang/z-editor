@@ -3,14 +3,15 @@ import { atom, useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ClientOnly } from 'remix-utils/client-only';
-import { Editor, Node, Path, Range, Transforms } from 'slate';
+import Slate, { Editor, Path, Range, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
-import { CodeBlockType } from './code';
 
 // inline element: link/url, tag
 export const LINK_TYPE = 'link';
 export const TAG_TYPE = 'tag';
 
+// todo? if user `ctrl + k` selected existed link
+// should it auto unwrap this link back to regular text?
 export const Link = ({ children, attributes, element }: RenderElementProps) => {
   const { url, children: [{ text }] } = element as any;
   const [newUrl, setNewUrl] = useState(url);
@@ -26,7 +27,7 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
 
   const updateLink = (url: string, text: string) => {
     const path = ReactEditor.findPath(editor, element);
-    Transforms.setNodes(editor, { url } as Partial<Node>, { at: path });
+    Transforms.setNodes(editor, { url } as Partial<Slate.Node>, { at: path });
 
     const linkEntry = Editor.above(editor, { match: n => (n as any).type === LINK_TYPE });
     if (linkEntry) {
@@ -235,6 +236,7 @@ export const isFloatingLinkOpenAtom = atom(false);
 const LinkPanel = () => {
   const [isFloatingLinkOpen, setIsFloatingLinkOpen] = useAtom(isFloatingLinkOpenAtom);
   const ref = useRef<HTMLInputElement>(null);
+  const container = useRef<HTMLDivElement>(null);
   const editor = useSlateStatic();
   const [url, setUrl] = useState('');
   const [text, setText] = useState('');
@@ -262,6 +264,18 @@ const LinkPanel = () => {
 
     document.addEventListener('keydown', handleEsc);
     return () => document.removeEventListener('keydown', handleEsc);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isFloatingLinkOpen && !container.current?.contains(event.target as Node)) {
+        setIsFloatingLinkOpen(false);
+        ReactEditor.focus(editor);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
   const submit = () => {
@@ -292,7 +306,7 @@ const LinkPanel = () => {
 
   };
 
-  return <div
+  return <div ref={container}
     un-position='fixed'
     un-top='1/2'
     un-left='1/2'

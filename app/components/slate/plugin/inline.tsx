@@ -43,7 +43,11 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
 
   useEffect(() => {
     if (isOpen) {
-      Promise.resolve().then(() => ref?.current?.focus());
+      const { scrollX, scrollY } = window;
+      Promise.resolve().then(() => {
+        ref?.current?.focus();
+        window.scrollTo(scrollX, scrollY);
+      });
     } else {
       ReactEditor.focus(editor);
     }

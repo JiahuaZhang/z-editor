@@ -16,6 +16,17 @@ export const isNewLinkShortcut = (event: KeyboardEvent) => {
   }
 };
 
+export const isFocusOnLink = (editor: Editor) => {
+  const { selection } = editor;
+  if (!selection || Range.isCollapsed(selection)) {
+    const ancestor = editor.above();
+    if (ancestor && (ancestor[0] as any).type === LINK_TYPE) {
+      return true;
+    }
+  }
+  return false;
+};
+
 export const Link = ({ children, attributes, element }: RenderElementProps) => {
   const { url, children: [{ text }] } = element as any;
   const [newUrl, setNewUrl] = useState(url);
@@ -248,19 +259,6 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
   </Popover>;
 };
 
-export const Tag = ({ children, attributes }: RenderElementProps) => {
-  return <span {...attributes}>{children}</span>;
-};
-
-// todo:? hash-tag like #id element?
-// e.g., ${id, 0} <-> [meta - id], they all refers to the same id, and could have various text
-// type Identity = {
-//   id: number; // auto generated, but unique
-//   text: string[];
-//   description?: string;
-//   decoration?: { [key: string]: string; };
-// };
-
 export const isFloatingLinkOpenAtom = atom(false);
 const LinkPanel = () => {
   const [isFloatingLinkOpen, setIsFloatingLinkOpen] = useAtom(isFloatingLinkOpenAtom);
@@ -457,6 +455,19 @@ export const LinkPlugin = () => {
     {() => createPortal(isFloatingLinkOpen && <LinkPanel />, document.body)}
   </ClientOnly>;
 };
+
+export const Tag = ({ children, attributes }: RenderElementProps) => {
+  return <span {...attributes}>{children}</span>;
+};
+
+// todo:? hash-tag like #id element?
+// e.g., ${id, 0} <-> [meta - id], they all refers to the same id, and could have various text
+// type Identity = {
+//   id: number; // auto generated, but unique
+//   text: string[];
+//   description?: string;
+//   decoration?: { [key: string]: string; };
+// };
 
 export const dummyData = [
   {

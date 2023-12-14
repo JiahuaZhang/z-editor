@@ -1,6 +1,6 @@
 import { useSetAtom } from 'jotai';
 import { useState } from 'react';
-import { BaseEditor, Editor, Element, Range, Transforms, createEditor } from 'slate';
+import { BaseEditor, Editor, Element, Transforms, createEditor } from 'slate';
 import { withHistory } from 'slate-history';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import { dummyData as blockDummyData, renderElement } from '~/components/slate/element/block';
@@ -10,7 +10,7 @@ import { onDOMBeforeInput as commonOnDOMBeforeInput, withCommon } from '~/compon
 import { dummyData as embedDummyData, handleEmbed } from '~/components/slate/plugin/embed';
 import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
 import { handlePasteOnImageUrl, dummyData as imageDummyData, onKeyDown as onKeyDownForImage } from '~/components/slate/plugin/image';
-import { LINK_TYPE, LinkPlugin, dummyData as inlineDummyData, isFloatingLinkOpenAtom, isNewLinkShortcut } from '~/components/slate/plugin/inline';
+import { LinkPlugin, dummyData as inlineDummyData, isFloatingLinkOpenAtom, isFocusOnLink, isNewLinkShortcut } from '~/components/slate/plugin/inline';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
 export { links };
@@ -60,11 +60,11 @@ const CustomEditor = {
 
 const initialValue = [
   ...blockDummyData,
+  ...inlineDummyData,
   ...imageDummyData,
   ...codeDummyData,
   ...embedDummyData,
   ...leafDummyData,
-  ...inlineDummyData,
 ];
 
 export const MySlate = () => {
@@ -100,14 +100,9 @@ export const MySlate = () => {
         onKeyDown={event => {
           if (isNewLinkShortcut(event.nativeEvent)) {
             event.preventDefault();
-            const { selection } = editor;
-            if (!selection || Range.isCollapsed(selection)) {
-              const ancestor = editor.above();
-              if (ancestor && (ancestor[0] as any).type === LINK_TYPE) {
-                return;
-              }
+            if (!isFocusOnLink(editor)) {
+              setIsFloatingLinkOpen(prev => !prev);
             }
-            setIsFloatingLinkOpen(prev => !prev);
           }
 
           if (onKeyDownForImage(event, editor)) {

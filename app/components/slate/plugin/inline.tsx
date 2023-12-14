@@ -314,6 +314,10 @@ const LinkPanel = () => {
     ReactEditor.focus(editor);
 
     if (editor.selection && Range.isExpanded(editor.selection)) {
+      Transforms.unwrapNodes(editor, {
+        match: n => Editor.isInline(editor, n as any),
+        split: true
+      });
       Transforms.delete(editor);
     }
 
@@ -330,9 +334,7 @@ const LinkPanel = () => {
         type: 'paragraph',
         children: [link],
       };
-      // Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: ' ' }] }, { at: Path.next(path) });
-      // Transforms.insertNodes(editor, paragraph as any, { at: Path.next(path) });
-      // Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: ' ' }] }, { at: Path.next(path) });
+      Transforms.insertNodes(editor, paragraph as any, { at: Path.next(path) });
     } else {
       Transforms.insertNodes(editor, link);
     }

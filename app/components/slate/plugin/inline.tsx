@@ -72,6 +72,11 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
 
   useEffect(() => {
     const handleShortCut = (event: KeyboardEvent) => {
+      const { selection } = editor;
+      if (!selection || Range.isExpanded(selection)) {
+        return;
+      }
+
       if (isNewLinkShortcut(event)) {
         event.preventDefault();
         const ancestor = editor.above();
@@ -325,7 +330,9 @@ const LinkPanel = () => {
         type: 'paragraph',
         children: [link],
       };
-      Transforms.insertNodes(editor, paragraph as any, { at: Path.next(path) });
+      // Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: ' ' }] }, { at: Path.next(path) });
+      // Transforms.insertNodes(editor, paragraph as any, { at: Path.next(path) });
+      // Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: ' ' }] }, { at: Path.next(path) });
     } else {
       Transforms.insertNodes(editor, link);
     }

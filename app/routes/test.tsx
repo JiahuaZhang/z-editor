@@ -1,5 +1,6 @@
+import { useSetAtom } from 'jotai';
 import { useState } from 'react';
-import { BaseEditor, Editor, Element, Transforms, createEditor } from 'slate';
+import { BaseEditor, Editor, Element, Range, Transforms, createEditor } from 'slate';
 import { withHistory } from 'slate-history';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import { dummyData as blockDummyData, renderElement } from '~/components/slate/element/block';
@@ -9,7 +10,7 @@ import { onDOMBeforeInput as commonOnDOMBeforeInput, withCommon } from '~/compon
 import { dummyData as embedDummyData, handleEmbed } from '~/components/slate/plugin/embed';
 import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
 import { handlePasteOnImageUrl, dummyData as imageDummyData, onKeyDown as onKeyDownForImage } from '~/components/slate/plugin/image';
-import { dummyData as inlineDummyData } from '~/components/slate/plugin/inline';
+import { LINK_TYPE, LinkPlugin, dummyData as inlineDummyData, isFloatingLinkOpenAtom, isNewLinkShortcut } from '~/components/slate/plugin/inline';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
 export { links };
@@ -59,16 +60,17 @@ const CustomEditor = {
 
 const initialValue = [
   ...blockDummyData,
-  ...inlineDummyData,
   ...imageDummyData,
   ...codeDummyData,
   ...embedDummyData,
   ...leafDummyData,
+  ...inlineDummyData,
 ];
 
 export const MySlate = () => {
   const [editor] = useState(() => withMarkdownShortcuts(withCommon(withHistory(withReact(createEditor())))));
   const decorate = useDecorate(editor);
+  const setIsFloatingLinkOpen = useSetAtom(isFloatingLinkOpenAtom);
 
   return <div >
     <Slate
@@ -89,12 +91,25 @@ export const MySlate = () => {
     >
       <FloatingToolbar />
       <CodePlugin />
+      <LinkPlugin />
       <Editable
         spellCheck={false}
         un-m='4'
         un-border='2 orange-200'
         un-p='2'
         onKeyDown={event => {
+          if (isNewLinkShortcut(event.nativeEvent)) {
+            event.preventDefault();
+            const { selection } = editor;
+            if (!selection || Range.isCollapsed(selection)) {
+              const ancestor = editor.above();
+              if (ancestor && (ancestor[0] as any).type === LINK_TYPE) {
+                return;
+              }
+            }
+            setIsFloatingLinkOpen(prev => !prev);
+          }
+
           if (onKeyDownForImage(event, editor)) {
             return;
           }

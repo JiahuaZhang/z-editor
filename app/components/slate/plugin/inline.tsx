@@ -10,8 +10,12 @@ import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 export const LINK_TYPE = 'link';
 export const TAG_TYPE = 'tag';
 
-// todo? if user `ctrl + k` selected existed link
-// should it auto unwrap this link back to regular text?
+export const isNewLinkShortcut = (event: KeyboardEvent) => {
+  if (event.key === 'k' && (event.ctrlKey || event.metaKey)) {
+    return true;
+  }
+};
+
 export const Link = ({ children, attributes, element }: RenderElementProps) => {
   const { url, children: [{ text }] } = element as any;
   const [newUrl, setNewUrl] = useState(url);
@@ -65,6 +69,22 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
   }, []);
 
   useEffect(() => () => ReactEditor.focus(editor), []);
+
+  useEffect(() => {
+    const handleShortCut = (event: KeyboardEvent) => {
+      if (isNewLinkShortcut(event)) {
+        event.preventDefault();
+        const ancestor = editor.above();
+        const path = ReactEditor.findPath(editor, element);
+        if (ancestor![1].join('') === path.join('')) {
+          setIsOpen(prev => !prev);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleShortCut);
+    return () => document.removeEventListener('keydown', handleShortCut);
+  }, []);
 
   const content = <div un-text='lg'>
     <div
@@ -283,6 +303,8 @@ const LinkPanel = () => {
   }, []);
 
   const submit = () => {
+    if (!url || !text) return;
+
     setIsFloatingLinkOpen(false);
     ReactEditor.focus(editor);
 

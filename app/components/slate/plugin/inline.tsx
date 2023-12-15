@@ -1,4 +1,4 @@
-import { Popover } from 'antd';
+import { Popover, Tag } from 'antd';
 import { atom, useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -8,7 +8,7 @@ import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 
 // inline element: link/url, tag
 export const LINK_TYPE = 'link';
-export const TAG_TYPE = 'tag';
+export const HASH_TAG_TYPE = 'hash-tag';
 
 export const isNewLinkShortcut = (event: KeyboardEvent) => {
   if (event.key === 'k' && (event.ctrlKey || event.metaKey)) {
@@ -456,8 +456,8 @@ export const LinkPlugin = () => {
   </ClientOnly>;
 };
 
-export const Tag = ({ children, attributes }: RenderElementProps) => {
-  return <span {...attributes}>{children}</span>;
+export const HashTag = ({ children, attributes }: RenderElementProps) => {
+  return <Tag {...attributes}>{children}</Tag>;
 };
 
 // todo:? hash-tag like #id element?
@@ -480,7 +480,7 @@ export const dummyData = [
       },
       { text: ' ' },
       {
-        type: TAG_TYPE,
+        type: HASH_TAG_TYPE,
         children: [{ text: 'react' }],
       },
       { text: ' ' },

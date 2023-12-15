@@ -457,7 +457,10 @@ export const LinkPlugin = () => {
 };
 
 export const HashTag = ({ children, attributes }: RenderElementProps) => {
-  return <Tag {...attributes}>{children}</Tag>;
+  return <Tag
+    un-text='lg'
+    un-px='1'
+    {...attributes}>{children}</Tag>;
 };
 
 // todo:? hash-tag like #id element?

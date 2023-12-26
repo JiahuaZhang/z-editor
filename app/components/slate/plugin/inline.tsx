@@ -1,14 +1,14 @@
-import { Popover, Tag } from 'antd';
+import { Popover } from 'antd';
 import { atom, useAtom, useAtomValue } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ClientOnly } from 'remix-utils/client-only';
 import Slate, { Editor, Path, Range, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
+import { HASH_TAG_TYPE } from './inline/hash-tag';
 
 // inline element: link/url, tag
 export const LINK_TYPE = 'link';
-export const HASH_TAG_TYPE = 'hash-tag';
 
 export const isNewLinkShortcut = (event: KeyboardEvent) => {
   if (event.key === 'k' && (event.ctrlKey || event.metaKey)) {
@@ -456,12 +456,10 @@ export const LinkPlugin = () => {
   </ClientOnly>;
 };
 
-export const HashTag = ({ children, attributes }: RenderElementProps) => {
-  return <Tag
-    un-text='lg'
-    un-px='1'
-    {...attributes}>{children}</Tag>;
-};
+// export const HashTag = ({ children, attributes }: RenderElementProps) => {
+//   return <Tag
+//     {...attributes}>{children}</Tag>;
+// };
 
 // todo:? hash-tag like #id element?
 // e.g., ${id, 0} <-> [meta - id], they all refers to the same id, and could have various text
@@ -484,6 +482,7 @@ export const dummyData = [
       { text: ' ' },
       {
         type: HASH_TAG_TYPE,
+        color: 'volcano',
         children: [{ text: 'react' }],
       },
       { text: ' ' },

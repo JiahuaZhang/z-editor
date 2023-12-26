@@ -1,2 +1,15 @@
+不太满意blueprint的css
+应该考虑直接查看blueprint js的Tag，看他的具体的css风格
+然后魔改它到antd的Tag上，适当用unocss修改下
+
+挑战难点：依然还是怎么更好的交互这个tag，因为其他都是text，怎么和它边缘交互，还有上下箭头问题。
+
 adding drag & drop to relocate element
 https://dev.to/devterminal/slatejs-dnd-kit-improving-rich-text-editor-ux-by-adding-drag-and-drop-23d3
+
+future todo:
+link的那种ctrl + k toggle不够好
+应该是 {type: 'link', url: <link>, chilcren: [{text: <text>}]}
+再加上 {showPopup: boolean}
+然后数据库做persistence的时候, showPopup不应该保存——》没必要
+读取的时候再只能赋予 {showPopup: false}的初始值这样

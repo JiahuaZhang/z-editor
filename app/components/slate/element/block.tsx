@@ -3,7 +3,8 @@ import { ReactEditor, RenderElementProps, useReadOnly, useSlateStatic } from 'sl
 import { CodeBlock, CodeBlockType } from '../plugin/code';
 import { renderEmbed } from '../plugin/embed';
 import { ImageBlock, ImageType } from '../plugin/image';
-import { HASH_TAG_TYPE, HashTag, LINK_TYPE, Link } from '../plugin/inline';
+import { LINK_TYPE, Link } from '../plugin/inline';
+import { HASH_TAG_TYPE, HashTag } from '../plugin/inline/hash-tag';
 
 const H1 = ({ children, attributes }: RenderElementProps) => {
   return <h1
@@ -82,6 +83,10 @@ const Blockquote = ({ children, attributes }: RenderElementProps) => {
   </blockquote>;
 };
 
+// todo: bugfix
+// checkbox is not tab negatiable, should be able to focus checkbox
+// through arrow <, >, v, ^, and visually show the checkbox is focus or not
+// and enable to use key space / enter to toggle on/off
 const CheckListItem = ({ children, element, attributes }: RenderElementProps) => {
   const editor = useSlateStatic();
   const readOnly = useReadOnly();

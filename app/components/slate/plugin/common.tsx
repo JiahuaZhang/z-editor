@@ -2,7 +2,8 @@ import { Editor, Node, Range, Transforms } from 'slate';
 import { CodeBlockType, CodeLineType, insertBreak as insertCodeBreak } from './code';
 import { EMBED_TYPES } from './embed';
 import { ImageType, fileToImageNode } from './image';
-import { HASH_TAG_TYPE, LINK_TYPE } from './inline';
+import { LINK_TYPE } from './inline';
+import { HASH_TAG_TYPE } from './inline/hash-tag';
 
 const AUTO_ESCAPE_TYPE = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
 

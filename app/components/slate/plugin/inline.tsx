@@ -475,6 +475,12 @@ export const dummyData = [
     type: 'paragraph',
     children: [
       {
+        type: HASH_TAG_TYPE,
+        color: '#13c2c2',
+        children: [{ text: 'openAI' }],
+      },
+      { text: ' ' },
+      {
         type: LINK_TYPE,
         url: 'https://github.com',
         children: [{ text: 'github' }],
@@ -490,6 +496,12 @@ export const dummyData = [
         type: LINK_TYPE,
         url: 'https://apple.com',
         children: [{ text: 'apple' }],
+      },
+      { text: ' ' },
+      {
+        type: HASH_TAG_TYPE,
+        color: 'blue-inverse',
+        children: [{ text: 'javascript' }],
       },
     ]
   }

@@ -1,9 +1,10 @@
 import { blue, cyan, geekblue, gold, green, lime, magenta, orange, purple, red, volcano, yellow } from '@ant-design/colors';
 import { Badge, ColorPicker, Divider, Popover, Tag } from 'antd';
-import { atom, useAtom, useAtomValue } from 'jotai';
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
-import { RenderElementProps } from 'slate-react';
+import { Editor, Transforms } from 'slate';
+import { RenderElementProps, useSlateStatic } from 'slate-react';
 
 export const HASH_TAG_TYPE = 'hash-tag';
 
@@ -31,6 +32,7 @@ const customColorAtom = atom('#f55');
 
 const PresetTag = ({ color, name = color }: { color: string, name?: string; }) => {
   const [tagStyle, setTagStyle] = useAtom(tagStyleAtom);
+  const editor = useSlateStatic();
 
   if (tagStyle === color) {
     return <Badge dot offset={[-8, 1]} color='green' >
@@ -50,6 +52,11 @@ const PresetTag = ({ color, name = color }: { color: string, name?: string; }) =
       onClick={(event) => {
         event.stopPropagation();
         setTagStyle(color);
+        const [match] = Editor.nodes(editor, { match: n => (n as any).type === HASH_TAG_TYPE, });
+        if (match) {
+          const [, path] = match;
+          Transforms.setNodes(editor, { color } as Partial<Node>, { at: path });
+        }
       }}
     >{name}</Tag>
   </div>;
@@ -86,9 +93,18 @@ const CustomColorPicker = () => {
 };
 
 export const HashTag = ({ children, attributes, element }: RenderElementProps) => {
-  const [isPopoverOpen, setIsPopoverOpen] = useState(true);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const { color } = element as any;
+  const setTagStyle = useSetAtom(tagStyleAtom);
+  const setCustomColor = useSetAtom(customColorAtom);
+
+  useEffect(() => {
+    setTagStyle(color);
+    if (!colors.some(c => color.includes(c))) {
+      setCustomColor(color);
+    }
+  }, [isPopoverOpen]);
 
   useEffect(() => {
     const handlePopoverClick = (event: MouseEvent) => {

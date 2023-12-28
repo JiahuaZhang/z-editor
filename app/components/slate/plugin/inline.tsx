@@ -7,7 +7,6 @@ import Slate, { Editor, Path, Range, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 import { HASH_TAG_TYPE } from './inline/hash-tag';
 
-// inline element: link/url, tag
 export const LINK_TYPE = 'link';
 
 export const isNewLinkShortcut = (event: KeyboardEvent) => {

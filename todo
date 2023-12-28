@@ -1,6 +1,4 @@
-不太满意blueprint的css
-应该考虑直接查看blueprint js的Tag，看他的具体的css风格
-然后魔改它到antd的Tag上，适当用unocss修改下
+type `#-hash-tag` => auto transform to hash-tag type
 
 挑战难点：依然还是怎么更好的交互这个tag，因为其他都是text，怎么和它边缘交互，还有上下箭头问题。
 

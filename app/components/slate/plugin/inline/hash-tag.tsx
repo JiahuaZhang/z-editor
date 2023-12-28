@@ -180,17 +180,18 @@ export const HashTag = ({ children, attributes, element }: RenderElementProps) =
 
   return <ClientOnly>
     {
-      () => <span {...attributes} >
-        <Popover content={<Content />} open={isPopoverOpen}  >
-          <Tag color={color}
-            un-text='lg'
-            un-px='1'
-            onDoubleClick={() => setIsPopoverOpen(true)}
-          >
-            {children}
-          </Tag>
-        </Popover>
-      </span>
+      () => <Popover content={<Content />} open={isPopoverOpen} {...attributes}  >
+        <Tag color={color}
+          un-text='lg'
+          un-px='1'
+          un-inline='~'
+          un-position='static'
+          onDoubleClick={() => setIsPopoverOpen(true)}
+          {...attributes}
+        >
+          {children}
+        </Tag>
+      </Popover>
     }
   </ClientOnly>;
 };

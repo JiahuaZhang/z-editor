@@ -103,9 +103,7 @@ export const MySlate = () => {
             if (!isFocusOnLink(editor)) {
               setIsFloatingLinkOpen(prev => !prev);
             }
-          }
-
-          if (onKeyDownForImage(event, editor)) {
+          } else if (onKeyDownForImage(event, editor)) {
             return;
           }
         }}

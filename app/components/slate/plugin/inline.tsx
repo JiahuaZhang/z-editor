@@ -125,9 +125,7 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
         un-hover='text-red-6'
         un-focus='text-red-6'
         tabIndex={0}
-        onClick={() => {
-          Transforms.unwrapNodes(editor, { at: ReactEditor.findPath(editor, element) });
-        }}
+        onClick={() => Transforms.unwrapNodes(editor, { at: ReactEditor.findPath(editor, element) })}
         onKeyDown={event => {
           if (['Enter', ' '].includes(event.key)) {
             event.preventDefault();

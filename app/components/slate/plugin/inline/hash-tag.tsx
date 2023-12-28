@@ -4,7 +4,7 @@ import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 import { Editor, Transforms } from 'slate';
-import { RenderElementProps, useSlateStatic } from 'slate-react';
+import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 
 export const HASH_TAG_TYPE = 'hash-tag';
 
@@ -98,13 +98,30 @@ export const HashTag = ({ children, attributes, element }: RenderElementProps) =
   const { color } = element as any;
   const setTagStyle = useSetAtom(tagStyleAtom);
   const setCustomColor = useSetAtom(customColorAtom);
+  const editor = useSlateStatic();
 
   useEffect(() => {
-    setTagStyle(color);
-    if (!colors.some(c => color.includes(c))) {
-      setCustomColor(color);
+    if (isPopoverOpen) {
+      setTagStyle(color);
+      if (!colors.some(c => color.includes(c))) {
+        setCustomColor(color);
+      }
+    } else {
+      ReactEditor.focus(editor);
     }
   }, [isPopoverOpen]);
+
+  useEffect(() => () => ReactEditor.focus(editor), []);
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent | React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Escape') {
+        setIsPopoverOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, []);
 
   useEffect(() => {
     const handlePopoverClick = (event: MouseEvent) => {
@@ -117,10 +134,21 @@ export const HashTag = ({ children, attributes, element }: RenderElementProps) =
   }, []);
 
   const Content = () => <div ref={popoverRef} >
-    <h1 un-text='xl' un-font='semibold'>Customize Tag</h1>
-    <h2 un-text='lg' un-font='semibold'>
-      Preset
-    </h2>
+    <h1 un-text='xl'
+      un-font='semibold'
+      un-grid='~'
+      un-grid-flow='col'
+      un-justify='between'
+      un-items='center'
+    >Customize Tag
+      <i className='i-mdi:link-variant-off'
+        un-cursor='pointer'
+        un-hover='text-red-6'
+        un-focus='text-red-6'
+        onClick={() => Transforms.unwrapNodes(editor, { at: ReactEditor.findPath(editor, element) })}
+      />
+    </h1>
+    <h2 un-text='lg' un-font='semibold'>Preset</h2>
     <div un-my='2'
       un-grid='~'
       un-grid-cols='[repeat(6,minmax(0,max-content))]'

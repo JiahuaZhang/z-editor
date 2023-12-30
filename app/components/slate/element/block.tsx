@@ -3,8 +3,8 @@ import { ReactEditor, RenderElementProps, useReadOnly, useSlateStatic } from 'sl
 import { CodeBlock, CodeBlockType } from '../plugin/code';
 import { renderEmbed } from '../plugin/embed';
 import { ImageBlock, ImageType } from '../plugin/image';
-import { LINK_TYPE, Link } from '../plugin/inline';
 import { HASH_TAG_TYPE, HashTag } from '../plugin/inline/hash-tag';
+import { LINK_TYPE, Link } from '../plugin/inline/link';
 
 const H1 = ({ children, attributes }: RenderElementProps) => {
   return <h1

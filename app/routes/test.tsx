@@ -10,7 +10,8 @@ import { onDOMBeforeInput as commonOnDOMBeforeInput, withCommon } from '~/compon
 import { dummyData as embedDummyData, handleEmbed } from '~/components/slate/plugin/embed';
 import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
 import { handlePasteOnImageUrl, dummyData as imageDummyData, onKeyDown as onKeyDownForImage } from '~/components/slate/plugin/image';
-import { LinkPlugin, dummyData as inlineDummyData, isFloatingLinkOpenAtom, isFocusOnLink, isNewLinkShortcut } from '~/components/slate/plugin/inline';
+import { dummyData as inlineDummyData } from '~/components/slate/plugin/inline/inline';
+import { LinkPlugin, isFloatingLinkOpenAtom, isFocusOnLink, isNewLinkShortcut } from '~/components/slate/plugin/inline/link';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
 export { links };

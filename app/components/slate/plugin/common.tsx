@@ -2,7 +2,7 @@ import { Editor, Node, Range, Transforms } from 'slate';
 import { CodeBlockType, CodeLineType, insertBreak as insertCodeBreak } from './code';
 import { EMBED_TYPES } from './embed';
 import { ImageType, fileToImageNode } from './image';
-import { HASH_TAG_TYPE } from './inline/hash-tag';
+import { HASH_TAG_TYPE, insertHashTagText } from './inline/hash-tag';
 import { LINK_TYPE } from './inline/link';
 
 const AUTO_ESCAPE_TYPE = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
@@ -47,7 +47,7 @@ export const onDOMBeforeInput = (editor: Editor, event: InputEvent) => {
 };
 
 export const withCommon = (editor: Editor) => {
-  const { insertBreak, insertData, insertSoftBreak, isVoid, isInline } = editor;
+  const { insertBreak, insertData, insertText, insertSoftBreak, isVoid, isInline } = editor;
 
   editor.insertBreak = () => {
     const ancestor = editor.above();
@@ -77,6 +77,12 @@ export const withCommon = (editor: Editor) => {
         Transforms.insertNodes(editor, await fileToImageNode(file));
       }
     }
+  };
+
+  editor.insertText = (text) => {
+    if (insertHashTagText(editor, text)) return;
+
+    insertText(text);
   };
 
   editor.insertSoftBreak = () => {

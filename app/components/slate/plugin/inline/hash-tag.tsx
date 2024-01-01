@@ -3,7 +3,7 @@ import { Badge, ColorPicker, Divider, Popover, Tag } from 'antd';
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
-import { Editor, Transforms } from 'slate';
+import { Editor, Range, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 
 export const HASH_TAG_TYPE = 'hash-tag';
@@ -194,4 +194,32 @@ export const HashTag = ({ children, attributes, element }: RenderElementProps) =
       </Popover>
     }
   </ClientOnly>;
+};
+
+export const insertHashTagText = (editor: Editor, text: string) => {
+  if (text !== ' ') return false;
+
+  const { selection } = editor;
+  if (!selection) return false;
+
+  const [start] = Range.edges(selection);
+  const line = Editor.before(editor, start, { unit: 'line' });
+  const range = line && Editor.range(editor, line, start);
+  const lineText = (range && Editor.string(editor, range)) ?? '';
+  const regex = /#(?<tag>[\w-]+)(?:\{(?<color>[^}]+)\})?$/;
+  const match = regex.exec(lineText);
+  if (match && match.groups) {
+    const { tag, color = '' } = match.groups;
+    const tagNode = { type: HASH_TAG_TYPE, color, children: [{ text: tag }] };
+    const matchRange = {
+      anchor: { path: start.path, offset: start.offset - match[0].length },
+      focus: { path: start.path, offset: start.offset }
+    };
+    Transforms.select(editor, matchRange);
+    Transforms.delete(editor);
+    Transforms.insertNodes(editor, tagNode);
+    return true;
+  }
+
+  return false;
 };

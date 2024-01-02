@@ -10,7 +10,7 @@ import { onDOMBeforeInput as commonOnDOMBeforeInput, withCommon } from '~/compon
 import { dummyData as embedDummyData, handleEmbed } from '~/components/slate/plugin/embed';
 import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
 import { handlePasteOnImageUrl, dummyData as imageDummyData, onKeyDown as onKeyDownForImage } from '~/components/slate/plugin/image';
-import { dummyData as inlineDummyData } from '~/components/slate/plugin/inline/inline';
+import { dummyData as inlineDummyData, onKeyDownForInline } from '~/components/slate/plugin/inline/inline';
 import { LinkPlugin, isFloatingLinkOpenAtom, isFocusOnLink, isNewLinkShortcut } from '~/components/slate/plugin/inline/link';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
@@ -105,6 +105,8 @@ export const MySlate = () => {
               setIsFloatingLinkOpen(prev => !prev);
             }
           } else if (onKeyDownForImage(event, editor)) {
+            return;
+          } else if (onKeyDownForInline(event, editor)) {
             return;
           }
         }}

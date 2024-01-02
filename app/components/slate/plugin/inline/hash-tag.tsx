@@ -2,7 +2,6 @@ import { blue, cyan, geekblue, gold, green, lime, magenta, orange, purple, red, 
 import { Badge, ColorPicker, Divider, Popover, Tag } from 'antd';
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
-import { ClientOnly } from 'remix-utils/client-only';
 import { Editor, Range, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react';
 
@@ -178,22 +177,21 @@ export const HashTag = ({ children, attributes, element }: RenderElementProps) =
     </div>
   </div>;
 
-  return <ClientOnly>
-    {
-      () => <Popover content={<Content />} open={isPopoverOpen} {...attributes}  >
-        <Tag color={color}
-          un-text='lg'
-          un-px='1'
-          un-inline='~'
-          un-position='static'
-          onDoubleClick={() => setIsPopoverOpen(true)}
-          {...attributes}
-        >
-          {children}
-        </Tag>
-      </Popover>
-    }
-  </ClientOnly>;
+  return <Popover content={<Content />} open={isPopoverOpen} {...attributes}  >
+    <Tag color={color}
+      un-text='lg'
+      un-px='1'
+      un-inline='~'
+      un-position='static'
+      un-me='0'
+      onDoubleClick={() => setIsPopoverOpen(true)}
+      {...attributes}
+    >
+      <span contentEditable={false} un-text='0' >{' '}</span>
+      {children}
+      <span contentEditable={false} un-text='0' >{' '}</span>
+    </Tag>
+  </Popover>;
 };
 
 export const insertHashTagText = (editor: Editor, text: string) => {

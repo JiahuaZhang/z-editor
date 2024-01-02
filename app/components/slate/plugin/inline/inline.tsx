@@ -1,5 +1,26 @@
+import { Editor, Transforms } from 'slate';
 import { HASH_TAG_TYPE } from './hash-tag';
 import { LINK_TYPE } from './link';
+
+// Put this at the start and end of an inline component to work around this Chromium bug:
+// https://bugs.chromium.org/p/chromium/issues/detail?id=1249405
+export const InlineChromiumBugfix = () => <span contentEditable={false} un-text='0'>{' '}</span>;
+
+export const onKeyDownForInline = (event: React.KeyboardEvent, editor: Editor) => {
+  if (event.key === 'ArrowLeft') {
+    event.preventDefault();
+    Transforms.move(editor, { unit: 'offset', reverse: true });
+    return true;
+  }
+
+  if (event.key === 'ArrowRight') {
+    event.preventDefault();
+    Transforms.move(editor, { unit: 'offset' });
+    return true;
+  }
+
+  return false;
+};
 
 // export const HashTag = ({ children, attributes }: RenderElementProps) => {
 //   return <Tag

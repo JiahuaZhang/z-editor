@@ -251,7 +251,11 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
       un-text='blue-600 hover:blue-800 visited:purple-600'
       un-cursor='pointer'
       {...attributes}
-    >{children}</a>
+    >
+      <span contentEditable={false} un-text='0' >{' '}</span>
+      {children}
+      <span contentEditable={false} un-text='0' >{' '}</span>
+    </a>
   </Popover>;
 };
 

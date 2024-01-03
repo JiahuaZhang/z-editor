@@ -1,6 +1,7 @@
 import { Editor, Element, Node, Range, Transforms } from 'slate';
 import { insertText as insertCodeText } from './code';
 
+// todo, add '1.' for ordered list
 const SHORTCUTS = {
   '*': 'list-item',
   '-': 'list-item',
@@ -23,7 +24,7 @@ export const withMarkdownShortcuts = (editor: Editor) => {
     }
 
     const { selection } = editor;
-    if (!selection || !Range.isCollapsed(selection)) {
+    if (!selection || Range.isExpanded(selection)) {
       return insertText(text);
     }
 
@@ -37,7 +38,7 @@ export const withMarkdownShortcuts = (editor: Editor) => {
     const codeNode = insertCodeText(beforeText);
     if (codeNode) {
       Transforms.select(editor, range);
-      if (!Range.isCollapsed(range)) {
+      if (Range.isExpanded(range)) {
         Transforms.delete(editor);
       }
       return Transforms.setNodes(editor, codeNode);
@@ -48,7 +49,7 @@ export const withMarkdownShortcuts = (editor: Editor) => {
     }
 
     Transforms.select(editor, range);
-    if (!Range.isCollapsed(range)) {
+    if (Range.isExpanded(range)) {
       Transforms.delete(editor);
     }
 

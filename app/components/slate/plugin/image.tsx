@@ -86,14 +86,14 @@ export const onKeyDown = (event: React.KeyboardEvent, editor: Editor) => {
 
     if (match) {
       event.preventDefault();
-      Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }], });
+      Transforms.insertNodes(editor, { type: 'p', children: [{ text: '' }], });
       return true;
     }
   } else if (event.key === 'Backspace') {
     const { selection } = editor;
     if (selection && Range.isCollapsed(selection)) {
       const [match] = Editor.nodes(editor, {
-        match: n => (n as any)?.type === 'paragraph',
+        match: n => (n as any)?.type === 'p',
         mode: 'highest',
       });
 

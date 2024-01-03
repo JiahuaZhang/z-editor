@@ -16,7 +16,7 @@ import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
 export { links };
 
-type CustomElement = { type: 'paragraph' | string; children: CustomText[]; };
+type CustomElement = { type: 'p' | string; children: CustomText[]; };
 type CustomText = { text: string; };
 
 declare module 'slate' {
@@ -132,7 +132,7 @@ export const MySlate = () => {
         //       });
         //       Transforms.setNodes(
         //         editor,
-        //         { type: match ? 'paragraph' : 'code' },
+        //         { type: match ? 'p' : 'code' },
         //         { match: n => Element.isElement(n) && Editor.isBlock(editor, n) }
         //       );
         //       break;

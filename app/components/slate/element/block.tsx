@@ -6,6 +6,8 @@ import { ImageBlock, ImageType } from '../plugin/image';
 import { HASH_TAG_TYPE, HashTag } from '../plugin/inline/hash-tag';
 import { LINK_TYPE, Link } from '../plugin/inline/link';
 
+export const CHECK_LIST_ITEM_TYPE = 'check-list-item';
+
 const H1 = ({ children, attributes }: RenderElementProps) => {
   return <h1
     un-text='4xl blue-950'
@@ -66,7 +68,7 @@ const H6 = ({ children, attributes }: RenderElementProps) => {
   </h6>;
 };
 
-const Paragraph = ({ children, attributes }: RenderElementProps) => {
+const P = ({ children, attributes }: RenderElementProps) => {
   return <p {...attributes} >
     {children}
   </p>;
@@ -81,6 +83,39 @@ const Blockquote = ({ children, attributes }: RenderElementProps) => {
     {...attributes} >
     {children}
   </blockquote>;
+};
+
+const UnorderedList = ({ children, attributes }: RenderElementProps) => {
+  return <ul
+    // un-list='none'
+    // un-text='gray-700'
+    // un-p='l-4'
+    // un-m='l-4'
+    {...attributes} >
+    {children}
+  </ul>;
+};
+
+const OrderedList = ({ children, attributes }: RenderElementProps) => {
+  return <ol
+    // un-list='none'
+    // un-text='gray-700'
+    // un-p='l-4'
+    // un-m='l-4'
+    {...attributes} >
+    {children}
+  </ol>;
+};
+
+const ListItem = ({ children, attributes }: RenderElementProps) => {
+  return <li
+    // un-list='none'
+    // un-text='gray-700'
+    // un-p='l-4'
+    // un-m='l-4'
+    {...attributes} >
+    {children}
+  </li>;
 };
 
 // todo: bugfix
@@ -142,7 +177,13 @@ export const renderElement = (props: RenderElementProps) => {
       return <H5 {...props} />;
     case 'h6':
       return <H6 {...props} />;
-    case 'check-list-item':
+    case 'ol':
+      return <OrderedList {...props} />;
+    case 'ul':
+      return <UnorderedList {...props} />;
+    case 'li':
+      return <ListItem {...props} />;
+    case CHECK_LIST_ITEM_TYPE:
       return <CheckListItem {...props} />;
     case CodeBlockType:
       return <CodeBlock {...props} />;
@@ -153,46 +194,46 @@ export const renderElement = (props: RenderElementProps) => {
     case HASH_TAG_TYPE:
       return <HashTag {...props} />;
     case 'p':
-      return <Paragraph {...props} />;
+      return <P {...props} />;
   }
 
   const embed = renderEmbed(props);
-  return embed || <Paragraph {...props} />;
+  return embed || <P {...props} />;
 };
 
 export const dummyData = [
   {
-    type: 'check-list-item',
+    type: CHECK_LIST_ITEM_TYPE,
     checked: true,
     children: [{ text: 'Slide to the left.' }],
   },
   {
-    type: 'check-list-item',
+    type: CHECK_LIST_ITEM_TYPE,
     checked: false,
     children: [{ text: 'Criss-cross.' }],
   },
   {
-    type: 'check-list-item',
+    type: CHECK_LIST_ITEM_TYPE,
     checked: true,
     children: [{ text: 'Criss-cross!' }],
   },
   {
-    type: 'check-list-item',
+    type: CHECK_LIST_ITEM_TYPE,
     checked: false,
     children: [{ text: 'Cha cha real smooth…' }],
   },
   {
-    type: 'check-list-item',
+    type: CHECK_LIST_ITEM_TYPE,
     checked: false,
     children: [{ text: "Let's go to work!" }],
   },
   {
-    type: 'check-list-item',
+    type: CHECK_LIST_ITEM_TYPE,
     checked: false,
     children: [{ text: "" }],
   },
   {
-    type: 'paragraph',
+    type: 'p',
     children: [{ text: 'Try it out for yourself!' }],
   },
   {
@@ -220,7 +261,7 @@ export const dummyData = [
     children: [{ text: 'Heading 6 here' }],
   },
   {
-    type: 'paragraph',
+    type: 'p',
     children: [{ text: 'A line of text in a paragraph' }],
   },
   {

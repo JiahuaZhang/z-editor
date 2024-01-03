@@ -113,7 +113,7 @@ export const insertBreak = (editor: Editor) => {
   const pathAfterBlock = Path.next(parentPath);
   Transforms.insertNodes(
     editor,
-    { type: 'paragraph', children: [{ text: '' }] } as Node,
+    { type: 'p', children: [{ text: '' }] } as Node,
     { at: pathAfterBlock }
   );
 
@@ -323,7 +323,7 @@ export const dummyData = [
     children: toCodeLines(`// Add the initial value.
     const initialValue = [
       {
-        type: 'paragraph',
+        type: 'p',
         children: [{ text: 'A line of text in a paragraph.' }]
       }
     ]
@@ -339,7 +339,7 @@ export const dummyData = [
     }`),
   },
   {
-    type: 'paragraph',
+    type: 'p',
     children: [{ text: '' }],
   },
   {
@@ -349,7 +349,7 @@ export const dummyData = [
     import { BaseEditor, Descendant } from 'slate'
     import { ReactEditor } from 'slate-react'
 
-    type CustomElement = { type: 'paragraph'; children: CustomText[] }
+    type CustomElement = { type: 'p'; children: CustomText[] }
     type CustomText = { text: string }
 
     declare module 'slate' {

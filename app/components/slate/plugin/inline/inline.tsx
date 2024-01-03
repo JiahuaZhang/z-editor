@@ -38,7 +38,7 @@ export const onKeyDownForInline = (event: React.KeyboardEvent, editor: Editor) =
 
 export const dummyData = [
   {
-    type: 'paragraph',
+    type: 'p',
     children: [
       {
         type: HASH_TAG_TYPE,

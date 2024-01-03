@@ -31,7 +31,7 @@ export const renderLeaf = (props: LeafProps) => {
 };
 
 export const dummyData = [{
-  type: 'paragraph',
+  type: 'p',
   children: [
     {
       text:

@@ -61,7 +61,7 @@ export const withCommon = (editor: Editor) => {
     if (insertCodeBreak(editor)) return;
 
     if (AUTO_ESCAPE_TYPE.includes(block.type)) {
-      return Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }] } as Node);
+      return Transforms.insertNodes(editor, { type: 'p', children: [{ text: '' }] } as Node);
     }
 
     return insertBreak();
@@ -96,7 +96,7 @@ export const withCommon = (editor: Editor) => {
 
 
     if (block.type === 'check-list-item') {
-      return Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }] } as Node);
+      return Transforms.insertNodes(editor, { type: 'p', children: [{ text: '' }] } as Node);
     }
     return insertSoftBreak();
   };

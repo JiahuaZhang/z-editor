@@ -86,33 +86,23 @@ const Blockquote = ({ children, attributes }: RenderElementProps) => {
 };
 
 const UnorderedList = ({ children, attributes }: RenderElementProps) => {
-  return <ul
-    // un-list='none'
-    // un-text='gray-700'
-    // un-p='l-4'
-    // un-m='l-4'
+  return <ul un-list='disc'
+    un-pl='4'
     {...attributes} >
     {children}
   </ul>;
 };
 
 const OrderedList = ({ children, attributes }: RenderElementProps) => {
-  return <ol
-    // un-list='none'
-    // un-text='gray-700'
-    // un-p='l-4'
-    // un-m='l-4'
+  return <ol un-list='decimal'
+    un-pl='4'
     {...attributes} >
     {children}
   </ol>;
 };
 
 const ListItem = ({ children, attributes }: RenderElementProps) => {
-  return <li
-    // un-list='none'
-    // un-text='gray-700'
-    // un-p='l-4'
-    // un-m='l-4'
+  return <li un-indent='-2'
     {...attributes} >
     {children}
   </li>;
@@ -267,5 +257,22 @@ export const dummyData = [
   {
     type: 'blockquote',
     children: [{ text: 'A line of text in a blockquote' }],
+  },
+  {
+    type: 'ul',
+    children: [
+      {
+        type: 'li',
+        children: [{ text: 'A list item' }],
+      },
+      {
+        type: 'li',
+        children: [{ text: 'another list item' }],
+      },
+      {
+        type: 'li',
+        children: [{ text: 'still a list item' }],
+      },
+    ]
   }
 ];

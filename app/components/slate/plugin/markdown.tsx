@@ -2,10 +2,11 @@ import { Editor, Element, Node, Range, Transforms } from 'slate';
 import { insertText as insertCodeText } from './code';
 
 // todo, add '1.' for ordered list
+// and [] for check list item
 const SHORTCUTS = {
-  '*': 'list-item',
-  '-': 'list-item',
-  '+': 'list-item',
+  '*': 'li',
+  '-': 'li',
+  '+': 'li',
   '>': 'blockquote',
   '#': 'h1',
   '##': 'h2',
@@ -60,10 +61,10 @@ export const withMarkdownShortcuts = (editor: Editor) => {
       { match: n => Element.isElement(n) && Editor.isBlock(editor, n) }
     );
 
-    if (type === 'list-item') {
+    if (type === 'li') {
       Transforms.wrapNodes(editor,
-        { type: 'bullet-list', children: [] } as Element,
-        { match: n => !Editor.isEditor(n) && Element.isElement(n) && (n as any).type === 'list-item' });
+        { type: 'ul', children: [] } as Element,
+        { match: n => !Editor.isEditor(n) && Element.isElement(n) && (n as any).type === 'li' });
     }
 
   };

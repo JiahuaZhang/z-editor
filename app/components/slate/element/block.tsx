@@ -263,7 +263,24 @@ export const dummyData = [
     children: [
       {
         type: 'li',
-        children: [{ text: 'A list item' }],
+        children: [{ text: '1st item' }],
+      },
+      {
+        type: 'ul',
+        children: [
+          {
+            type: 'li',
+            children: [{ text: 'A nested list item' }],
+          },
+          {
+            type: 'li',
+            children: [{ text: 'Another nested list item' }],
+          },
+          {
+            type: 'li',
+            children: [{ text: 'still nested list item' }],
+          },
+        ],
       },
       {
         type: 'li',

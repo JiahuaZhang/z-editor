@@ -2,7 +2,7 @@ import { Editor, Element, Node, Range, Transforms } from 'slate';
 import { insertText as insertCodeText } from './code';
 
 // todo, add '1.' for ordered list
-// and [] for check list item
+// and [], [x] for check list item
 const SHORTCUTS = {
   '*': 'li',
   '-': 'li',

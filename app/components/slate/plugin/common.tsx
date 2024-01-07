@@ -1,4 +1,5 @@
 import { Editor, Node, Range, Transforms } from 'slate';
+import { CHECK_LIST_ITEM_TYPE } from '../element/block';
 import { CodeBlockType, CodeLineType, insertBreak as insertCodeBreak } from './code';
 import { EMBED_TYPES } from './embed';
 import { ImageType, fileToImageNode } from './image';
@@ -94,9 +95,10 @@ export const withCommon = (editor: Editor) => {
     const [block] = ancestor;
     if (!('type' in block)) return insertSoftBreak();
 
-
-    if (block.type === 'check-list-item') {
+    if (block.type === CHECK_LIST_ITEM_TYPE) {
       return Transforms.insertNodes(editor, { type: 'p', children: [{ text: '' }] } as Node);
+    } else if (block.type === 'li') {
+      return Editor.insertText(editor, '\n');
     }
     return insertSoftBreak();
   };

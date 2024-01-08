@@ -12,6 +12,7 @@ import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
 import { handlePasteOnImageUrl, dummyData as imageDummyData, onKeyDown as onKeyDownForImage } from '~/components/slate/plugin/image';
 import { dummyData as inlineDummyData, onKeyDownForInline } from '~/components/slate/plugin/inline/inline';
 import { LinkPlugin, isFloatingLinkOpenAtom, isFocusOnLink, isNewLinkShortcut } from '~/components/slate/plugin/inline/link';
+import { onKeyDownForList } from '~/components/slate/plugin/list/list';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
 export { links };
@@ -107,6 +108,8 @@ export const MySlate = () => {
           } else if (onKeyDownForImage(event, editor)) {
             return;
           } else if (onKeyDownForInline(event, editor)) {
+            return;
+          } else if (onKeyDownForList(event, editor)) {
             return;
           }
         }}

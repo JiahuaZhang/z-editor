@@ -273,8 +273,21 @@ export const dummyData = [
             children: [{ text: 'A nested list item' }],
           },
           {
-            type: 'li',
-            children: [{ text: 'Another nested list item' }],
+            type: 'ul',
+            children: [
+              {
+                type: 'li',
+                children: [{ text: 'A nested list item' }],
+              },
+              {
+                type: 'li',
+                children: [{ text: 'super nested list item' }],
+              },
+              {
+                type: 'li',
+                children: [{ text: 'super super nested list item' }],
+              },
+            ],
           },
           {
             type: 'li',

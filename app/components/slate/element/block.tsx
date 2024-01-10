@@ -289,9 +289,16 @@ export const dummyData = [
               },
             ],
           },
+          { type: 'li', children: [{ text: 'after nested item' }] },
           {
             type: 'li',
-            children: [{ text: 'still nested list item' }],
+            children: [
+              { text: 'still nested list item' },
+              {
+                type: 'ul',
+                children: [{ type: 'li', children: [{ text: 'I am nested' }] }],
+              }
+            ],
           },
         ],
       },
@@ -303,6 +310,24 @@ export const dummyData = [
         type: 'li',
         children: [{ text: 'still a list item' }],
       },
-    ]
-  }
+      {
+        type: 'li',
+        children: [{ text: 'random list item' }],
+      },
+      {
+        type: 'li',
+        children: [
+          { text: 'another list item' },
+          {
+            type: 'ul', children: [
+              {
+                type: 'li',
+                children: [{ text: 'still a list item' }], // relocated to here
+              },
+            ]
+          }
+        ],
+      }
+    ],
+  },
 ];

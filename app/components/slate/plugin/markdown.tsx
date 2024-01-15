@@ -1,12 +1,12 @@
 import { Editor, Element, Node, Range, Transforms } from 'slate';
 import { insertText as insertCodeText } from './code';
 
-// todo, add '1.' for ordered list
 // and [], [x] for check list item
 const SHORTCUTS = {
   '*': 'li',
   '-': 'li',
   '+': 'li',
+  '1.': 'li',
   '>': 'blockquote',
   '#': 'h1',
   '##': 'h2',
@@ -62,8 +62,9 @@ export const withMarkdownShortcuts = (editor: Editor) => {
     );
 
     if (type === 'li') {
+      const parentType = beforeText === '1.' ? 'ol' : 'ul';
       Transforms.wrapNodes(editor,
-        { type: 'ul', children: [] } as Element,
+        { type: parentType, children: [] } as Element,
         { match: n => !Editor.isEditor(n) && Element.isElement(n) && (n as any).type === 'li' });
     }
 

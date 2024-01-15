@@ -88,6 +88,7 @@ const Blockquote = ({ children, attributes }: RenderElementProps) => {
 const UnorderedList = ({ children, attributes }: RenderElementProps) => {
   return <ul un-list='disc'
     un-pl='4'
+    un-indent='[&>li]:-2'
     {...attributes} >
     {children}
   </ul>;
@@ -96,14 +97,14 @@ const UnorderedList = ({ children, attributes }: RenderElementProps) => {
 const OrderedList = ({ children, attributes }: RenderElementProps) => {
   return <ol un-list='decimal'
     un-pl='4'
+    un-indent='[&>li]:-1'
     {...attributes} >
     {children}
   </ol>;
 };
 
 const ListItem = ({ children, attributes }: RenderElementProps) => {
-  return <li un-indent='-2'
-    {...attributes} >
+  return <li {...attributes} >
     {children}
   </li>;
 };
@@ -257,77 +258,5 @@ export const dummyData = [
   {
     type: 'blockquote',
     children: [{ text: 'A line of text in a blockquote' }],
-  },
-  {
-    type: 'ul',
-    children: [
-      {
-        type: 'li',
-        children: [{ text: '1st item' }],
-      },
-      {
-        type: 'ul',
-        children: [
-          {
-            type: 'li',
-            children: [{ text: 'A nested list item' }],
-          },
-          {
-            type: 'ul',
-            children: [
-              {
-                type: 'li',
-                children: [{ text: 'A nested list item' }],
-              },
-              {
-                type: 'li',
-                children: [{ text: 'super nested list item' }],
-              },
-              {
-                type: 'li',
-                children: [{ text: 'super super nested list item' }],
-              },
-            ],
-          },
-          { type: 'li', children: [{ text: 'after nested item' }] },
-          {
-            type: 'li',
-            children: [
-              { text: 'still nested list item' },
-              {
-                type: 'ul',
-                children: [{ type: 'li', children: [{ text: 'I am nested' }] }],
-              }
-            ],
-          },
-        ],
-      },
-      {
-        type: 'li',
-        children: [{ text: 'another list item' }],
-      },
-      {
-        type: 'li',
-        children: [{ text: 'still a list item' }],
-      },
-      {
-        type: 'li',
-        children: [{ text: 'random list item' }],
-      },
-      {
-        type: 'li',
-        children: [
-          { text: 'another list item' },
-          {
-            type: 'ul', children: [
-              {
-                type: 'li',
-                children: [{ text: 'still a list item' }], // relocated to here
-              },
-            ]
-          }
-        ],
-      }
-    ],
   },
 ];

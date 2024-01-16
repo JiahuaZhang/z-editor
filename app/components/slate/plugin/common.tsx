@@ -5,6 +5,7 @@ import { EMBED_TYPES } from './embed';
 import { ImageType, fileToImageNode } from './image';
 import { HASH_TAG_TYPE, insertHashTagText } from './inline/hash-tag';
 import { LINK_TYPE } from './inline/link';
+import { normalizeListNode } from './list/list';
 
 const AUTO_ESCAPE_TYPE = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
 
@@ -48,7 +49,7 @@ export const onDOMBeforeInput = (editor: Editor, event: InputEvent) => {
 };
 
 export const withCommon = (editor: Editor) => {
-  const { insertBreak, insertData, insertText, insertSoftBreak, isVoid, isInline } = editor;
+  const { insertBreak, insertData, insertText, insertSoftBreak, isVoid, isInline, normalizeNode } = editor;
 
   editor.insertBreak = () => {
     const ancestor = editor.above();
@@ -109,6 +110,11 @@ export const withCommon = (editor: Editor) => {
 
   editor.isInline = node => {
     return [LINK_TYPE, HASH_TAG_TYPE].includes(node.type) || isInline(node);
+  };
+
+  editor.normalizeNode = entry => {
+    if (normalizeListNode(entry, editor)) return;
+    normalizeNode(entry);
   };
 
   return editor;

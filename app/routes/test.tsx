@@ -12,7 +12,7 @@ import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
 import { handlePasteOnImageUrl, dummyData as imageDummyData, onKeyDown as onKeyDownForImage } from '~/components/slate/plugin/image';
 import { dummyData as inlineDummyData, onKeyDownForInline } from '~/components/slate/plugin/inline/inline';
 import { LinkPlugin, isFloatingLinkOpenAtom, isFocusOnLink, isNewLinkShortcut } from '~/components/slate/plugin/inline/link';
-import { onKeyDownForList } from '~/components/slate/plugin/list/list';
+import { dummyData as listDummyData, onKeyDownForList } from '~/components/slate/plugin/list/list';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
 export { links };
@@ -61,6 +61,7 @@ const CustomEditor = {
 };
 
 const initialValue = [
+  ...listDummyData,
   ...blockDummyData,
   ...inlineDummyData,
   ...imageDummyData,

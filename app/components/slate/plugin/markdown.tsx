@@ -1,7 +1,7 @@
 import { Editor, Element, Node, Range, Transforms } from 'slate';
 import { insertText as insertCodeText } from './code';
+import { CHECK_LIST_ITEM_TYPE } from './list/list';
 
-// and [], [x] for check list item
 const SHORTCUTS = {
   '*': 'li',
   '-': 'li',
@@ -14,6 +14,8 @@ const SHORTCUTS = {
   '####': 'h4',
   '#####': 'h5',
   '######': 'h6',
+  '[]': CHECK_LIST_ITEM_TYPE,
+  '[x]': CHECK_LIST_ITEM_TYPE,
 };
 
 export const withMarkdownShortcuts = (editor: Editor) => {
@@ -60,8 +62,12 @@ export const withMarkdownShortcuts = (editor: Editor) => {
       { type } as Partial<Node>,
       { match: n => Element.isElement(n) && Editor.isBlock(editor, n) }
     );
-
-    if (type === 'li') {
+    if (beforeText === '[x]') {
+      Transforms.setNodes(
+        editor,
+        { type, checked: true } as Partial<Node>,
+      );
+    } else if (type === 'li') {
       const parentType = beforeText === '1.' ? 'ol' : 'ul';
       Transforms.wrapNodes(editor,
         { type: parentType, children: [] } as Element,

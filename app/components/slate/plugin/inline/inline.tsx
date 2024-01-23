@@ -7,6 +7,8 @@ import { LINK_TYPE } from './link';
 export const InlineChromiumBugfix = () => <span contentEditable={false} un-text='0'>{' '}</span>;
 
 export const onKeyDownForInline = (event: React.KeyboardEvent, editor: Editor) => {
+  if (event.shiftKey) return;
+
   if (event.key === 'ArrowLeft') {
     event.preventDefault();
     Transforms.move(editor, { unit: 'offset', reverse: true });
@@ -14,7 +16,6 @@ export const onKeyDownForInline = (event: React.KeyboardEvent, editor: Editor) =
     event.preventDefault();
     Transforms.move(editor, { unit: 'offset' });
   }
-
 };
 
 // export const HashTag = ({ children, attributes }: RenderElementProps) => {

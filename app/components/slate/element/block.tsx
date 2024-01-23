@@ -1,12 +1,10 @@
-import { Element, Transforms } from 'slate';
-import { ReactEditor, RenderElementProps, useReadOnly, useSlateStatic } from 'slate-react';
+import { RenderElementProps } from 'slate-react';
 import { CodeBlock, CodeBlockType } from '../plugin/code';
 import { renderEmbed } from '../plugin/embed';
 import { ImageBlock, ImageType } from '../plugin/image';
 import { HASH_TAG_TYPE, HashTag } from '../plugin/inline/hash-tag';
 import { LINK_TYPE, Link } from '../plugin/inline/link';
-
-export const CHECK_LIST_ITEM_TYPE = 'check-list-item';
+import { CHECK_LIST_ITEM_TYPE, CheckListItem, ListItem, OrderedList, UnorderedList } from '../plugin/list/list';
 
 const H1 = ({ children, attributes }: RenderElementProps) => {
   return <h1
@@ -85,73 +83,6 @@ const Blockquote = ({ children, attributes }: RenderElementProps) => {
   </blockquote>;
 };
 
-const UnorderedList = ({ children, attributes }: RenderElementProps) => {
-  return <ul un-list='disc'
-    un-pl='4'
-    un-indent='[&>li]:-2'
-    {...attributes} >
-    {children}
-  </ul>;
-};
-
-const OrderedList = ({ children, attributes }: RenderElementProps) => {
-  return <ol un-list='decimal'
-    un-pl='4'
-    un-indent='[&>li]:-1'
-    {...attributes} >
-    {children}
-  </ol>;
-};
-
-const ListItem = ({ children, attributes }: RenderElementProps) => {
-  return <li {...attributes} >
-    {children}
-  </li>;
-};
-
-// todo: bugfix
-// checkbox is not tab negatiable, should be able to focus checkbox
-// through arrow <, >, v, ^, and visually show the checkbox is focus or not
-// and enable to use key space / enter to toggle on/off
-const CheckListItem = ({ children, element, attributes }: RenderElementProps) => {
-  const editor = useSlateStatic();
-  const readOnly = useReadOnly();
-  const { checked } = element as any;
-
-  return (
-    <div
-      un-flex='~ items-center'
-      {...attributes}
-    >
-      <input
-        un-border='rounded'
-        un-h='4'
-        un-w='4'
-        un-accent='blue-500'
-        un-cursor='pointer'
-        type="checkbox"
-        checked={checked}
-        onChange={event => {
-          Transforms.setNodes(editor,
-            { checked: event.target.checked, } as Partial<Element>,
-            { at: ReactEditor.findPath(editor as ReactEditor, element) });
-        }}
-      />
-      <span
-        un-flex='1'
-        un-m='l-2'
-        un-text={`${checked && 'gray-500'}`}
-        un-font={`${checked && 'italic'}`}
-        un-decoration={`${checked && 'line-through'}`}
-        contentEditable={!readOnly}
-        suppressContentEditableWarning
-      >
-        {children}
-      </span>
-    </div >
-  );
-};
-
 export const renderElement = (props: RenderElementProps) => {
   switch ((props.element as any).type as string) {
     case 'blockquote':
@@ -193,36 +124,6 @@ export const renderElement = (props: RenderElementProps) => {
 };
 
 export const dummyData = [
-  {
-    type: CHECK_LIST_ITEM_TYPE,
-    checked: true,
-    children: [{ text: 'Slide to the left.' }],
-  },
-  {
-    type: CHECK_LIST_ITEM_TYPE,
-    checked: false,
-    children: [{ text: 'Criss-cross.' }],
-  },
-  {
-    type: CHECK_LIST_ITEM_TYPE,
-    checked: true,
-    children: [{ text: 'Criss-cross!' }],
-  },
-  {
-    type: CHECK_LIST_ITEM_TYPE,
-    checked: false,
-    children: [{ text: 'Cha cha real smooth…' }],
-  },
-  {
-    type: CHECK_LIST_ITEM_TYPE,
-    checked: false,
-    children: [{ text: "Let's go to work!" }],
-  },
-  {
-    type: CHECK_LIST_ITEM_TYPE,
-    checked: false,
-    children: [{ text: "" }],
-  },
   {
     type: 'p',
     children: [{ text: 'Try it out for yourself!' }],

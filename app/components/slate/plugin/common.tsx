@@ -1,11 +1,10 @@
 import { Editor, Node, Range, Transforms } from 'slate';
-import { CHECK_LIST_ITEM_TYPE } from '../element/block';
 import { CodeBlockType, CodeLineType, insertBreak as insertCodeBreak } from './code';
 import { EMBED_TYPES } from './embed';
 import { ImageType, fileToImageNode } from './image';
 import { HASH_TAG_TYPE, insertHashTagText } from './inline/hash-tag';
 import { LINK_TYPE } from './inline/link';
-import { normalizeListNode } from './list/list';
+import { CHECK_LIST_ITEM_TYPE, normalizeListNode } from './list/list';
 
 const AUTO_ESCAPE_TYPE = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
 

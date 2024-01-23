@@ -1,4 +1,4 @@
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useState } from 'react';
 import { BaseEditor, Editor, Element, Transforms, createEditor } from 'slate';
 import { withHistory } from 'slate-history';
@@ -12,7 +12,7 @@ import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
 import { handlePasteOnImageUrl, dummyData as imageDummyData, onKeyDown as onKeyDownForImage } from '~/components/slate/plugin/image';
 import { dummyData as inlineDummyData, onKeyDownForInline } from '~/components/slate/plugin/inline/inline';
 import { LinkPlugin, isFloatingLinkOpenAtom, isFocusOnLink, isNewLinkShortcut } from '~/components/slate/plugin/inline/link';
-import { dummyData as listDummyData, onKeyDownForList } from '~/components/slate/plugin/list/list';
+import { currentCheckListCheckBoxAtom, dummyData as listDummyData, onKeyDownForCheckList, onKeyDownForList } from '~/components/slate/plugin/list/list';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 
 export { links };
@@ -74,6 +74,7 @@ export const MySlate = () => {
   const [editor] = useState(() => withMarkdownShortcuts(withCommon(withHistory(withReact(createEditor())))));
   const decorate = useDecorate(editor);
   const setIsFloatingLinkOpen = useSetAtom(isFloatingLinkOpenAtom);
+  const currentCheckListCheckBox = useAtomValue(currentCheckListCheckBoxAtom);
 
   return <div >
     <Slate
@@ -101,18 +102,23 @@ export const MySlate = () => {
         un-border='2 orange-200'
         un-p='2'
         onKeyDown={event => {
+          // console.log('key', event.key);
+
           if (isNewLinkShortcut(event.nativeEvent)) {
             event.preventDefault();
             if (!isFocusOnLink(editor)) {
               setIsFloatingLinkOpen(prev => !prev);
             }
-          } else if (onKeyDownForImage(event, editor)) {
             return;
-          } else if (onKeyDownForInline(event, editor)) {
+          } else if (onKeyDownForImage(event, editor)) {
             return;
           } else if (onKeyDownForList(event, editor)) {
             return;
+          } else if (onKeyDownForCheckList(event, editor, currentCheckListCheckBox)) {
+            return;
           }
+
+          onKeyDownForInline(event, editor);
         }}
         onPaste={event => {
           const text = event.clipboardData.getData('text/plain');

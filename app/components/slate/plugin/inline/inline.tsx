@@ -10,16 +10,11 @@ export const onKeyDownForInline = (event: React.KeyboardEvent, editor: Editor) =
   if (event.key === 'ArrowLeft') {
     event.preventDefault();
     Transforms.move(editor, { unit: 'offset', reverse: true });
-    return true;
-  }
-
-  if (event.key === 'ArrowRight') {
+  } else if (event.key === 'ArrowRight') {
     event.preventDefault();
     Transforms.move(editor, { unit: 'offset' });
-    return true;
   }
 
-  return false;
 };
 
 // export const HashTag = ({ children, attributes }: RenderElementProps) => {

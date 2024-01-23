@@ -1,6 +1,21 @@
-list:
-indentation, outdentation
-refer to Notion list!
+[], [-], [x], todo-list update
+check-list, ctrl + enter to escape
+
+slash dropdown
+/p, /paragraph,
+/blockquote
+/list-item
+/bold, /underline, /strike, /code, /heading, /link
+
+smart match
+/code-jsx
+/code-js
+/code-c
+/code python
+
+key tab, enter interaction
+
+select text, start with /, it could smartly retrigger dropdown 
 
 smart collect #hash tags on meta data
 

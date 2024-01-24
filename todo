@@ -1,5 +1,22 @@
-[], [-], [x], todo-list update
-check-list, ctrl + enter to escape
+try approach:
+with / => {
+  type: 'dropdown',
+  meta: { ... data  },
+  children: [
+    {
+      text: ''
+    }
+  ]
+}
+void element?
+
+=> Customized Escape, with Escape key => convert it to strign `/` plus some text?
+
+/
+only => default dropdown
+* should be interactable..
+
+/ + Escape = ignore this / only
 
 slash dropdown
 /p, /paragraph,
@@ -13,11 +30,25 @@ smart match
 /code-c
 /code python
 
-key tab, enter interaction
+key tab, enter interaction, ctrl + k smart retrigger
+let's say, I typed /code, then press Escape by accident
+if I press ctrl + k, with cursor after it, it would smartly retrigger dropdown
 
 select text, start with /, it could smartly retrigger dropdown 
 
+/split, (2, 3, 4, ...)
+configurable, could expand, collapsed
+
+?
+/timeline
+
 smart collect #hash tags on meta data
+
+/notification
+database sync
+
+color font
+color background
 
 adding drag & drop to relocate element
 https://dev.to/devterminal/slatejs-dnd-kit-improving-rich-text-editor-ux-by-adding-drag-and-drop-23d3

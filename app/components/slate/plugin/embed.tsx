@@ -37,68 +37,80 @@ const YouTube = ({ children, element, attributes }: RenderElementProps) => {
 };
 
 const Facebook = ({ children, element, attributes }: RenderElementProps) => {
+  const isSelected = useSelected();
+  const isFocused = useFocused();
   const { url } = element as any;
-  return <div
-    contentEditable={false}
-    un-flex='~ justify-center'
-    {...attributes} >
-    <FacebookEmbed url={url!} />
+
+  return <div {...attributes} >
     {children}
+    <div un-flex='~ justify-center' contentEditable={false} >
+      <FacebookEmbed un-shadow={`${isSelected && isFocused && '[0_0_0_3px_#b4d5ff]'}`} url={url!} />
+    </div>
   </div>;
 };
 
 const Instagram = ({ children, element, attributes }: RenderElementProps) => {
+  const isSelected = useSelected();
+  const isFocused = useFocused();
   const { url } = element as any;
-  return <div
-    contentEditable={false}
-    un-flex='~ justify-center'
-    {...attributes}>
-    <InstagramEmbed url={url!} width={500} />
+
+  return <div {...attributes} >
     {children}
+    <div un-flex='~ justify-center' contentEditable={false}>
+      <InstagramEmbed un-shadow={`${isSelected && isFocused && '[0_0_0_3px_#b4d5ff]'}`} url={url!} width={500} />
+    </div>
   </div>;
 };
 
 const LinkedIn = ({ children, element, attributes }: RenderElementProps) => {
+  const isSelected = useSelected();
+  const isFocused = useFocused();
   const { url } = element as any;
-  return <div
-    contentEditable={false}
-    un-flex='~ justify-center'
-    {...attributes}>
-    <LinkedInEmbed url={url!} width={500} />
+
+  return <div {...attributes} >
     {children}
+    <div un-flex='~ justify-center' contentEditable={false}>
+      <LinkedInEmbed un-shadow={`${isSelected && isFocused && '[0_0_0_3px_#b4d5ff]'}`} url={url!} width={500} />
+    </div>
   </div>;
 };
 
 const Pinterest = ({ children, element, attributes }: RenderElementProps) => {
+  const isSelected = useSelected();
+  const isFocused = useFocused();
   const { url } = element as any;
-  return <div
-    contentEditable={false}
-    un-flex='~ justify-center'
-    {...attributes}>
-    <PinterestEmbed url={url!} height={540} />
+
+  return <div {...attributes} >
     {children}
+    <div un-flex='~ justify-center' contentEditable={false}>
+      <PinterestEmbed un-shadow={`${isSelected && isFocused && '[0_0_0_3px_#b4d5ff]'}`} url={url!} height={540} />
+    </div>
   </div>;
 };
 
 const TikTok = ({ children, element, attributes }: RenderElementProps) => {
+  const isSelected = useSelected();
+  const isFocused = useFocused();
   const { url } = element as any;
-  return <div
-    contentEditable={false}
-    un-flex='~ justify-center'
-    {...attributes}>
-    <TikTokEmbed url={url!} />
+
+  return <div {...attributes} >
     {children}
+    <div un-flex='~ justify-center' contentEditable={false}>
+      <TikTokEmbed un-shadow={`${isSelected && isFocused && '[0_0_0_3px_#b4d5ff]'}`} url={url!} />
+    </div>
   </div>;
 };
 
 const Twitter = ({ children, element, attributes }: RenderElementProps) => {
+  const isSelected = useSelected();
+  const isFocused = useFocused();
   const { url } = element as any;
-  return <div
-    contentEditable={false}
-    un-flex='~ justify-center'
-    {...attributes}>
-    <TwitterEmbed url={url!} width={400} />
+
+  return <div {...attributes} >
     {children}
+    <div un-flex='~ justify-center' contentEditable={false}>
+      <TwitterEmbed un-shadow={`${isSelected && isFocused && '[0_0_0_3px_#b4d5ff]'}`} url={url!} width={400} />
+    </div>
   </div>;
 };
 
@@ -110,7 +122,7 @@ export const renderEmbed = (props: RenderElementProps) => {
       return <Facebook {...props} />;
     case 'instagram':
       return <Instagram {...props} />;
-    case 'linkedin':
+    case 'linkedIn':
       return <LinkedIn {...props} />;
     case 'pinterest':
       return <Pinterest {...props} />;
@@ -166,7 +178,7 @@ const handleLinkedIn = (text: string, editor: Editor) => {
   if (!matches) { return false; }
 
   Transforms.insertNodes(
-    editor, [{ type: 'linkedin', url: text, children: [{ text: '' }] } as Node]
+    editor, [{ type: 'linkedIn', url: text, children: [{ text: '' }] } as Node]
   );
   return true;
 };
@@ -234,12 +246,12 @@ export const dummyData = [
   //   children: [{ text: '' }]
   // },
   // {
-  //   type: 'linkedin',
+  //   type: 'linkedIn',
   //   url: 'https://www.linkedin.com/embed/feed/update/urn:li:share:6898694772484112384',
   //   children: [{ text: '' }]
   // },
   // {
-  //   type: 'linkedin',
+  //   type: 'linkedIn',
   //   url: 'https://www.linkedin.com/embed/feed/update/urn:li:share:7109495184224124928',
   //   children: [{ text: '' }]
   // },
@@ -263,14 +275,9 @@ export const dummyData = [
   //   url: 'https://www.facebook.com/photo/?fbid=779946203929812&set=a.537750521482716',
   //   children: [{ text: '' }]
   // },
-  // {
-  //   type: 'check-list-item',
-  //   checked: true,
-  //   children: [{ text: 'Slide to the right.' }],
-  // },
   {
     type: 'youtube',
     id: 'gwOhmYGihUw',
     children: [{ text: '' }]
   },
-];;
+];

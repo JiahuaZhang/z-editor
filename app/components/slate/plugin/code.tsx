@@ -81,11 +81,11 @@ export const toCodeLines = (content: string): Element[] => content
 
 export const insertText = (text: string) => {
   if (text === '```') {
-    return { type: CodeBlockType, language: 'typescript' } as Partial<Node>;
+    return { type: CodeBlockType, language: 'typescript', children: [] };
   } else if (text.startsWith('```')) {
     const language = text.replace('```', '');
     if (SupportedCodeLanguage.includes(language)) {
-      return { type: CodeBlockType, language } as Partial<Node>;
+      return { type: CodeBlockType, language, children: [] };
     }
   }
 

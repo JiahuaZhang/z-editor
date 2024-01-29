@@ -1,5 +1,5 @@
 import { Editor, Element, Node, Range, Transforms } from 'slate';
-import { insertText as insertCodeText } from './code';
+import { CodeLineType, insertText as insertCodeText } from './code';
 import { CHECK_LIST_ITEM_TYPE } from './list/list';
 
 const SHORTCUTS = {
@@ -44,7 +44,8 @@ export const withMarkdownShortcuts = (editor: Editor) => {
       if (Range.isExpanded(range)) {
         Transforms.delete(editor);
       }
-      return Transforms.setNodes(editor, codeNode);
+      Transforms.setNodes(editor, { type: CodeLineType, });
+      return Transforms.wrapNodes(editor, codeNode);
     }
 
     if (!(beforeText in SHORTCUTS)) {

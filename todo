@@ -12,6 +12,10 @@ void element?
 
 => Customized Escape, with Escape key => convert it to strign `/` plus some text?
 
+=> need to fully customzied
+popoup的默认位置，就不够自然
+而且自己要考虑是放上面还是放下面——根据用户现在的位置，智能调整——》所以的跳出的内容可以scroll
+
 /
 only => default dropdown
 * should be interactable..

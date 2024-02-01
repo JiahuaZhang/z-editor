@@ -14,6 +14,7 @@ import { dummyData as inlineDummyData, onKeyDownForInline } from '~/components/s
 import { LinkPlugin, isFloatingLinkOpenAtom, isFocusOnLink, isNewLinkShortcut } from '~/components/slate/plugin/inline/link';
 import { currentCheckListCheckBoxAtom, dummyData as listDummyData, onKeyDownForCheckList, onKeyDownForList } from '~/components/slate/plugin/list/list';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
+import { inlinePanelDummyData } from '~/components/slate/plugin/panel/inline-panel';
 
 export { links };
 
@@ -63,6 +64,7 @@ const CustomEditor = {
 const initialValue = [
   ...listDummyData,
   ...blockDummyData,
+  ...inlinePanelDummyData,
   ...inlineDummyData,
   ...imageDummyData,
   ...codeDummyData,

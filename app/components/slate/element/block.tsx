@@ -5,6 +5,7 @@ import { ImageBlock, ImageType } from '../plugin/image';
 import { HASH_TAG_TYPE, HashTag } from '../plugin/inline/hash-tag';
 import { LINK_TYPE, Link } from '../plugin/inline/link';
 import { CHECK_LIST_ITEM_TYPE, CheckListItem, ListItem, OrderedList, UnorderedList } from '../plugin/list/list';
+import { InlinePanel, InlinePanelType } from '../plugin/panel/inline-panel';
 
 const H1 = ({ children, attributes }: RenderElementProps) => {
   return <h1
@@ -115,6 +116,8 @@ export const renderElement = (props: RenderElementProps) => {
       return <Link {...props} />;
     case HASH_TAG_TYPE:
       return <HashTag {...props} />;
+    case InlinePanelType:
+      return <InlinePanel {...props} />;
     case 'p':
       return <P {...props} />;
   }

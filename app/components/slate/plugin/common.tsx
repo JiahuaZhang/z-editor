@@ -5,6 +5,7 @@ import { ImageType, fileToImageNode } from './image';
 import { HASH_TAG_TYPE, insertHashTagText } from './inline/hash-tag';
 import { LINK_TYPE } from './inline/link';
 import { CHECK_LIST_ITEM_TYPE, normalizeListNode } from './list/list';
+import { InlinePanelType, insertPanelText } from './panel/inline-panel';
 
 const AUTO_ESCAPE_TYPE = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
 
@@ -81,6 +82,8 @@ export const withCommon = (editor: Editor) => {
   };
 
   editor.insertText = (text) => {
+    if (insertPanelText(editor, text)) return;
+
     if (insertHashTagText(editor, text)) return;
 
     insertText(text);
@@ -104,11 +107,11 @@ export const withCommon = (editor: Editor) => {
   };
 
   editor.isVoid = (node) => {
-    return [ImageType, ...EMBED_TYPES].includes(node.type) || isVoid(node);
+    return [InlinePanelType, ImageType, ...EMBED_TYPES].includes(node.type) || isVoid(node);
   };
 
   editor.isInline = node => {
-    return [LINK_TYPE, HASH_TAG_TYPE].includes(node.type) || isInline(node);
+    return [LINK_TYPE, HASH_TAG_TYPE, InlinePanelType].includes(node.type) || isInline(node);
   };
 
   editor.normalizeNode = entry => {

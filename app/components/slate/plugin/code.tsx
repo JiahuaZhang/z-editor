@@ -1,4 +1,3 @@
-import { LinksFunction } from '@remix-run/react/dist/routeModules';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-java.js';
 import 'prismjs/components/prism-javascript.js';
@@ -11,9 +10,8 @@ import 'prismjs/components/prism-tsx.js';
 import 'prismjs/components/prism-typescript.js';
 import { Descendant, Editor, Element, Node, NodeEntry, Path, Range, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, RenderLeafProps, useSlate, useSlateStatic } from 'slate-react';
-import prismCSS from './code.prism.css';
+import './code.prism.css';
 
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: prismCSS }];
 export { Prism };
 export const CodeBlockType = 'code-block';
 export const CodeLineType = 'code-line';

@@ -5,7 +5,7 @@ import { withHistory } from 'slate-history';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import { dummyData as blockDummyData, renderElement } from '~/components/slate/element/block';
 import { dummyData as leafDummyData, renderLeaf } from '~/components/slate/element/leaf';
-import { CodePlugin, dummyData as codeDummyData, links, useDecorate } from '~/components/slate/plugin/code';
+import { CodePlugin, dummyData as codeDummyData, useDecorate } from '~/components/slate/plugin/code';
 import { onDOMBeforeInput as commonOnDOMBeforeInput, withCommon } from '~/components/slate/plugin/common';
 import { dummyData as embedDummyData, handleEmbed } from '~/components/slate/plugin/embed';
 import { FloatingToolbar } from '~/components/slate/plugin/floating-toolbar';
@@ -15,8 +15,6 @@ import { LinkPlugin, isFloatingLinkOpenAtom, isFocusOnLink, isNewLinkShortcut } 
 import { currentCheckListCheckBoxAtom, dummyData as listDummyData, onKeyDownForCheckList, onKeyDownForList } from '~/components/slate/plugin/list/list';
 import { withMarkdownShortcuts } from '~/components/slate/plugin/markdown';
 import { inlinePanelDummyData } from '~/components/slate/plugin/panel/inline-panel';
-
-export { links };
 
 type CustomElement = { type: 'p' | string; children: CustomText[]; };
 type CustomText = { text: string; };

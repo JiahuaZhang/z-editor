@@ -1,21 +1,12 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction } from "@remix-run/node";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration,
+  ScrollRestoration
 } from "@remix-run/react";
-import reset from '@unocss/reset/tailwind.css';
-import unocss from '~/styles/uno.css';
-
-export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: reset },
-  { rel: "stylesheet", href: unocss },
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-];
+import '@unocss/reset/tailwind.css';
+import '~/styles/uno.css';
 
 export default function App() {
   return (
@@ -30,7 +21,6 @@ export default function App() {
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
   );

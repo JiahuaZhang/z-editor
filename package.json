@@ -4,14 +4,13 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "npm run build:css && remix vite:build",
-    "build:css": "unocss './app/**/*.{ts,tsx}' --out-file ./app/styles/uno.css",
-    "dev": "concurrently \"npm run dev:css\" \"remix vite:dev\"",
-    "dev:css": "npm run build:css -- --watch",
+    "build": "remix vite:build",
+    "dev": "remix vite:dev",
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@iconify-json/ci": "^1.1.13",
     "@remix-run/css-bundle": "^2.6.0",
     "@remix-run/node": "^2.6.0",
     "@remix-run/react": "^2.6.0",

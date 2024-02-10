@@ -14,6 +14,14 @@ export const UnorderedList = ({ children, attributes }: RenderElementProps) => {
   </ul>;
 };
 
+export const UnorderedListDropDown = () => <ul un-list='disc'
+  un-pl='4'
+  un-indent='[&>li]:-2'>
+  <li>
+    unordered list
+  </li>
+</ul>;
+
 export const OrderedList = ({ children, attributes }: RenderElementProps) => {
   return <ol un-list='decimal'
     un-pl='4'
@@ -22,6 +30,14 @@ export const OrderedList = ({ children, attributes }: RenderElementProps) => {
     {children}
   </ol>;
 };
+
+export const OrderedListDropDown = () => <ol un-list='decimal'
+  un-pl='4'
+  un-indent='[&>li]:-1'>
+  <li>
+    ordered list
+  </li>
+</ol>;
 
 export const ListItem = ({ children, attributes }: RenderElementProps) => {
   return <li {...attributes} >
@@ -123,6 +139,16 @@ export const CheckListItem = ({ children, element, attributes }: RenderElementPr
     </div >
   );
 };
+
+export const CheckListItemDropDown = () => <div un-flex='~ items-center' >
+  <input un-border='rounded'
+    un-h='4'
+    un-w='4'
+    un-accent='blue-500'
+    un-cursor='pointer'
+    type="checkbox" />
+  <span un-flex='1' un-m='l-2'>check list</span>
+</div>;
 
 export const normalizeListNode = (entry: NodeEntry, editor: Editor) => {
   const [node, path] = entry;

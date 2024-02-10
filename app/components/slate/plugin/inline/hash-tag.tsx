@@ -194,6 +194,18 @@ export const HashTag = ({ children, attributes, element }: RenderElementProps) =
   </Popover>;
 };
 
+export const HashTagDropDown = () => <Tag color='volcano'
+  un-text='sm'
+  un-px='1'
+  un-inline='~'
+  un-position='static'
+  un-me='0'
+>
+  <span contentEditable={false} un-text='0' >{' '}</span>
+  #hash-tag
+  <span contentEditable={false} un-text='0' >{' '}</span>
+</Tag>;
+
 export const insertHashTagText = (editor: Editor, text: string) => {
   if (text !== ' ') return false;
 

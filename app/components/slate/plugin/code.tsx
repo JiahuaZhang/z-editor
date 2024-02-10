@@ -72,6 +72,8 @@ export const CodeLeaf = ({ children, leaf: { text, ...rest }, attributes }: Rend
   </span>;
 };
 
+export const CodeLeafDropDown = () => <pre>code</pre>;
+
 export const toChildren = (content: string) => [{ text: content }];
 export const toCodeLines = (content: string): Element[] => content
   .split('\n')

@@ -259,6 +259,14 @@ export const Link = ({ children, attributes, element }: RenderElementProps) => {
   </Popover>;
 };
 
+export const LinkDropDown = () => <a un-text='blue-600 hover:blue-800 visited:purple-600'
+  un-cursor='pointer'
+>
+  <span contentEditable={false} un-text='0' >{' '}</span>
+  link
+  <span contentEditable={false} un-text='0' >{' '}</span>
+</a>;
+
 export const isFloatingLinkOpenAtom = atom(false);
 const LinkPanel = () => {
   const [isFloatingLinkOpen, setIsFloatingLinkOpen] = useAtom(isFloatingLinkOpenAtom);

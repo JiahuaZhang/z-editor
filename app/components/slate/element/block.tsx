@@ -17,6 +17,10 @@ const H1 = ({ children, attributes }: RenderElementProps) => {
   </h1>;
 };
 
+export const H1DropDown = () => <h1 un-text='4xl blue-950'
+  un-font='bold'
+  un-leading='tight'>Heading h1</h1>;
+
 const H2 = ({ children, attributes }: RenderElementProps) => {
   return <h2
     un-text='3xl blue-900'
@@ -26,6 +30,10 @@ const H2 = ({ children, attributes }: RenderElementProps) => {
     {children}
   </h2>;
 };
+
+export const H2DropDown = () => <h2 un-text='3xl blue-900'
+  un-font='bold'
+  un-leading='tight'>Heading h2</h2>;
 
 const H3 = ({ children, attributes }: RenderElementProps) => {
   return <h3
@@ -37,6 +45,10 @@ const H3 = ({ children, attributes }: RenderElementProps) => {
   </h3>;
 };
 
+export const H3DropDown = () => <h3 un-text='2xl blue-800'
+  un-font='bold'
+  un-leading='tight'>Heading h3</h3>;
+
 const H4 = ({ children, attributes }: RenderElementProps) => {
   return <h4
     un-text='xl blue-700'
@@ -46,6 +58,10 @@ const H4 = ({ children, attributes }: RenderElementProps) => {
     {children}
   </h4>;
 };
+
+export const H4DropDown = () => <h4 un-text='xl blue-700'
+  un-font='bold'
+  un-leading='tight'>Heading h4</h4>;
 
 const H5 = ({ children, attributes }: RenderElementProps) => {
   return <h5
@@ -57,6 +73,10 @@ const H5 = ({ children, attributes }: RenderElementProps) => {
   </h5>;
 };
 
+export const H5DropDown = () => <h5 un-text='lg blue-600'
+  un-font='bold'
+  un-leading='tight'>Heading h5</h5>;
+
 const H6 = ({ children, attributes }: RenderElementProps) => {
   return <h6
     un-text='base blue-500'
@@ -67,11 +87,17 @@ const H6 = ({ children, attributes }: RenderElementProps) => {
   </h6>;
 };
 
+export const H6DropDown = () => <h6 un-text='base blue-500'
+  un-font='bold'
+  un-leading='tight'>Heading h6</h6>;
+
 const P = ({ children, attributes }: RenderElementProps) => {
   return <p {...attributes} >
     {children}
   </p>;
 };
+
+export const PDropDown = () => <p>paragraph</p>;
 
 const Blockquote = ({ children, attributes }: RenderElementProps) => {
   return <blockquote
@@ -83,6 +109,11 @@ const Blockquote = ({ children, attributes }: RenderElementProps) => {
     {children}
   </blockquote>;
 };
+
+export const BlockquoteDropDown = () => <blockquote un-text='gray-700'
+  un-border='l-4 gray-400'
+  un-p='l-4'
+  un-font='italic'>blockquote</blockquote>;
 
 export const renderElement = (props: RenderElementProps) => {
   switch ((props.element as any).type as string) {

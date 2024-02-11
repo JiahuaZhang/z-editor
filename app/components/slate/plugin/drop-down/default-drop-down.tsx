@@ -4,6 +4,20 @@ import { CodeLeafDropDown } from '../code';
 import { HashTagDropDown } from '../inline/hash-tag';
 import { LinkDropDown } from '../inline/link';
 import { CheckListItemDropDown, OrderedListDropDown, UnorderedListDropDown } from '../list/list';
+import { TAB_INDEX } from './drop-down';
+
+const navigateDropDown = (event: React.KeyboardEvent) => {
+  if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
+    const focusableElements = document.querySelectorAll<HTMLElement>(`[tabindex="${TAB_INDEX}"]`);
+    const currentIndex = Array.from(focusableElements).indexOf(document.activeElement as HTMLElement);
+
+    if (event.key === 'ArrowUp') {
+      focusableElements[currentIndex > 1 ? currentIndex - 1 : 0]?.focus();
+    } else {
+      focusableElements[currentIndex + 1 < focusableElements.length ? currentIndex + 1 : currentIndex]?.focus();
+    }
+  }
+};
 
 const DropDownItem = ({ icon, children }: { icon: string, children: React.ReactNode; }) => {
   return <div un-grid='~ flow-col'
@@ -11,9 +25,12 @@ const DropDownItem = ({ icon, children }: { icon: string, children: React.ReactN
     un-gap='1'
     un-cursor='pointer'
     un-rounded='~'
-    un-bg='hover:gray-200'
-    un-hover='[&>i]:text-blue-4'
+    un-bg='hover:gray-200 focus:gray-200'
+    un-text='[&>i]:hover:blue-4 [&>i]:focus:blue-4'
+    un-outline='none'
     un-p='1'
+    tabIndex={TAB_INDEX}
+    onKeyDown={navigateDropDown}
   >
     <i className={icon} />
     {children}
@@ -63,10 +80,30 @@ export const DefaultDropDown = () => {
         un-gap='1'
         un-cursor='pointer'
         un-rounded='~'
-        un-bg='hover:gray-200'
-        un-hover='[&>button]:text-blue-4'
-        un-p='1' >
-        <button onClick={() => setIsHeadingExpanded(true)} >...</button>
+        un-bg='hover:gray-200 focus:gray-200'
+        un-text='[&>button]:hover:blue-4 [&>button]:focus:blue-4'
+        un-outline='none'
+        un-p='1'
+        tabIndex={TAB_INDEX}
+        role='button'
+        onClick={() => setIsHeadingExpanded(true)}
+        onKeyDown={event => {
+          if (['Enter', ' '].includes(event.key)) {
+            setIsHeadingExpanded(true);
+
+            const focusableElements = document.querySelectorAll<HTMLElement>(`[tabindex="${TAB_INDEX}"]`);
+            const currentIndex = Array.from(focusableElements).indexOf(document.activeElement as HTMLElement);
+            Promise.resolve()
+              .then(() => {
+                const focusableElements = document.querySelectorAll<HTMLElement>(`[tabindex="${TAB_INDEX}"]`);
+                focusableElements[currentIndex].focus();
+              });
+          } else {
+            navigateDropDown(event);
+          }
+        }}
+      >
+        <button tabIndex={-1}>...</button>
       </div>}
     </div>
     <div>
@@ -82,10 +119,30 @@ export const DefaultDropDown = () => {
         un-gap='1'
         un-cursor='pointer'
         un-rounded='~'
-        un-bg='hover:gray-200'
-        un-hover='[&>button]:text-blue-4'
-        un-p='1' >
-        <button onClick={() => setIsBasicBlockExpanded(true)} >...</button>
+        un-bg='hover:gray-200 focus:gray-200'
+        un-text='[&>button]:hover:blue-4 [&>button]:focus:blue-4'
+        un-outline='none'
+        un-p='1'
+        tabIndex={TAB_INDEX}
+        role='button'
+        onClick={() => setIsBasicBlockExpanded(true)}
+        onKeyDown={event => {
+          if (['Enter', ' '].includes(event.key)) {
+            setIsBasicBlockExpanded(true);
+
+            const focusableElements = document.querySelectorAll<HTMLElement>(`[tabindex="${TAB_INDEX}"]`);
+            const currentIndex = Array.from(focusableElements).indexOf(document.activeElement as HTMLElement);
+            Promise.resolve()
+              .then(() => {
+                const focusableElements = document.querySelectorAll<HTMLElement>(`[tabindex="${TAB_INDEX}"]`);
+                focusableElements[currentIndex].focus();
+              });
+          } else {
+            navigateDropDown(event);
+          }
+        }}
+      >
+        <button tabIndex={-1} >...</button>
       </div>}
     </div>
   </div >;

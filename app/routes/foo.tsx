@@ -1,11 +1,25 @@
 import { Popover } from 'antd';
+import { useAtom, useSetAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
+import { createEditor } from 'slate';
+import { Slate, withReact } from 'slate-react';
+import { DefaultDropDown } from '~/components/slate/plugin/drop-down/default-drop-down';
+import { dropDownActionAtom, dropDownNavigationEffect } from '~/components/slate/plugin/drop-down/drop-down';
+
+const keyActionMap = {
+  ArrowUp: 'up',
+  ArrowDown: 'down',
+  Enter: 'enter',
+  ' ': 'space',
+} as const;
 
 const Bar = () => {
   const [inputValue, setInputValue] = useState('');
   const ref = useRef<HTMLInputElement>(null);
   const mirrorRef = useRef<HTMLSpanElement>(null);
+  const setDropDownAction = useSetAtom(dropDownActionAtom);
+  useAtom(dropDownNavigationEffect);
 
   useEffect(() => ref.current?.focus(), []);
 
@@ -16,15 +30,7 @@ const Bar = () => {
     }
   }, [inputValue]);
 
-  const content = <div>
-    <div>1</div>
-    <div>2</div>
-    <div>3</div>
-    <div>4</div>
-    <div>5</div>
-  </div>;
-
-  return <Popover content={content} arrow={false} open placement='bottomLeft' >
+  return <Popover content={<DefaultDropDown />} arrow={false} open placement='bottomLeft' >
     <div un-position='relative' >
       <span un-position='absolute'
         un-left='6px'
@@ -39,6 +45,9 @@ const Bar = () => {
         un-pl='10px'
         value={inputValue}
         onChange={evengt => setInputValue(evengt.target.value)}
+        onKeyDown={event => {
+          Object.keys(keyActionMap).includes(event.key) && setDropDownAction(keyActionMap[event.key as keyof typeof keyActionMap]);
+        }}
       />
       <span ref={mirrorRef}
         un-position='absolute'
@@ -49,10 +58,16 @@ const Bar = () => {
   </Popover>;
 };
 
-const Foo = () => <ClientOnly>{
-  () => <div un-m='2' un-border='~ solid purple-200'>
-    <Bar />
-  </div>
-}</ClientOnly>;
+const Foo = () => {
+  const [editor] = useState(() => (withReact(createEditor())));
+
+  return <ClientOnly>{
+    () => <div un-m='2' un-border='~ solid purple-200'>
+      <Slate editor={editor} initialValue={[]} >
+        <Bar />
+      </Slate>
+    </div>
+  }</ClientOnly>;
+};
 
 export default Foo;

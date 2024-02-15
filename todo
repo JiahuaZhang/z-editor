@@ -1,3 +1,16 @@
+action base trigger:
+up / down arrow
+space & enter case issue
+space ?? ignore it for now?:
+  ? ignore?
+    up/down interaction, space / enter is natural.
+  trigger expansion?
+  regular typing ' '
+
+setAction --> feedback loop
+
+consume once schema? framework?
+
 try approach:
 with / => {
   type: 'dropdown',

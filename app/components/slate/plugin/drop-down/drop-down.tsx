@@ -1,30 +1,28 @@
-import { useAtom, atom } from 'jotai';
+import { atom } from 'jotai';
 import { atomEffect } from 'jotai-effect';
 
-export type DropDownAction = '' | 'up' | 'down' | 'space' | 'enter' | `query ${string}`;
-export type DropDownFeedback = '' | 'space';
+export type DropDownMessage = '' | 'up' | 'down' | 'space-trigger' | 'space' | 'enter' | `query ${string}`;
 
-export const dropDownActionAtom = atom<DropDownAction>('');
-export const dropDownFeedbackAtom = atom<DropDownFeedback>('');
+export const dropDownMessageAtom = atom<DropDownMessage>('');
 
 export const dropDownKeyAtom = atom('');
 export const dropDownOptionsAtom = atom<string[]>([]);
 
 export const dropDownNavigationEffect = atomEffect((get, set) => {
-  const dropDownAction = get(dropDownActionAtom);
+  const dropdownMessage = get(dropDownMessageAtom);
 
-  if (['up', 'down'].includes(dropDownAction)) {
+  if (['up', 'down'].includes(dropdownMessage)) {
     const key = get(dropDownKeyAtom);
     const options = get(dropDownOptionsAtom);
     const index = options.findIndex(option => option === key);
 
-    if ('up' === dropDownAction) {
+    if ('up' === dropdownMessage) {
       set(dropDownKeyAtom, options[index > 0 ? index - 1 : 0]);
     } else {
       set(dropDownKeyAtom, options[index < options.length - 1 ? index + 1 : index]);
     }
 
-    set(dropDownActionAtom, '');
+    set(dropDownMessageAtom, '');
   }
 
 });

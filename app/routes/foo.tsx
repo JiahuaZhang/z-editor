@@ -1,25 +1,25 @@
 import { Popover } from 'antd';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 import { createEditor } from 'slate';
 import { Slate, withReact } from 'slate-react';
 import { DefaultDropDown } from '~/components/slate/plugin/drop-down/default-drop-down';
-import { dropDownActionAtom, dropDownNavigationEffect } from '~/components/slate/plugin/drop-down/drop-down';
+import { dropDownMessageAtom, dropDownNavigationEffect } from '~/components/slate/plugin/drop-down/drop-down';
 
 const keyActionMap = {
   ArrowUp: 'up',
   ArrowDown: 'down',
   Enter: 'enter',
-  ' ': 'space',
+  ' ': 'space-trigger',
 } as const;
 
 const Bar = () => {
   const [inputValue, setInputValue] = useState('');
   const ref = useRef<HTMLInputElement>(null);
   const mirrorRef = useRef<HTMLSpanElement>(null);
-  const setDropDownAction = useSetAtom(dropDownActionAtom);
   useAtom(dropDownNavigationEffect);
+  const [dropdownMessage, setDropDownMessage] = useAtom(dropDownMessageAtom);
 
   useEffect(() => ref.current?.focus(), []);
 
@@ -29,6 +29,19 @@ const Bar = () => {
       ref.current.style.width = `${mirrorWidth + 20}px`;
     }
   }, [inputValue]);
+
+  useEffect(() => {
+    if (dropdownMessage === 'space') {
+      console.log('adding back space here?');
+
+      // issue: if user is typing in between characters?
+      setInputValue(prev => `${prev} `);
+      setDropDownMessage('');
+    }
+  }, [dropdownMessage]);
+
+  // console.log({ dropDownFeedback });
+
 
   return <Popover content={<DefaultDropDown />} arrow={false} open placement='bottomLeft' >
     <div un-position='relative' >
@@ -46,7 +59,13 @@ const Bar = () => {
         value={inputValue}
         onChange={evengt => setInputValue(evengt.target.value)}
         onKeyDown={event => {
-          Object.keys(keyActionMap).includes(event.key) && setDropDownAction(keyActionMap[event.key as keyof typeof keyActionMap]);
+          Object.keys(keyActionMap).includes(event.key) && setDropDownMessage(keyActionMap[event.key as keyof typeof keyActionMap]);
+
+          if (event.key === ' ') {
+            event.preventDefault();
+          }
+
+          // todo?, on up, down arrow, preserve event, if there's no dropdown, up down is back to normal navigation of input
         }}
       />
       <span ref={mirrorRef}

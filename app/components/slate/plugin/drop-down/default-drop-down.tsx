@@ -5,7 +5,7 @@ import { CodeLeafDropDown } from '../code';
 import { HashTagDropDown } from '../inline/hash-tag';
 import { LinkDropDown } from '../inline/link';
 import { CheckListItemDropDown, OrderedListDropDown, UnorderedListDropDown } from '../list/list';
-import { dropDownActionAtom, dropDownFeedbackAtom, dropDownKeyAtom, dropDownOptionsAtom } from './drop-down';
+import { dropDownKeyAtom, dropDownMessageAtom, dropDownOptionsAtom } from './drop-down';
 
 const DropDownItem = ({ icon, children }: { icon: string, children: React.ReactNode; }) => {
   const dropDownKey = useAtomValue(dropDownKeyAtom);
@@ -56,8 +56,7 @@ export const DefaultDropDown = () => {
   const [isBasicBlockExpanded, setIsBasicBlockExpanded] = useState(false);
   const [dropDownKey, setDropDownKey] = useAtom(dropDownKeyAtom);
   const setDropDownOptions = useSetAtom(dropDownOptionsAtom);
-  const [dropDownAction, setDropDownAction] = useAtom(dropDownActionAtom);
-  const [dropDownFeedback, setDropDownFeedback] = useAtom(dropDownFeedbackAtom);
+  const [dropDownMessage, setDropDownMessage] = useAtom(dropDownMessageAtom);
 
   useEffect(() => {
     const headingKeys = (isHeadingExpanded ? headings : [...headings.slice(0, 3), ['heading-expand']]).map(([icon, _]) => icon);
@@ -66,17 +65,34 @@ export const DefaultDropDown = () => {
   }, [isHeadingExpanded, isBasicBlockExpanded]);
 
   useEffect(() => {
-    if (['space', 'enter'].includes(dropDownAction)) {
+    if (['space', 'space-trigger'].includes(dropDownMessage)) {
       if (dropDownKey === 'heading-expand') {
         setIsHeadingExpanded(true);
         setDropDownKey(headings[3][0]);
+        setDropDownMessage('');
+        return;
       } else if (dropDownKey === 'basic-block-expand') {
         setIsBasicBlockExpanded(true);
         setDropDownKey(basicBlocks[3][0]);
+        setDropDownMessage('');
+        return;
       }
-      // todo
+
+      if (dropDownKey === 'i-ci:heading-h1') {
+        console.log('convert this to h1');
+        setDropDownMessage('');
+        return;
+      }
+
+      if (dropDownMessage === 'space-trigger') {
+        setDropDownMessage('space');
+        return;
+      } else {
+        setDropDownMessage('');
+      }
     }
-  }, [dropDownAction]);
+
+  }, [dropDownMessage]);
 
   return <div>
     <div>

@@ -1,11 +1,21 @@
 import { Popover } from 'antd';
+import { useAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
 import { Editor, Transforms } from 'slate';
 import { ReactEditor, RenderElementProps, useFocused, useSelected, useSlateStatic } from 'slate-react';
+import { DefaultDropDown } from '../drop-down/default-drop-down';
+import { dropDownMessageAtom, dropDownNavigationEffect } from '../drop-down/drop-down';
 
 const UnoStaticTrick = () => <div un-shadow='[0_0_0_3px_#b4d5ff]' ></div>;
 
 export const InlinePanelType = 'inline-panel';
+
+const keyActionMap = {
+  ArrowUp: 'up',
+  ArrowDown: 'down',
+  Enter: 'enter',
+  ' ': 'space-trigger',
+} as const;
 
 export const insertPanelText = (editor: Editor, text: string) => {
   if (text === '/') {
@@ -13,7 +23,7 @@ export const insertPanelText = (editor: Editor, text: string) => {
       editor,
       {
         type: InlinePanelType,
-        meta: { active: true },
+        state: { active: true },
         children: [{ text: '' }],
       } as any
     );
@@ -44,6 +54,8 @@ const ActivePanel = () => {
   const [inputValue, setInputValue] = useState('');
   const ref = useRef<HTMLInputElement>(null);
   const mirrorRef = useRef<HTMLSpanElement>(null);
+  useAtom(dropDownNavigationEffect);
+  const [dropdownMessage, setDropDownMessage] = useAtom(dropDownMessageAtom);
 
   useEffect(() => ref.current?.focus(), []);
 
@@ -54,18 +66,21 @@ const ActivePanel = () => {
     }
   }, [inputValue]);
 
-  const content = <div>
-    <div>1</div>
-    <div>2</div>
-    <div>3</div>
-    <div>4</div>
-  </div>;
+  useEffect(() => {
+    if (dropdownMessage === 'space') {
+      console.log('adding back space here?');
 
-  return <Popover content={content} arrow={false} open placement='bottomLeft' >
-    <div un-position='relative' >
+      // issue: if user is typing in between characters?
+      setInputValue(prev => `${prev} `);
+      setDropDownMessage('');
+    }
+  }, [dropdownMessage]);
+
+  return <Popover content={<DefaultDropDown />} arrow={false} open placement='bottomLeft' >
+    <span un-position='relative' >
       <span un-position='absolute'
         un-left='6px'
-        un-top='1.5px'
+        un-top='-2px'
       >
         /
       </span>
@@ -73,30 +88,38 @@ const ActivePanel = () => {
         un-outline='none'
         un-border='2px solid focus:blue-5 rounded'
         un-shadow='focus:[0_0_5px_#007bff]'
-        un-pl='10px'
+        un-pl='11px'
         onClick={event => event.stopPropagation()}
         value={inputValue}
         onChange={evengt => setInputValue(evengt.target.value)}
+        onKeyDown={event => {
+          Object.keys(keyActionMap).includes(event.key) && setDropDownMessage(keyActionMap[event.key as keyof typeof keyActionMap]);
+
+          if (event.key === ' ') {
+            event.preventDefault();
+          }
+        }}
       />
       <span ref={mirrorRef}
         un-position='absolute'
         un-invisible='~'
         un-whitespace='pre'
       >{inputValue}</span>
-    </div>
+    </span>
   </Popover>;
 };
 
-type InlinePanelMeta = {
+type InlinePanelState = {
   active: boolean;
 };
+
+type InlinePanelData = {};
 
 export const InlinePanel = ({ children, attributes, element }: RenderElementProps) => {
   const editor = useSlateStatic();
   const isSelected = useSelected();
   const isFocused = useFocused();
-  const meta: InlinePanelMeta = (element as any).meta;
-  console.log(meta);
+  const inlinePanelState: InlinePanelState = (element as any).state;
 
   return <span {...attributes} >
     {children}
@@ -104,17 +127,12 @@ export const InlinePanel = ({ children, attributes, element }: RenderElementProp
       un-cursor='pointer'
       contentEditable={false}
       onClick={() => {
-        console.log('toggle active for inline-panel');
-
         const path = ReactEditor.findPath(editor, element);
-        Transforms.setNodes(editor, { meta: { active: !meta.active } } as Partial<Node>, { at: path });
+        Transforms.setNodes(editor, { state: { active: !inlinePanelState.active } } as Partial<Node>, { at: path });
       }}
     >
-      {meta.active && <ActivePanel />}
-      {!meta.active && '/'}
-      {/* <Popover content={<PanelContent />} open={meta.active} arrow={false} >
-        <input />
-      </Popover> */}
+      {inlinePanelState.active && <ActivePanel />}
+      {!inlinePanelState.active && '/'}
     </span>
   </span>;
 };
@@ -122,10 +140,12 @@ export const InlinePanel = ({ children, attributes, element }: RenderElementProp
 export const inlinePanelDummyData = [{
   type: 'p',
   children: [
+    { text: ' ' },
     {
       type: InlinePanelType,
-      meta: { active: false } as InlinePanelMeta,
+      state: { active: false } as InlinePanelState,
       children: [{ text: '' }],
-    }
+    },
+    { text: ' ' },
   ]
 }];

@@ -19,6 +19,7 @@ const DropDownItem = ({ icon, children }: { icon: string, children: React.ReactN
     un-text={`[&>i]:hover:blue-4 ${dropDownKey === icon ? 'blue-4' : ''}`}
     un-outline='none'
     un-p='1'
+    onClick={event => event.stopPropagation()}
   >
     <i className={icon} />
     {children}
@@ -65,7 +66,7 @@ export const DefaultDropDown = () => {
   }, [isHeadingExpanded, isBasicBlockExpanded]);
 
   useEffect(() => {
-    if (['space', 'space-trigger'].includes(dropDownMessage)) {
+    if (['enter', 'space-trigger'].includes(dropDownMessage)) {
       if (dropDownKey === 'heading-expand') {
         setIsHeadingExpanded(true);
         setDropDownKey(headings[3][0]);
@@ -113,7 +114,11 @@ export const DefaultDropDown = () => {
         un-outline='none'
         un-p='1'
         role='button'
-        onClick={() => { setIsHeadingExpanded(true); setDropDownKey(headings[3][0]); }}
+        onClick={event => {
+          event.stopPropagation();
+          setIsHeadingExpanded(true);
+          setDropDownKey(headings[3][0]);
+        }}
         onKeyDown={event => {
           if (['Enter', ' '].includes(event.key)) {
             setIsHeadingExpanded(true);
@@ -142,7 +147,11 @@ export const DefaultDropDown = () => {
         un-outline='none'
         un-p='1'
         role='button'
-        onClick={() => { setIsBasicBlockExpanded(true); setDropDownKey(basicBlocks[3][0]); }}
+        onClick={event => {
+          event.stopPropagation();
+          setIsBasicBlockExpanded(true);
+          setDropDownKey(basicBlocks[3][0]);
+        }}
         onKeyDown={event => {
           if (['Enter', ' '].includes(event.key)) {
             setIsBasicBlockExpanded(true);

@@ -68,9 +68,6 @@ const ActivePanel = () => {
 
   useEffect(() => {
     if (dropdownMessage === 'space') {
-      console.log('adding back space here?');
-
-      // issue: if user is typing in between characters?
       setInputValue(prev => `${prev} `);
       setDropDownMessage('');
     }
@@ -93,11 +90,16 @@ const ActivePanel = () => {
         value={inputValue}
         onChange={evengt => setInputValue(evengt.target.value)}
         onKeyDown={event => {
-          Object.keys(keyActionMap).includes(event.key) && setDropDownMessage(keyActionMap[event.key as keyof typeof keyActionMap]);
-
-          if (event.key === ' ') {
-            event.preventDefault();
+          const { key, target } = event;
+          const { selectionStart, value } = target as HTMLInputElement;
+          if (key === ' ') {
+            if (selectionStart === value.length) {
+              event.preventDefault();
+            } else {
+              return;
+            }
           }
+          Object.keys(keyActionMap).includes(event.key) && setDropDownMessage(keyActionMap[event.key as keyof typeof keyActionMap]);
         }}
       />
       <span ref={mirrorRef}

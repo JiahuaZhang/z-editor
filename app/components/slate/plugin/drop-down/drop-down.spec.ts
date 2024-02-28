@@ -76,10 +76,10 @@ const dropDownConvert = (editor: Editor, type: string) => {
     logJson(editor);
 
     if (listType.includes(type)) {
-      Transforms.setNodes(editor, { type: 'li' }, { at: parentPath });
+      Transforms.setNodes(editor, { type: 'li' }, { at: listPath });
       logJson(editor);
 
-      Transforms.wrapNodes(editor, { type, children: [] }, { at: parentPath });
+      Transforms.wrapNodes(editor, { type, children: [] }, { at: listPath });
       logJson(editor);
     } else {
       Transforms.setNodes(editor, { type }, { at: listPath });
@@ -94,45 +94,18 @@ const dropDownConvert = (editor: Editor, type: string) => {
 };
 
 describe('simple converting', () => {
-  test('all simple cases', () => {
-    for (const from of simpleType) {
-      for (const to of simpleType) {
-        const initState = generateSimpleState(from, true);
-        const expectedState = generateSimpleState(to);
+  test('simple case + list case', () => {
+    const types = simpleType.concat(listType);
+    for (const from of types) {
+      for (const to of types) {
+        const initState = listType.includes(from) ? generateListState(from, true) : generateSimpleState(from, true);
+        const expectedState = listType.includes(to) ? generateListState(to) : generateSimpleState(to);
 
         const editor = init(initState);
         dropDownConvert(editor, to);
+
         expect(editor.children).toEqual(expectedState);
       }
     }
   });
-
-  test('simple case to list case', () => {
-    for (const from of simpleType) {
-      for (const to of listType) {
-        const initState = generateSimpleState(from, true);
-        const expectedState = generateListState(to);
-
-        const editor = init(initState);
-        dropDownConvert(editor, to);
-        expect(editor.children).toEqual(expectedState);
-      }
-    }
-  });
-
-  test('list case to simple case', () => {
-    for (const from of listType) {
-      for (const to of simpleType) {
-        const initState = generateListState(from, true);
-        const expectedState = generateSimpleState(to);
-
-        const editor = init(initState);
-        dropDownConvert(editor, to);
-        expect(editor.children).toEqual(expectedState);
-      }
-    }
-  });
-
-
-  // todo, split list in fact, not replacing.
 });

@@ -74,7 +74,7 @@ const ActivePanel = () => {
   }, [dropdownMessage]);
 
   return <Popover content={<DefaultDropDown />} arrow={false} open placement='bottomLeft' >
-    <span un-position='relative' >
+    <span un-position='relative' un-text='base' >
       <span un-position='absolute'
         un-left='6px'
         un-top='-2px'

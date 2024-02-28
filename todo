@@ -77,6 +77,9 @@ select text, start with /, it could smartly retrigger dropdown
 /split, (2, 3, 4, ...)
 configurable, could expand, collapsed
 
+bugfix:
+with text selection, using left, right cursor is not intuitive
+
 ?
 /timeline
 

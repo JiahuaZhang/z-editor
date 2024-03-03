@@ -58,12 +58,12 @@ const dropDownConvert = (editor: Editor, type: string) => {
 
   if (!match) return;
 
-  const [node, path] = match;
-  Transforms.removeNodes(editor, { at: path });
+  const [node, inlinePanelPath] = match;
+  Transforms.removeNodes(editor, { at: inlinePanelPath });
 
   logJson(editor);
 
-  const parentPath = Path.parent(path);
+  const parentPath = Path.parent(inlinePanelPath);
   const [parentNode] = Editor.node(editor, parentPath);
 
   if (simpleType.includes((parentNode as any).type) && simpleType.includes(type)) {
@@ -71,20 +71,35 @@ const dropDownConvert = (editor: Editor, type: string) => {
     logJson(editor);
   } else if ((parentNode as any).type === 'li') {
     const listPath = Path.parent(parentPath);
-    // Transforms.splitNodes(editor, { at: listPath, always: true });
-    Transforms.unwrapNodes(editor, { at: listPath });
-    logJson(editor);
-
-    if (listType.includes(type)) {
-      Transforms.setNodes(editor, { type: 'li' }, { at: listPath });
+    const [listNode] = Editor.node(editor, listPath);
+    if ((listNode as any).children.length === 1) {
+      Transforms.unwrapNodes(editor, { at: listPath });
       logJson(editor);
 
-      Transforms.wrapNodes(editor, { type, children: [] }, { at: listPath });
-      logJson(editor);
+      if (listType.includes(type)) {
+        Transforms.setNodes(editor, { type: 'li' }, { at: listPath });
+        logJson(editor);
+
+        Transforms.wrapNodes(editor, { type, children: [] }, { at: listPath });
+        logJson(editor);
+      } else {
+        Transforms.setNodes(editor, { type }, { at: listPath });
+        logJson(editor);
+      }
     } else {
-      Transforms.setNodes(editor, { type }, { at: listPath });
+      console.log('multiple length list node', parentPath, listPath);
+      (editor as any).enableNormalizeNode = false;
+
+      Transforms.splitNodes(editor, { at: parentPath, always: true });
+      logJson(editor);
+
+      console.log('split again');
+      Transforms.splitNodes(editor, { at: [1, 0] });
+
+      (editor as any).enableNormalizeNode = true;
       logJson(editor);
     }
+
   } else if (listType.includes(type)) {
     Transforms.setNodes(editor, { type: 'li' }, { at: parentPath });
     Transforms.wrapNodes(editor, { type, children: [] }, { at: parentPath });
@@ -107,5 +122,56 @@ describe('simple converting', () => {
         expect(editor.children).toEqual(expectedState);
       }
     }
+  });
+
+  test('complicated list case', () => {
+    const initState = [
+      {
+        type: 'ul',
+        children: [
+          {
+            type: 'li',
+            children: [{ text: 'line 1' }],
+          },
+          {
+            type: "li",
+            children: [dropDownState(),]
+          },
+          {
+            type: 'li',
+            children: [{ text: 'line 3' }],
+          }
+        ]
+      }
+    ];
+
+    const expectedState = [
+      {
+        type: 'ul',
+        children: [
+          {
+            type: 'li',
+            children: [{ text: 'line 1' }],
+          }
+        ]
+      },
+      {
+        type: 'h1',
+        children: [{ text: '' }],
+      },
+      {
+        type: 'ul',
+        children: [
+          {
+            type: 'li',
+            children: [{ text: 'line 3' }],
+          }
+        ]
+      }
+    ];
+
+    const editor = init(initState);
+    dropDownConvert(editor, 'h1');
+
   });
 });

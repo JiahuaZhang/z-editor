@@ -61,14 +61,14 @@ const CustomEditor = {
 };
 
 const initialValue = [
-  ...listDummyData,
-  ...blockDummyData,
+  // ...listDummyData,
+  // ...blockDummyData,
   ...inlinePanelDummyData,
-  ...inlineDummyData,
-  ...imageDummyData,
-  ...codeDummyData,
-  ...embedDummyData,
-  ...leafDummyData,
+  // ...inlineDummyData,
+  // ...imageDummyData,
+  // ...codeDummyData,
+  // ...embedDummyData,
+  // ...leafDummyData,
 ];
 
 export const MySlate = () => {
@@ -83,7 +83,7 @@ export const MySlate = () => {
       initialValue={initialValue}
       onChange={value => {
         // console.log('onchange!');
-        // console.log(value);
+        console.log(value);
 
         // const isAstChange = editor.operations.some(op => 'set_selection' != op.type);
 

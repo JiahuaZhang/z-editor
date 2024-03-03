@@ -114,8 +114,12 @@ export const withCommon = (editor: Editor) => {
     return [LINK_TYPE, HASH_TAG_TYPE, InlinePanelType].includes(node.type) || isInline(node);
   };
 
+  (editor as any).enableNormalizeNode = true;
   editor.normalizeNode = entry => {
-    if (normalizeListNode(entry, editor)) return;
+    if ((editor as any).enableNormalizeNode) {
+      if (normalizeListNode(entry, editor)) return;
+    }
+
     normalizeNode(entry);
   };
 

@@ -64,8 +64,6 @@ const Bar = () => {
           if (event.key === ' ') {
             event.preventDefault();
           }
-
-          // todo?, on up, down arrow, preserve event, if there's no dropdown, up down is back to normal navigation of input
         }}
       />
       <span ref={mirrorRef}

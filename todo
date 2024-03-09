@@ -1,3 +1,42 @@
+# own text editor
+1. Implementing Rich Text Features
+Determine which rich text features are essential for your editor (e.g., bold, italic, underline, lists, links, images) and implement them systematically. This involves:
+
+Creating toolbar components with buttons to toggle these styles.
+Handling command execution to apply the selected styles to the text.
+Defining commands that modify the processedProps based on the current selection and desired action.
+2. Managing Editor State
+The core of your editor is its internal state (processedProps), which represents the document structure. Efficiently managing this state is crucial:
+
+Ensure that every change within the contentEditable div is captured and accurately reflected in your state.
+Consider using a library like Immer for immutable state updates, which can simplify complex state manipulations.
+Implement a mechanism for undo and redo actions.
+3. Custom Selection and Cursor Management
+While contentEditable takes care of basic cursor and selection behaviors, you may need finer control for certain features:
+
+Track the current selection range within the editor.
+Implement custom behaviors for text selection, especially if you're handling custom elements like images or embeds that require special interaction models.
+4. Handling Paste Events
+Pasted content can bring unwanted styles or elements into your editor:
+
+Intercept paste events (onPaste) to sanitize the input, stripping out unsupported styles or elements and transforming the content to match your editor's model.
+5. Implementing Serialization and Deserialization
+For saving and loading content:
+
+Define a serialization format for saving your editor's state to a database or file. This might be HTML, Markdown, or a custom JSON structure.
+Implement deserialization logic to load and parse saved content back into your editor's state structure.
+6. Accessibility and Usability
+Ensure your editor is accessible and user-friendly:
+
+Add keyboard shortcuts for common actions.
+Ensure that your editor and its controls are accessible to screen readers and support keyboard navigation.
+7. Optimization and Testing
+Optimize performance, particularly for large documents or complex rendering logic.
+Write unit and integration tests to cover key functionalities and ensure that changes don’t introduce regressions.
+8. Review and Research
+Continuously review your editor's design and code against best practices.
+Study existing open-source editors (e.g., Slate.js, Quill, Draft.js) to understand their architectures and solutions to common problems.
+
 action base trigger:
 up / down arrow
 space & enter case issue

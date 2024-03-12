@@ -1,41 +1,41 @@
 import { Fragment } from 'react';
-import { RichContent, RichContentLabel, SimpleRichContentLabel, TextContent } from './structure';
+import { Content, SimpleRichContentLabel } from './type';
 
-export type DisplayerFn<T extends RichContentLabel> = (props: RichContent<T>) => JSX.Element;
+export type DisplayerFn = (props: Content) => JSX.Element;
 
-export const SpanDisplayer = (props: TextContent) => {
-  if (!props.attribute) throw new Error('attribute is required');
+export const SpanDisplayer = ({ data }: Content) => {
+  if (!data || !data.value) throw new Error('attribute is required');
 
-  return <span un-italic={`${props.attribute.italic && '~'}`}
-    un-underline={`${props.attribute.underline && '~'}`}
-    un-font={`${props.attribute.bold && 'bold'}`}
+  return <span un-italic={`${data.italic && '~'}`}
+    un-underline={`${data.underline && '~'}`}
+    un-font={`${data.bold && 'bold'}`}
     style={{
-      color: props.attribute.color,
-      background: props.attribute.background
-    }} >{props.text}</span>;
+      color: data.color,
+      background: data.background
+    }} >{data.value}</span>;
 };
 
-export const PDisplayer: DisplayerFn<'p'> = (props) => {
-  return <p>{props.data.children.map((child, index) => {
-    if (child.attribute) {
+export const PDisplayer: DisplayerFn = ({ children }) => {
+  return <p>{children?.map((child, index) => {
+    if (child.data?.value) {
       return <SpanDisplayer {...child} key={index} />;
     }
-    return <Fragment key={index} >{child.text}</Fragment>;
+    return <Fragment key={index} >{child.data?.text}</Fragment>;
   })}</p>;
 };
 
-export const H1Displayer: DisplayerFn<'h1'> = (props) => {
-  return <h1>{props.data.children.map((child, index) => {
-    if (child.attribute) {
+export const H1Displayer: DisplayerFn = ({ children }) => {
+  return <h1>{children?.map((child, index) => {
+    if (child.data?.value) {
       return <SpanDisplayer {...child} key={index} />;
     }
-    return <Fragment key={index} >{child.text}</Fragment>;
+    return <Fragment key={index} >{child.data?.text}</Fragment>;
   })}
   </h1>;
 };
 
 export type DefaultDisplayerMap = {
-  [K in SimpleRichContentLabel]: DisplayerFn<K>;
+  [K in SimpleRichContentLabel]: DisplayerFn;
 };
 
 export const defaultDisplayerMap = {

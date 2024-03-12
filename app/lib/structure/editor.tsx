@@ -1,12 +1,12 @@
 import { defaultDisplayerMap } from './displayer';
 import { initContent } from './processor';
-import { RichContent, SimpleRichContentLabel } from './structure';
+import { Content, SimpleRichContentLabel } from './type';
 
 type RichTextEditorProps = {
-  initDate: RichContent[];
+  initDate: Content[];
 };
 
-const RichContentProcessor = (props: RichContent) => {
+const RichContentProcessor = (props: Content) => {
   if (props.label in defaultDisplayerMap) {
     return defaultDisplayerMap[props.label as SimpleRichContentLabel](props as any);
   }

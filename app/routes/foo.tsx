@@ -2,36 +2,28 @@
 // data => render html
 
 import { RichTextEditor } from '~/lib/structure/editor';
-import { PContent, RichContent } from '~/lib/structure/structure';
+import { Content } from '~/lib/structure/type';
 
 const initDate = [
   {
     label: 'p',
-    data: {
-      children: [
-        { text: 'c', attribute: { color: 'red' } },
-        { text: 'a', attribute: { bold: true, italic: true, underline: true } },
-        { text: 'F', attribute: { background: '#ddd' } },
-        {
-          text: 'P content'
-        }
-      ]
-    }
+    children: [
+      { label: 'span', data: { value: 'c', color: 'red' } },
+      { label: 'span', data: { value: 'a', bold: true, italic: true, underline: true } },
+      { label: 'span', data: { value: 'F', background: '#ddd' } },
+      { label: 'span', data: { text: 'P content' } }
+    ]
   },
   {
     label: 'h1',
-    data: {
-      children: [
-        {
-          text: 'H1 content'
-        },
-        { text: 'why', attribute: { color: 'green' } },
-        { text: 'a', attribute: { bold: true, italic: true } },
-        { text: 'okay? ', attribute: { background: '#ccc' } },
-      ]
-    }
-  }
-] as RichContent[];
+    children: [
+      { label: 'span', data: { text: 'h1 content' } },
+      { label: 'span', data: { value: 'why', color: 'green' } },
+      { label: 'span', data: { value: 'a', bold: true, italic: true } },
+      { label: 'span', data: { value: 'okay? ', background: '#ccc' } },
+    ]
+  },
+] as Content[];
 
 const Foo = () => {
   return <RichTextEditor un-m='4' initDate={initDate} />;

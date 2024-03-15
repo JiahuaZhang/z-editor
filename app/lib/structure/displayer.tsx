@@ -27,12 +27,13 @@ export const SpanDisplayer = ({ data, state }: Content) => {
 export const PDisplayer: DisplayerFn = ({ children, state }) => {
   const [content, setContent] = useAtom(contentAtom);
 
-  return <p ref={
-    r => {
-      if (!r) return;
-      setContent(draft => _.set(draft, `${state?.key}.state.ref`, r));
-    }
-  }>{children?.map((child, index) => {
+  return <p
+    ref={
+      r => {
+        if (!r) return;
+        setContent(draft => _.set(draft, `${state?.key}.state.ref`, r));
+      }}
+  >{children?.map((child, index) => {
     if (child.data?.value) {
       return <SpanDisplayer {...child} key={index} />;
     }
@@ -43,16 +44,16 @@ export const PDisplayer: DisplayerFn = ({ children, state }) => {
 export const H1Displayer: DisplayerFn = ({ children, state }) => {
   const [content, setContent] = useAtom(contentAtom);
 
-  return <h1 ref={
-    r => {
+  return <h1
+    ref={r => {
       if (!r) return;
       setContent(draft => _.set(draft, `${state?.key}.state.ref`, r));
-    }
-  } >{children?.map((child, index) => {
+    }}
+  >{children?.map(child => {
     if (child.data?.value) {
-      return <SpanDisplayer {...child} key={index} />;
+      return <SpanDisplayer {...child} key={child.state?.id} />;
     }
-    return <Fragment key={index} >{child.data?.text}</Fragment>;
+    return <Fragment key={child.state?.id} >{child.data?.text}</Fragment>;
   })}
   </h1>;
 };

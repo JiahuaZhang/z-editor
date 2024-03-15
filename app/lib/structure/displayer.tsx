@@ -1,9 +1,13 @@
+import { useAtom } from 'jotai';
+import _ from 'lodash';
 import { Fragment } from 'react';
+import { contentAtom } from './state';
 import { Content, SimpleRichContentLabel } from './type';
 
 export type DisplayerFn = (props: Content) => JSX.Element;
 
-export const SpanDisplayer = ({ data }: Content) => {
+export const SpanDisplayer = ({ data, state }: Content) => {
+  const [content, setContent] = useAtom(contentAtom);
   if (!data || !data.value) throw new Error('attribute is required');
 
   return <span un-italic={`${data.italic && '~'}`}
@@ -12,11 +16,23 @@ export const SpanDisplayer = ({ data }: Content) => {
     style={{
       color: data.color,
       background: data.background
-    }} >{data.value}</span>;
+    }}
+    ref={r => {
+      if (!r) return;
+      setContent(draft => _.set(draft, `${state?.key}.state.ref`, r));
+    }}
+  >{data.value}</span>;
 };
 
-export const PDisplayer: DisplayerFn = ({ children }) => {
-  return <p>{children?.map((child, index) => {
+export const PDisplayer: DisplayerFn = ({ children, state }) => {
+  const [content, setContent] = useAtom(contentAtom);
+
+  return <p ref={
+    r => {
+      if (!r) return;
+      setContent(draft => _.set(draft, `${state?.key}.state.ref`, r));
+    }
+  }>{children?.map((child, index) => {
     if (child.data?.value) {
       return <SpanDisplayer {...child} key={index} />;
     }
@@ -24,8 +40,15 @@ export const PDisplayer: DisplayerFn = ({ children }) => {
   })}</p>;
 };
 
-export const H1Displayer: DisplayerFn = ({ children }) => {
-  return <h1>{children?.map((child, index) => {
+export const H1Displayer: DisplayerFn = ({ children, state }) => {
+  const [content, setContent] = useAtom(contentAtom);
+
+  return <h1 ref={
+    r => {
+      if (!r) return;
+      setContent(draft => _.set(draft, `${state?.key}.state.ref`, r));
+    }
+  } >{children?.map((child, index) => {
     if (child.data?.value) {
       return <SpanDisplayer {...child} key={index} />;
     }

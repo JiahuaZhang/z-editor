@@ -7,7 +7,7 @@ import { Content } from '~/lib/structure/type';
 const initDate = [
   {
     label: 'p',
-    children: [
+    content: [
       { label: 'span', data: { value: 'c', color: 'red' } },
       { label: 'span', data: { value: 'a', bold: true, italic: true, underline: true } },
       { label: 'span', data: { value: 'F', background: '#ddd' } },
@@ -16,7 +16,7 @@ const initDate = [
   },
   {
     label: 'h1',
-    children: [
+    content: [
       { label: 'span', data: { text: 'h1 content' } },
       { label: 'span', data: { value: 'why', color: 'green' } },
       { label: 'span', data: { value: 'a', bold: true, italic: true } },
@@ -26,7 +26,8 @@ const initDate = [
 ] as Content[];
 
 const Foo = () => {
-  return <RichTextEditor un-m='4' initDate={initDate} />;
+  // return <RichTextEditor un-m='4' initDate={initDate} />;
+  return null;
 };
 
 export default Foo;

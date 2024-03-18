@@ -3,16 +3,16 @@ import { Content } from './type';
 
 type Props = {
   content: Content;
-  key: string;
+  path: string;
 };
 
-export const prepareContent = ({ content, key }: Props): Content => ({
+export const prepareContent = ({ content, path }: Props): Content => ({
   ...content,
   state: {
     id: v4(),
-    key
+    path
   },
-  children: content.children?.map((child, childIndex) => prepareContent({ content: child, key: `${key}.children[${childIndex}]` }))
+  content: content.content?.map((c, index) => prepareContent({ content: c, path: `${path}.content[${index}]` }))
 });
 
-export const initContent = (contents: Content[]) => contents.map((content, index) => prepareContent({ content, key: `[${index}]` }));
+export const initContent = (contents: Content[]) => contents.map((content, index) => prepareContent({ content, path: `[${index}]` }));

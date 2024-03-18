@@ -5,9 +5,9 @@ export type SimpleRichContentLabel = 'span' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 
 export type RichContentLabel = SimpleRichContentLabel | 'ul' | 'li' | 'ol' | 'code' | 'embed' | 'image' | 'link' | 'hashTag' | 'inlinePanel' | string;
 
 export type ContentState = {
-  ref?: HTMLElement;
+  element?: HTMLElement;
   id?: string;
-  key?: string;
+  path?: string;
 } & Record<string, any>;
 
 export type ContentData = ({ text: string; }
@@ -24,5 +24,11 @@ export type Content = {
   label: RichContentLabel;
   state?: ContentState;
   data?: ContentData;
-  children?: Content[],
+  content?: Content[],
 };
+
+// todo:
+// state & path needs to be completely separated?
+// react would be confused -> self reference issue..
+
+// Init, content => sync + content & state ==> update? => state + => sync content => react render..

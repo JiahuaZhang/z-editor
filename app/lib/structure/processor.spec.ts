@@ -5,7 +5,7 @@ import { Content } from './type';
 const initDate = [
   {
     label: 'p',
-    children: [
+    content: [
       { label: 'span', data: { value: 'c', color: 'red' } },
       { label: 'span', data: { value: 'a', bold: true, italic: true, underline: true } },
       { label: 'span', data: { value: 'F', background: '#ddd' } },
@@ -14,7 +14,7 @@ const initDate = [
   },
   {
     label: 'h1',
-    children: [
+    content: [
       { label: 'span', data: { text: 'h1 content' } },
       { label: 'span', data: { value: 'why', color: 'green' } },
       { label: 'span', data: { value: 'a', bold: true, italic: true } },
@@ -23,10 +23,10 @@ const initDate = [
   },
   {
     label: 'ul',
-    children: [
+    content: [
       {
         label: 'li',
-        children: [{ label: 'span', data: { text: 'li content' } }]
+        content: [{ label: 'span', data: { text: 'li content' } }]
       },
     ]
   }
@@ -35,58 +35,58 @@ const initDate = [
 const expectedContent = [
   {
     label: 'p',
-    children: [
-      { label: 'span', data: { value: 'c', color: 'red' }, state: { id: '', key: '[0].children[0]' } },
-      { label: 'span', data: { value: 'a', bold: true, italic: true, underline: true }, state: { id: '', key: '[0].children[1]' } },
-      { label: 'span', data: { value: 'F', background: '#ddd' }, state: { id: '', key: '[0].children[2]' } },
-      { label: 'span', data: { text: 'P content' }, state: { id: '', key: '[0].children[3]' } }
+    content: [
+      { label: 'span', data: { value: 'c', color: 'red' }, state: { id: '', path: '[0].content[0]' } },
+      { label: 'span', data: { value: 'a', bold: true, italic: true, underline: true }, state: { id: '', path: '[0].content[1]' } },
+      { label: 'span', data: { value: 'F', background: '#ddd' }, state: { id: '', path: '[0].content[2]' } },
+      { label: 'span', data: { text: 'P content' }, state: { id: '', path: '[0].content[3]' } }
     ],
-    state: { id: '', key: '[0]' }
+    state: { id: '', path: '[0]' }
   },
   {
     label: 'h1',
-    children: [
-      { label: 'span', data: { text: 'h1 content' }, state: { id: '', key: '[1].children[0]' } },
-      { label: 'span', data: { value: 'why', color: 'green' }, state: { id: '', key: '[1].children[1]' } },
-      { label: 'span', data: { value: 'a', bold: true, italic: true }, state: { id: '', key: '[1].children[2]' } },
-      { label: 'span', data: { value: 'okay? ', background: '#ccc' }, state: { id: '', key: '[1].children[3]' } },
+    content: [
+      { label: 'span', data: { text: 'h1 content' }, state: { id: '', path: '[1].content[0]' } },
+      { label: 'span', data: { value: 'why', color: 'green' }, state: { id: '', path: '[1].content[1]' } },
+      { label: 'span', data: { value: 'a', bold: true, italic: true }, state: { id: '', path: '[1].content[2]' } },
+      { label: 'span', data: { value: 'okay? ', background: '#ccc' }, state: { id: '', path: '[1].content[3]' } },
     ],
-    state: { id: '', key: '[1]' }
+    state: { id: '', path: '[1]' }
   },
   {
     label: 'ul',
-    children: [
+    content: [
       {
         label: 'li',
-        children: [
+        content: [
           {
             label: 'span',
-            state: { text: 'li content', key: '[2].children[0].children[0]' }
+            state: { text: 'li content', path: '[2].content[0].content[0]' }
           }
         ],
-        state: { id: '', key: '[2].children[0]' }
+        state: { id: '', path: '[2].content[0]' }
       },
     ],
-    state: { id: '', key: '[2]' }
+    state: { id: '', path: '[2]' }
   }
 ] as Content[];
 
 type StateOnly = {
   state?: {
-    key: string;
+    path: string;
   };
-  children?: StateOnly[];
+  content?: StateOnly[];
 };
 
-const extractKey = (content: Content[]): StateOnly[] =>
+const extractPath = (content: Content[]): StateOnly[] =>
   content.map(c => ({
-    state: { key: c.state?.key ?? '' },
-    children: extractKey(c.children || [])
+    state: { path: c.state?.path ?? '' },
+    content: extractPath(c.content || [])
   }));
 
 test('generate correct keys', () => {
   const result = initContent(initDate);
-  const check = extractKey(result);
-  const expected = extractKey(expectedContent);
+  const check = extractPath(result);
+  const expected = extractPath(expectedContent);
   expect(check).toEqual(expected);
 });

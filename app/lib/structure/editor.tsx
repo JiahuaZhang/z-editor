@@ -1,4 +1,4 @@
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom, useAtom } from 'jotai';
 import { Fragment } from 'react';
 import { defaultDisplayerMap } from './displayer';
 import { initContent } from './processor';
@@ -36,17 +36,19 @@ const InternalEditor = (props: any) => {
     suppressContentEditableWarning
     onKeyDown={event => {
       console.log('event', event);
+      console.log(event.key);
 
       const selection = window.getSelection();
       console.log('selection', selection);
 
       if (!selection) return;
 
+      // selection.
+
     }}
     {...props} >
-    {content.map(item => <Fragment key={item.state?.id} >
-      <ContentProcessor {...item} />
-    </Fragment>
-    )}
+    {content.map(item => <Fragment key={item.state?.id}>
+      <ContentProcessor  {...item} />
+    </Fragment>)}
   </div>;
 };

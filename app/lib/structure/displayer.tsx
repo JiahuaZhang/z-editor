@@ -1,60 +1,70 @@
 import { useAtom } from 'jotai';
 import _ from 'lodash';
-import { Fragment } from 'react';
+import { Fragment, useRef } from 'react';
 import { contentAtom } from './state';
 import { Content, SimpleRichContentLabel } from './type';
+import { useImmerAtom } from 'jotai-immer';
 
 export type DisplayerFn = (props: Content) => JSX.Element;
 
 export const SpanDisplayer = ({ data, state }: Content) => {
-  const [content, setContent] = useAtom(contentAtom);
-  if (!data || !data.value) throw new Error('attribute is required');
+  // const [content, setContent] = useAtom(contentAtom);
+  if (!data || !data.value) throw new Error('Data value is required');
 
-  return <span un-italic={`${data.italic && '~'}`}
+  const result = <span
+    un-italic={`${data.italic && '~'}`}
     un-underline={`${data.underline && '~'}`}
     un-font={`${data.bold && 'bold'}`}
     style={{
       color: data.color,
       background: data.background
     }}
-    ref={r => {
-      if (!r) return;
-      setContent(draft => _.set(draft, `${state?.key}.state.ref`, r));
-    }}
+  // ref={
+  //   r => {
+  //     if (!r) return;
+  //     setContent(draft => _.set(draft, `${state?.path}.state.element`, r));
+  //   }
+  // }
   >{data.value}</span>;
+
+  return result;
 };
 
-export const PDisplayer: DisplayerFn = ({ children, state }) => {
-  const [content, setContent] = useAtom(contentAtom);
+const renderContent = (children: Content[]) => {
+  return children?.map(child => {
+    if (child.data?.value) {
+      return <Fragment key={child.state?.id} >
+        <SpanDisplayer {...child} />
+      </Fragment>;
+    }
+    return <Fragment key={child.state?.id} >{child.data?.text}</Fragment>;
+  });
+};
+
+export const PDisplayer: DisplayerFn = ({ content, state }) => {
+  const [__, setContent] = useImmerAtom(contentAtom);
 
   return <p
     ref={
       r => {
         if (!r) return;
-        setContent(draft => _.set(draft, `${state?.key}.state.ref`, r));
+        setContent(draft => _.set(draft, `${state?.path}.state.element`, r));
       }}
-  >{children?.map((child, index) => {
-    if (child.data?.value) {
-      return <SpanDisplayer {...child} key={index} />;
-    }
-    return <Fragment key={index} >{child.data?.text}</Fragment>;
-  })}</p>;
+  >
+    {renderContent(content ?? [])}
+  </p>;
 };
 
-export const H1Displayer: DisplayerFn = ({ children, state }) => {
-  const [content, setContent] = useAtom(contentAtom);
+export const H1Displayer: DisplayerFn = ({ content, state }) => {
+  const [__, setContent] = useImmerAtom(contentAtom);
 
   return <h1
     ref={r => {
       if (!r) return;
-      setContent(draft => _.set(draft, `${state?.key}.state.ref`, r));
+      setContent(draft => _.set(draft, `${state?.path}.state.element`, r));
     }}
-  >{children?.map(child => {
-    if (child.data?.value) {
-      return <SpanDisplayer {...child} key={child.state?.id} />;
-    }
-    return <Fragment key={child.state?.id} >{child.data?.text}</Fragment>;
-  })}
+  >
+    {renderContent(content ?? [])}
   </h1>;
 };
 

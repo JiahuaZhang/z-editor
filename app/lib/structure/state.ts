@@ -1,4 +1,8 @@
-import { atomWithImmer } from 'jotai-immer';
+import { atomWithImmer, withImmer } from 'jotai-immer';
 import { Content } from './type';
+import { atom, useAtom } from 'jotai';
 
-export const contentAtom = atomWithImmer<Content[]>([]);
+// const primitiveAtom = atom<Content[]>([]);
+export const contentAtom = atom<Content[]>([]);
+// export const contentAtom = withImmer(primitiveAtom);
+// export const contentAtom = atomWithImmer<Content[]>([]);

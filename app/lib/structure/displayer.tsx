@@ -1,14 +1,12 @@
-import { useAtom } from 'jotai';
-import _ from 'lodash';
-import { Fragment, useRef } from 'react';
-import { contentAtom } from './state';
+import { Fragment } from 'react';
 import { Content, SimpleRichContentLabel } from './type';
-import { useImmerAtom } from 'jotai-immer';
+import { useSetAtom } from 'jotai';
+import { updateElementAtom } from './state';
 
 export type DisplayerFn = (props: Content) => JSX.Element;
 
 export const SpanDisplayer = ({ data, state }: Content) => {
-  // const [content, setContent] = useAtom(contentAtom);
+  // const updateElement = useSetAtom(updateElementAtom);
   if (!data || !data.value) throw new Error('Data value is required');
 
   const result = <span
@@ -19,12 +17,14 @@ export const SpanDisplayer = ({ data, state }: Content) => {
       color: data.color,
       background: data.background
     }}
-  // ref={
-  //   r => {
-  //     if (!r) return;
-  //     setContent(draft => _.set(draft, `${state?.path}.state.element`, r));
-  //   }
-  // }
+    ref={
+      r => {
+        if (!r) return;
+        console.log('r', r);
+
+        // updateElement(`${state?.path}.state.element`, r);
+      }
+    }
   >{data.value}</span>;
 
   return result;
@@ -42,27 +42,25 @@ const renderContent = (children: Content[]) => {
 };
 
 export const PDisplayer: DisplayerFn = ({ content, state }) => {
-  const [__, setContent] = useImmerAtom(contentAtom);
 
   return <p
-    ref={
-      r => {
-        if (!r) return;
-        setContent(draft => _.set(draft, `${state?.path}.state.element`, r));
-      }}
+  // ref={
+  //   r => {
+  //     if (!r) return;
+  //     setContent(draft => _.set(draft, `${state?.path}.state.element`, r));
+  //   }}
   >
     {renderContent(content ?? [])}
   </p>;
 };
 
 export const H1Displayer: DisplayerFn = ({ content, state }) => {
-  const [__, setContent] = useImmerAtom(contentAtom);
 
   return <h1
-    ref={r => {
-      if (!r) return;
-      setContent(draft => _.set(draft, `${state?.path}.state.element`, r));
-    }}
+  // ref={r => {
+  //   if (!r) return;
+  //   setContent(draft => _.set(draft, `${state?.path}.state.element`, r));
+  // }}
   >
     {renderContent(content ?? [])}
   </h1>;

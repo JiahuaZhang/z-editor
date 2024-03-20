@@ -1,13 +1,10 @@
-import { useAtomValue, useSetAtom, useAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { Fragment } from 'react';
 import { defaultDisplayerMap } from './displayer';
 import { initContent } from './processor';
 import { contentAtom } from './state';
 import { Content, SimpleRichContentLabel } from './type';
-
-type RichTextEditorProps = {
-  initDate: Content[];
-};
+import { useAtom } from 'jotai/react';
 
 const ContentProcessor = (props: Content) => {
   if (props.label in defaultDisplayerMap) {
@@ -18,16 +15,36 @@ const ContentProcessor = (props: Content) => {
   return <></>;
 };
 
-export const RichTextEditor = ({ initDate, ...rest }: RichTextEditorProps) => {
+export const RichTextEditor = ({ initData, ...rest }: { initData: Content[]; }) => {
+  console.log('Render RichTextEditor');
+
+  const data = initContent(initData);
   const setContent = useSetAtom(contentAtom);
-  setContent(initContent(initDate));
-  return <InternalEditor {...rest} />;
+  setContent(data);
+  return <InternalEditor data={data}  {...rest} />;
 };
 
-const InternalEditor = (props: any) => {
-  const content = useAtomValue(contentAtom);
+const InternalEditor = ({ data, ...rest }: { data: Content[]; }) => {
+  console.log('Render InternalEditor');
 
-  console.log('content', content);
+  return <>
+    <EditorState />
+    <EditorData data={data} {...rest} />
+  </>;
+};
+
+const EditorState = () => {
+  const [content] = useAtom(contentAtom);
+  console.log('rendering EditorState');
+
+  // console.log('content', content);
+
+  return <></>;
+};
+
+const EditorData = ({ data, ...rest }: { data: Content[]; }) => {
+  console.log('Render EditorData');
+
 
   return <div un-border='~ 2 blue-4 rounded'
     un-p='2'
@@ -46,8 +63,8 @@ const InternalEditor = (props: any) => {
       // selection.
 
     }}
-    {...props} >
-    {content.map(item => <Fragment key={item.state?.id}>
+    {...rest} >
+    {data.map(item => <Fragment key={item.state?.id}>
       <ContentProcessor  {...item} />
     </Fragment>)}
   </div>;

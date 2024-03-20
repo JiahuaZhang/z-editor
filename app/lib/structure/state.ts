@@ -1,8 +1,16 @@
-import { atomWithImmer, withImmer } from 'jotai-immer';
+import { atom } from 'jotai';
+import { atomWithImmer } from 'jotai-immer';
+import _ from 'lodash';
 import { Content } from './type';
-import { atom, useAtom } from 'jotai';
 
-// const primitiveAtom = atom<Content[]>([]);
-export const contentAtom = atom<Content[]>([]);
-// export const contentAtom = withImmer(primitiveAtom);
-// export const contentAtom = atomWithImmer<Content[]>([]);
+export const contentAtom = atomWithImmer<Content[]>([]);
+
+export const updateElementAtom = atom(
+  null,
+  (get, set, path: string, element: HTMLElement) => {
+    set(contentAtom, draft => {
+      _.set(draft, path, element);
+    });
+  }
+);
+

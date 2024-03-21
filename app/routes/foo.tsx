@@ -1,10 +1,7 @@
-// todo:
-// data => render html
-
 import { RichTextEditor } from '~/lib/structure/editor';
 import { Content } from '~/lib/structure/type';
 
-const initDate = [
+const initData = [
   {
     label: 'p',
     content: [
@@ -26,8 +23,7 @@ const initDate = [
 ] as Content[];
 
 const Foo = () => {
-  // return <RichTextEditor un-m='4' initDate={initDate} />;
-  return null;
+  return <RichTextEditor un-m='4' initData={initData} />;
 };
 
 export default Foo;

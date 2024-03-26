@@ -14,3 +14,11 @@ export const updateElementAtom = atom(
   }
 );
 
+export const updateSpanAtom = atom(
+  null,
+  (get, set, path: string, value: string) => {
+    set(contentAtom, draft => {
+      _.set(draft, `${path}.data.value`, value);
+    });
+  }
+);

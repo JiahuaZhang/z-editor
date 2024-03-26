@@ -5,7 +5,7 @@ const initData = [
   {
     label: 'p',
     content: [
-      { label: 'span', data: { value: 'c', color: 'red' } },
+      { label: 'span', data: { value: 'zX', color: 'red' } },
       { label: 'span', data: { value: 'a', bold: true, italic: true, underline: true } },
       { label: 'span', data: { value: 'F', background: '#ddd' } },
       { label: 'span', data: { text: 'P content' } }

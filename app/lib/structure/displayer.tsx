@@ -6,7 +6,7 @@ import { Content, SimpleRichContentLabel } from './type';
 export type DisplayerFn = (props: Content) => JSX.Element;
 
 export const SpanDisplayer = ({ data, state }: Content) => {
-  const updateElement = useSetAtom(updateElementAtom);
+  // const updateElement = useSetAtom(updateElementAtom);
   if (!data || !data.value) throw new Error('Data value is required');
 
   return <span
@@ -21,7 +21,7 @@ export const SpanDisplayer = ({ data, state }: Content) => {
     ref={
       r => {
         if (!r) return;
-        updateElement(`${state?.path}.state.element`, r);
+        // updateElement(`${state?.path}.state.element`, r);
       }
     }
   >{data.value}</span>;
@@ -39,14 +39,14 @@ const renderContent = (children: Content[]) => {
 };
 
 export const PDisplayer: DisplayerFn = ({ content, state }) => {
-  const updateElement = useSetAtom(updateElementAtom);
+  // const updateElement = useSetAtom(updateElementAtom);
 
   return <p
     id={state?.path}
     ref={
       r => {
         if (!r) return;
-        updateElement(`${state?.path}.state.element`, r);
+        // updateElement(`${state?.path}.state.element`, r);
         r.childNodes.forEach((item, index) => {
           if (!(item as any).id) {
             (item as any).id = `${state?.path}.content[${index}]`;
@@ -59,13 +59,13 @@ export const PDisplayer: DisplayerFn = ({ content, state }) => {
 };
 
 export const H1Displayer: DisplayerFn = ({ content, state }) => {
-  const updateElement = useSetAtom(updateElementAtom);
+  // const updateElement = useSetAtom(updateElementAtom);
 
   return <h1
     id={state?.path}
     ref={r => {
       if (!r) return;
-      updateElement(`${state?.path}.state.element`, r);
+      // updateElement(`${state?.path}.state.element`, r);
       r.childNodes.forEach((item, index) => {
         if (!(item as any).id) {
           (item as any).id = `${state?.path}.content[${index}]`;

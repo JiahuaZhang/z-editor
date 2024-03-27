@@ -3,7 +3,7 @@ import { useAtom, useAtomValue } from 'jotai/react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { defaultDisplayerMap } from './displayer';
 import { initContent } from './processor';
-import { contentAtom, updateSpanAtom } from './state';
+import { contentAtom, updateSpanAtom, updateTextAtom } from './state';
 import { Content, SimpleRichContentLabel } from './type';
 
 const ContentProcessor = (props: Content) => {
@@ -37,7 +37,7 @@ const EditorState = () => {
   const [content] = useAtom(contentAtom);
   console.log('rendering EditorState');
 
-  console.log('content', content);
+  console.log(JSON.stringify(content, null, 2));
 
   return <></>;
 };
@@ -46,32 +46,13 @@ const EditorData = ({ data, ...rest }: { data: Content[]; }) => {
   const [key, setKey] = useState(0);
   const content = useAtomValue(contentAtom);
   const updateSpan = useSetAtom(updateSpanAtom);
+  const updateText = useSetAtom(updateTextAtom);
   const [state, setState] = useState(data);
   const editorRef = useRef<HTMLDivElement>(null);
-  const [cursor, setCurosr] = useState<{ anchorNode: Node | null, anchorOffset: number; }>({
-    anchorNode: null,
-    anchorOffset: 0
-  });
   console.log('Render EditorData');
 
   useEffect(() => {
     setState(content);
-
-    const { anchorNode, anchorOffset } = cursor;
-    console.log('cursor', cursor);
-    console.log(content);
-
-
-    if (anchorNode) {
-      const selection = document.getSelection();
-      if (selection) {
-        selection.removeAllRanges();
-        const range = new Range();
-        range.setStart(anchorNode, anchorOffset);
-        selection.addRange(range);
-      }
-    }
-
     editorRef.current?.focus();
   }, [key]);
 
@@ -83,40 +64,23 @@ const EditorData = ({ data, ...rest }: { data: Content[]; }) => {
     contentEditable
     suppressContentEditableWarning
     onKeyDown={event => {
-      console.log('event', event);
-      console.log(event.key);
       if (event.key.includes('Arrow')) {
         return;
       }
 
       const selection = window.getSelection();
-      console.log('selection', selection);
 
       if (!selection) return;
 
       if (selection.isCollapsed) {
         const { anchorNode, anchorOffset } = selection;
-        setCurosr({ anchorNode, anchorOffset });
+        const oldValue = anchorNode!.nodeValue!;
+        const value = `${oldValue.slice(0, anchorOffset)}${event.key}${oldValue.slice(anchorOffset)}`;
 
-        let container = content.find(c => c.state?.element?.contains(anchorNode));
-        while (true) {
-          const currentContainer = container?.content?.find(c => c.state?.element?.contains(anchorNode));
-          if (!currentContainer) {
-            if (container?.state?.element === anchorNode?.parentElement) {
-              if (container?.label === 'span') {
-                const { value } = container.data!;
-                const newValue = `${value!.slice(0, anchorOffset)}${event.key}${value!.slice(anchorOffset)}`;
-                updateSpan(container.state?.path!, newValue);
-                setKey(prev => prev + 1);
-                // issue, after resync data, the cursor is moved to the beginning of the editor
-              } else if (container?.content?.length === anchorNode?.parentElement.childNodes.length) {
-                console.log('full length match case');
-              }
-            }
-
-            break;
-          }
-          container = currentContainer;
+        if ((anchorNode as any).id) {
+          updateText((anchorNode as any).id, value);
+        } else if (anchorNode?.parentElement?.id) {
+          updateSpan(anchorNode?.parentElement?.id, value);
         }
       }
     }}

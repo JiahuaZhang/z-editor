@@ -22,3 +22,12 @@ export const updateSpanAtom = atom(
     });
   }
 );
+
+export const updateTextAtom = atom(
+  null,
+  (get, set, path: string, value: string) => {
+    set(contentAtom, draft => {
+      _.set(draft, `${path}.data.text`, value);
+    });
+  }
+);

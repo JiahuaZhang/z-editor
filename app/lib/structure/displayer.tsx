@@ -17,6 +17,7 @@ export const SpanDisplayer = ({ data, state }: Content) => {
       color: data.color,
       background: data.background
     }}
+    id={state?.path}
     ref={
       r => {
         if (!r) return;
@@ -41,10 +42,16 @@ export const PDisplayer: DisplayerFn = ({ content, state }) => {
   const updateElement = useSetAtom(updateElementAtom);
 
   return <p
+    id={state?.path}
     ref={
       r => {
         if (!r) return;
         updateElement(`${state?.path}.state.element`, r);
+        r.childNodes.forEach((item, index) => {
+          if (!(item as any).id) {
+            (item as any).id = `${state?.path}.content[${index}]`;
+          }
+        });
       }}
   >
     {renderContent(content ?? [])}
@@ -55,9 +62,15 @@ export const H1Displayer: DisplayerFn = ({ content, state }) => {
   const updateElement = useSetAtom(updateElementAtom);
 
   return <h1
+    id={state?.path}
     ref={r => {
       if (!r) return;
       updateElement(`${state?.path}.state.element`, r);
+      r.childNodes.forEach((item, index) => {
+        if (!(item as any).id) {
+          (item as any).id = `${state?.path}.content[${index}]`;
+        }
+      });
     }}
   >
     {renderContent(content ?? [])}

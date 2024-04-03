@@ -4,11 +4,11 @@ export type Color = NamedColor | HexColor;
 export type SimpleRichContentLabel = 'span' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote';
 export type RichContentLabel = SimpleRichContentLabel | 'ul' | 'li' | 'ol' | 'code' | 'embed' | 'image' | 'link' | 'hashTag' | 'inlinePanel' | string;
 
-export type ContentState = {
-  element?: HTMLElement;
-  id?: string;
-  path?: string;
-} & Record<string, any>;
+// export type ContentState = {
+//   element?: HTMLElement;
+//   id?: string;
+//   path?: string;
+// } & Record<string, any>;
 
 export type ContentData = ({ text: string; }
   | {
@@ -18,13 +18,14 @@ export type ContentData = ({ text: string; }
     italic?: boolean;
     color?: Color;
     background?: Color;
-  }) & Record<string, string>;
+  }) & { id?: string; } & Record<string, string>;
 
 export type Content = {
   label: RichContentLabel;
-  state?: ContentState;
+  // state?: ContentState;
   data?: ContentData;
-  content?: Content[],
+  children?: Content[],
+  id?: string;
 };
 
 // todo:
@@ -32,3 +33,18 @@ export type Content = {
 // react would be confused -> self reference issue..
 
 // Init, content => sync + content & state ==> update? => state + => sync content => react render..
+
+// array issue
+// insertion, deletion should be O(1) for rich text editor
+
+type ManagedContent = {
+  content: Content;
+  prev: ManagedContent | null;
+  next: ManagedContent | null;
+};
+
+type ContentManager = {
+  head: ManagedContent | null;
+  tail: ManagedContent | null;
+  map: Map<string, ManagedContent>;
+};

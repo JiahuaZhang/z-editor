@@ -135,8 +135,8 @@ export class LinkedList {
     }
   }
 
-  toString() {
-    return JSON.stringify(this.list(), null, 2);
+  toString(space = 2) {
+    return JSON.stringify(this.list(), null, space);
   }
 
 }

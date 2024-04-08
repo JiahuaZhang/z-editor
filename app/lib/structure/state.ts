@@ -1,6 +1,7 @@
 import { atom } from 'jotai';
 import { atomWithImmer } from 'jotai-immer';
 import _ from 'lodash';
+import { LinkedList } from './managed-content';
 import { Content } from './type';
 
 export const contentAtom = atomWithImmer<Content[]>([]);
@@ -31,3 +32,7 @@ export const updateTextAtom = atom(
     });
   }
 );
+
+////////
+
+export const linkedListAtom = atom(new LinkedList([]));

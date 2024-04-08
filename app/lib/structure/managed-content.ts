@@ -1,4 +1,4 @@
-import { uniqueId } from 'lodash';
+import _ from 'lodash';
 import { Content } from './type';
 
 export class ContentNode {
@@ -21,7 +21,7 @@ export class ContentNode {
       children[i].prev = children[i - 1];
     }
 
-    content.id = uniqueId('content-');
+    content.id = _.uniqueId('content-');
     map.set(content.id, this);
   }
 
@@ -90,6 +90,16 @@ export class ContentNode {
     return content;
   }
 
+  children() {
+    const children: ContentNode[] = [];
+    let node = this.child;
+    while (node) {
+      children.push(node);
+      node = node.next;
+    }
+    return children;
+  }
+
 }
 
 export class LinkedList {
@@ -137,6 +147,16 @@ export class LinkedList {
 
   toString(space = 2) {
     return JSON.stringify(this.list(), null, space);
+  }
+
+  children() {
+    const children: ContentNode[] = [];
+    let node = this.head;
+    while (node) {
+      children.push(node);
+      node = node.next;
+    }
+    return children;
   }
 
 }

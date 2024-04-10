@@ -1,9 +1,9 @@
-import { Fragment, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { ContentNode } from './managed-content';
 import { ComplexData } from './type';
 
-export const Render = ({ node, ...rest }: { node: ContentNode; }) => {
-  console.log('Render', node);
+export const Render = ({ node }: { node: ContentNode; }) => {
+  // console.log('Render', node);
 
   let Match = PRender;
   switch (node.content?.label) {
@@ -14,26 +14,26 @@ export const Render = ({ node, ...rest }: { node: ContentNode; }) => {
       Match = SpanRender;
   }
 
-  return <Match node={node} {...rest}  >
+  return <Match node={node}   >
     {node.children().map((n) => <Render key={n.content?.id} node={n} />)}
   </Match>;
 };
 
-const H1Render = ({ node, children, ...rest }: { node: ContentNode, children?: ReactNode; }) => {
-  return <h1 id={node.content?.id}  {...rest} >
+const H1Render = ({ node, children }: { node: ContentNode, children?: ReactNode; }) => {
+  return <h1 id={node.content?.id}   >
     {children}
   </h1>;
 };
 
-const PRender = ({ node, children, ...rest }: { node: ContentNode, children?: ReactNode; }) => {
-  return <p id={node.content?.id} {...rest} >
+const PRender = ({ node, children }: { node: ContentNode, children?: ReactNode; }) => {
+  return <p id={node.content?.id} >
     {children}
   </p>;
 };
 
-const SpanRender = ({ node, ...rest }: { node: ContentNode; }) => {
+const SpanRender = ({ node }: { node: ContentNode; }) => {
   if (node.content?.data?.text) {
-    return <Fragment>{node.content.data.text}</Fragment>;
+    return <span id={node.content?.id} >{node.content.data.text}</span>;
   }
 
   const data = node.content?.data as ComplexData;
@@ -47,7 +47,7 @@ const SpanRender = ({ node, ...rest }: { node: ContentNode; }) => {
         background: data.background
       }}
       id={node.content?.id}
-      {...rest}>
+    >
       {data.value}
     </span>
   );

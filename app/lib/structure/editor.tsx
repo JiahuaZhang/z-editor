@@ -1,24 +1,22 @@
 import { useAtomValue, useSetAtom } from 'jotai';
+import { ClientOnly } from 'remix-utils/client-only';
 import { LinkedList } from './managed-content';
-import { Content } from './type';
-import { linkedListAtom } from './state';
 import { Render } from './render';
+import { linkedListAtom } from './state';
+import { Content } from './type';
 
 export const RichTextEditor = ({ initData, ...rest }: { initData: Content[]; }) => {
-  console.log('Render RichTextEditor');
   const linkedList = new LinkedList(initData);
   const setLinkedList = useSetAtom(linkedListAtom);
   setLinkedList(linkedList);
 
-  // return <div>Rich text editor here</div>;
-  return <InternalEditor {...rest} />;
+  return <ClientOnly>
+    {() => <InternalEditor {...rest} />}
+  </ClientOnly>;
 };
 
 const InternalEditor = (props: any) => {
   const linkedList = useAtomValue(linkedListAtom);
-  // console.log('internal editor');
-  // console.log('linkedList', linkedList);
-  console.log(linkedList.children());
 
   return <div
     un-border='rounded'
@@ -26,7 +24,21 @@ const InternalEditor = (props: any) => {
     un-outline='2 solid gray-4 focus-visible:blue-4'
     contentEditable
     suppressContentEditableWarning
-    {...props} >
+    {...props}
+    onKeyDown={event => {
+      if (event.key.includes('Arrow')) {
+        return;
+      }
+      const selection = window.getSelection();
+      if (!selection) return;
+
+      const { anchorNode, anchorOffset } = selection;
+
+      if (anchorNode?.parentElement?.id) {
+        linkedList.insertLetter(anchorNode.parentElement.id, event.key, anchorOffset);
+      }
+    }}
+  >
     {linkedList.children().map((node) => <Render key={node.content?.id} node={node} />)}
   </div>;
 };

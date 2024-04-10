@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Content } from './type';
+import { ComplexData, Content, PlainData } from './type';
 
 export class ContentNode {
   content?: Content;
@@ -100,6 +100,15 @@ export class ContentNode {
     return children;
   }
 
+  insertLetter(letter: string, offset: number) {
+    if (this.content?.data?.text) {
+      const data = this.content?.data as PlainData;
+      data.text = `${data.text.slice(0, offset)}${letter}${data.text.slice(offset)}`;
+    } else {
+      const data = this.content?.data as ComplexData;
+      data.value = `${data.value!.slice(0, offset)}${letter}${data.value!.slice(offset)}`;
+    }
+  }
 }
 
 export class LinkedList {
@@ -157,6 +166,10 @@ export class LinkedList {
       node = node.next;
     }
     return children;
+  }
+
+  insertLetter(id: string, letter: string, offset: number) {
+    this.map.get(id)!.insertLetter(letter, offset);
   }
 
 }

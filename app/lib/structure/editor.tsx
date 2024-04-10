@@ -1,4 +1,5 @@
 import { useAtomValue, useSetAtom } from 'jotai';
+import { useEffect } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 import { LinkedList } from './managed-content';
 import { Render } from './render';
@@ -8,7 +9,9 @@ import { Content } from './type';
 export const RichTextEditor = ({ initData, ...rest }: { initData: Content[]; }) => {
   const linkedList = new LinkedList(initData);
   const setLinkedList = useSetAtom(linkedListAtom);
-  setLinkedList(linkedList);
+  useEffect(() => {
+    setLinkedList(linkedList);
+  }, []);
 
   return <ClientOnly>
     {() => <InternalEditor {...rest} />}

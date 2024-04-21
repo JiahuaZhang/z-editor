@@ -19,7 +19,7 @@ export const Displayer = ({ richData }: { richData: RichData; }) => {
 
 const Span = ({ richData }: { richData: RichData, children: ReactNode; }) => {
   if (richData.data?.text) {
-    return <>{richData.data.text}</>;
+    return <span id={richData.id} >{richData.data.text}</span>;
   }
 
   const data = richData.data as ComplexData;
@@ -31,19 +31,20 @@ const Span = ({ richData }: { richData: RichData, children: ReactNode; }) => {
       color: data.color,
       background: data.background
     }}
+    id={richData.id}
   >
     {data.value}
   </span>;
 };
 
 const P = ({ richData, children }: { richData: RichData, children: ReactNode; }) => {
-  return <p>
+  return <p id={richData.id} >
     {children}
   </p>;
 };
 
 const H1 = ({ richData, children }: { richData: RichData, children: ReactNode; }) => {
-  return <h1>
+  return <h1 id={richData.id} >
     {children}
   </h1>;
 };

@@ -7,15 +7,15 @@ import { linkedListAtom } from './state';
 import { Content } from './type';
 
 export const RichTextEditor = ({ initData, ...rest }: { initData: Content[]; }) => {
-  const linkedList = new LinkedList(initData);
   const setLinkedList = useSetAtom(linkedListAtom);
   useEffect(() => {
-    setLinkedList(linkedList);
+    setLinkedList(new LinkedList(initData));
   }, []);
 
-  return <ClientOnly>
-    {() => <InternalEditor {...rest} />}
-  </ClientOnly>;
+  return <InternalEditor {...rest} />;
+  // <ClientOnly>
+  //   {() => <InternalEditor {...rest} />}
+  // </ClientOnly>;
 };
 
 const InternalEditor = (props: any) => {
@@ -29,6 +29,14 @@ const InternalEditor = (props: any) => {
     suppressContentEditableWarning
     {...props}
     onKeyDown={event => {
+      if (event.key === 'Enter') {
+        console.log(event.shiftKey);
+        // todo: if it's already selected mutliple text content?
+      }
+      console.log(event.key);
+
+      // todo, delete case, backspace case
+      // ctrl, alt, arrow etc
       if (event.key.includes('Arrow')) {
         return;
       }

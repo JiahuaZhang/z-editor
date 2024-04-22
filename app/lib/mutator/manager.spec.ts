@@ -141,7 +141,7 @@ test('simple data', () => {
   ];
 
   const manager = new DataManager(initData);
-  expect(manager.list()).toEqual(expected);
+  expect(manager.toData()).toEqual(expected);
 });
 
 test('nested data', () => {
@@ -248,5 +248,5 @@ test('nested data', () => {
   ];
 
   const manager = new DataManager(initData);
-  expect(manager.list()).toEqual(expected);
+  expect(manager.toData()).toEqual(expected);
 });

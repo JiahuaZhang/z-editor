@@ -1,16 +1,15 @@
 import _ from 'lodash';
-import { RichData } from './type';
+import { ComplexData, RichData } from './type';
 
 export class DataNode {
-  data?: RichData;
+  node?: RichData;
   prev?: DataNode;
   next?: DataNode;
   parent?: DataNode;
   child?: DataNode;
 
   constructor(data: RichData, map: Map<string, DataNode>) {
-    this.data = data;
-    this.data = data;
+    this.node = data;
 
     const children = data.children?.map(child => new DataNode(child, map));
 
@@ -24,8 +23,8 @@ export class DataNode {
       }
     }
 
-    data.id = _.uniqueId('data-');
-    map.set(data.id, this);
+    this.node.id = _.uniqueId('data-');
+    map.set(this.node.id, this);
   }
 
   prepend(node: DataNode) {
@@ -78,11 +77,11 @@ export class DataNode {
       node.remove(map);
       node = node.next;
     }
-    map.delete(this.data?.id!);
+    map.delete(this.node?.id!);
   }
 
   toData() {
-    let data = this.data;
+    let data = this.node;
     const children: RichData[] = [];
     let node = this.child;
     while (node) {
@@ -128,7 +127,7 @@ export class DataManager {
     }
   }
 
-  list() {
+  toData() {
     const list: RichData[] = [];
     let node = this.head;
     while (node) {
@@ -146,17 +145,18 @@ export class DataManager {
   }
 
   toString(space = 2) {
-    return JSON.stringify(this.list(), null, space);
+    return JSON.stringify(this.toData(), null, space);
   }
 
-  children() {
-    const children: DataNode[] = [];
-    let node = this.head;
-    while (node) {
-      children.push(node);
-      node = node.next;
+  updateSpanText(id: string, text: string) {
+    const dataNode = this.map.get(id);
+    if (dataNode?.node?.data) {
+      if (dataNode.node.data.text) {
+        dataNode.node.data.text = text;
+      } else {
+        (dataNode.node.data as ComplexData).value = text;
+      }
     }
-    return children;
   }
 
 }

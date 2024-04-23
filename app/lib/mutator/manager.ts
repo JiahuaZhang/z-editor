@@ -151,7 +151,7 @@ export class DataManager {
   updateSpanText(id: string, text: string) {
     const dataNode = this.map.get(id);
     if (dataNode?.node?.data) {
-      if (dataNode.node.data.text) {
+      if (dataNode.node.data.text !== undefined) {
         dataNode.node.data.text = text;
       } else {
         (dataNode.node.data as ComplexData).value = text;

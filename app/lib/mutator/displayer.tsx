@@ -18,12 +18,12 @@ export const Displayer = ({ richData }: { richData: RichData; }) => {
 };
 
 const Span = ({ richData }: { richData: RichData, children: ReactNode; }) => {
-  if (richData.data?.text) {
-    return <span id={richData.id} >{richData.data.text}</span>;
+  if (richData.data?.text !== undefined) {
+    return <span un-empty='min-w-1em min-h-1em inline-block' id={richData.id} >{richData.data.text}</span>;
   }
 
   const data = richData.data as ComplexData;
-  return <span
+  return <span un-empty='min-w-1em min-h-1em inline-block'
     un-italic={`${data.italic && '~'}`}
     un-underline={`${data.underline && '~'}`}
     un-font={`${data.bold && 'bold'}`}

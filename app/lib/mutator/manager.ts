@@ -80,6 +80,31 @@ export class DataNode {
     map.delete(this.node?.id!);
   }
 
+  insertEnterAtStart(map: Map<string, DataNode>) {
+    // simple case, 'p' parent & 'span' child
+    const spanData: RichData = {
+      label: 'span',
+      data: {
+        text: ''
+      }
+    };
+    const parentData: RichData = {
+      label: 'p',
+      data: {
+        value: ''
+      },
+      children: [spanData]
+    };
+    const dataNode = new DataNode(parentData, map);
+    console.log('insertEnterAtStart', dataNode);
+    console.log('id', dataNode.node?.id);
+    console.log('child id', dataNode.child?.node?.id);
+
+    this.prepend(dataNode);
+
+    return dataNode;
+  }
+
   toData() {
     let data = this.node;
     const children: RichData[] = [];
@@ -157,6 +182,14 @@ export class DataManager {
         (dataNode.node.data as ComplexData).value = text;
       }
     }
+  }
+
+  insertEnterAtStart(id: string) {
+    const dataNode = this.map.get(id)!.insertEnterAtStart(this.map);
+    if (this.head?.prev) {
+      this.head = this.head.prev;
+    }
+    return dataNode;
   }
 
 }

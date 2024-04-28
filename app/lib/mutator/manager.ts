@@ -96,12 +96,27 @@ export class DataNode {
       children: [spanData]
     };
     const dataNode = new DataNode(parentData, map);
-    console.log('insertEnterAtStart', dataNode);
-    console.log('id', dataNode.node?.id);
-    console.log('child id', dataNode.child?.node?.id);
-
     this.prepend(dataNode);
+    return dataNode;
+  }
 
+  insertEnterAtEnd(map: Map<string, DataNode>) {
+    // simple case, 'p' parent & 'span' child
+    const spanData: RichData = {
+      label: 'span',
+      data: {
+        text: ''
+      }
+    };
+    const parentData: RichData = {
+      label: 'p',
+      data: {
+        value: ''
+      },
+      children: [spanData]
+    };
+    const dataNode = new DataNode(parentData, map);
+    this.append(dataNode);
     return dataNode;
   }
 
@@ -188,6 +203,14 @@ export class DataManager {
     const dataNode = this.map.get(id)!.insertEnterAtStart(this.map);
     if (this.head?.prev) {
       this.head = this.head.prev;
+    }
+    return dataNode;
+  }
+
+  insertEnterAtEnd(id: string) {
+    const dataNode = this.map.get(id)!.insertEnterAtEnd(this.map);
+    if (this.tail?.next) {
+      this.tail = this.tail.next;
     }
     return dataNode;
   }

@@ -41,21 +41,48 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
         if (mutation.type === 'characterData') {
           dataManager.updateSpanText(mutation.target.parentElement?.id!, mutation.target.textContent!);
           console.log(dataManager.toString());
+          return;
         }
+      } else if (mutations.length === 2) {
+        // special case of insert character
+        // after insert a break, then typing a character, would trigger adding #text
+        console.log('length 2 of mutation');
+        console.log(mutations[0]);
+        console.log(mutations[1]);
+        if (mutations[0].type === 'childList' && mutations[1].type === 'characterData') {
+          dataManager.updateSpanText(mutations[1].target.parentElement?.id!, mutations[1].target.textContent!);
+          console.log(dataManager.toString());
+          return;
+        }
+
+        // need to handle another insert enter case
+        // insert first enter at the start
+        // then insert again, because previous is empty, could make this happens
       } else if (mutations.length === 3
         && !mutations.some(m => m.type !== 'childList')
         && mutations[0].addedNodes[0] === mutations[1].target
         && mutations[1].addedNodes[0] === mutations[2].target) {
         // insert break at the end / start of block
-        console.log(mutations);
         if ((mutations[0].addedNodes[0] as HTMLElement).id === (mutations[0].nextSibling as HTMLElement).id) {
           const element = mutations[0].addedNodes[0] as HTMLElement;
           const dataNode = dataManager.insertEnterAtStart(element.id!);
-          console.log(dataManager.toString());
           setFocusId(dataNode.child?.node?.id!);
           setKey(prev => prev + 1);
+          return;
+        } else {
+          const element = mutations[0].addedNodes[0] as HTMLElement;
+          const id = element.id;
+          const id_element = document.getElementById(id!)!;
+          if (id_element !== element && id_element.nextSibling === element) {
+            const dataNode = dataManager.insertEnterAtEnd(element.id!);
+            setFocusId(dataNode.child?.node?.id!);
+            setKey(prev => prev + 1);
+            return;
+          }
         }
       }
+
+      console.log('unhandled mutations', mutations);
     });
     observer.observe(ref.current, { childList: true, subtree: true, characterData: true, characterDataOldValue: true });
 

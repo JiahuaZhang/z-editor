@@ -46,12 +46,8 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
       } else if (mutations.length === 2) {
         // special case of insert character
         // after insert a break, then typing a character, would trigger adding #text
-        console.log('length 2 of mutation');
-        console.log(mutations[0]);
-        console.log(mutations[1]);
         if (mutations[0].type === 'childList' && mutations[1].type === 'characterData') {
           dataManager.updateSpanText(mutations[1].target.parentElement?.id!, mutations[1].target.textContent!);
-          console.log(dataManager.toString());
           return;
         }
 
@@ -71,7 +67,7 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
         && !mutations.some(m => m.type !== 'childList')
         && mutations[0].addedNodes[0] === mutations[1].target
         && mutations[1].addedNodes[0] === mutations[2].target) {
-        // insert break at the end / start of block
+        // insert break at the start of block
         if ((mutations[0].addedNodes[0] as HTMLElement).id === (mutations[0].nextSibling as HTMLElement).id) {
           const element = mutations[0].addedNodes[0] as HTMLElement;
           const dataNode = dataManager.insertEnterAtStart(element.id!);
@@ -80,10 +76,9 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
           return;
         }
 
-        const element = mutations[0].addedNodes[0] as HTMLElement;
-        const id = element.id;
-        const id_element = document.getElementById(id!)!;
-        if (id_element !== element && id_element.nextSibling === element) {
+        // insert break at the end of block
+        if ((mutations[0].addedNodes[0] as HTMLElement).id === (mutations[0].previousSibling as HTMLElement).id) {
+          const element = mutations[0].addedNodes[0] as HTMLElement;
           const dataNode = dataManager.insertEnterAtEnd(element.id!);
           setFocusId(dataNode.child?.node?.id!);
           setKey(prev => prev + 1);

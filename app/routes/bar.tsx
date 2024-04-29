@@ -1,14 +1,36 @@
-import { useEffect, useRef } from 'react';
+import { RichTextEditor } from '~/lib/mutator/editor';
+import { RichData } from '~/lib/mutator/type';
 
-const Foo = () => {
-  const ref = useRef<HTMLSpanElement>(null);
+const initData = [
+  // {
+  //   label: 'p',
+  //   children: [
+  //     { label: 'span', data: { text: '' } },
+  //   ]
+  // },
+  {
+    label: 'p',
+    children: [
+      { label: 'span', data: { value: 'zX', color: 'red' } },
+      { label: 'span', data: { value: 'a', bold: true, italic: true, underline: true } },
+      { label: 'span', data: { value: 'F', background: '#ddd' } },
+      { label: 'span', data: { text: 'P content' } }
+    ]
+  },
+  {
+    label: 'h1',
+    children: [
+      { label: 'span', data: { text: 'h1 content' } },
+      { label: 'span', data: { value: 'why', color: 'green' } },
+      { label: 'span', data: { value: 'a', bold: true, italic: true } },
+      { label: 'span', data: { value: 'okay? ', background: '#ccc' } },
+    ]
+  },
+] as RichData[];
 
-  useEffect(() => {
-    console.log('ref', ref.current);
 
-  }, [ref.current]);
-
-  return <span ref={ref} >test span</span>;
+const Bar = () => {
+  return <RichTextEditor un-m='4' initData={initData} />;
 };
 
-export default Foo;
+export default Bar;

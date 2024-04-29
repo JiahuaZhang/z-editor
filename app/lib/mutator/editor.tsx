@@ -56,8 +56,17 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
         }
 
         // need to handle another insert enter case
-        // insert first enter at the start
-        // then insert again, because previous is empty, could make this happens
+        // when current selection is empy <span></span>, would trigger this case with only 2 mutations
+        if (mutations[0].type === 'childList'
+          && mutations[1].type === 'childList'
+          && mutations[1].addedNodes[0].nodeName === 'BR'
+          && mutations[0].addedNodes[0] === mutations[1].target) {
+          const element = mutations[0].addedNodes[0] as HTMLElement;
+          const dataNode = dataManager.insertEnterAtEnd(element.id!);
+          setFocusId(dataNode.child?.node?.id!);
+          setKey(prev => prev + 1);
+          return;
+        }
       } else if (mutations.length === 3
         && !mutations.some(m => m.type !== 'childList')
         && mutations[0].addedNodes[0] === mutations[1].target
@@ -69,19 +78,21 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
           setFocusId(dataNode.child?.node?.id!);
           setKey(prev => prev + 1);
           return;
-        } else {
-          const element = mutations[0].addedNodes[0] as HTMLElement;
-          const id = element.id;
-          const id_element = document.getElementById(id!)!;
-          if (id_element !== element && id_element.nextSibling === element) {
-            const dataNode = dataManager.insertEnterAtEnd(element.id!);
-            setFocusId(dataNode.child?.node?.id!);
-            setKey(prev => prev + 1);
-            return;
-          }
+        }
+
+        const element = mutations[0].addedNodes[0] as HTMLElement;
+        const id = element.id;
+        const id_element = document.getElementById(id!)!;
+        if (id_element !== element && id_element.nextSibling === element) {
+          const dataNode = dataManager.insertEnterAtEnd(element.id!);
+          setFocusId(dataNode.child?.node?.id!);
+          setKey(prev => prev + 1);
+          return;
         }
       }
 
+      // todo: need to check insert enter at the end
+      // case of having text, then insert, insert to check
       console.log('unhandled mutations', mutations);
     });
     observer.observe(ref.current, { childList: true, subtree: true, characterData: true, characterDataOldValue: true });

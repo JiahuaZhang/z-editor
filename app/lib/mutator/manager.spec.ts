@@ -250,3 +250,70 @@ test('nested data', () => {
   const manager = new DataManager(initData);
   expect(manager.toData()).toEqual(expected);
 });
+
+test('pretty print', () => {
+  const initData = [
+    {
+      label: 'p',
+      children: [
+        { label: 'span', data: { value: 'c', color: 'red' } },
+        { label: 'span', data: { value: 'a', bold: true, italic: true, underline: true } },
+        { label: 'span', data: { value: 'F', background: '#ddd' } },
+        { label: 'span', data: { text: 'P content' } }
+      ]
+    },
+    {
+      label: 'h1',
+      children: [
+        { label: 'span', data: { text: 'h1 content' } },
+        { label: 'span', data: { value: 'why', color: 'green' } },
+        { label: 'span', data: { value: 'a', bold: true, italic: true } },
+        { label: 'span', data: { value: 'okay? ', background: '#ccc' } },
+      ]
+    },
+    {
+      label: 'ul',
+      children: [
+        {
+          label: 'li',
+          children: [{ label: 'span', data: { text: 'li content' } }]
+        },
+      ]
+    }
+  ] as RichData[];
+
+  const manager = new DataManager(initData);
+  manager.prettyPrint();
+});
+
+test('pretty print with nested data', () => {
+  const initData = [
+    {
+      label: 'ul',
+      children: [
+        {
+          label: 'li',
+          children: [{ label: 'span', data: { text: 'li content' } }]
+        },
+        {
+          label: 'li',
+          children: [
+            {
+              label: 'ul', children: [
+                { label: 'li', children: [{ label: 'span', data: { text: 'nested item' } }] },
+                {
+                  label: 'li', children: [
+                    { label: 'ul', children: [{ label: 'li', children: [{ label: 'span', data: { text: 'nested nested item' } }] }] }
+                  ]
+                },
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ] as RichData[];
+
+  const manager = new DataManager(initData);
+  manager.prettyPrint();
+});

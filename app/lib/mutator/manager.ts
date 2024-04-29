@@ -132,6 +132,15 @@ export class DataNode {
     return data;
   }
 
+  prettyPrint(prefix = [] as string[]) {
+    console.log(`[${[...prefix, this.node?.label].join(' > ')}] ${this.node?.data?.text ?? (this.node?.data as ComplexData)?.value ?? ''}`);
+    let node = this.child;
+    while (node) {
+      node.prettyPrint([...prefix, this.node!.label]);
+      node = node.next;
+    }
+  }
+
   children() {
     let node = this.child;
     const children: DataNode[] = [];
@@ -186,6 +195,14 @@ export class DataManager {
 
   toString(space = 2) {
     return JSON.stringify(this.toData(), null, space);
+  }
+
+  prettyPrint() {
+    let node = this.head;
+    while (node) {
+      node.prettyPrint();
+      node = node.next;
+    }
   }
 
   updateSpanText(id: string, text: string) {

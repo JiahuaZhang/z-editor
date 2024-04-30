@@ -40,7 +40,8 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
         const mutation = mutations[0];
         if (mutation.type === 'characterData') {
           dataManager.updateSpanText(mutation.target.parentElement?.id!, mutation.target.textContent!);
-          console.log(dataManager.toString());
+          // console.log(dataManager.toString());
+          dataManager.prettyPrint();
           return;
         }
       } else if (mutations.length === 2) {
@@ -92,7 +93,7 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
     });
     observer.observe(ref.current, { childList: true, subtree: true, characterData: true, characterDataOldValue: true });
 
-    return () => { observer.disconnect(); console.log('disconnect'); };
+    return () => observer.disconnect();
   }, [ref.current]);
 
   return <div

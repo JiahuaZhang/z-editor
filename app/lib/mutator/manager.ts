@@ -133,12 +133,15 @@ export class DataNode {
   }
 
   prettyPrint(prefix = [] as string[]) {
-    console.log(`[${[...prefix, this.node?.label].join(' > ')}] ${this.node?.data?.text ?? (this.node?.data as ComplexData)?.value ?? ''}`);
+    let arrays = [`[${[...prefix, this.node?.label].join(' > ')}] ${this.node?.data?.text ?? (this.node?.data as ComplexData)?.value ?? ''}`];
+    // console.log();
     let node = this.child;
     while (node) {
-      node.prettyPrint([...prefix, this.node!.label]);
+      // node.prettyPrint([...prefix, this.node!.label]);
+      arrays = [...arrays, ...node.prettyPrint([...prefix, this.node!.label])];
       node = node.next;
     }
+    return arrays;
   }
 
   children() {
@@ -198,11 +201,13 @@ export class DataManager {
   }
 
   prettyPrint() {
+    let arrays: string[] = [];
     let node = this.head;
     while (node) {
-      node.prettyPrint();
+      arrays = [...arrays, ...node.prettyPrint()];
       node = node.next;
     }
+    console.log(arrays.join('\n'));
   }
 
   updateSpanText(id: string, text: string) {

@@ -40,7 +40,6 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
         const mutation = mutations[0];
         if (mutation.type === 'characterData') {
           dataManager.updateSpanText(mutation.target.parentElement?.id!, mutation.target.textContent!);
-          // console.log(dataManager.toString());
           dataManager.prettyPrint();
           return;
         }
@@ -49,6 +48,7 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
         // after insert a break, then typing a character, would trigger adding #text
         if (mutations[0].type === 'childList' && mutations[1].type === 'characterData') {
           dataManager.updateSpanText(mutations[1].target.parentElement?.id!, mutations[1].target.textContent!);
+          dataManager.prettyPrint();
           return;
         }
 
@@ -62,6 +62,16 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
           const dataNode = dataManager.insertEnterAtEnd(element.id!);
           setFocusId(dataNode.child?.node?.id!);
           setKey(prev => prev + 1);
+          dataManager.prettyPrint();
+          return;
+        }
+
+        if (mutations[0].type === 'characterData'
+          && mutations[1].type === 'characterData'
+          && mutations[0].target.textContent === mutations[1].target.textContent) {
+          // sometime this happen, a span with customized style might be having intermediate state (might be space added, causing 2 mutations record)
+          dataManager.updateSpanText(mutations[0].target.parentElement?.id!, mutations[0].target.textContent!);
+          dataManager.prettyPrint();
           return;
         }
       } else if (mutations.length === 3
@@ -74,6 +84,7 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
           const dataNode = dataManager.insertEnterAtStart(element.id!);
           setFocusId(dataNode.child?.node?.id!);
           setKey(prev => prev + 1);
+          dataManager.prettyPrint();
           return;
         }
 
@@ -83,6 +94,7 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
           const dataNode = dataManager.insertEnterAtEnd(element.id!);
           setFocusId(dataNode.child?.node?.id!);
           setKey(prev => prev + 1);
+          dataManager.prettyPrint();
           return;
         }
       }

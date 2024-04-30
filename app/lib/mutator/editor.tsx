@@ -81,8 +81,8 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
         // insert break at the start of block
         if ((mutations[0].addedNodes[0] as HTMLElement).id === (mutations[0].nextSibling as HTMLElement).id) {
           const element = mutations[0].addedNodes[0] as HTMLElement;
-          const dataNode = dataManager.insertEnterAtStart(element.id!);
-          setFocusId(dataNode.child?.node?.id!);
+          dataManager.insertEnterAtStart(element.id!);
+          setFocusId(element.id!);
           setKey(prev => prev + 1);
           dataManager.prettyPrint();
           return;

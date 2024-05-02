@@ -42,6 +42,18 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
           dataManager.updateSpanText(mutation.target.parentElement?.id!, mutation.target.textContent!);
           dataManager.prettyPrint();
           return;
+        } else if (mutation.type === 'childList'
+          && mutation.addedNodes.length === 0
+          && mutation.nextSibling === null
+          && mutation.previousSibling === null
+          && mutation.oldValue === null
+        ) {
+          // special case of empty <span>, then pressing delete would delete the existing element
+          // we need to always syncu up with data, a minimal of 1 element is required, so rollback
+          setFocusId((mutation.removedNodes[0] as HTMLElement).id!);
+          setKey(prev => prev + 1);
+          dataManager.prettyPrint();
+          return;
         }
       } else if (mutations.length === 2) {
         // special case of insert character
@@ -109,8 +121,8 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
         }
       }
 
-      // todo: need to check insert enter at the end
-      // case of having text, then insert, insert to check
+      // todo, check backspace, if this would delete the span, need to sync it.
+      // test case, p > span > 'text', slowly delete character one by one, on last delete, need handle this.
       console.log('unhandled mutations', mutations);
     });
     observer.observe(ref.current, { childList: true, subtree: true, characterData: true, characterDataOldValue: true });

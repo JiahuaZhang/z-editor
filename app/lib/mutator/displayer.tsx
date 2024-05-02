@@ -10,6 +10,21 @@ export const Displayer = ({ richData }: { richData: RichData; }) => {
     case 'h1':
       Match = H1;
       break;
+    case 'h2':
+      Match = H2;
+      break;
+    case 'h3':
+      Match = H3;
+      break;
+    case 'h4':
+      Match = H4;
+      break;
+    case 'h5':
+      Match = H5;
+      break;
+    case 'h6':
+      Match = H6;
+      break;
   }
 
   return <Match richData={richData}>
@@ -47,4 +62,34 @@ const H1 = ({ richData, children }: { richData: RichData, children: ReactNode; }
   return <h1 id={richData.id} >
     {children}
   </h1>;
+};
+
+const H2 = ({ richData, children }: { richData: RichData, children: ReactNode; }) => {
+  return <h2 id={richData.id} >
+    {children}
+  </h2>;
+};
+
+const H3 = ({ richData, children }: { richData: RichData, children: ReactNode; }) => {
+  return <h3 id={richData.id} >
+    {children}
+  </h3>;
+};
+
+const H4 = ({ richData, children }: { richData: RichData, children: ReactNode; }) => {
+  return <h4 id={richData.id} >
+    {children}
+  </h4>;
+};
+
+const H5 = ({ richData, children }: { richData: RichData, children: ReactNode; }) => {
+  return <h5 id={richData.id} >
+    {children}
+  </h5>;
+};
+
+const H6 = ({ richData, children }: { richData: RichData, children: ReactNode; }) => {
+  return <h6 id={richData.id} >
+    {children}
+  </h6>;
 };

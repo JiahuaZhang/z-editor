@@ -77,9 +77,19 @@ const InternalEditor = ({ dataManager, ...rest }: { dataManager: DataManager; })
       } else if (mutations.length === 3
         && !mutations.some(m => m.type !== 'childList')
         && mutations[0].addedNodes[0] === mutations[1].target
-        && mutations[1].addedNodes[0] === mutations[2].target) {
+        && mutations[1].addedNodes[0] === mutations[2].target
+        && mutations[2].addedNodes[0].nodeName === 'BR') {
+        //no id ? previous element is no <p>
+        if (!(mutations[0].addedNodes[0] as HTMLElement).id) {
+          const dataNode = dataManager.insertEnterAtEnd((mutations[0].previousSibling as HTMLElement).id!);
+          setFocusId(dataNode.child?.node?.id!);
+          setKey(prev => prev + 1);
+          dataManager.prettyPrint();
+          return;
+        }
+
         // insert break at the start of block
-        if ((mutations[0].addedNodes[0] as HTMLElement).id === (mutations[0].nextSibling as HTMLElement).id) {
+        if ((mutations[0].addedNodes[0] as HTMLElement).id === (mutations[0].nextSibling as HTMLElement)?.id) {
           const element = mutations[0].addedNodes[0] as HTMLElement;
           dataManager.insertEnterAtStart(element.id!);
           setFocusId(element.id!);

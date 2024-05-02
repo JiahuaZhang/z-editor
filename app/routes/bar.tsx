@@ -24,8 +24,19 @@ const initData = [
       { label: 'span', data: { value: 'why', color: 'green' } },
       { label: 'span', data: { value: 'a', bold: true, italic: true } },
       { label: 'span', data: { value: 'okay? ', background: '#ccc' } },
+      // { label: 'span', data: { text: 'simple content' } }
     ]
   },
+  // {
+  //   label: 'h3',
+  //   children: [
+  //     { label: 'span', data: { text: 'h1 content' } },
+  //     { label: 'span', data: { value: 'why', color: 'green' } },
+  //     { label: 'span', data: { value: 'a', bold: true, italic: true } },
+  //     { label: 'span', data: { value: 'okay? ', background: '#ccc' } },
+  //     { label: 'span', data: { text: 'simple content' } }
+  //   ]
+  // },
 ] as RichData[];
 
 

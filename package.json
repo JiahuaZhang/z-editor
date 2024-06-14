@@ -24,6 +24,7 @@
     "@types/uuid": "^9.0.8",
     "@unocss/reset": "^0.58.3",
     "antd": "^5.13.2",
+    "emoji-datasource-facebook": "^15.1.2",
     "immer": "^10.0.4",
     "isbot": "^3.6.8",
     "jotai": "^2.7.1",

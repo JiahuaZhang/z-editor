@@ -1,7 +1,7 @@
-import { LexicalCustomizeEditor } from '~/components/lexical/editor';
+import { ZEditor } from '~/components/zeditor/zeditor';
 
 const Baz = () => {
-  return <LexicalCustomizeEditor />;
+  return <ZEditor />;
 };
 
 export default Baz;

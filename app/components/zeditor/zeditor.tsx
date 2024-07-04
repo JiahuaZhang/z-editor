@@ -1,9 +1,11 @@
 import { ListItemNode, ListNode } from '@lexical/list';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { HeadingNode } from '@lexical/rich-text';
 import { ClientOnly } from 'remix-utils/client-only';
@@ -56,6 +58,8 @@ export const ZEditor = () => {
             />
             <HistoryPlugin />
             <AutoFocusPlugin />
+            <ListPlugin />
+            <CheckListPlugin />
 
             <EmojiPlugin />
           </LexicalComposer>

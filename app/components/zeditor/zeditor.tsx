@@ -7,7 +7,7 @@ import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
-import { HeadingNode } from '@lexical/rich-text';
+import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { ClientOnly } from 'remix-utils/client-only';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { $generateContent } from './init';
@@ -17,7 +17,7 @@ import { EmojiPlugin } from './plugin/emoji/EmojiPlugin';
 export const UnoStaticTrick = () => <div un-top='2' un-left='2' />;
 
 const initialConfig = {
-  namespace: 'MyEditor',
+  namespace: 'z-editor',
   theme: {
     heading: {
       h1: 'text-4xl font-bold text-blue-950 ',
@@ -32,14 +32,16 @@ const initialConfig = {
       listitem: '',
       listitemChecked: 'line-through relative list-none pl-6 outline-none [&:before]:[content:""] [&:before]:absolute [&:before]:w-4 [&:before]:h-4 [&:before]:bg-blue-4 [&:before]:border-rounded-0.5 [&:before]:left-0 [&:before]:top-1 [&:before]:cursor-pointer	[&:after]:[content:""] [&:after]:absolute [&:after]:w-1.75 [&:after]:h-3.5 [&:after]:border-white [&:after]:border-r-2 [&:after]:border-b-2 [&:after]:rotate-45 [&:after]:left-1 [&:after]:top-1 [&:after]:cursor-pointer',
       listitemUnchecked: 'relative list-none pl-6 outline-none [&:before]:[content:""] [&:before]:absolute [&:before]:w-4 [&:before]:h-4 [&:before]:border-1 [&:before]:border-black [&:before]:border-rounded-0.5 [&:before]:left-0 [&:before]:top-1 [&:before]:cursor-pointer ',
-      nested: {},
+      nested: {
+        listitem: 'list-none'
+      },
       ul: 'list-disc pl-4',
       ol: 'list-decimal pl-4',
       olDepth: [],
     }
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, EmojiNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, EmojiNode],
   editorState: $generateContent
 };
 

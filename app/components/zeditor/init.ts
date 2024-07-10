@@ -1,5 +1,6 @@
+import { $createCodeHighlightNode, $createCodeNode } from '@lexical/code';
 import { $createListItemNode, $createListNode } from '@lexical/list';
-import { $createHeadingNode } from '@lexical/rich-text';
+import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 import { $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
 
 const $generateListContent = () => {
@@ -139,11 +140,40 @@ const $generateH1To6 = () => {
   root.append(h6);
 };
 
+const $generateCode = () => {
+  const root = $getRoot();
+  const code = $createCodeNode('java');
+  code.append($createTextNode(`public class HelloWorld {
+    public static void main(String[] args) {
+        // Prints "Hello, World" to the console
+        System.out.println("Hello, World");
+    }
+}`));
+  root.append(code);
+
+  const codeHighlight = $createCodeHighlightNode(`public class HelloWorld {
+  public static void main(String[] args) {
+      // Prints "Hello, World" to the console
+      System.out.println("Hello, World");
+  }
+}`);
+  const codeParagarph = $createCodeNode('java`');
+  codeParagarph.append(codeHighlight);
+  root.append(codeParagarph);
+};
+
 export const $generateContent = () => {
   $generateH1To6();
   $generateListContent();
+  $generateCode();
 
   const root = $getRoot();
+
+  const quote = $createQuoteNode();
+  quote.append($createTextNode('This is a quote node'));
+  root.append(quote);
+
+
   const paragraph = $createParagraphNode();
   paragraph.append($createTextNode(''));
   root.append(paragraph);

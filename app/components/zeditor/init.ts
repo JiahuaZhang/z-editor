@@ -173,7 +173,6 @@ export const $generateContent = () => {
   quote.append($createTextNode('This is a quote node'));
   root.append(quote);
 
-
   const paragraph = $createParagraphNode();
   paragraph.append($createTextNode(''));
   root.append(paragraph);

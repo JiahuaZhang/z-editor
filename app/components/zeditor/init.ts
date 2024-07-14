@@ -2,6 +2,7 @@ import { $createCodeHighlightNode, $createCodeNode } from '@lexical/code';
 import { $createListItemNode, $createListNode } from '@lexical/list';
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 import { $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
+import { $createTableNode, $createTableRowNode, $createTableCellNode } from '@lexical/table';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -162,10 +163,43 @@ const $generateCode = () => {
   root.append(codeParagarph);
 };
 
+const $generateTable = () => {
+  const root = $getRoot();
+
+  const emptyTable = $createTableNode();
+  const emptyRow = $createTableRowNode();
+  const emptyCell = $createTableCellNode(0);
+  emptyRow.append(emptyCell);
+  emptyTable.append(emptyRow);
+  root.append(emptyTable);
+
+  const table = $createTableNode();
+  const row = $createTableRowNode();
+  const cell = $createTableCellNode(0);
+  cell.append($createTextNode('cell'));
+
+  row.append(cell);
+  table.append(row);
+  root.append(table);
+
+  const table2x2 = $createTableNode();
+  for (const row of [0, 1]) {
+    const rowNode = $createTableRowNode();
+    for (const col of [0, 1]) {
+      const cell = $createTableCellNode(0);
+      cell.append($createTextNode(`${row}-${col}`));
+      rowNode.append(cell);
+    }
+    table2x2.append(rowNode);
+  }
+  root.append(table2x2);
+};
+
 export const $generateContent = () => {
   $generateH1To6();
-  $generateListContent();
-  $generateCode();
+  // $generateListContent();
+  // $generateCode();
+  $generateTable();
 
   const root = $getRoot();
 

@@ -2,7 +2,7 @@ import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
-import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
@@ -12,7 +12,9 @@ import { initialConfig } from './config';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { CodeHighlightPlugin } from './plugin/code/CodeHighlightPlugin';
 import { EmojiPlugin } from './plugin/emoji/EmojiPlugin';
+import { TableCellResizerPlugin } from './plugin/table/TableCellResizer';
 import { TableContext } from './plugin/table/TablePlugin';
+import './theme/style.css';
 
 export const UnoStaticTrick = () => <div un-top='2' un-left='2' />;
 
@@ -36,6 +38,7 @@ export const ZEditor = () => {
               <CheckListPlugin />
               <CodeHighlightPlugin />
               <TablePlugin />
+              <TableCellResizerPlugin />
 
               <EmojiPlugin />
             </LexicalComposer>

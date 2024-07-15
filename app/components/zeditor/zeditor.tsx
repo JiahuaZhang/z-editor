@@ -6,6 +6,7 @@ import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { ClientOnly } from 'remix-utils/client-only';
 import { initialConfig } from './config';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
@@ -34,6 +35,7 @@ export const ZEditor = () => {
               <ListPlugin />
               <CheckListPlugin />
               <CodeHighlightPlugin />
+              <TablePlugin />
 
               <EmojiPlugin />
             </LexicalComposer>

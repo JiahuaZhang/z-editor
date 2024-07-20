@@ -1,7 +1,7 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
-import type { TableCellNode, TableDOMCell, TableMapType, TableMapValueType } from '@lexical/table';
-import { $computeTableMapSkipCellCheck, $getTableNodeFromLexicalNodeOrThrow, $getTableRowIndexFromTableCellNode, $isTableCellNode, $isTableRowNode, getDOMCellFromTarget } from '@lexical/table';
+import type { TableCellNode, TableDOMCell, TableMapValueType } from '@lexical/table';
+import { $computeTableMapSkipCellCheck, $getTableColumnIndexFromTableCellNode, $getTableNodeFromLexicalNodeOrThrow, $getTableRowIndexFromTableCellNode, $isTableCellNode, $isTableRowNode, getDOMCellFromTarget } from '@lexical/table';
 import { calculateZoomLevel } from '@lexical/utils';
 import { MousePosition } from 'antd/es/modal/interface';
 import { $getNearestNodeFromDOMNode, LexicalEditor, } from 'lexical';
@@ -16,12 +16,9 @@ const MIN_COLUMN_WIDTH = 50;
 const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
   const targetRef = useRef<HTMLElement | null>(null);
   const resizerRef = useRef<HTMLDivElement | null>(null);
-  const tableRectRef = useRef<ClientRect | null>(null);
-
+  const tableRectRef = useRef<DOMRect | null>(null);
   const mouseStartPosRef = useRef<MousePosition | null>(null);
-  const [mouseCurrentPos, updateMouseCurrentPos] =
-    useState<MousePosition | null>(null);
-
+  const [mouseCurrentPos, updateMouseCurrentPos] = useState<MousePosition | null>(null);
   const [activeCell, updateActiveCell] = useState<TableDOMCell | null>(null);
   const [isMouseDown, updateIsMouseDown] = useState<boolean>(false);
   const [draggingDirection, updateDraggingDirection] = useState<MouseDraggingDirection | null>(null);
@@ -39,46 +36,42 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
   useEffect(() => {
     const onMouseMove = (event: MouseEvent) => {
       setTimeout(() => {
-        const target = event.target;
-
         if (draggingDirection) {
-          updateMouseCurrentPos({
-            x: event.clientX,
-            y: event.clientY,
-          });
+          updateMouseCurrentPos({ x: event.clientX, y: event.clientY, });
           return;
         }
+
         updateIsMouseDown(isMouseDownOnEvent(event));
+        const target = event.target;
         if (resizerRef.current && resizerRef.current.contains(target as Node)) {
           return;
         }
 
-        if (targetRef.current !== target) {
-          targetRef.current = target as HTMLElement;
-          const cell = getDOMCellFromTarget(target as HTMLElement);
+        if (targetRef.current === target) {
+          return;
+        }
 
-          if (cell && activeCell !== cell) {
-            editor.update(() => {
-              const tableCellNode = $getNearestNodeFromDOMNode(cell.elem);
-              if (!tableCellNode) {
-                throw new Error('TableCellResizer: Table cell node not found.');
-              }
+        targetRef.current = target as HTMLElement;
+        const cell = getDOMCellFromTarget(target as HTMLElement);
+        if (cell && activeCell !== cell) {
+          editor.update(() => {
+            const tableCellNode = $getNearestNodeFromDOMNode(cell.elem);
+            if (!tableCellNode) {
+              throw new Error('TableCellResizer: Table cell node not found.');
+            }
 
-              const tableNode =
-                $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-              const tableElement = editor.getElementByKey(tableNode.getKey());
+            const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
+            const tableElement = editor.getElementByKey(tableNode.getKey());
+            if (!tableElement) {
+              throw new Error('TableCellResizer: Table element not found.');
+            }
 
-              if (!tableElement) {
-                throw new Error('TableCellResizer: Table element not found.');
-              }
-
-              targetRef.current = target as HTMLElement;
-              tableRectRef.current = tableElement.getBoundingClientRect();
-              updateActiveCell(cell);
-            });
-          } else if (cell == null) {
-            resetState();
-          }
+            targetRef.current = target as HTMLElement;
+            tableRectRef.current = tableElement.getBoundingClientRect();
+            updateActiveCell(cell);
+          });
+        } else if (cell == null) {
+          resetState();
         }
       }, 0);
     };
@@ -113,10 +106,7 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
           }
 
           const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-
-          const tableRowIndex =
-            $getTableRowIndexFromTableCellNode(tableCellNode);
-
+          const tableRowIndex = $getTableRowIndexFromTableCellNode(tableCellNode);
           const tableRows = tableNode.getChildren();
 
           if (tableRowIndex >= tableRows.length || tableRowIndex < 0) {
@@ -124,7 +114,6 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
           }
 
           const tableRow = tableRows[tableRowIndex];
-
           if (!$isTableRowNode(tableRow)) {
             throw new Error('Expected table row');
           }
@@ -148,79 +137,55 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
     [activeCell, editor],
   );
 
-  const getCellNodeWidth = (cell: TableCellNode, activeEditor: LexicalEditor,) => {
+  const getCellNodeWidth = (cell: TableCellNode, activeEditor: LexicalEditor) => {
     const width = cell.getWidth();
-    if (width !== undefined) {
-      return width;
-    }
+    if (width !== undefined) { return width; }
 
     const domCellNode = activeEditor.getElementByKey(cell.getKey());
-    if (domCellNode == null) {
-      return undefined;
-    }
+    if (domCellNode == null) { return undefined; }
+
     const computedStyle = getComputedStyle(domCellNode);
-    return (
-      domCellNode.clientWidth -
-      parseFloat(computedStyle.paddingLeft) -
-      parseFloat(computedStyle.paddingRight)
-    );
+    return domCellNode.clientWidth - parseFloat(computedStyle.paddingLeft) - parseFloat(computedStyle.paddingRight);
   };
 
   const getCellNodeHeight = (cell: TableCellNode, activeEditor: LexicalEditor,) =>
     activeEditor.getElementByKey(cell.getKey())?.clientHeight;
-
-  const getCellColumnIndex = (tableCellNode: TableCellNode, tableMap: TableMapType) => {
-    for (let row = 0; row < tableMap.length; row++) {
-      for (let column = 0; column < tableMap[row].length; column++) {
-        if (tableMap[row][column].cell === tableCellNode) {
-          return column;
-        }
-      }
-    }
-  };
 
   const updateColumnWidth = useCallback(
     (widthChange: number) => {
       if (!activeCell) {
         throw new Error('TableCellResizer: Expected active cell.');
       }
-      editor.update(
-        () => {
-          const tableCellNode = $getNearestNodeFromDOMNode(activeCell.elem);
-          if (!$isTableCellNode(tableCellNode)) {
-            throw new Error('TableCellResizer: Table cell node not found.');
-          }
 
-          const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-          const [tableMap] = $computeTableMapSkipCellCheck(
-            tableNode,
-            null,
-            null,
-          );
-          const columnIndex = getCellColumnIndex(tableCellNode, tableMap);
-          if (columnIndex === undefined) {
-            throw new Error('TableCellResizer: Table column not found.');
-          }
+      editor.update(() => {
+        const tableCellNode = $getNearestNodeFromDOMNode(activeCell.elem);
+        if (!$isTableCellNode(tableCellNode)) {
+          throw new Error('TableCellResizer: Table cell node not found.');
+        }
 
-          for (let row = 0; row < tableMap.length; row++) {
-            const cell: TableMapValueType = tableMap[row][columnIndex];
-            if (
-              cell.startRow === row &&
-              (columnIndex === tableMap[row].length - 1 ||
-                tableMap[row][columnIndex].cell !==
-                tableMap[row][columnIndex + 1].cell)
-            ) {
-              const width = getCellNodeWidth(cell.cell, editor);
-              if (width === undefined) {
-                continue;
-              }
-              const newWidth = Math.max(width + widthChange, MIN_COLUMN_WIDTH);
-              cell.cell.setWidth(newWidth);
+        const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
+        const [tableMap] = $computeTableMapSkipCellCheck(tableNode, null, null);
+        const columnIndex = $getTableColumnIndexFromTableCellNode(tableCellNode);
+        if (columnIndex === undefined) {
+          throw new Error('TableCellResizer: Table column not found.');
+        }
+
+        for (let row = 0; row < tableMap.length; row++) {
+          const cell: TableMapValueType = tableMap[row][columnIndex];
+          if (
+            cell.startRow === row
+            && (columnIndex === tableMap[row].length - 1
+              || tableMap[row][columnIndex].cell !== tableMap[row][columnIndex + 1].cell)
+          ) {
+            const width = getCellNodeWidth(cell.cell, editor);
+            if (width === undefined) {
+              continue;
             }
+            const newWidth = Math.max(width + widthChange, MIN_COLUMN_WIDTH);
+            cell.cell.setWidth(newWidth);
           }
-        },
-        { tag: 'skip-scroll-into-view' },
-      );
+        }
+      }, { tag: 'skip-scroll-into-view' });
     },
     [activeCell, editor],
   );
@@ -283,70 +248,84 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
   );
 
   const getResizers = useCallback(() => {
-    if (activeCell) {
-      const { height, width, top, left } = activeCell.elem.getBoundingClientRect();
-      const zoom = calculateZoomLevel(activeCell.elem);
-      const zoneWidth = 10; // Pixel width of the zone where you can drag the edge
-      const styles = {
-        bottom: {
-          backgroundColor: 'none',
-          cursor: 'row-resize',
-          height: `${zoneWidth}px`,
-          left: `${window.pageXOffset + left}px`,
-          top: `${window.pageYOffset + top + height - zoneWidth / 2}px`,
-          width: `${width}px`,
-        },
-        right: {
-          backgroundColor: 'none',
-          cursor: 'col-resize',
-          height: `${height}px`,
-          left: `${window.pageXOffset + left + width - zoneWidth / 2}px`,
-          top: `${window.pageYOffset + top}px`,
-          width: `${zoneWidth}px`,
-        },
-      };
+    if (!activeCell) return { bottom: null, left: null, right: null, top: null, };
 
-      const tableRect = tableRectRef.current;
+    const { height, width, top, left } = activeCell.elem.getBoundingClientRect();
+    const zoom = calculateZoomLevel(activeCell.elem);
+    const zoneWidth = 10; // Pixel width of the zone where you can drag the edge
+    const styles = {
+      bottom: {
+        backgroundColor: 'none',
+        height: `${zoneWidth}px`,
+        left: `${window.pageXOffset + left}px`,
+        top: `${window.pageYOffset + top + height - zoneWidth / 2}px`,
+        width: `${width}px`,
+      },
+      right: {
+        backgroundColor: 'none',
+        height: `${height}px`,
+        left: `${window.pageXOffset + left + width - zoneWidth / 2}px`,
+        top: `${window.pageYOffset + top}px`,
+        width: `${zoneWidth}px`,
+      },
+    };
 
-      if (draggingDirection && mouseCurrentPos && tableRect) {
-        if (isHeightChanging(draggingDirection)) {
-          styles[draggingDirection].left = `${window.pageXOffset + tableRect.left}px`;
-          styles[draggingDirection].top = `${window.pageYOffset + mouseCurrentPos.y / zoom}px`;
-          styles[draggingDirection].height = '3px';
-          styles[draggingDirection].width = `${tableRect.width}px`;
-        } else {
-          styles[draggingDirection].top = `${window.pageYOffset + tableRect.top}px`;
-          styles[draggingDirection].left = `${window.pageXOffset + mouseCurrentPos.x / zoom}px`;
-          styles[draggingDirection].width = '3px';
-          styles[draggingDirection].height = `${tableRect.height}px`;
-        }
+    const tableRect = tableRectRef.current;
 
-        styles[draggingDirection].backgroundColor = '#adf';
+    if (draggingDirection && mouseCurrentPos && tableRect) {
+      if (isHeightChanging(draggingDirection)) {
+        styles[draggingDirection].left = `${window.pageXOffset + tableRect.left}px`;
+        styles[draggingDirection].top = `${window.pageYOffset + mouseCurrentPos.y / zoom}px`;
+        styles[draggingDirection].height = '3px';
+        styles[draggingDirection].width = `${tableRect.width}px`;
+      } else {
+        styles[draggingDirection].top = `${window.pageYOffset + tableRect.top}px`;
+        styles[draggingDirection].left = `${window.pageXOffset + mouseCurrentPos.x / zoom}px`;
+        styles[draggingDirection].width = '3px';
+        styles[draggingDirection].height = `${tableRect.height}px`;
       }
 
-      return styles;
+      styles[draggingDirection].backgroundColor = '#adf';
     }
 
-    return { bottom: null, left: null, right: null, top: null, };
+    return styles;
   }, [activeCell, draggingDirection, mouseCurrentPos]);
 
   const resizerStyles = getResizers();
+
   return (
     <div ref={resizerRef}>
       {activeCell != null && !isMouseDown && (
         <>
-          <div
-            un-position='absolute'
+          <div un-position='absolute'
+            un-cursor='col-resize'
             style={resizerStyles.right || undefined}
             onMouseDown={toggleResize('right')}
           />
-          <div
-            un-position='absolute'
+          <div un-position='absolute'
+            un-cursor='row-resize'
             style={resizerStyles.bottom || undefined}
             onMouseDown={toggleResize('bottom')}
           />
         </>
       )}
+
+      {/* <div un-positionn='absolute'
+        un-cursor='row-resize'
+        un-h='2.5'
+        un-left='[105.5px]'
+        un-top='[335.5px]'
+        un-w='16'
+        un-bg='blue-4'
+      />
+      <div un-positionn='absolute'
+        un-cursor='col-resize'
+        un-h='6'
+        un-left='[164.5px]'
+        un-top='[313.5px]'
+        un-w='16'
+        un-bg='blue4'
+      /> */}
     </div>
   );
 };

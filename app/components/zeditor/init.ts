@@ -193,6 +193,30 @@ const $generateTable = () => {
     table2x2.append(rowNode);
   }
   root.append(table2x2);
+
+  const table3x3 = $createTableNode();
+  for (const row of [0, 1, 2]) {
+    const rowNode = $createTableRowNode();
+    for (const col of [0, 1, 2]) {
+      const cell = $createTableCellNode(0);
+      cell.append($createTextNode(`${row}-${col}`));
+      rowNode.append(cell);
+    }
+    table3x3.append(rowNode);
+  }
+  root.append(table3x3);
+
+  const table4x4 = $createTableNode();
+  for (const row of [0, 1, 2, 3]) {
+    const rowNode = $createTableRowNode();
+    for (const col of [0, 1, 2, 3]) {
+      const cell = $createTableCellNode(0);
+      cell.append($createTextNode(`${row}-${col}`));
+      rowNode.append(cell);
+    }
+    table4x4.append(rowNode);
+  }
+  root.append(table4x4);
 };
 
 export const $generateContent = () => {

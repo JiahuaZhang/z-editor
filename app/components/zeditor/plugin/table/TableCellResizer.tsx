@@ -8,7 +8,11 @@ import { $getNearestNodeFromDOMNode, LexicalEditor, } from 'lexical';
 import { MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-type MouseDraggingDirection = 'right' | 'bottom';
+namespace Mouse {
+  export namespace Dragging {
+    export type Direction = 'right' | 'bottom';
+  }
+}
 
 const MIN_ROW_HEIGHT = 33;
 const MIN_COLUMN_WIDTH = 50;
@@ -18,15 +22,15 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
   const resizerRef = useRef<HTMLDivElement | null>(null);
   const tableRectRef = useRef<DOMRect | null>(null);
   const mouseStartPosRef = useRef<MousePosition | null>(null);
-  const [mouseCurrentPos, updateMouseCurrentPos] = useState<MousePosition | null>(null);
-  const [activeCell, updateActiveCell] = useState<TableDOMCell | null>(null);
-  const [isMouseDown, updateIsMouseDown] = useState<boolean>(false);
-  const [draggingDirection, updateDraggingDirection] = useState<MouseDraggingDirection | null>(null);
+  const [mouseCurrentPos, setMouseCurrentPos] = useState<MousePosition | null>(null);
+  const [activeCell, setActiveCell] = useState<TableDOMCell | null>(null);
+  const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
+  const [draggingDirection, setDraggingDirection] = useState<Mouse.Dragging.Direction | null>(null);
 
   const resetState = useCallback(() => {
-    updateActiveCell(null);
+    setActiveCell(null);
     targetRef.current = null;
-    updateDraggingDirection(null);
+    setDraggingDirection(null);
     mouseStartPosRef.current = null;
     tableRectRef.current = null;
   }, []);
@@ -37,11 +41,11 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
     const onMouseMove = (event: MouseEvent) => {
       setTimeout(() => {
         if (draggingDirection) {
-          updateMouseCurrentPos({ x: event.clientX, y: event.clientY, });
+          setMouseCurrentPos({ x: event.clientX, y: event.clientY, });
           return;
         }
 
-        updateIsMouseDown(isMouseDownOnEvent(event));
+        setIsMouseDown(isMouseDownOnEvent(event));
         const target = event.target;
         if (resizerRef.current && resizerRef.current.contains(target as Node)) {
           return;
@@ -68,7 +72,7 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
 
             targetRef.current = target as HTMLElement;
             tableRectRef.current = tableElement.getBoundingClientRect();
-            updateActiveCell(cell);
+            setActiveCell(cell);
           });
         } else if (cell == null) {
           resetState();
@@ -76,8 +80,8 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
       }, 0);
     };
 
-    const onMouseDown = (event: MouseEvent) => setTimeout(() => updateIsMouseDown(true), 0);
-    const onMouseUp = (event: MouseEvent) => setTimeout(() => updateIsMouseDown(false), 0);
+    const onMouseDown = (event: MouseEvent) => setTimeout(() => setIsMouseDown(true), 0);
+    const onMouseUp = (event: MouseEvent) => setTimeout(() => setIsMouseDown(false), 0);
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mousedown', onMouseDown);
@@ -90,7 +94,7 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
     };
   }, [activeCell, draggingDirection, editor, resetState]);
 
-  const isHeightChanging = (direction: MouseDraggingDirection) => direction === 'bottom';
+  const isHeightChanging = (direction: Mouse.Dragging.Direction) => direction === 'bottom';
 
   const updateRowHeight = useCallback(
     (heightChange: number) => {
@@ -191,7 +195,7 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
   );
 
   const mouseUpHandler = useCallback(
-    (direction: MouseDraggingDirection) => {
+    (direction: Mouse.Dragging.Direction) => {
       const handler = (event: MouseEvent) => {
         event.preventDefault();
         event.stopPropagation();
@@ -201,13 +205,10 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
         }
 
         if (mouseStartPosRef.current) {
+          if (activeCell === null) { return; }
+
           const { x, y } = mouseStartPosRef.current;
-
-          if (activeCell === null) {
-            return;
-          }
           const zoom = calculateZoomLevel(event.target as Element);
-
           if (isHeightChanging(direction)) {
             const heightChange = (event.clientY - y) / zoom;
             updateRowHeight(heightChange);
@@ -226,7 +227,7 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
   );
 
   const toggleResize = useCallback(
-    (direction: MouseDraggingDirection): MouseEventHandler<HTMLDivElement> =>
+    (direction: Mouse.Dragging.Direction): MouseEventHandler<HTMLDivElement> =>
       (event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -235,12 +236,9 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
           throw new Error('TableCellResizer: Expected active cell.');
         }
 
-        mouseStartPosRef.current = {
-          x: event.clientX,
-          y: event.clientY,
-        };
-        updateMouseCurrentPos(mouseStartPosRef.current);
-        updateDraggingDirection(direction);
+        mouseStartPosRef.current = { x: event.clientX, y: event.clientY };
+        setMouseCurrentPos(mouseStartPosRef.current);
+        setDraggingDirection(direction);
 
         document.addEventListener('mouseup', mouseUpHandler(direction));
       },
@@ -257,30 +255,29 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
       bottom: {
         backgroundColor: 'none',
         height: `${zoneWidth}px`,
-        left: `${window.pageXOffset + left}px`,
-        top: `${window.pageYOffset + top + height - zoneWidth / 2}px`,
+        left: `${window.scrollX + left}px`,
+        top: `${window.scrollY + top + height - zoneWidth / 2}px`,
         width: `${width}px`,
       },
       right: {
         backgroundColor: 'none',
         height: `${height}px`,
-        left: `${window.pageXOffset + left + width - zoneWidth / 2}px`,
-        top: `${window.pageYOffset + top}px`,
+        left: `${window.scrollX + left + width - zoneWidth / 2}px`,
+        top: `${window.scrollY + top}px`,
         width: `${zoneWidth}px`,
       },
     };
 
     const tableRect = tableRectRef.current;
-
     if (draggingDirection && mouseCurrentPos && tableRect) {
       if (isHeightChanging(draggingDirection)) {
-        styles[draggingDirection].left = `${window.pageXOffset + tableRect.left}px`;
-        styles[draggingDirection].top = `${window.pageYOffset + mouseCurrentPos.y / zoom}px`;
+        styles[draggingDirection].left = `${window.scrollX + tableRect.left}px`;
+        styles[draggingDirection].top = `${window.scrollY + mouseCurrentPos.y / zoom}px`;
         styles[draggingDirection].height = '3px';
         styles[draggingDirection].width = `${tableRect.width}px`;
       } else {
-        styles[draggingDirection].top = `${window.pageYOffset + tableRect.top}px`;
-        styles[draggingDirection].left = `${window.pageXOffset + mouseCurrentPos.x / zoom}px`;
+        styles[draggingDirection].top = `${window.scrollY + tableRect.top}px`;
+        styles[draggingDirection].left = `${window.scrollX + mouseCurrentPos.x / zoom}px`;
         styles[draggingDirection].width = '3px';
         styles[draggingDirection].height = `${tableRect.height}px`;
       }
@@ -309,23 +306,6 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
           />
         </>
       )}
-
-      {/* <div un-positionn='absolute'
-        un-cursor='row-resize'
-        un-h='2.5'
-        un-left='[105.5px]'
-        un-top='[335.5px]'
-        un-w='16'
-        un-bg='blue-4'
-      />
-      <div un-positionn='absolute'
-        un-cursor='col-resize'
-        un-h='6'
-        un-left='[164.5px]'
-        un-top='[313.5px]'
-        un-w='16'
-        un-bg='blue4'
-      /> */}
     </div>
   );
 };

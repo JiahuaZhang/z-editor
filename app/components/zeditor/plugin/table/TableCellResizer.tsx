@@ -94,7 +94,8 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
     };
   }, [activeCell, draggingDirection, editor, resetState]);
 
-  const isHeightChanging = (direction: Mouse.Dragging.Direction) => direction === 'bottom';
+  const getCellNodeHeight = (cell: TableCellNode, activeEditor: LexicalEditor,) =>
+    activeEditor.getElementByKey(cell.getKey())?.clientHeight;
 
   const updateRowHeight = useCallback(
     (heightChange: number) => {
@@ -152,9 +153,6 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
     return domCellNode.clientWidth - parseFloat(computedStyle.paddingLeft) - parseFloat(computedStyle.paddingRight);
   };
 
-  const getCellNodeHeight = (cell: TableCellNode, activeEditor: LexicalEditor,) =>
-    activeEditor.getElementByKey(cell.getKey())?.clientHeight;
-
   const updateColumnWidth = useCallback(
     (widthChange: number) => {
       if (!activeCell) {
@@ -193,6 +191,8 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
     },
     [activeCell, editor],
   );
+
+  const isHeightChanging = (direction: Mouse.Dragging.Direction) => direction === 'bottom';
 
   const mouseUpHandler = useCallback(
     (direction: Mouse.Dragging.Direction) => {
@@ -237,9 +237,7 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
         }
 
         mouseStartPosRef.current = { x: event.clientX, y: event.clientY };
-        setMouseCurrentPos(mouseStartPosRef.current);
         setDraggingDirection(direction);
-
         document.addEventListener('mouseup', mouseUpHandler(direction));
       },
     [activeCell, mouseUpHandler],

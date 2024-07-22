@@ -10,9 +10,7 @@ import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { ClientOnly } from 'remix-utils/client-only';
 import { initialConfig } from './config';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
-import { CodeHighlightPlugin } from './plugin/code/CodeHighlightPlugin';
-import { EmojiPlugin } from './plugin/emoji/EmojiPlugin';
-import { TableCellResizerPlugin } from './plugin/table/TableCellResizer';
+import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import './theme/style.css';
 
@@ -36,11 +34,11 @@ export const ZEditor = () => {
               <AutoFocusPlugin />
               <ListPlugin />
               <CheckListPlugin />
-              <CodeHighlightPlugin />
+              <Plugin.Code.Highlight />
               <TablePlugin />
-              <TableCellResizerPlugin />
+              <Plugin.Table.CellResizer />
 
-              <EmojiPlugin />
+              <Plugin.Emoji />
             </LexicalComposer>
           </TableContext>
         </SharedHistoryContext>

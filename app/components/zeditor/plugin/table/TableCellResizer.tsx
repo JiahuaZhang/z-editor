@@ -294,11 +294,13 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
         <>
           <div un-position='absolute'
             un-cursor='col-resize'
+            className='zeditor-tabel-cell-resizer'
             style={resizerStyles.right || undefined}
             onMouseDown={toggleResize('right')}
           />
           <div un-position='absolute'
             un-cursor='row-resize'
+            className='zeditor-tabel-cell-resizer'
             style={resizerStyles.bottom || undefined}
             onMouseDown={toggleResize('bottom')}
           />

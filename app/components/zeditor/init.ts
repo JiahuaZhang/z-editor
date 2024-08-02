@@ -1,8 +1,9 @@
 import { $createCodeHighlightNode, $createCodeNode } from '@lexical/code';
+import { $createHashtagNode } from '@lexical/hashtag';
 import { $createListItemNode, $createListNode } from '@lexical/list';
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
+import { $createTableCellNode, $createTableNode, $createTableRowNode } from '@lexical/table';
 import { $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
-import { $createTableNode, $createTableRowNode, $createTableCellNode } from '@lexical/table';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -219,11 +220,33 @@ const $generateTable = () => {
   root.append(table4x4);
 };
 
+const $generateHashTag = () => {
+  const root = $getRoot();
+  const paragraphNode = $createParagraphNode();
+  const text = `Check out this hashtag: #lexical #smart-tag-here #中文标签🏷 #📕-中文-英文, #randomTag. #📕-😔-♥`;
+  // const textNode = $createTextNode('Check out this hashtag: ');
+  // const hashtagNode = $createHashtagNode('#lexical');
+  // const textNode1 = $createTextNode(' ');
+  // const hashtagNode1 = $createHashtagNode('#smart-tag-here');
+  // const textNode2 = $createTextNode(' ');
+  // const hashtagNode2 = $createHashtagNode('#中文标签🏷');
+  // const textNode3 = $createTextNode(' ');
+  // const hashtagNode3 = $createHashtagNode('#📕-中文-英文');
+  // const textNode4 = $createTextNode(',');
+  // const hashtagNode4 = $createHashtagNode('#randomTag');
+  // const textNode5 = $createTextNode('.');
+  // const hashtagNode5 = $createHashtagNode('#📕-😔-♥');
+  // paragraphNode.append(textNode, hashtagNode, textNode1, hashtagNode1, textNode2, hashtagNode2, textNode, hashtagNode3, textNode4, hashtagNode4, textNode5, hashtagNode5);
+  paragraphNode.append($createTextNode(text));
+  root.append(paragraphNode);
+};
+
 export const $generateContent = () => {
   $generateH1To6();
   // $generateListContent();
   // $generateCode();
-  $generateTable();
+  // $generateTable();
+  $generateHashTag();
 
   const root = $getRoot();
 

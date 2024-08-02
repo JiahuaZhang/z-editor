@@ -1,5 +1,6 @@
 import { CodeHighlightPlugin } from './code/CodeHighlightPlugin';
 import { EmojiPlugin } from './emoji/EmojiPlugin';
+import { HashtagPlugin } from './hashtag/HashTagPlugin';
 import { TableCellResizerPlugin } from './table/TableCellResizer';
 import { TableHoverActionsPlugin } from './table/TableHoverActionsPlugin';
 
@@ -12,4 +13,5 @@ export namespace Plugin {
     export const HoverActinos = TableHoverActionsPlugin;
   }
   export const Emoji = EmojiPlugin;
+  export const HashTag = HashtagPlugin;
 }

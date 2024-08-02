@@ -38,6 +38,7 @@ export const ZEditor = () => {
               <TablePlugin />
               <Plugin.Table.CellResizer />
               <Plugin.Table.HoverActinos />
+              <Plugin.HashTag />
 
               <Plugin.Emoji />
             </LexicalComposer>

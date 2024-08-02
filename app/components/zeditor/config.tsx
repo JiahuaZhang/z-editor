@@ -1,4 +1,5 @@
 import { CodeHighlightNode, CodeNode } from '@lexical/code';
+import { HashtagNode } from '@lexical/hashtag';
 import { ListItemNode, ListNode } from '@lexical/list';
 import { InitialConfigType } from '@lexical/react/LexicalComposer';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
@@ -77,8 +78,9 @@ export const initialConfig: InitialConfigType = {
     tableResizeRuler: 'PlaygroundEditorTheme__tableCellResizeRuler',
     tableSelected: 'PlaygroundEditorTheme__tableSelected',
     tableSelection: 'PlaygroundEditorTheme__tableSelection',
+    hashtag: 'bg-blue-2 border-b-blue-4 border-b-2'
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, EmojiNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, EmojiNode],
   editorState: $generateContent
 };

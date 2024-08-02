@@ -39,7 +39,6 @@ const TableHoverActionsContainer = ({ anchorElem }: { anchorElem: HTMLElement; }
   const [isShownRow, setShownRow] = useState<boolean>(false);
   const [isShownColumn, setShownColumn] = useState<boolean>(false);
   const [shouldListenMouseMove, setShouldListenMouseMove] = useState<boolean>(false);
-  const [position, setPosition] = useState({});
   const [rowPosition, setRowPosition] = useState({});
   const [columnPosition, setColumnPosition] = useState({});
   const codeSetRef = useRef<Set<NodeKey>>(new Set());

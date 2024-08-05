@@ -83,5 +83,6 @@ export const initialConfig: InitialConfigType = {
   },
   onError: console.error,
   nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, EmojiNode],
-  editorState: $generateContent
+  editorState: $generateContent,
+  // editable: false
 };

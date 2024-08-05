@@ -4,6 +4,7 @@ import { $createListItemNode, $createListNode } from '@lexical/list';
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 import { $createTableCellNode, $createTableNode, $createTableRowNode } from '@lexical/table';
 import { $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
+import { $createLinkNode } from '@lexical/link';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -241,12 +242,25 @@ const $generateHashTag = () => {
   root.append(paragraphNode);
 };
 
+const $generateLink = () => {
+  const root = $getRoot();
+  const link = $createLinkNode('google.com');
+  console.log({ link });
+
+  link.append($createTextNode('google'));
+  // const paragraphNode = $createParagraphNode();
+  // paragraphNode.append(link);
+  // root.append(paragraphNode);
+  root.append(link);
+};
+
 export const $generateContent = () => {
   $generateH1To6();
   // $generateListContent();
   // $generateCode();
   // $generateTable();
   $generateHashTag();
+  $generateLink();
 
   const root = $getRoot();
 

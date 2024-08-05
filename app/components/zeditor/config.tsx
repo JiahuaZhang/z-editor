@@ -1,5 +1,6 @@
 import { CodeHighlightNode, CodeNode } from '@lexical/code';
 import { HashtagNode } from '@lexical/hashtag';
+import { AutoLinkNode, LinkNode } from '@lexical/link';
 import { ListItemNode, ListNode } from '@lexical/list';
 import { InitialConfigType } from '@lexical/react/LexicalComposer';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
@@ -66,21 +67,21 @@ export const initialConfig: InitialConfigType = {
     },
     table: 'w-max border border-gray-3 border-rounded m-2',
     tableCell: 'min-w-16 border border-gray-4 zeditor-table-cell',
-    tableCellActionButton: 'PlaygroundEditorTheme__tableCellActionButton',
-    tableCellActionButtonContainer:
-      'PlaygroundEditorTheme__tableCellActionButtonContainer',
-    tableCellEditing: 'PlaygroundEditorTheme__tableCellEditing',
-    tableCellHeader: 'PlaygroundEditorTheme__tableCellHeader',
-    tableCellPrimarySelected: 'PlaygroundEditorTheme__tableCellPrimarySelected',
-    tableCellResizer: 'PlaygroundEditorTheme__tableCellResizer',
-    tableCellSelected: 'PlaygroundEditorTheme__tableCellSelected',
-    tableCellSortedIndicator: 'PlaygroundEditorTheme__tableCellSortedIndicator',
-    tableResizeRuler: 'PlaygroundEditorTheme__tableCellResizeRuler',
-    tableSelected: 'PlaygroundEditorTheme__tableSelected',
-    tableSelection: 'PlaygroundEditorTheme__tableSelection',
-    hashtag: 'bg-blue-2 border-b-blue-4 border-b-2'
+    // tableCellActionButton: 'PlaygroundEditorTheme__tableCellActionButton',
+    // tableCellActionButtonContainer: 'PlaygroundEditorTheme__tableCellActionButtonContainer',
+    // tableCellEditing: 'PlaygroundEditorTheme__tableCellEditing',
+    // tableCellHeader: 'PlaygroundEditorTheme__tableCellHeader',
+    // tableCellPrimarySelected: 'PlaygroundEditorTheme__tableCellPrimarySelected',
+    // tableCellResizer: 'PlaygroundEditorTheme__tableCellResizer',
+    // tableCellSelected: 'PlaygroundEditorTheme__tableCellSelected',
+    // tableCellSortedIndicator: 'PlaygroundEditorTheme__tableCellSortedIndicator',
+    // tableResizeRuler: 'PlaygroundEditorTheme__tableCellResizeRuler',
+    // tableSelected: 'PlaygroundEditorTheme__tableSelected',
+    // tableSelection: 'PlaygroundEditorTheme__tableSelection',
+    hashtag: 'bg-blue-2 border-b-blue-4 border-b-2',
+    link: 'text-blue-7 hover:cursor-pointer hover:underline'
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, EmojiNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, EmojiNode],
   editorState: $generateContent
 };

@@ -245,12 +245,7 @@ const $generateHashTag = () => {
 const $generateLink = () => {
   const root = $getRoot();
   const link = $createLinkNode('google.com');
-  console.log({ link });
-
   link.append($createTextNode('google'));
-  // const paragraphNode = $createParagraphNode();
-  // paragraphNode.append(link);
-  // root.append(paragraphNode);
   root.append(link);
 };
 

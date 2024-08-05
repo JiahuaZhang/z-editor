@@ -1,9 +1,11 @@
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+import { AutoLinkPlugin } from '@lexical/react/LexicalAutoLinkPlugin';
 import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
@@ -13,6 +15,7 @@ import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import './theme/style.css';
+import { MATCHERS, validateUrl } from './util/url';
 
 export const UnoStaticTrick = () => <div un-top='2' un-left='2' />;
 
@@ -39,6 +42,8 @@ export const ZEditor = () => {
               <Plugin.Table.CellResizer />
               <Plugin.Table.HoverActinos />
               <Plugin.HashTag />
+              <LinkPlugin validateUrl={validateUrl} />
+              <AutoLinkPlugin matchers={MATCHERS} />
 
               <Plugin.Emoji />
             </LexicalComposer>

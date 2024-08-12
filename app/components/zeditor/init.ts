@@ -3,7 +3,7 @@ import { $createHashtagNode } from '@lexical/hashtag';
 import { $createListItemNode, $createListNode } from '@lexical/list';
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 import { $createTableCellNode, $createTableNode, $createTableRowNode } from '@lexical/table';
-import { $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
+import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
 import { $createLinkNode } from '@lexical/link';
 
 const $generateListContent = () => {
@@ -247,6 +247,12 @@ const $generateLink = () => {
   const link = $createLinkNode('https://www.google.com');
   link.append($createTextNode('google'));
   root.append(link);
+
+  root.append($createParagraphNode());
+
+  const link2 = $createLinkNode('https://www.google.com/search?sca_esv=09b2b442516542ec&sxsrf=ADLYWIJu4_eb8hV8Q4a4FecqsoqigzsLIA:1723334765340&q=google+images&udm=2&fbs=AEQNm0Aa4sjWe7Rqy32pFwRj0UkWd8nbOJfsBGGB5IQQO6L3J_86uWOeqwdnV0yaSF-x2jogM63VUdBhAMVqo6r6ESHk5gYCycVYeSiTstipcfTqmDX4HENY8qrzy053qKvdRZFWn-VmYPJETamxffmtEKSqSFyN1NAs7geTy2Zjz_QIIZYxp-nlO2-_BmwI3ttsV3gNreTXhU1gZ0r7wI6MyQGb9r9hAw&sa=X&ved=2ahUKEwikl5Gk0uuHAxWUm4kEHStbAmEQtKgLegQIGBAB&biw=1912&bih=1002&dpr=1#vhid=yI1lnDQM0d5JwM&vssid=mosaic');
+  link2.append($createTextNode('image'));
+  root.append(link2);
 };
 
 export const $generateContent = () => {

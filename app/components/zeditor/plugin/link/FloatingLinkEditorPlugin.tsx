@@ -50,12 +50,9 @@ const FloatingLinkEditor = ({
     const nativeSelection = window.getSelection();
     const activeElement = document.activeElement;
 
-    if (editorElem === null) {
-      return;
-    }
+    if (editorElem === null) return;
 
     const rootElement = editor.getRootElement();
-
     if (
       selection !== null
       && nativeSelection !== null
@@ -84,11 +81,7 @@ const FloatingLinkEditor = ({
   useEffect(() => {
     const scrollerElem = anchorElem.parentElement;
 
-    const update = () => {
-      editor.getEditorState().read(() => {
-        $updateLinkEditor();
-      });
-    };
+    const update = () => { editor.getEditorState().read($updateLinkEditor); };
 
     window.addEventListener('resize', update);
 
@@ -107,11 +100,7 @@ const FloatingLinkEditor = ({
 
   useEffect(() => {
     return mergeRegister(
-      editor.registerUpdateListener(({ editorState }) => {
-        editorState.read(() => {
-          $updateLinkEditor();
-        });
-      }),
+      editor.registerUpdateListener(({ editorState }) => { editorState.read($updateLinkEditor); }),
 
       editor.registerCommand(
         SELECTION_CHANGE_COMMAND,
@@ -135,11 +124,7 @@ const FloatingLinkEditor = ({
     );
   }, [editor, $updateLinkEditor, setIsLink, isLink]);
 
-  useEffect(() => {
-    editor.getEditorState().read(() => {
-      $updateLinkEditor();
-    });
-  }, [editor, $updateLinkEditor]);
+  useEffect(() => { editor.getEditorState().read($updateLinkEditor); }, [editor, $updateLinkEditor]);
 
   useEffect(() => {
     if (isLinkEditMode && inputRef.current) {
@@ -160,27 +145,26 @@ const FloatingLinkEditor = ({
   };
 
   const handleLinkSubmission = () => {
-    if (lastSelection !== null) {
-      if (linkUrl !== '') {
-        editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl(editedLinkUrl));
-        editor.update(() => {
-          const selection = $getSelection();
-          if ($isRangeSelection(selection)) {
-            const parent = getSelectedNode(selection).getParent();
-            if ($isAutoLinkNode(parent)) {
-              const linkNode = $createLinkNode(parent.getURL(), {
-                rel: parent.__rel,
-                target: parent.__target,
-                title: parent.__title,
-              });
-              parent.replace(linkNode, true);
-            }
+    if (lastSelection === null) return;
+    if (linkUrl !== '') {
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl(editedLinkUrl));
+      editor.update(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          const parent = getSelectedNode(selection).getParent();
+          if ($isAutoLinkNode(parent)) {
+            const linkNode = $createLinkNode(parent.getURL(), {
+              rel: parent.__rel,
+              target: parent.__target,
+              title: parent.__title,
+            });
+            parent.replace(linkNode, true);
           }
-        });
-      }
-      setEditedLinkUrl('https://');
-      setIsLinkEditMode(false);
+        }
+      });
     }
+    setEditedLinkUrl('https://');
+    setIsLinkEditMode(false);
   };
 
   return <div ref={editorRef}
@@ -188,11 +172,11 @@ const FloatingLinkEditor = ({
     un-top='0'
     un-left='0'
     un-bg='#fff'
-    un-shadow='[2px_2px_2px_#0000004d]'
+    un-shadow='[0_0_4px_2px_#7dd3fc]'
     un-border='rounded'
     un-transition='opacity'
     un-duration='500'
-    className="link-editor">
+  >
     {
       isLink && isLinkEditMode && <div un-grid='~ flow-col'
         un-grid-cols='[1fr_max-content_max-content]'
@@ -220,23 +204,20 @@ const FloatingLinkEditor = ({
             monitorInputInteraction(event);
           }}
         />
-        <div
-          un-hover='text-blue-5'
+        <button
+          un-hover='text-red-6'
+          un-focus='text-red-6'
           un-scale='125'
-          className="i-material-symbols-light:check link-cancel"
-          role="button"
+          className="i-material-symbols-light:cancel link-cancel"
           tabIndex={0}
-          onMouseDown={(event) => event.preventDefault()}
-          onClick={() => {
-            setIsLinkEditMode(false);
-          }}
+          onClick={() => setIsLinkEditMode(false)}
         />
-        <div un-hover='text-red-6'
+        <button
+          un-hover='text-blue-5'
+          un-focus='text-blue-5'
           un-scale='125'
-          className="i-material-symbols-light:cancel link-confirm"
-          role="button"
+          className="i-material-symbols-light:check link-confirm"
           tabIndex={0}
-          onMouseDown={(event) => event.preventDefault()}
           onClick={handleLinkSubmission}
         />
       </div>
@@ -265,11 +246,11 @@ const FloatingLinkEditor = ({
         </a>
         <button
           un-hover='text-blue-5'
+          un-focus='text-blue-5'
           className="i-material-symbols-light:edit link-edit"
           un-w='4'
           un-h='4'
           tabIndex={0}
-          onMouseDown={(event) => event.preventDefault()}
           onClick={() => {
             setEditedLinkUrl(linkUrl);
             setIsLinkEditMode(true);
@@ -278,9 +259,9 @@ const FloatingLinkEditor = ({
         <button un-w='4'
           un-h='4'
           un-hover='text-red-6'
+          un-focus='text-red-6'
           className="i-mdi:trash link-trash"
           tabIndex={0}
-          onMouseDown={(event) => event.preventDefault()}
           onClick={() => {
             editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
           }}
@@ -321,11 +302,6 @@ const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLEle
           );
         });
       setIsLink(!badNode);
-      // if (!badNode) {
-      //   setIsLink(true);
-      // } else {
-      //   setIsLink(false);
-      // }
     };
 
     return mergeRegister(

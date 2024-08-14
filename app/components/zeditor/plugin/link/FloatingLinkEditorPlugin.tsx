@@ -66,7 +66,7 @@ const FloatingLinkEditor = ({
         setFloatingElemPositionForLinkEditor(domRect, editorElem, anchorElem);
       }
       setLastSelection(selection);
-    } else if (!activeElement || activeElement.className !== 'link-input') {
+    } else if (!activeElement || activeElement.className !== 'lexical-float-link-input') {
       if (rootElement !== null) {
         setFloatingElemPositionForLinkEditor(null, editorElem, anchorElem);
       }
@@ -132,9 +132,7 @@ const FloatingLinkEditor = ({
     }
   }, [isLinkEditMode, isLink]);
 
-  const monitorInputInteraction = (
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
+  const monitorInputInteraction = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault();
       handleLinkSubmission();
@@ -195,20 +193,16 @@ const FloatingLinkEditor = ({
           un-border='rounded'
           un-w='96'
           ref={inputRef}
-          className="link-input"
+          className="lexical-float-link-input"
           value={editedLinkUrl}
-          onChange={(event) => {
-            setEditedLinkUrl(event.target.value);
-          }}
-          onKeyDown={(event) => {
-            monitorInputInteraction(event);
-          }}
+          onChange={(event) => setEditedLinkUrl(event.target.value)}
+          onKeyDown={monitorInputInteraction}
         />
         <button
           un-hover='text-red-6'
           un-focus='text-red-6'
           un-scale='125'
-          className="i-material-symbols-light:cancel link-cancel"
+          className="i-material-symbols-light:cancel"
           tabIndex={0}
           onClick={() => setIsLinkEditMode(false)}
         />
@@ -216,7 +210,7 @@ const FloatingLinkEditor = ({
           un-hover='text-blue-5'
           un-focus='text-blue-5'
           un-scale='125'
-          className="i-material-symbols-light:check link-confirm"
+          className="i-material-symbols-light:check"
           tabIndex={0}
           onClick={handleLinkSubmission}
         />
@@ -247,7 +241,7 @@ const FloatingLinkEditor = ({
         <button
           un-hover='text-blue-5'
           un-focus='text-blue-5'
-          className="i-material-symbols-light:edit link-edit"
+          className="i-material-symbols-light:edit"
           un-w='4'
           un-h='4'
           tabIndex={0}
@@ -262,9 +256,7 @@ const FloatingLinkEditor = ({
           un-focus='text-red-6'
           className="i-mdi:trash link-trash"
           tabIndex={0}
-          onClick={() => {
-            editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
-          }}
+          onClick={() => { editor.dispatchCommand(TOGGLE_LINK_COMMAND, null); }}
         />
       </div>
     }

@@ -7,6 +7,7 @@ import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
 import { $generateContent } from './init';
 import { EmojiNode } from './plugin/emoji/EmojiNode';
+import { StickyNode } from './plugin/sticky-note/StickNote';
 
 export const initialConfig: InitialConfigType = {
   namespace: 'z-editor',
@@ -82,7 +83,7 @@ export const initialConfig: InitialConfigType = {
     link: 'text-blue-7 hover:cursor-pointer hover:underline'
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, EmojiNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, EmojiNode, StickyNode],
   editorState: $generateContent,
   // editable: false
 };

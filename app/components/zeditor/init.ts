@@ -5,6 +5,7 @@ import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 import { $createTableCellNode, $createTableNode, $createTableRowNode } from '@lexical/table';
 import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
 import { $createLinkNode } from '@lexical/link';
+import { $createStickyNode } from './plugin/sticky-note/StickNote';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -275,4 +276,7 @@ export const $generateContent = () => {
   const paragraph = $createParagraphNode();
   paragraph.append($createTextNode(''));
   root.append(paragraph);
+
+  const stickyNode = $createStickyNode(200, 20);
+  root.append(stickyNode);
 };

@@ -1,10 +1,12 @@
-import { defineConfig, presetUno, presetIcons, presetAttributify, presetTypography } from 'unocss'
+import { defineConfig, presetAttributify, presetIcons, presetTagify, presetTypography, presetUno, transformerVariantGroup } from 'unocss'
 
 export default defineConfig({
   presets: [
     presetUno(),
-    presetAttributify(),
+    presetAttributify({ trueToNonValued: true }),
     presetIcons({ extraProperties: { display: 'inline-block' } }),
-    presetTypography()
+    presetTypography(),
+    presetTagify({ prefix: 'un-' })
   ],
+  transformers: [transformerVariantGroup()]
 })

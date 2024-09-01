@@ -1,4 +1,4 @@
-import { defineConfig, presetAttributify, presetIcons, presetTagify, presetTypography, presetUno, transformerVariantGroup, transformerAttributifyJsx } from 'unocss'
+import { defineConfig, presetAttributify, presetIcons, presetTagify, presetTypography, presetUno, transformerAttributifyJsx, transformerVariantGroup } from 'unocss'
 
 export default defineConfig({
   presets: [
@@ -8,5 +8,7 @@ export default defineConfig({
     presetTypography(),
     presetTagify({ prefix: 'un-' })
   ],
-  transformers: [transformerVariantGroup()]
+  transformers: [transformerVariantGroup(),
+    // transformerAttributifyJsx({ blocklist: [/^(?!un-)/] })
+  ]
 })

@@ -203,21 +203,26 @@ export const StickyComponent = ({
             event.preventDefault();
           }
         }}>
-        <header un-grid='~' un-justify='end' un-grid-flow='col' un-gap='1' un-items='center'>
-          <button
-            onClick={handleColorChange}
+        <header un-grid='~' un-justify='end' un-grid-flow='col' un-gap='1' un-items='center' un-pointer-events='none'>
+          <button un-cursor='pointer'
+            un-pointer-events='auto'
+            onClick={() => {
+              console.log('try to change color');
+              handleColorChange();
+            }}
             className="color"
             aria-label="Change sticky note color"
-            title="Color">
-            <i className="bucket" />
-            <div className="i-mdi:paint" un-text='pink-6' ></div>
+            title="Color"
+          >
+            <div className="i-mdi:paint" un-text='hover:pink-6' ></div>
           </button>
-          <button
+          <button un-cursor='pointer'
+            un-pointer-events='auto'
             onClick={handleDelete}
             className="delete"
             aria-label="Delete sticky note"
             title="Delete">
-            <div className="i-mdi:close" un-text='red-6' ></div>
+            <div className="i-mdi:close" un-text='hover:red-6' ></div>
           </button>
         </header>
         <LexicalNestedComposer initialEditor={caption}>
@@ -225,15 +230,14 @@ export const StickyComponent = ({
           <PlainTextPlugin
             contentEditable={
               <ContentEditable
-                // un-border='2 solid blue'
                 un-position='relative'
+                un-outline='focus-visible:none'
+                un-cursor='text'
+                un-px='1'
                 className='StickyNode__contentEditable'
                 aria-placeholder="What's up?"
-                // un-text='gray-6'
                 placeholder={<div
-                  // un-border='2px solid purple-6' 
-                  un-position='absolute' un-top='31px' un-pointer-events='none' className='prose-rose' >What's up?
-                  <h1 un-prose un-prose-neutral  >testing prose color</h1>
+                  un-position='absolute' un-top='32px' un-left='3' un-pointer-events='none' un-text='zinc-4' >What's up?
                 </div>}
               />
             }
@@ -245,4 +249,4 @@ export const StickyComponent = ({
   );
 };
 
-const UnoTrick = () => <div un-w='72' />;
+// const UnoTrick = () => <div un-w='72' />;

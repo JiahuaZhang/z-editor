@@ -142,3 +142,9 @@ link的那种ctrl + k toggle不够好
 再加上 {showPopup: boolean}
 然后数据库做persistence的时候, showPopup不应该保存——》没必要
 读取的时候再只能赋予 {showPopup: false}的初始值这样
+
+sticky note?
+可以隐藏？甚至是编辑器本身都可以是多个？不同的panel？
+
+生成式 ui
+https://github.com/vercel-labs/ai-sdk-preview-rsc-genui

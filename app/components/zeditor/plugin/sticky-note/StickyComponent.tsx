@@ -15,7 +15,7 @@ type Positioning = {
   isDragging: boolean;
   offsetX: number;
   offsetY: number;
-  rootElementRect: null | ClientRect;
+  rootElementRect: null | DOMRect;
   x: number;
   y: number;
 };
@@ -102,17 +102,6 @@ export const StickyComponent = ({
     };
   }, [editor]);
 
-  useEffect(() => {
-    const stickyContainer = stickyContainerRef.current;
-    if (stickyContainer !== null) {
-      // Delay adding transition so we don't trigger the
-      // transition on load of the sticky.
-      setTimeout(() => {
-        stickyContainer.style.setProperty('transition', 'top 0.3s ease 0s, left 0.3s ease 0s',);
-      }, 500);
-    }
-  }, []);
-
   const handlePointerMove = (event: PointerEvent) => {
     const stickyContainer = stickyContainerRef.current;
     const positioning = positioningRef.current;
@@ -134,7 +123,6 @@ export const StickyComponent = ({
     const positioning = positioningRef.current;
     if (stickyContainer !== null) {
       positioning.isDragging = false;
-      stickyContainer.classList.remove('dragging');
       editor.update(() => {
         const node = $getNodeByKey(nodeKey);
         if ($isStickyNode(node)) {
@@ -171,14 +159,14 @@ export const StickyComponent = ({
       un-w='72'
       un-h='50'
       un-position='absolute'
-      className="sticky-note-container" >
+    >
       <div un-h='full'
-        un-bg='[linear-gradient(135deg,#ff8_81%,#ff8_82%,#ff8_82%,#ffffc6)]'
+        un-bg={`${color === 'yellow' ? '[linear-gradient(135deg,#ff8_81%,#ff8_82%,#ff8_82%,#ffffc6)]' : '[linear-gradient(135deg,#f7cbe8_81%,#f7cbe8_82%,#f7cbe8_82%,#e7bfe1)]'} `}
         un-cursor='move'
         un-position='relative'
         un-border='rounded-br-[_75px_12px] 1px solid slate-1'
         un-p='2'
-        className={`sticky-note ${color} after:([content:""] absolute z--1 right-0 bottom-18px w-[120px] h-[25px] bg-[#0003] shadow-[2px_15px_5px_#0006])`}
+        className={`sticky-note after:([content:""] absolute z--1 right-0 bottom-18px w-[120px] h-[25px] bg-[#0003] shadow-[2px_15px_5px_#0006])`}
         onPointerDown={(event) => {
           const stickyContainer = stickyContainerRef.current;
           if (
@@ -197,7 +185,6 @@ export const StickyComponent = ({
             positioning.offsetX = event.clientX / zoom - left;
             positioning.offsetY = event.clientY / zoom - top;
             positioning.isDragging = true;
-            stickContainer.classList.add('dragging');
             document.addEventListener('pointermove', handlePointerMove);
             document.addEventListener('pointerup', handlePointerUp);
             event.preventDefault();
@@ -206,20 +193,16 @@ export const StickyComponent = ({
         <header un-grid='~' un-justify='end' un-grid-flow='col' un-gap='1' un-items='center' un-pointer-events='none'>
           <button un-cursor='pointer'
             un-pointer-events='auto'
-            onClick={() => {
-              console.log('try to change color');
-              handleColorChange();
-            }}
-            className="color"
+            un-bg='hover:white'
+            onClick={handleColorChange}
             aria-label="Change sticky note color"
             title="Color"
           >
-            <div className="i-mdi:paint" un-text='hover:pink-6' ></div>
+            <div className="i-mdi:paint" un-text={`${color === 'yellow' ? 'hover:pink-6' : 'hover:yellow-6'}`} ></div>
           </button>
           <button un-cursor='pointer'
             un-pointer-events='auto'
             onClick={handleDelete}
-            className="delete"
             aria-label="Delete sticky note"
             title="Delete">
             <div className="i-mdi:close" un-text='hover:red-6' ></div>
@@ -234,10 +217,9 @@ export const StickyComponent = ({
                 un-outline='focus-visible:none'
                 un-cursor='text'
                 un-px='1'
-                className='StickyNode__contentEditable'
                 aria-placeholder="What's up?"
-                placeholder={<div
-                  un-position='absolute' un-top='32px' un-left='3' un-pointer-events='none' un-text='zinc-4' >What's up?
+                placeholder={<div un-position='absolute' un-top='32px' un-left='3' un-pointer-events='none' un-text='zinc-4' >
+                  What's up?
                 </div>}
               />
             }
@@ -249,4 +231,4 @@ export const StickyComponent = ({
   );
 };
 
-// const UnoTrick = () => <div un-w='72' />;
+export const UnoTrick = () => <div un-w='72' />;

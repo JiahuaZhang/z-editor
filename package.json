@@ -50,6 +50,7 @@
     "@iconify-json/mdi": "^1.1.64",
     "@iconify-json/ph": "^1.1.10",
     "@iconify-json/radix-icons": "^1.1.14",
+    "@iconify-json/system-uicons": "^1.2.0",
     "@iconify-json/tabler": "^1.1.104",
     "@iconify-json/twemoji": "^1.1.15",
     "@remix-run/dev": "2.11.2",

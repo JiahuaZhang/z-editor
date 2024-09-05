@@ -10,6 +10,9 @@ import path from 'path'
 export default defineConfig({
   ssr: {
     noExternal: [],
+    optimizeDeps: {
+      include: []
+    }
   },
   plugins: [
     UnoCSS(),

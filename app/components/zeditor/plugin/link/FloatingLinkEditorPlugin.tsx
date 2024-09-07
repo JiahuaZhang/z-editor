@@ -1,7 +1,7 @@
 import { $createLinkNode, $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister } from '@lexical/utils';
-import { $getSelection, $isLineBreakNode, $isRangeSelection, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_CRITICAL, COMMAND_PRIORITY_HIGH, COMMAND_PRIORITY_LOW, KEY_ESCAPE_COMMAND, LexicalEditor, SELECTION_CHANGE_COMMAND } from 'lexical';
+import { $getSelection, $isLineBreakNode, $isRangeSelection, BaseSelection, BLUR_COMMAND, CLICK_COMMAND, COMMAND_PRIORITY_CRITICAL, COMMAND_PRIORITY_HIGH, COMMAND_PRIORITY_LOW, KEY_ESCAPE_COMMAND, LexicalEditor, SELECTION_CHANGE_COMMAND } from 'lexical';
 import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { getSelectedNode } from '../../util/getSelectedNode';
@@ -324,6 +324,15 @@ const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLEle
         },
         COMMAND_PRIORITY_LOW,
       ),
+      editor.registerCommand(
+        BLUR_COMMAND,
+        () => {
+          setIsLink(false);
+          setIsLinkEditMode(false);
+          return false;
+        },
+        COMMAND_PRIORITY_LOW
+      )
     );
   }, [editor]);
 

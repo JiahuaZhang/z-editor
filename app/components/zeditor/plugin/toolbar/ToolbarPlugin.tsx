@@ -52,7 +52,7 @@ export const ToolbarPlugin = () => {
     </button>
     <Divider />
 
-    <Select un-m='1' un-min-w='30'
+    <Select un-m='1' un-min-w='30' un-border='none hover:blue-6'
       defaultValue="paragraph"
       popupClassName='w-auto!'
       options={BLOCK_FORMATS.map(value => ({ label: BLOCK_LABELS[value], value }))}

@@ -277,6 +277,6 @@ export const $generateContent = () => {
   paragraph.append($createTextNode(''));
   root.append(paragraph);
 
-  const stickyNode = $createStickyNode(600, 30);
-  root.append(stickyNode);
+  // const stickyNode = $createStickyNode(600, 30);
+  // root.append(stickyNode);
 };

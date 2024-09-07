@@ -19,7 +19,6 @@ import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import './theme/style.css';
 import { MATCHERS, validateUrl } from './util/url';
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 
 export const UnoStaticTrick = () => <div un-top='2' un-left='2' />;
 
@@ -28,17 +27,12 @@ const Plugins = () => {
   const [isLinkEditMode, setIsLinkEditMode] = useState(false);
 
   return <>
-    {/* ToolbarPlugin */}
+    <Plugin.Toolbar />
     <RichTextPlugin
       contentEditable={<ContentEditable un-p='2' un-z='10' />}
       placeholder={<div un-position='absolute' un-top='2' un-left='2' un-z='1' un-pointer-events='none' >Enter some rich text...</div>}
       ErrorBoundary={LexicalErrorBoundary}
     />
-    {/* <OnChangePlugin onChange={(state, editor, tags) => {
-      console.log('on change for editor');
-      console.log(state);
-      console.log(state.toJSON());
-    }} /> */}
     <HistoryPlugin />
     <AutoFocusPlugin />
     <ListPlugin />
@@ -59,16 +53,14 @@ const Plugins = () => {
 
 export const ZEditor = () => {
   return <ClientOnly>{() =>
-    <>
-      <div un-border='~ rounded 2' un-m='2' un-position='relative' >
-        <SharedHistoryContext>
-          <TableContext>
-            <LexicalComposer initialConfig={initialConfig} >
-              <Plugins />
-            </LexicalComposer>
-          </TableContext>
-        </SharedHistoryContext>
-      </div>
-    </>
+    <div un-border='~ rounded 2' un-m='2' un-position='relative' >
+      <SharedHistoryContext>
+        <TableContext>
+          <LexicalComposer initialConfig={initialConfig} >
+            <Plugins />
+          </LexicalComposer>
+        </TableContext>
+      </SharedHistoryContext>
+    </div>
   }</ClientOnly>;
 };

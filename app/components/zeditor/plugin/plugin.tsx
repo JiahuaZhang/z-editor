@@ -4,6 +4,7 @@ import { HashtagPlugin } from './hashtag/HashTagPlugin';
 import { FloatingLinkEditorPlugin } from './link/FloatingLinkEditorPlugin';
 import { TableCellResizerPlugin } from './table/TableCellResizer';
 import { TableHoverActionsPlugin } from './table/TableHoverActionsPlugin';
+import { ToolbarPlugin } from './toolbar/ToolbarPlugin';
 
 export namespace Plugin {
   export namespace Code {
@@ -18,4 +19,5 @@ export namespace Plugin {
   export namespace Link {
     export const Float = FloatingLinkEditorPlugin;
   }
+  export const Toolbar = ToolbarPlugin;
 }

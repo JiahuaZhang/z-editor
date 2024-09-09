@@ -1,7 +1,7 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
-import { Button, Dropdown, MenuProps, Select } from 'antd';
-import { CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW } from 'lexical';
+import { Button, Dropdown, MenuProps, Select, Tooltip } from 'antd';
+import { CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
 import { useEffect, useState } from 'react';
 
 const BLOCK_FORMATS = ['paragraph', 'h1', 'h2', 'h3', 'bullet', 'number', 'check', 'quote', 'code'] as const;
@@ -71,11 +71,19 @@ export const ToolbarPlugin = () => {
   }, [editor]);
 
   return <div un-border='2px solid blue-4' un-text='2xl' un-grid='~' un-grid-flow='col' un-justify='start' un-items='center' un-gap='1'  >
-    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' disabled={!canUndo || !isEditable} >
-      <span className="i-material-symbols-light:undo" un-text='blue-6'  ></span>
+    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' disabled={!canUndo || !isEditable}
+      onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
+    >
+      <Tooltip title="Undo" >
+        <span className="i-material-symbols-light:undo" un-text='blue-6'  ></span>
+      </Tooltip>
     </button>
-    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' disabled={!canRedo || !isEditable} >
-      <span className="i-material-symbols-light:redo" un-text='blue-6'  ></span>
+    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' disabled={!canRedo || !isEditable}
+      onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
+    >
+      <Tooltip title="Redo" >
+        <span className="i-material-symbols-light:redo" un-text='blue-6'  ></span>
+      </Tooltip>
     </button>
     <Divider />
 

@@ -1,4 +1,4 @@
-import { Select } from 'antd';
+import { Button, Dropdown, MenuProps, Select } from 'antd';
 
 const BLOCK_FORMATS = ['paragraph', 'h1', 'h2', 'h3', 'bullet', 'number', 'check', 'quote', 'code'] as const;
 const BLOCK_LABELS: Record<typeof BLOCK_FORMATS[number], string> = {
@@ -23,6 +23,13 @@ const BLOCK_ICONS: Record<typeof BLOCK_FORMATS[number], string> = {
   quote: 'i-mdi:format-quote-open',
   code: 'i-ph:code-bold',
 };
+const items: MenuProps['items'] = [
+  {
+    key: 'sticky-note',
+    label: 'Sticky Note',
+    icon: <div className="i-bi:sticky"></div>
+  },
+];
 
 const Divider = () => <span un-bg='neutral' un-w='2px' un-h='70%' un-border='rounded-full' />;
 
@@ -72,6 +79,15 @@ export const ToolbarPlugin = () => {
         {original}
       </div>}
     />
+
+    <Divider />
+    <Dropdown menu={{ items }} trigger={['click']} >
+      <Button un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='1' un-text='sm' >
+        <span className="i-mdi:plus" />
+        Insert
+        <span className="i-ph:caret-down" />
+      </Button>
+    </Dropdown>
 
   </div>;
 };

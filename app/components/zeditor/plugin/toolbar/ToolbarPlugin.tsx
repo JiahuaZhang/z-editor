@@ -1,4 +1,8 @@
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { mergeRegister } from '@lexical/utils';
 import { Button, Dropdown, MenuProps, Select } from 'antd';
+import { CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW } from 'lexical';
+import { useEffect, useState } from 'react';
 
 const BLOCK_FORMATS = ['paragraph', 'h1', 'h2', 'h3', 'bullet', 'number', 'check', 'quote', 'code'] as const;
 const BLOCK_LABELS: Record<typeof BLOCK_FORMATS[number], string> = {
@@ -34,27 +38,43 @@ const items: MenuProps['items'] = [
 const Divider = () => <span un-bg='neutral' un-w='2px' un-h='70%' un-border='rounded-full' />;
 
 export const ToolbarPlugin = () => {
+  const [editor] = useLexicalComposerContext();
+  const [isEditable, setIsEditable] = useState(() => editor.isEditable());
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
+
+  useEffect(() => {
+    return editor.registerEditableListener((editable) => {
+      setIsEditable(editable);
+    });
+  }, [editor]);
+
+  useEffect(() => {
+    return mergeRegister(
+      editor.registerCommand(
+        CAN_UNDO_COMMAND,
+        (payload) => {
+          setCanUndo(payload);
+          return false;
+        },
+        COMMAND_PRIORITY_LOW
+      ),
+      editor.registerCommand(
+        CAN_REDO_COMMAND,
+        (payload) => {
+          setCanRedo(payload);
+          return false;
+        },
+        COMMAND_PRIORITY_LOW
+      )
+    );
+  }, [editor]);
+
   return <div un-border='2px solid blue-4' un-text='2xl' un-grid='~' un-grid-flow='col' un-justify='start' un-items='center' un-gap='1'  >
-    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' >
+    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' disabled={!canUndo || !isEditable} >
       <span className="i-material-symbols-light:undo" un-text='blue-6'  ></span>
     </button>
-    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' >
-      <span className="i-material-symbols-light:redo" un-text='blue-6'  ></span>
-    </button>
-    <Divider />
-
-    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' disabled un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' >
-      <span className="i-material-symbols-light:undo" un-text='blue-6'   ></span>
-    </button>
-    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' disabled un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' >
-      <span className="i-material-symbols-light:redo" un-text='blue-6'  ></span>
-    </button>
-    <Divider />
-
-    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' >
-      <span className="i-material-symbols-light:undo" un-text='blue-6'  ></span>
-    </button>
-    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' >
+    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' disabled={!canRedo || !isEditable} >
       <span className="i-material-symbols-light:redo" un-text='blue-6'  ></span>
     </button>
     <Divider />

@@ -1,6 +1,6 @@
 import { $isListNode, ListNode } from '@lexical/list';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $isHeadingNode } from '@lexical/rich-text';
+import { $createHeadingNode, $isHeadingNode, HeadingTagType } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { $findMatchingParent, $getNearestNodeOfType } from '@lexical/utils';
 import { Select } from 'antd';
@@ -13,6 +13,13 @@ const formatParagraph = (editor: LexicalEditor) => {
     if ($isRangeSelection(selection)) {
       $setBlocksType(selection, () => $createParagraphNode());
     }
+  });
+};
+
+const formatHeading = (heading: HeadingTagType) => (editor: LexicalEditor) => {
+  editor.update(() => {
+    const selection = $getSelection();
+    $setBlocksType(selection, () => $createHeadingNode(heading));
   });
 };
 
@@ -41,9 +48,9 @@ const BLOCK_ICONS: Record<typeof BLOCK_FORMATS[number], string> = {
 };
 const BLOCK_CONVERTERS: Record<typeof BLOCK_FORMATS[number], (editor: LexicalEditor) => void> = {
   paragraph: formatParagraph,
-  h1: () => {},
-  h2: () => {},
-  h3: () => {},
+  h1: formatHeading('h1'),
+  h2: formatHeading('h2'),
+  h3: formatHeading('h3'),
   bullet: () => {},
   number: () => {},
   check: () => {},

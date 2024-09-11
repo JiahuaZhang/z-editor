@@ -1,32 +1,10 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
-import { Button, Dropdown, MenuProps, Select, Tooltip } from 'antd';
+import { Button, Dropdown, MenuProps, Tooltip } from 'antd';
 import { CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
 import { useEffect, useState } from 'react';
+import { BlockFormatDropDown } from './BlockFormatDropDown';
 
-const BLOCK_FORMATS = ['paragraph', 'h1', 'h2', 'h3', 'bullet', 'number', 'check', 'quote', 'code'] as const;
-const BLOCK_LABELS: Record<typeof BLOCK_FORMATS[number], string> = {
-  paragraph: 'Normal',
-  h1: 'Heading 1',
-  h2: 'Heading 2',
-  h3: 'Heading 3',
-  bullet: 'Bullet List',
-  number: 'Numbered List',
-  check: 'Check List',
-  quote: 'Quote',
-  code: 'Code Block'
-};
-const BLOCK_ICONS: Record<typeof BLOCK_FORMATS[number], string> = {
-  paragraph: 'i-system-uicons:paragraph-left',
-  h1: 'i-ci:heading-h1',
-  h2: 'i-ci:heading-h2',
-  h3: 'i-ci:heading-h3',
-  bullet: 'i-ph:list-bullets',
-  number: 'i-ph:list-numbers',
-  check: 'i-material-symbols-light:check-box-outline',
-  quote: 'i-mdi:format-quote-open',
-  code: 'i-ph:code-bold',
-};
 const items: MenuProps['items'] = [
   {
     key: 'sticky-note',
@@ -87,28 +65,9 @@ export const ToolbarPlugin = () => {
     </button>
     <Divider />
 
-    <Select un-m='1' un-min-w='30' un-border='none hover:blue-6'
-      defaultValue="paragraph"
-      popupClassName='w-auto!'
-      options={BLOCK_FORMATS.map(value => ({ label: BLOCK_LABELS[value], value }))}
-      optionRender={args => {
-        return <div un-inline='grid' un-grid-flow='col' un-gap='2' un-items='center' >
-          <span className={BLOCK_ICONS[args.data.value]} />
-          {args.data.label}
-        </div>;
-      }}
-      labelRender={args => {
-        return <div un-inline='grid' un-grid-flow='col' un-gap='2' un-items='center' >
-          <div className={BLOCK_ICONS[args.value as typeof BLOCK_FORMATS[number]]}></div>
-          {args.label}
-        </div>;
-      }}
-      dropdownRender={original => <div un-min-w='80'>
-        {original}
-      </div>}
-    />
-
+    <BlockFormatDropDown />
     <Divider />
+
     <Dropdown menu={{ items }} trigger={['click']} >
       <Button un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='1' un-text='sm' >
         <span className="i-mdi:plus" />

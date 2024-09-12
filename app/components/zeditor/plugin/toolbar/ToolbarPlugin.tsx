@@ -1,17 +1,25 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
 import { Button, Dropdown, MenuProps, Tooltip } from 'antd';
-import { CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
-import { useEffect, useState } from 'react';
+import { $getRoot, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, LexicalEditor, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
+import { useEffect, useMemo, useState } from 'react';
+import { $createStickyNode } from '../sticky-note/StickNote';
 import { BlockFormatDropDown } from './BlockFormatDropDown';
 
-const items: MenuProps['items'] = [
+const getInsertItems = (editor: LexicalEditor) => [
   {
     key: 'sticky-note',
     label: 'Sticky Note',
-    icon: <div className="i-bi:sticky"></div>
+    icon: <span className="i-bi:sticky" />,
+    onClick: () => {
+      editor.update(() => {
+        const root = $getRoot();
+        const stickyNode = $createStickyNode(0, 0);
+        root.append(stickyNode);
+      });
+    }
   },
-];
+] as MenuProps['items'];
 
 const Divider = () => <span un-bg='neutral' un-w='2px' un-h='70%' un-border='rounded-full' />;
 
@@ -20,6 +28,7 @@ export const ToolbarPlugin = () => {
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
+  const insertItems = useMemo(() => getInsertItems(editor), [editor]);
 
   useEffect(() => {
     return editor.registerEditableListener((editable) => {
@@ -68,8 +77,8 @@ export const ToolbarPlugin = () => {
     <BlockFormatDropDown />
     <Divider />
 
-    <Dropdown menu={{ items }} trigger={['click']} >
-      <Button un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='1' un-text='sm' >
+    <Dropdown menu={{ items: insertItems }} trigger={['click']} >
+      <Button un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='1' un-text='sm'>
         <span className="i-mdi:plus" />
         Insert
         <span className="i-ph:caret-down" />

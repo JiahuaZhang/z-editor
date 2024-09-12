@@ -1,6 +1,7 @@
-import { $isListNode, ListNode } from '@lexical/list';
+import { $createCodeNode } from '@lexical/code';
+import { $isListNode, INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, ListNode } from '@lexical/list';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $createHeadingNode, $isHeadingNode, HeadingTagType } from '@lexical/rich-text';
+import { $createHeadingNode, $createQuoteNode, $isHeadingNode, HeadingTagType } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { $findMatchingParent, $getNearestNodeOfType } from '@lexical/utils';
 import { Select } from 'antd';
@@ -20,6 +21,52 @@ const formatHeading = (heading: HeadingTagType) => (editor: LexicalEditor) => {
   editor.update(() => {
     const selection = $getSelection();
     $setBlocksType(selection, () => $createHeadingNode(heading));
+  });
+};
+
+const formatBulletList = (editor: LexicalEditor) => {
+  editor.update(() => {
+    editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+  });
+};
+
+const formatNumberedList = (editor: LexicalEditor) => {
+  editor.update(() => {
+    editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
+  });
+};
+
+const formatCheckList = (editor: LexicalEditor) => {
+  editor.update(() => {
+    editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, undefined);
+  });
+};
+
+const formatQuote = (editor: LexicalEditor) => {
+  editor.update(() => {
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      $setBlocksType(selection, () => $createQuoteNode());
+    }
+  });
+};
+
+const formatCode = (editor: LexicalEditor) => {
+  editor.update(() => {
+    let selection = $getSelection();
+    if (!selection) return;
+
+    if (selection.isCollapsed()) {
+      $setBlocksType(selection, () => $createCodeNode());
+    } else {
+      const textContent = selection.getTextContent();
+      const codeNode = $createCodeNode();
+      selection.insertNodes([codeNode]);
+      selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        selection.insertRawText(textContent);
+      }
+    }
   });
 };
 
@@ -51,11 +98,11 @@ const BLOCK_CONVERTERS: Record<typeof BLOCK_FORMATS[number], (editor: LexicalEdi
   h1: formatHeading('h1'),
   h2: formatHeading('h2'),
   h3: formatHeading('h3'),
-  bullet: () => {},
-  number: () => {},
-  check: () => {},
-  quote: () => {},
-  code: () => {},
+  bullet: formatBulletList,
+  number: formatNumberedList,
+  check: formatCheckList,
+  quote: formatQuote,
+  code: formatCode
 };
 
 export const BlockFormatDropDown = ({}: {}) => {

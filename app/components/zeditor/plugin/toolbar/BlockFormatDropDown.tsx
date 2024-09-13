@@ -131,19 +131,16 @@ export const BlockFormatDropDown = ({}: {}) => {
     const elementKey = element.getKey();
     const elementDOM = editor.getElementByKey(elementKey);
 
-    if (elementDOM === null) {
-      console.log('elementDOM is null');
-      return;
+    if (elementDOM === null) return;
+
+    if ($isListNode(element)) {
+      const parentList = $getNearestNodeOfType(anchorNode, ListNode);
+      const type = parentList ? parentList.getListType() : element.getListType();
+      setFormat(type as any);
     } else {
-      if ($isListNode(element)) {
-        const parentList = $getNearestNodeOfType(anchorNode, ListNode);
-        const type = parentList ? parentList.getListType() : element.getListType();
+      const type = $isHeadingNode(element) ? element.getTag() : element.getType();
+      if (BLOCK_FORMATS.includes(type as any)) {
         setFormat(type as any);
-      } else {
-        const type = $isHeadingNode(element) ? element.getTag() : element.getType();
-        if (BLOCK_FORMATS.includes(type as any)) {
-          setFormat(type as any);
-        }
       }
     }
   }, [editor]);

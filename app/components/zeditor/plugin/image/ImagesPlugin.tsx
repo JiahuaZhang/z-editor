@@ -1,6 +1,6 @@
 import { CAN_USE_DOM } from '@lexical/utils';
-import { ImagePayload } from '../nodes/ImageNode';
 import { LexicalCommand, createCommand } from 'lexical';
+import { ImagePayload } from './ImageNode';
 
 export type InsertImagePayload = Readonly<ImagePayload>;
 

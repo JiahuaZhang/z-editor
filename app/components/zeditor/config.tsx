@@ -80,10 +80,11 @@ export const initialConfig: InitialConfigType = {
     // tableSelected: 'PlaygroundEditorTheme__tableSelected',
     // tableSelection: 'PlaygroundEditorTheme__tableSelection',
     hashtag: 'bg-blue-2 border-b-blue-4 border-b-2',
-    link: 'text-blue-7 hover:cursor-pointer hover:underline'
+    link: 'text-blue-7 hover:cursor-pointer hover:underline',
+    keyword: 'prose prose-fuchsia'
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, EmojiNode, StickyNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, EmojiNode],
   editorState: $generateContent,
   // editable: false
 };

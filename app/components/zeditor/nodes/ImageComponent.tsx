@@ -4,7 +4,7 @@ import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { useCollaborationContext } from '@lexical/react/LexicalCollaborationContext';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
-import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
@@ -20,9 +20,9 @@ import { EmojiNode } from '../plugin/emoji/EmojiNode';
 import { EmojiPlugin } from '../plugin/emoji/EmojiPlugin';
 import { KeywordsPlugin } from '../plugin/KeywordsPlugin';
 import { ImageResizer } from '../ui/ImageResizer';
+import { validateUrl } from '../util/url';
 import { $isImageNode } from './ImageNode';
 import { KeywordNode } from './KeywordNode';
-import { validateUrl } from '../util/url';
 
 const imageCache = new Set();
 
@@ -44,16 +44,7 @@ const useSuspenseImage = (src: string) => {
   }
 };
 
-const LazyImage = ({
-  altText,
-  className,
-  imageRef,
-  src,
-  width,
-  height,
-  maxWidth,
-  onError
-}: {
+const LazyImage = ({ altText, className, imageRef, src, width, height, maxWidth, onError }: {
   altText: string;
   className: string | null;
   height: 'inherit' | number;
@@ -68,11 +59,7 @@ const LazyImage = ({
     src={src}
     alt={altText}
     ref={imageRef}
-    style={{
-      height,
-      maxWidth,
-      width
-    }}
+    style={{ height, maxWidth, width }}
     onError={onError}
     draggable={false}
   />;
@@ -80,18 +67,7 @@ const LazyImage = ({
 
 const BrokenImage = () => <img src={brokenImage} un-h='50' un-w='50' un-opacity='20' />;
 
-export const ImageComponent = ({
-  src,
-  altText,
-  nodeKey,
-  width,
-  height,
-  maxWidth,
-  resizable,
-  showCaption,
-  caption,
-  captionsEnabled,
-}: {
+export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth, resizable, showCaption, caption, captionsEnabled }: {
   altText: string;
   caption: LexicalEditor;
   height: 'inherit' | number;
@@ -115,15 +91,16 @@ export const ImageComponent = ({
 
   const $onDelete = useCallback(
     (event: KeyboardEvent) => {
-      if (isSelected && $isNodeSelection($getSelection())) {
-        // const event: KeyboardEvent = payload;
-        // event.preventDefault();
+      const deleteSelection = $getSelection();
+      if (isSelected && $isNodeSelection(deleteSelection)) {
         event.preventDefault();
-        const node = $getNodeByKey(nodeKey);
-        if ($isImageNode(node)) {
-          node.remove();
-          return true;
-        }
+        editor.update(() => {
+          deleteSelection.getNodes().forEach((node) => {
+            if ($isImageNode(node)) {
+              node.remove();
+            }
+          });
+        });
       }
       return false;
     },
@@ -144,10 +121,7 @@ export const ImageComponent = ({
           event.preventDefault();
           caption.focus();
           return true;
-        } else if (
-          buttonElm !== null
-          && buttonElm !== document.activeElement
-        ) {
+        } else if (buttonElm !== null && buttonElm !== document.activeElement) {
           event.preventDefault();
           buttonElm.focus();
           return true;
@@ -160,9 +134,7 @@ export const ImageComponent = ({
 
   const $onEscape = useCallback(
     (event: KeyboardEvent) => {
-      if (activeEditorRef.current === caption
-        || buttonRef.current === event?.target
-      ) {
+      if (activeEditorRef.current === caption || buttonRef.current === event?.target) {
         $setSelection(null);
         editor.update(() => {
           setSelected(true);
@@ -209,10 +181,7 @@ export const ImageComponent = ({
           && $isRangeSelection(latestSelection)
           && latestSelection.getNodes().length === 1
         ) {
-          editor.dispatchCommand(
-            RIGHT_CLICK_IMAGE_COMMAND,
-            event as MouseEvent
-          );
+          editor.dispatchCommand(RIGHT_CLICK_IMAGE_COMMAND, event as MouseEvent);
         }
       });
     },
@@ -273,18 +242,7 @@ export const ImageComponent = ({
       unregister();
       rootElement?.removeEventListener('contextmenu', onRightClick);
     };
-  }, [
-    clearSelection,
-    editor,
-    isResizing,
-    nodeKey,
-    $onDelete,
-    $onEnter,
-    $onEscape,
-    onClick,
-    onRightClick,
-    setSelected
-  ]);
+  }, [clearSelection, editor, isResizing, nodeKey, $onDelete, $onEnter, $onEscape, onClick, onRightClick, setSelected]);
 
   const setShowCaption = () => {
     editor.update(() => {

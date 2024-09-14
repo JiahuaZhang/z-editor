@@ -29,7 +29,8 @@ export class KeywordNode extends TextNode {
   createDOM(config: EditorConfig): HTMLElement {
     const dom = super.createDOM(config);
     dom.style.cursor = 'default';
-    dom.className = 'keyword';
+    const className = config.theme.keyword;
+    dom.className = `${className} ${dom.className}`.trim();
     return dom;
   }
 

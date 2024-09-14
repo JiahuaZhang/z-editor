@@ -96,14 +96,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 
   static importJSON(serializedNode: SerializedImageNode) {
     const { altText, height, width, maxWidth, caption, src, showCaption } = serializedNode;
-    const node = $createImageNode({
-      altText,
-      height,
-      maxWidth,
-      showCaption,
-      src,
-      width,
-    });
+    const node = $createImageNode({ altText, height, maxWidth, showCaption, src, width });
     const nestedEditor = node.__caption;
     const editorState = nestedEditor.parseEditorState(caption.editorState);
     if (!editorState.isEmpty()) {
@@ -195,9 +188,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 }
 
-export const $isImageNode = (node: LexicalNode | null | undefined): node is ImageNode => {
-  return node instanceof ImageNode;
-};
+export const $isImageNode = (node: LexicalNode | null | undefined): node is ImageNode => node instanceof ImageNode;
 
 export const $createImageNode = ({
   altText,

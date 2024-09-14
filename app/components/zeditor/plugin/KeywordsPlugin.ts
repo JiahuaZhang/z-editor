@@ -25,17 +25,10 @@ export const KeywordsPlugin = () => {
     const hashtagLength = matchArr[2].length;
     const startOffset = matchArr.index + matchArr[1].length;
     const endOffset = startOffset + hashtagLength;
-    return {
-      end: endOffset,
-      start: startOffset
-    };
+    return { end: endOffset, start: startOffset };
   }, []);
 
-  useLexicalTextEntity<KeywordNode>(
-    getKeywordMatch,
-    KeywordNode,
-    $createKeywordNode_
-  );
+  useLexicalTextEntity<KeywordNode>(getKeywordMatch, KeywordNode, $createKeywordNode_);
 
   return null;
 };

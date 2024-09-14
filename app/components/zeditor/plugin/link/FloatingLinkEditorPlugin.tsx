@@ -5,8 +5,8 @@ import { $getSelection, $isLineBreakNode, $isRangeSelection, BaseSelection, BLUR
 import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { getSelectedNode } from '../../util/getSelectedNode';
-import { sanitizeUrl } from '../../util/sanitizeUrl';
 import { setFloatingElemPositionForLinkEditor } from '../../util/setFloatingElemPositionForLinkEditor';
+import { sanitizeUrl } from '../../util/url';
 
 const FloatingLinkEditor = ({
   editor,

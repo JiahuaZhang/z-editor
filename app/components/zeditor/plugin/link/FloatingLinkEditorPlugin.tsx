@@ -204,7 +204,10 @@ const FloatingLinkEditor = ({
           un-scale='125'
           className="i-material-symbols-light:cancel"
           tabIndex={0}
-          onClick={() => setIsLinkEditMode(false)}
+          onClick={() => {
+            setIsLinkEditMode(false);
+            editor.focus();
+          }}
         />
         <button
           un-hover='text-blue-5'

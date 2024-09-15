@@ -314,7 +314,6 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
           }
           ErrorBoundary={LexicalErrorBoundary}
         />
-        {/* TreeViewPlugin */}
       </div>}
 
       {resizable && $isNodeSelection(selection) && isFocused && (

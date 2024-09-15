@@ -17,7 +17,6 @@ import { initialConfig } from './config';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
-import './theme/style.css';
 import { MATCHERS, validateUrl } from './util/url';
 
 export const UnoStaticTrick = () => <div un-top='2' un-left='2' />;
@@ -46,7 +45,6 @@ const Plugins = () => {
     <AutoLinkPlugin matchers={MATCHERS} />
     <ClickableLinkPlugin disabled={isEditable} />
     <Plugin.Link.Float isLinkEditMode={isLinkEditMode} setIsLinkEditMode={setIsLinkEditMode} />
-
     <Plugin.Emoji />
   </>;
 };

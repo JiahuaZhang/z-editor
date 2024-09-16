@@ -190,16 +190,5 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 
 export const $isImageNode = (node: LexicalNode | null | undefined): node is ImageNode => node instanceof ImageNode;
 
-export const $createImageNode = ({
-  altText,
-  height,
-  maxWidth = 500,
-  captionsEnabled,
-  src,
-  width,
-  showCaption,
-  caption,
-  key,
-}: ImagePayload) => $applyNodeReplacement<ImageNode>(
-  new ImageNode(src, altText, maxWidth, width, height, showCaption, caption, captionsEnabled, key)
-);
+export const $createImageNode = ({ altText, height, maxWidth = 500, captionsEnabled, src, width, showCaption, caption, key, }: ImagePayload) =>
+  $applyNodeReplacement<ImageNode>(new ImageNode(src, altText, maxWidth, width, height, showCaption, caption, captionsEnabled, key));

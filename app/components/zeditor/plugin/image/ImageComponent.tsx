@@ -15,11 +15,11 @@ import { mergeRegister } from '@lexical/utils';
 import { $getNodeByKey, $getSelection, $isNodeSelection, $isRangeSelection, $setSelection, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, KEY_DELETE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, LexicalCommand, LexicalEditor, LineBreakNode, NodeKey, ParagraphNode, RootNode, SELECTION_CHANGE_COMMAND, TextNode, createCommand } from 'lexical';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useSharedHistoryContext } from '../../context/SharedHistoryContext';
+import brokenImage from '../../images/image-broken.svg';
 import { ImageResizer } from '../../ui/ImageResizer';
 import { validateUrl } from '../../util/url';
 import { EmojiNode } from '../emoji/EmojiNode';
 import { EmojiPlugin } from '../emoji/EmojiPlugin';
-import brokenImage from '../images/image-broken.svg';
 import { $isImageNode } from './ImageNode';
 
 const imageCache = new Set();
@@ -81,7 +81,6 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey);
   const [isResizing, setIsResizing] = useState(false);
-  const { isCollabActive } = useCollaborationContext();
   const [editor] = useLexicalComposerContext();
   const [selection, setSelection] = useState<BaseSelection | null>(null);
   const activeEditorRef = useRef<LexicalEditor | null>(null);

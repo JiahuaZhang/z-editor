@@ -6,6 +6,7 @@ import { $createTableCellNode, $createTableNode, $createTableRowNode } from '@le
 import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
 import { $createLinkNode } from '@lexical/link';
 import { $createStickyNode } from './plugin/sticky-note/StickNote';
+import { $createMentionNode } from './plugin/mention/MentionNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -276,6 +277,11 @@ export const $generateContent = () => {
   const paragraph = $createParagraphNode();
   paragraph.append($createTextNode(''));
   root.append(paragraph);
+
+  const mention = $createMentionNode('hello');
+  const mentionParagraph = $createParagraphNode();
+  mentionParagraph.append(mention);
+  root.append(mentionParagraph);
 
   // const stickyNode = $createStickyNode(600, 30);
   // root.append(stickyNode);

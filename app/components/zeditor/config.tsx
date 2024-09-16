@@ -7,6 +7,7 @@ import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
 import { $generateContent } from './init';
 import { EmojiNode } from './plugin/emoji/EmojiNode';
+import { MentionNode } from './plugin/mention/MentionNode';
 import { StickyNode } from './plugin/sticky-note/StickNote';
 
 export const initialConfig: InitialConfigType = {
@@ -81,10 +82,11 @@ export const initialConfig: InitialConfigType = {
     // tableSelection: 'PlaygroundEditorTheme__tableSelection',
     hashtag: 'bg-blue-2 border-b-blue-4 border-b-2',
     link: 'text-blue-7 hover:cursor-pointer hover:underline',
-    keyword: 'prose prose-fuchsia'
+    keyword: 'prose prose-fuchsia',
+    mention: 'bg-blue-2'
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, EmojiNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, MentionNode, EmojiNode],
   editorState: $generateContent,
   // editable: false
 };

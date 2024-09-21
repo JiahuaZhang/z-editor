@@ -7,6 +7,7 @@ import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getRoot }
 import { $createLinkNode } from '@lexical/link';
 import { $createStickyNode } from './plugin/sticky-note/StickNote';
 import { $createMentionNode } from './plugin/mention/MentionNode';
+import { $createImageNode } from './plugin/image/ImageNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -278,10 +279,16 @@ export const $generateContent = () => {
   paragraph.append($createTextNode(''));
   root.append(paragraph);
 
-  const mention = $createMentionNode('hello');
-  const mentionParagraph = $createParagraphNode();
-  mentionParagraph.append(mention);
-  root.append(mentionParagraph);
+  // const mention = $createMentionNode('hello');
+  // const mentionParagraph = $createParagraphNode();
+  // mentionParagraph.append(mention);
+  // root.append(mentionParagraph);
+
+  const image = $createImageNode({
+    src: 'https://images.dog.ceo/breeds/basenji/n02110806_1778.jpg',
+    altText: 'random image',
+  });
+  root.append(image);
 
   // const stickyNode = $createStickyNode(600, 30);
   // root.append(stickyNode);

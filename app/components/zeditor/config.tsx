@@ -7,7 +7,7 @@ import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
 import { $generateContent } from './init';
 import { EmojiNode } from './plugin/emoji/EmojiNode';
-import { MentionNode } from './plugin/mention/MentionNode';
+import { ImageNode } from './plugin/image/ImageNode';
 import { StickyNode } from './plugin/sticky-note/StickNote';
 
 export const initialConfig: InitialConfigType = {
@@ -86,7 +86,7 @@ export const initialConfig: InitialConfigType = {
     mention: 'bg-blue-2'
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, MentionNode, EmojiNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, EmojiNode],
   editorState: $generateContent,
   // editable: false
 };

@@ -1,5 +1,5 @@
 import { $applyNodeReplacement, DOMConversionMap, DOMExportOutput, DecoratorNode, EditorConfig, LexicalEditor, LexicalNode, NodeKey, SerializedEditor, SerializedLexicalNode, Spread, createEditor } from 'lexical';
-import { Suspense, lazy } from 'react';
+import { lazy } from 'react';
 
 const ImageComponent = lazy(() => import('./ImageComponent').then(module => ({ default: module.ImageComponent })));
 
@@ -171,20 +171,18 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 
   decorate() {
-    return <Suspense>
-      <ImageComponent
-        src={this.__src}
-        altText={this.__altText}
-        width={this.__width}
-        height={this.__height}
-        maxWidth={this.__maxWidth}
-        nodeKey={this.getKey()}
-        showCaption={this.__showCaption}
-        caption={this.__caption}
-        captionsEnabled={this.__captionsEnabled}
-        resizable={true}
-      />
-    </Suspense>;
+    return <ImageComponent
+      src={this.__src}
+      altText={this.__altText}
+      width={this.__width}
+      height={this.__height}
+      maxWidth={this.__maxWidth}
+      nodeKey={this.getKey()}
+      showCaption={this.__showCaption}
+      caption={this.__caption}
+      captionsEnabled={this.__captionsEnabled}
+      resizable={true}
+    />;
   }
 }
 

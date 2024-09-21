@@ -1,7 +1,6 @@
 import { HashtagNode } from '@lexical/hashtag';
 import { LinkNode } from '@lexical/link';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
-import { useCollaborationContext } from '@lexical/react/LexicalCollaborationContext';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
@@ -15,7 +14,6 @@ import { mergeRegister } from '@lexical/utils';
 import { $getNodeByKey, $getSelection, $isNodeSelection, $isRangeSelection, $setSelection, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, KEY_DELETE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, LexicalCommand, LexicalEditor, LineBreakNode, NodeKey, ParagraphNode, RootNode, SELECTION_CHANGE_COMMAND, TextNode, createCommand } from 'lexical';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useSharedHistoryContext } from '../../context/SharedHistoryContext';
-import brokenImage from '../../images/image-broken.svg';
 import { ImageResizer } from '../../ui/ImageResizer';
 import { validateUrl } from '../../util/url';
 import { EmojiNode } from '../emoji/EmojiNode';
@@ -62,8 +60,6 @@ const LazyImage = ({ altText, className, imageRef, src, width, height, maxWidth,
     draggable={false}
   />;
 };
-
-const BrokenImage = () => <img src={brokenImage} un-h='50' un-w='50' un-opacity='20' />;
 
 export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth, resizable, showCaption, caption, captionsEnabled }: {
   altText: string;
@@ -270,7 +266,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
   return <Suspense>
     <>
       <div draggable={draggable} >
-        {isLoadError ? <BrokenImage /> : <LazyImage
+        {isLoadError ? <span className="i-material-symbols-light:broken-image" un-w='32' un-h='32' /> : <LazyImage
           className={isFocused ? `focused ${$isNodeSelection(selection) ? 'draggable' : ''}` : null}
           src={src}
           altText={altText}
@@ -296,7 +292,6 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
           ]}
         >
           <AutoFocusPlugin />
-          {/* mentions plugin */}
           <LinkPlugin validateUrl={validateUrl} />
           <EmojiPlugin />
           <HashtagPlugin />

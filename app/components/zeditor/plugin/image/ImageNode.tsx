@@ -158,7 +158,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     return span;
   }
 
-  updateDom() {
+  updateDOM() {
     return false;
   }
 

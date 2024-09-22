@@ -286,6 +286,8 @@ export const $generateContent = () => {
 
   const image = $createImageNode({
     src: 'https://images.dog.ceo/breeds/basenji/n02110806_1778.jpg',
+    // src: 'https://images.dog.ceo/breeds/danish-swedish-farmdog/ebba_003.jpg',
+    // src: `data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==`,
     altText: 'random image',
   });
   root.append(image);

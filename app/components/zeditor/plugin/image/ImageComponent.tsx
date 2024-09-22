@@ -40,9 +40,9 @@ const useSuspenseImage = (src: string) => {
   }
 };
 
-const LazyImage = ({ altText, className, imageRef, src, width, height, maxWidth, onError }: {
+const LazyImage = ({ altText, className, imageRef, src, width, height, maxWidth, onError, ...rest }: {
   altText: string;
-  className: string | null;
+  className?: string;
   height: 'inherit' | number;
   imageRef: { current: null | HTMLImageElement; };
   maxWidth: number;
@@ -58,6 +58,7 @@ const LazyImage = ({ altText, className, imageRef, src, width, height, maxWidth,
     style={{ height, maxWidth, width }}
     onError={onError}
     draggable={false}
+    {...rest}
   />;
 };
 
@@ -264,65 +265,54 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
   const isFocused = isSelected || isResizing;
 
   return <Suspense>
-    <>
-      <div draggable={draggable} >
-        {isLoadError ? <span className="i-material-symbols-light:broken-image" un-w='32' un-h='32' /> : <LazyImage
-          className={isFocused ? `focused ${$isNodeSelection(selection) ? 'draggable' : ''}` : null}
-          src={src}
-          altText={altText}
-          imageRef={imageRef}
-          width={width}
-          height={height}
-          maxWidth={maxWidth}
-          onError={() => setIsLoadError(true)}
-        />}
-      </div>
+    <div draggable={draggable} >
+      {isLoadError ? <span className="i-material-symbols-light:broken-image" un-w='32' un-h='32' /> : <LazyImage
+        un-outline={`${isFocused ? '2 solid blue-4' : 'none'}`}
+        un-cursor={`${(isFocused && $isNodeSelection(selection)) ? 'grab' : ''}`}
+        src={src}
+        altText={altText}
+        imageRef={imageRef}
+        width={width}
+        height={height}
+        maxWidth={maxWidth}
+        onError={() => setIsLoadError(true)}
+      />}
+    </div>
 
-      {showCaption && <div className="image-caption-container">
-        <LexicalNestedComposer
-          initialEditor={caption}
-          initialNodes={[
-            RootNode,
-            TextNode,
-            LineBreakNode,
-            ParagraphNode,
-            LinkNode,
-            EmojiNode,
-            HashtagNode,
-          ]}
-        >
-          <AutoFocusPlugin />
-          <LinkPlugin validateUrl={validateUrl} />
-          <EmojiPlugin />
-          <HashtagPlugin />
-        </LexicalNestedComposer>
-        <HistoryPlugin externalHistoryState={historyState} />
-        <RichTextPlugin
-          contentEditable={
-            <ContentEditable className="ImageNode__contentEditable" />
-          }
-          placeholder={
-            <div className="ImageNode__placeholder">
-              Enter a caption...
-            </div>
-          }
-          ErrorBoundary={LexicalErrorBoundary}
-        />
-      </div>}
+    {showCaption && <div className="image-caption-container">
+      <LexicalNestedComposer
+        initialEditor={caption}
+        initialNodes={[RootNode, TextNode, LineBreakNode, ParagraphNode, LinkNode, EmojiNode, HashtagNode]}
+      >
+        <AutoFocusPlugin />
+        <LinkPlugin validateUrl={validateUrl} />
+        <EmojiPlugin />
+        <HashtagPlugin />
+      </LexicalNestedComposer>
+      <HistoryPlugin externalHistoryState={historyState} />
+      <RichTextPlugin
+        contentEditable={<ContentEditable className="ImageNode__contentEditable" />}
+        placeholder={
+          <div className="ImageNode__placeholder">
+            Enter a caption...
+          </div>
+        }
+        ErrorBoundary={LexicalErrorBoundary}
+      />
+    </div>}
 
-      {resizable && $isNodeSelection(selection) && isFocused && (
-        <ImageResizer
-          showCaption={showCaption}
-          setShowCaption={setShowCaption}
-          editor={editor}
-          buttonRef={buttonRef}
-          imageRef={imageRef}
-          maxWidth={maxWidth}
-          onResizeStart={onResizeStart}
-          onResizeEnd={onResizeEnd}
-          captionsEnabled={!isLoadError && captionsEnabled}
-        />
-      )}
-    </>
+    {resizable && $isNodeSelection(selection) && isFocused && (
+      <ImageResizer
+        showCaption={showCaption}
+        setShowCaption={setShowCaption}
+        editor={editor}
+        buttonRef={buttonRef}
+        imageRef={imageRef}
+        maxWidth={maxWidth}
+        onResizeStart={onResizeStart}
+        onResizeEnd={onResizeEnd}
+        captionsEnabled={!isLoadError && captionsEnabled}
+      />
+    )}
   </Suspense>;
 };

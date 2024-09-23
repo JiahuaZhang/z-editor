@@ -181,7 +181,6 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
       showCaption={this.__showCaption}
       caption={this.__caption}
       captionsEnabled={this.__captionsEnabled}
-      resizable={true}
     />;
   }
 }

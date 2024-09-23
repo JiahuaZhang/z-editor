@@ -62,13 +62,12 @@ const LazyImage = ({ altText, className, imageRef, src, width, height, maxWidth,
   />;
 };
 
-export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth, resizable, showCaption, caption, captionsEnabled }: {
+export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth, showCaption, caption, captionsEnabled }: {
   altText: string;
   caption: LexicalEditor;
   height: 'inherit' | number;
   maxWidth: number;
   nodeKey: NodeKey;
-  resizable: boolean;
   showCaption: boolean;
   src: string;
   width: 'inherit' | number;
@@ -301,7 +300,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
       />
     </div>}
 
-    {resizable && $isNodeSelection(selection) && isFocused && (
+    {$isNodeSelection(selection) && isFocused && (
       <ImageResizer
         showCaption={showCaption}
         setShowCaption={setShowCaption}

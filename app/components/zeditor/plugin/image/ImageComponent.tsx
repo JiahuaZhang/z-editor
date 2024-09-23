@@ -287,17 +287,17 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
         <LinkPlugin validateUrl={validateUrl} />
         <EmojiPlugin />
         <HashtagPlugin />
+        <HistoryPlugin externalHistoryState={historyState} />
+        <RichTextPlugin
+          contentEditable={<ContentEditable className="ImageNode__contentEditable" />}
+          placeholder={
+            <div className="ImageNode__placeholder">
+              Enter a caption...
+            </div>
+          }
+          ErrorBoundary={LexicalErrorBoundary}
+        />
       </LexicalNestedComposer>
-      <HistoryPlugin externalHistoryState={historyState} />
-      <RichTextPlugin
-        contentEditable={<ContentEditable className="ImageNode__contentEditable" />}
-        placeholder={
-          <div className="ImageNode__placeholder">
-            Enter a caption...
-          </div>
-        }
-        ErrorBoundary={LexicalErrorBoundary}
-      />
     </div>}
 
     {$isNodeSelection(selection) && isFocused && (

@@ -266,7 +266,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
   return <Suspense>
     <div draggable={draggable} >
       {isLoadError ? <span className="i-material-symbols-light:broken-image" un-w='32' un-h='32' /> : <LazyImage
-        un-outline={`${isFocused ? '2 solid blue-4' : 'none'}`}
+        un-border={`${isFocused ? '2 solid blue-4' : '0'}`}
         un-cursor={`${(isFocused && $isNodeSelection(selection)) ? 'grab' : ''}`}
         src={src}
         altText={altText}
@@ -278,7 +278,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
       />}
     </div>
 
-    {showCaption && <div className="image-caption-container">
+    {showCaption && <div un-position='relative'>
       <LexicalNestedComposer
         initialEditor={caption}
         initialNodes={[RootNode, TextNode, LineBreakNode, ParagraphNode, LinkNode, EmojiNode, HashtagNode]}
@@ -289,9 +289,9 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
         <HashtagPlugin />
         <HistoryPlugin externalHistoryState={historyState} />
         <RichTextPlugin
-          contentEditable={<ContentEditable className="ImageNode__contentEditable" />}
+          contentEditable={<ContentEditable un-border='rounded-b top-0 solid x-2 b-2 blue-1 focus-within:blue-6' un-p='1' un-outline='none' />}
           placeholder={
-            <div className="ImageNode__placeholder">
+            <div un-position='absolute' un-top='[5px]' un-pointer-events='none' un-left='[7px]' un-text='gray-5'>
               Enter a caption...
             </div>
           }
@@ -315,3 +315,5 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
     )}
   </Suspense>;
 };
+
+const UnoTrick = <div un-top='[5px]' un-left='[7px]' un-text='gray-5' un-pointer-events='none' />;

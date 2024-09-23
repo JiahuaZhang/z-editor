@@ -11,17 +11,7 @@ const Direction = {
   west: 1 << 2
 };
 
-export const ImageResizer = ({
-  onResizeStart,
-  onResizeEnd,
-  buttonRef,
-  imageRef,
-  maxWidth,
-  editor,
-  showCaption,
-  setShowCaption,
-  captionsEnabled,
-}: {
+export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, maxWidth, editor, showCaption, setShowCaption, captionsEnabled }: {
   editor: LexicalEditor;
   buttonRef: { current: null | HTMLButtonElement; };
   imageRef: { current: null | HTMLElement; };
@@ -33,10 +23,7 @@ export const ImageResizer = ({
   captionsEnabled: boolean;
 }) => {
   const controlWrapperRef = useRef<HTMLDivElement>(null);
-  const userSelect = useRef({
-    priority: '',
-    value: 'default',
-  });
+  const userSelect = useRef({ priority: '', value: 'default', });
   const positioningRef = useRef<{
     currentHeight: 'inherit' | number;
     currentWidth: 'inherit' | number;
@@ -239,18 +226,17 @@ export const ImageResizer = ({
       document.removeEventListener('pointerup', handlePointerUp);
     }
   };
+
   return (
     <div ref={controlWrapperRef}>
       {!showCaption && captionsEnabled && (
-        <button
-          className="image-caption-button"
+        <button un-position='absolute' un-w='full' un-bg='neutral-1' un-border='rounded-b' un-outline='2 solid blue-4' un-hover='bg-blue-4 text-white'
           ref={buttonRef}
-          onClick={() => {
-            setShowCaption(!showCaption);
-          }}>
+          onClick={() => setShowCaption(!showCaption)}>
           Add Caption
         </button>
       )}
+
       <div
         className="image-resizer image-resizer-n"
         onPointerDown={(event) => {

@@ -83,7 +83,8 @@ export const initialConfig: InitialConfigType = {
     hashtag: 'bg-blue-2 border-b-blue-4 border-b-2',
     link: 'text-blue-7 hover:cursor-pointer hover:underline',
     keyword: 'prose prose-fuchsia',
-    mention: 'bg-blue-2'
+    mention: 'bg-blue-2',
+    image: 'relative inline-block'
   },
   onError: console.error,
   nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, EmojiNode],

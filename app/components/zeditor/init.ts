@@ -290,7 +290,10 @@ export const $generateContent = () => {
     // src: `data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==`,
     altText: 'random image',
   });
-  root.append(image);
+  // root.append(image);
+  const imageParagraph = $createParagraphNode();
+  imageParagraph.append(image);
+  root.append(imageParagraph);
 
   // const stickyNode = $createStickyNode(600, 30);
   // root.append(stickyNode);

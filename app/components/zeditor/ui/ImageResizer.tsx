@@ -230,7 +230,7 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
   return (
     <div ref={controlWrapperRef}>
       {!showCaption && captionsEnabled && (
-        <button un-position='absolute' un-w='full' un-bg='neutral-1' un-border='rounded-b' un-outline='2 solid blue-4' un-hover='bg-blue-4 text-white'
+        <button un-position='absolute' un-left='0.5' un-right='0.5' un-bg='neutral-1' un-border='rounded-b' un-outline='2 solid blue-4' un-hover='bg-blue-4 text-white'
           ref={buttonRef}
           onClick={() => setShowCaption(!showCaption)}>
           Add Caption

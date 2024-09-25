@@ -269,55 +269,57 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
   const isFocused = isSelected || isResizing;
 
   return <Suspense>
-    <div draggable={draggable}>
-      {isLoadError ? <span className="i-material-symbols-light:broken-image" un-w='32' un-h='32' /> : <LazyImage
-        un-border={`${isFocused ? '2 solid blue-4' : '0'}`}
-        un-cursor={`${(isFocused && $isNodeSelection(selection)) ? 'grab' : ''}`}
-        src={src}
-        altText={altText}
-        imageRef={imageRef}
-        width={width}
-        height={height}
-        maxWidth={maxWidth}
-        onError={() => setIsLoadError(true)}
-      />}
-    </div>
+    <div un-mx='1' >
+      <div draggable={draggable}>
+        {isLoadError ? <span className="i-material-symbols-light:broken-image" un-w='32' un-h='32' /> : <LazyImage
+          un-border={`${isFocused ? '2 solid blue-4' : '0'}`}
+          un-cursor={`${(isFocused && $isNodeSelection(selection)) ? 'grab' : ''}`}
+          src={src}
+          altText={altText}
+          imageRef={imageRef}
+          width={width}
+          height={height}
+          maxWidth={maxWidth}
+          onError={() => setIsLoadError(true)}
+        />}
+      </div>
 
-    {showCaption && <div un-position='relative'>
-      <LexicalNestedComposer
-        initialEditor={caption}
-        initialNodes={[RootNode, TextNode, LineBreakNode, ParagraphNode, LinkNode, EmojiNode, HashtagNode]}
-      >
-        <LinkPlugin validateUrl={validateUrl} />
-        <EmojiPlugin />
-        <HashtagPlugin />
-        <HistoryPlugin externalHistoryState={historyState} />
-        <RichTextPlugin
-          contentEditable={<ContentEditable un-border='rounded-b top-0 solid x-2 b-2 blue-1 focus-within:blue-6' un-p='1' un-outline='none' />}
-          placeholder={
-            <div un-position='absolute' un-top='[5px]' un-pointer-events='none' un-left='[7px]' un-text='gray-5'>
-              Enter a caption...
-            </div>
-          }
-          ErrorBoundary={LexicalErrorBoundary}
+      {showCaption && <div un-position='relative'>
+        <LexicalNestedComposer
+          initialEditor={caption}
+          initialNodes={[RootNode, TextNode, LineBreakNode, ParagraphNode, LinkNode, EmojiNode, HashtagNode]}
+        >
+          <LinkPlugin validateUrl={validateUrl} />
+          <EmojiPlugin />
+          <HashtagPlugin />
+          <HistoryPlugin externalHistoryState={historyState} />
+          <RichTextPlugin
+            contentEditable={<ContentEditable un-border='rounded-b top-0 solid x-2 b-2 blue-1 focus-within:blue-6' un-p='1' un-outline='none' />}
+            placeholder={
+              <div un-position='absolute' un-top='[5px]' un-pointer-events='none' un-left='[7px]' un-text='gray-5'>
+                Enter a caption...
+              </div>
+            }
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+          <ImageCaptionAutoFocusPlugin />
+        </LexicalNestedComposer>
+      </div>}
+
+      {$isNodeSelection(selection) && isFocused && (
+        <ImageResizer
+          showCaption={showCaption}
+          setShowCaption={setShowCaption}
+          editor={editor}
+          buttonRef={buttonRef}
+          imageRef={imageRef}
+          maxWidth={maxWidth}
+          onResizeStart={onResizeStart}
+          onResizeEnd={onResizeEnd}
+          captionsEnabled={!isLoadError && captionsEnabled}
         />
-        <ImageCaptionAutoFocusPlugin />
-      </LexicalNestedComposer>
-    </div>}
-
-    {$isNodeSelection(selection) && isFocused && (
-      <ImageResizer
-        showCaption={showCaption}
-        setShowCaption={setShowCaption}
-        editor={editor}
-        buttonRef={buttonRef}
-        imageRef={imageRef}
-        maxWidth={maxWidth}
-        onResizeStart={onResizeStart}
-        onResizeEnd={onResizeEnd}
-        captionsEnabled={!isLoadError && captionsEnabled}
-      />
-    )}
+      )}
+    </div>
   </Suspense>;
 };
 

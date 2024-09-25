@@ -1,6 +1,5 @@
 import { HashtagNode } from '@lexical/hashtag';
 import { LinkNode } from '@lexical/link';
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
@@ -60,6 +59,12 @@ const LazyImage = ({ altText, className, imageRef, src, width, height, maxWidth,
     draggable={false}
     {...rest}
   />;
+};
+
+const ImageCaptionAutoFocusPlugin = () => {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => editor.getRootElement()?.focus({ preventScroll: true }), [editor]);
+  return null;
 };
 
 export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth, showCaption, caption, captionsEnabled }: {
@@ -264,7 +269,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
   const isFocused = isSelected || isResizing;
 
   return <Suspense>
-    <div draggable={draggable} >
+    <div draggable={draggable}>
       {isLoadError ? <span className="i-material-symbols-light:broken-image" un-w='32' un-h='32' /> : <LazyImage
         un-border={`${isFocused ? '2 solid blue-4' : '0'}`}
         un-cursor={`${(isFocused && $isNodeSelection(selection)) ? 'grab' : ''}`}
@@ -283,7 +288,6 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
         initialEditor={caption}
         initialNodes={[RootNode, TextNode, LineBreakNode, ParagraphNode, LinkNode, EmojiNode, HashtagNode]}
       >
-        <AutoFocusPlugin />
         <LinkPlugin validateUrl={validateUrl} />
         <EmojiPlugin />
         <HashtagPlugin />
@@ -297,6 +301,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
           }
           ErrorBoundary={LexicalErrorBoundary}
         />
+        <ImageCaptionAutoFocusPlugin />
       </LexicalNestedComposer>
     </div>}
 

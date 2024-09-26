@@ -230,57 +230,49 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
   return (
     <div ref={controlWrapperRef}>
       {!showCaption && captionsEnabled && (
-        <button un-position='absolute' un-left='0.5' un-right='0.5' un-bg='neutral-1' un-border='rounded-b' un-outline='2 solid blue-4' un-hover='bg-blue-4 text-white'
+        <button un-position='absolute' un-left='1.5' un-right='1.5' un-bg='neutral-1' un-border='rounded-b' un-outline='2 solid blue-4' un-hover='bg-blue-4 text-white'
           ref={buttonRef}
           onClick={() => setShowCaption(!showCaption)}>
           Add Caption
         </button>
       )}
 
-      <div
-        className="image-resizer image-resizer-n"
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='-1' un-left='[calc(50%-4px)]' un-cursor='n-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.north);
         }}
       />
-      <div
-        className="image-resizer image-resizer-ne"
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='-1' un-right='0' un-cursor='ne-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.north | Direction.east);
         }}
       />
-      <div
-        className="image-resizer image-resizer-e"
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='[calc(50%-4px)]' un-right='0' un-cursor='e-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.east);
         }}
       />
-      <div
-        className="image-resizer image-resizer-se"
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-bottom='-1' un-right='0' un-cursor='se-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.south | Direction.east);
         }}
       />
-      <div
-        className="image-resizer image-resizer-s"
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-bottom='-1' un-left='[calc(50%-4px)]' un-cursor='s-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.south);
         }}
       />
-      <div
-        className="image-resizer image-resizer-sw"
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-bottom='-1' un-left='0' un-cursor='sw-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.south | Direction.west);
         }}
       />
-      <div
-        className="image-resizer image-resizer-w"
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='[calc(50%-4px)]' un-left='0' un-cursor='w-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.west);
         }}
       />
-      <div
-        className="image-resizer image-resizer-nw"
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='-1' un-left='0' un-cursor='nw-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.north | Direction.west);
         }}

@@ -9,8 +9,9 @@ import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { LexicalNestedComposer } from '@lexical/react/LexicalNestedComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
+import { $isRootTextContentEmptyCurry } from '@lexical/text';
 import { mergeRegister } from '@lexical/utils';
-import { $getNodeByKey, $getSelection, $isNodeSelection, $isRangeSelection, $setSelection, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, KEY_DELETE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, LexicalCommand, LexicalEditor, LineBreakNode, NodeKey, ParagraphNode, RootNode, SELECTION_CHANGE_COMMAND, TextNode, createCommand } from 'lexical';
+import { $getNodeByKey, $getSelection, $isNodeSelection, $isRangeSelection, $setSelection, BLUR_COMMAND, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, KEY_DELETE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, LexicalCommand, LexicalEditor, LineBreakNode, NodeKey, ParagraphNode, RootNode, SELECTION_CHANGE_COMMAND, TextNode, createCommand } from 'lexical';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useSharedHistoryContext } from '../../context/SharedHistoryContext';
 import { ImageResizer } from '../../ui/ImageResizer';
@@ -61,9 +62,21 @@ const LazyImage = ({ altText, className, imageRef, src, width, height, maxWidth,
   />;
 };
 
-const ImageCaptionAutoFocusPlugin = () => {
+const ImageCaptionPlugin = ({ closeCaption }: { closeCaption: () => void; }) => {
   const [editor] = useLexicalComposerContext();
+
   useEffect(() => editor.getRootElement()?.focus({ preventScroll: true }), [editor]);
+
+  useEffect(() => {
+    editor.registerCommand(BLUR_COMMAND, (payload) => {
+      const isEmpty = editor.getEditorState().read($isRootTextContentEmptyCurry(editor.isComposing(), true));
+      if (isEmpty) closeCaption();
+      return false;
+    },
+      COMMAND_PRIORITY_LOW
+    );
+  }, [editor]);
+
   return null;
 };
 
@@ -242,11 +255,11 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
     };
   }, [clearSelection, editor, isResizing, nodeKey, $onDelete, $onEnter, $onEscape, onClick, onRightClick, setSelected]);
 
-  const setShowCaption = () => {
+  const setShowCaption = (show = true) => {
     editor.update(() => {
       const node = $getNodeByKey(nodeKey);
       if ($isImageNode(node)) {
-        node.setShowCaption(true);
+        node.setShowCaption(show);
       }
     });
   };
@@ -302,7 +315,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
             }
             ErrorBoundary={LexicalErrorBoundary}
           />
-          <ImageCaptionAutoFocusPlugin />
+          <ImageCaptionPlugin closeCaption={() => setShowCaption(false)} />
         </LexicalNestedComposer>
       </div>}
 

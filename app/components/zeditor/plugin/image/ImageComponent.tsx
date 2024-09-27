@@ -297,7 +297,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
         />}
       </div>
 
-      {showCaption && <div un-position='relative'>
+      {showCaption && <div un-position='absolute' un-left='0' un-right='0' >
         <LexicalNestedComposer
           initialEditor={caption}
           initialNodes={[RootNode, TextNode, LineBreakNode, ParagraphNode, LinkNode, EmojiNode, HashtagNode]}
@@ -307,9 +307,9 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
           <HashtagPlugin />
           <HistoryPlugin externalHistoryState={historyState} />
           <RichTextPlugin
-            contentEditable={<ContentEditable un-border='rounded-b top-0 solid x-2 b-2 blue-1 focus-within:blue-6' un-p='1' un-outline='none' />}
+            contentEditable={<ContentEditable un-border='rounded-b top-0 solid x-2 b-2 blue-1 focus-within:blue-6' un-p='1' un-outline='none' un-text='sm' un-bg='white' />}
             placeholder={
-              <div un-position='absolute' un-top='[5px]' un-pointer-events='none' un-left='[7px]' un-text='gray-5'>
+              <div un-position='absolute' un-top='[5px]' un-pointer-events='none' un-left='[7px]' un-text='gray-5 sm'>
                 Enter a caption...
               </div>
             }

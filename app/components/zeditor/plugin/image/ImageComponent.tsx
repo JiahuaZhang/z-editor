@@ -297,7 +297,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
         />}
       </div>
 
-      {showCaption && <div un-position='absolute' un-left='0' un-right='0' >
+      {showCaption && <div>
         <LexicalNestedComposer
           initialEditor={caption}
           initialNodes={[RootNode, TextNode, LineBreakNode, ParagraphNode, LinkNode, EmojiNode, HashtagNode]}

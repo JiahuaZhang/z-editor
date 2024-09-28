@@ -70,29 +70,13 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
     const cursorDir = ew ? 'ew' : ns ? 'ns' : nwse ? 'nwse' : 'nesw';
 
     if (editorRootElement !== null) {
-      editorRootElement.style.setProperty(
-        'cursor',
-        `${cursorDir}-resize`,
-        'important',
-      );
+      editorRootElement.style.setProperty('cursor', `${cursorDir}-resize`, 'important');
     }
     if (document.body !== null) {
-      document.body.style.setProperty(
-        'cursor',
-        `${cursorDir}-resize`,
-        'important',
-      );
-      userSelect.current.value = document.body.style.getPropertyValue(
-        '-webkit-user-select',
-      );
-      userSelect.current.priority = document.body.style.getPropertyPriority(
-        '-webkit-user-select',
-      );
-      document.body.style.setProperty(
-        '-webkit-user-select',
-        `none`,
-        'important',
-      );
+      document.body.style.setProperty('cursor', `${cursorDir}-resize`, 'important');
+      userSelect.current.value = document.body.style.getPropertyValue('-webkit-user-select',);
+      userSelect.current.priority = document.body.style.getPropertyPriority('-webkit-user-select',);
+      document.body.style.setProperty('-webkit-user-select', `none`, 'important');
     }
   };
 
@@ -102,18 +86,11 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
     }
     if (document.body !== null) {
       document.body.style.setProperty('cursor', 'default');
-      document.body.style.setProperty(
-        '-webkit-user-select',
-        userSelect.current.value,
-        userSelect.current.priority,
-      );
+      document.body.style.setProperty('-webkit-user-select', userSelect.current.value, userSelect.current.priority);
     }
   };
 
-  const handlePointerDown = (
-    event: React.PointerEvent<HTMLDivElement>,
-    direction: number,
-  ) => {
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>, direction: number) => {
     if (!editor.isEditable()) {
       return;
     }
@@ -147,14 +124,13 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
       document.addEventListener('pointerup', handlePointerUp);
     }
   };
+
   const handlePointerMove = (event: PointerEvent) => {
     const image = imageRef.current;
     const positioning = positioningRef.current;
 
-    const isHorizontal =
-      positioning.direction & (Direction.east | Direction.west);
-    const isVertical =
-      positioning.direction & (Direction.south | Direction.north);
+    const isHorizontal = positioning.direction & (Direction.east | Direction.west);
+    const isVertical = positioning.direction & (Direction.south | Direction.north);
 
     if (image !== null && positioning.isResizing) {
       const zoom = calculateZoomLevel(image);
@@ -201,6 +177,7 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
       }
     }
   };
+
   const handlePointerUp = () => {
     const image = imageRef.current;
     const positioning = positioningRef.current;

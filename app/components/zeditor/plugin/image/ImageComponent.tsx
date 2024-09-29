@@ -283,17 +283,33 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
   return <Suspense>
     <div un-mx='1' >
       <div draggable={draggable}>
-        {isLoadError ? <span className="i-material-symbols-light:broken-image" un-w='32' un-h='32' /> : <LazyImage
-          un-border={`${isFocused ? '2 solid blue-4' : '0'}`}
-          un-cursor={`${(isFocused && $isNodeSelection(selection)) ? 'grab' : ''}`}
-          src={src}
-          altText={altText}
-          imageRef={imageRef}
-          width={width}
-          height={height}
-          maxWidth={maxWidth}
-          onError={() => setIsLoadError(true)}
-        />}
+        {isLoadError && <span className="i-material-symbols-light:broken-image" un-w='32' un-h='32' />}
+
+        {!isLoadError && <div un-position='relative' >
+          <LazyImage
+            un-border={`${isFocused ? '2 solid blue-4' : '0'}`}
+            un-cursor={`${(isFocused && $isNodeSelection(selection)) ? 'grab' : ''}`}
+            src={src}
+            altText={altText}
+            imageRef={imageRef}
+            width={width}
+            height={height}
+            maxWidth={maxWidth}
+            onError={() => setIsLoadError(true)}
+          />
+          {$isNodeSelection(selection) && isFocused && (
+            <ImageResizer
+              showCaption={showCaption}
+              setShowCaption={setShowCaption}
+              editor={editor}
+              buttonRef={buttonRef}
+              imageRef={imageRef}
+              maxWidth={maxWidth}
+              onResizeStart={onResizeStart}
+              onResizeEnd={onResizeEnd}
+              captionsEnabled={!isLoadError && captionsEnabled} />
+          )}
+        </div>}
       </div>
 
       {showCaption && <LexicalNestedComposer
@@ -314,19 +330,6 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
         />
         <ImageCaptionPlugin closeCaption={() => setShowCaption(false)} />
       </LexicalNestedComposer>}
-
-      {$isNodeSelection(selection) && isFocused && (
-        <ImageResizer
-          showCaption={showCaption}
-          setShowCaption={setShowCaption}
-          editor={editor}
-          buttonRef={buttonRef}
-          imageRef={imageRef}
-          maxWidth={maxWidth}
-          onResizeStart={onResizeStart}
-          onResizeEnd={onResizeEnd}
-          captionsEnabled={!isLoadError && captionsEnabled} />
-      )}
     </div>
   </Suspense>;
 };

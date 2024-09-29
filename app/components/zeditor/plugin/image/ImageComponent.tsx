@@ -285,7 +285,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
       <div draggable={draggable}>
         {isLoadError && <span className="i-material-symbols-light:broken-image" un-w='32' un-h='32' />}
 
-        {!isLoadError && <div un-position='relative' >
+        {!isLoadError && <div un-position='relative' un-w='fit' >
           <LazyImage
             un-border={`${isFocused ? '2 solid blue-4' : '0'}`}
             un-cursor={`${(isFocused && $isNodeSelection(selection)) ? 'grab' : ''}`}

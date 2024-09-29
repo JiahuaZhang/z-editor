@@ -91,38 +91,36 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
   };
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>, direction: number) => {
-    if (!editor.isEditable()) {
-      return;
-    }
+    if (!editor.isEditable()) return;
 
     const image = imageRef.current;
     const controlWrapper = controlWrapperRef.current;
 
-    if (image !== null && controlWrapper !== null) {
-      event.preventDefault();
-      const { width, height } = image.getBoundingClientRect();
-      const zoom = calculateZoomLevel(image);
-      const positioning = positioningRef.current;
-      positioning.startWidth = width;
-      positioning.startHeight = height;
-      positioning.ratio = width / height;
-      positioning.currentWidth = width;
-      positioning.currentHeight = height;
-      positioning.startX = event.clientX / zoom;
-      positioning.startY = event.clientY / zoom;
-      positioning.isResizing = true;
-      positioning.direction = direction;
+    if (image === null || controlWrapper === null) return;
 
-      setStartCursor(direction);
-      onResizeStart();
+    event.preventDefault();
+    const { width, height } = image.getBoundingClientRect();
+    const zoom = calculateZoomLevel(image);
+    const positioning = positioningRef.current;
+    positioning.startWidth = width;
+    positioning.startHeight = height;
+    positioning.ratio = width / height;
+    positioning.currentWidth = width;
+    positioning.currentHeight = height;
+    positioning.startX = event.clientX / zoom;
+    positioning.startY = event.clientY / zoom;
+    positioning.isResizing = true;
+    positioning.direction = direction;
 
-      controlWrapper.classList.add('image-control-wrapper--resizing');
-      image.style.height = `${height}px`;
-      image.style.width = `${width}px`;
+    setStartCursor(direction);
+    onResizeStart();
 
-      document.addEventListener('pointermove', handlePointerMove);
-      document.addEventListener('pointerup', handlePointerUp);
-    }
+    controlWrapper.classList.add('image-control-wrapper--resizing');
+    image.style.height = `${height}px`;
+    image.style.width = `${width}px`;
+
+    document.addEventListener('pointermove', handlePointerMove);
+    document.addEventListener('pointerup', handlePointerUp);
   };
 
   const handlePointerMove = (event: PointerEvent) => {
@@ -132,49 +130,37 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
     const isHorizontal = positioning.direction & (Direction.east | Direction.west);
     const isVertical = positioning.direction & (Direction.south | Direction.north);
 
-    if (image !== null && positioning.isResizing) {
-      const zoom = calculateZoomLevel(image);
-      // Corner cursor
-      if (isHorizontal && isVertical) {
-        let diff = Math.floor(positioning.startX - event.clientX / zoom);
-        diff = positioning.direction & Direction.east ? -diff : diff;
+    if (image === null || !positioning.isResizing) return;
 
-        const width = clamp(
-          positioning.startWidth + diff,
-          minWidth,
-          maxWidthContainer,
-        );
+    const zoom = calculateZoomLevel(image);
+    // Corner cursor
+    if (isHorizontal && isVertical) {
+      let diff = Math.floor(positioning.startX - event.clientX / zoom);
+      diff = positioning.direction & Direction.east ? -diff : diff;
 
-        const height = width / positioning.ratio;
-        image.style.width = `${width}px`;
-        image.style.height = `${height}px`;
-        positioning.currentHeight = height;
-        positioning.currentWidth = width;
-      } else if (isVertical) {
-        let diff = Math.floor(positioning.startY - event.clientY / zoom);
-        diff = positioning.direction & Direction.south ? -diff : diff;
+      const width = clamp(positioning.startWidth + diff, minWidth, maxWidthContainer);
 
-        const height = clamp(
-          positioning.startHeight + diff,
-          minHeight,
-          maxHeightContainer,
-        );
+      const height = width / positioning.ratio;
+      image.style.width = `${width}px`;
+      image.style.height = `${height}px`;
+      positioning.currentHeight = height;
+      positioning.currentWidth = width;
+    } else if (isVertical) {
+      let diff = Math.floor(positioning.startY - event.clientY / zoom);
+      diff = positioning.direction & Direction.south ? -diff : diff;
 
-        image.style.height = `${height}px`;
-        positioning.currentHeight = height;
-      } else {
-        let diff = Math.floor(positioning.startX - event.clientX / zoom);
-        diff = positioning.direction & Direction.east ? -diff : diff;
+      const height = clamp(positioning.startHeight + diff, minHeight, maxHeightContainer);
 
-        const width = clamp(
-          positioning.startWidth + diff,
-          minWidth,
-          maxWidthContainer,
-        );
+      image.style.height = `${height}px`;
+      positioning.currentHeight = height;
+    } else {
+      let diff = Math.floor(positioning.startX - event.clientX / zoom);
+      diff = positioning.direction & Direction.east ? -diff : diff;
 
-        image.style.width = `${width}px`;
-        positioning.currentWidth = width;
-      }
+      const width = clamp(positioning.startWidth + diff, minWidth, maxWidthContainer);
+
+      image.style.width = `${width}px`;
+      positioning.currentWidth = width;
     }
   };
 
@@ -182,26 +168,27 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
     const image = imageRef.current;
     const positioning = positioningRef.current;
     const controlWrapper = controlWrapperRef.current;
-    if (image !== null && controlWrapper !== null && positioning.isResizing) {
-      const width = positioning.currentWidth;
-      const height = positioning.currentHeight;
-      positioning.startWidth = 0;
-      positioning.startHeight = 0;
-      positioning.ratio = 0;
-      positioning.startX = 0;
-      positioning.startY = 0;
-      positioning.currentWidth = 0;
-      positioning.currentHeight = 0;
-      positioning.isResizing = false;
 
-      controlWrapper.classList.remove('image-control-wrapper--resizing');
+    if (image === null || controlWrapper === null || !positioning.isResizing) return;
 
-      setEndCursor();
-      onResizeEnd(width, height);
+    const width = positioning.currentWidth;
+    const height = positioning.currentHeight;
+    positioning.startWidth = 0;
+    positioning.startHeight = 0;
+    positioning.ratio = 0;
+    positioning.startX = 0;
+    positioning.startY = 0;
+    positioning.currentWidth = 0;
+    positioning.currentHeight = 0;
+    positioning.isResizing = false;
 
-      document.removeEventListener('pointermove', handlePointerMove);
-      document.removeEventListener('pointerup', handlePointerUp);
-    }
+    controlWrapper.classList.remove('image-control-wrapper--resizing');
+
+    setEndCursor();
+    onResizeEnd(width, height);
+
+    document.removeEventListener('pointermove', handlePointerMove);
+    document.removeEventListener('pointerup', handlePointerUp);
   };
 
   return (
@@ -209,7 +196,7 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
       {!showCaption && captionsEnabled && (
         <button un-position='absolute' un-left='1.5' un-right='1.5' un-bg='neutral-1' un-border='rounded-b' un-outline='2 solid blue-4' un-hover='bg-blue-4 text-white' un-truncate='~'
           ref={buttonRef}
-          onClick={() => setShowCaption(!showCaption)}>
+          onClick={() => setShowCaption(true)}>
           Add Caption
         </button>
       )}

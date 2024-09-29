@@ -3,7 +3,6 @@ import { LinkNode } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
-import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { LexicalNestedComposer } from '@lexical/react/LexicalNestedComposer';
@@ -17,7 +16,7 @@ import { useSharedHistoryContext } from '../../context/SharedHistoryContext';
 import { ImageResizer } from '../../ui/ImageResizer';
 import { validateUrl } from '../../util/url';
 import { EmojiNode } from '../emoji/EmojiNode';
-import { EmojiPlugin } from '../emoji/EmojiPlugin';
+import { Plugin } from '../plugin';
 import { $isImageNode } from './ImageNode';
 
 const imageCache = new Set();
@@ -297,27 +296,24 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
         />}
       </div>
 
-      {showCaption && <div>
-        <LexicalNestedComposer
-          initialEditor={caption}
-          initialNodes={[RootNode, TextNode, LineBreakNode, ParagraphNode, LinkNode, EmojiNode, HashtagNode]}
-        >
-          <LinkPlugin validateUrl={validateUrl} />
-          <EmojiPlugin />
-          <HashtagPlugin />
-          <HistoryPlugin externalHistoryState={historyState} />
-          <RichTextPlugin
-            contentEditable={<ContentEditable un-border='rounded-b top-0 solid x-2 b-2 blue-1 focus-within:blue-6' un-p='1' un-outline='none' un-text='sm' un-bg='white' />}
-            placeholder={
-              <div un-position='absolute' un-top='[5px]' un-pointer-events='none' un-left='[7px]' un-text='gray-5 sm'>
-                Enter a caption...
-              </div>
-            }
-            ErrorBoundary={LexicalErrorBoundary}
-          />
-          <ImageCaptionPlugin closeCaption={() => setShowCaption(false)} />
-        </LexicalNestedComposer>
-      </div>}
+      {showCaption && <LexicalNestedComposer
+        initialEditor={caption}
+        initialNodes={[RootNode, TextNode, LineBreakNode, ParagraphNode, LinkNode, EmojiNode, HashtagNode]}
+      >
+        <LinkPlugin validateUrl={validateUrl} />
+        <Plugin.HashTag />
+        <HistoryPlugin externalHistoryState={historyState} />
+        <RichTextPlugin
+          contentEditable={<ContentEditable un-border='rounded-b top-0 solid x-2 b-2 blue-1 focus-within:blue-6' un-p='1' un-outline='none' un-text='sm' un-bg='white' />}
+          placeholder={
+            <div un-position='absolute' un-top='[5px]' un-pointer-events='none' un-left='[7px]' un-text='gray-5 sm'>
+              Enter a caption...
+            </div>
+          }
+          ErrorBoundary={LexicalErrorBoundary}
+        />
+        <ImageCaptionPlugin closeCaption={() => setShowCaption(false)} />
+      </LexicalNestedComposer>}
 
       {$isNodeSelection(selection) && isFocused && (
         <ImageResizer
@@ -329,8 +325,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
           maxWidth={maxWidth}
           onResizeStart={onResizeStart}
           onResizeEnd={onResizeEnd}
-          captionsEnabled={!isLoadError && captionsEnabled}
-        />
+          captionsEnabled={!isLoadError && captionsEnabled} />
       )}
     </div>
   </Suspense>;

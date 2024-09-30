@@ -321,9 +321,9 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
         <Plugin.HashTag />
         <HistoryPlugin externalHistoryState={historyState} />
         <RichTextPlugin
-          contentEditable={<ContentEditable un-border='rounded-b top-0 solid x-2 b-2 blue-1 focus-within:blue-6' un-p='1' un-outline='none' un-text='sm' un-bg='white' />}
+          contentEditable={<ContentEditable un-position='relative' un-border='rounded-b top-0 solid x-2 b-2 blue-1 focus-within:blue-6' un-p='1' un-outline='none' un-text='sm' un-bg='white' />}
           placeholder={
-            <div un-position='absolute' un-top='[5px]' un-pointer-events='none' un-left='[7px]' un-text='gray-5 sm'>
+            <div un-position='absolute' un-top='[calc(100%-26px)]' un-pointer-events='none' un-left='[9px]' un-text='gray-5 sm'>
               Enter a caption...
             </div>
           }
@@ -335,4 +335,4 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
   </Suspense>;
 };
 
-const UnoTrick = <div un-top='[5px]' un-left='[7px]' un-text='gray-5' un-pointer-events='none' />;
+const UnoTrick = <div un-top='[calc(100%-26px)]' un-left='[9px]' un-text='gray-5' un-pointer-events='none' />;

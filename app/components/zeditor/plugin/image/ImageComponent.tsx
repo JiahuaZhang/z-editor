@@ -1,5 +1,6 @@
 import { HashtagNode } from '@lexical/hashtag';
-import { LinkNode } from '@lexical/link';
+import { AutoLinkNode, LinkNode } from '@lexical/link';
+import { AutoLinkPlugin } from '@lexical/react/LexicalAutoLinkPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
@@ -14,8 +15,7 @@ import { $getNodeByKey, $getSelection, $isNodeSelection, $isRangeSelection, $set
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useSharedHistoryContext } from '../../context/SharedHistoryContext';
 import { ImageResizer } from '../../ui/ImageResizer';
-import { validateUrl } from '../../util/url';
-import { EmojiNode } from '../emoji/EmojiNode';
+import { MATCHERS, validateUrl } from '../../util/url';
 import { Plugin } from '../plugin';
 import { $isImageNode } from './ImageNode';
 
@@ -314,9 +314,10 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
 
       {showCaption && <LexicalNestedComposer
         initialEditor={caption}
-        initialNodes={[RootNode, TextNode, LineBreakNode, ParagraphNode, LinkNode, EmojiNode, HashtagNode]}
+        initialNodes={[RootNode, TextNode, LineBreakNode, ParagraphNode, LinkNode, AutoLinkNode, HashtagNode]}
       >
         <LinkPlugin validateUrl={validateUrl} />
+        <AutoLinkPlugin matchers={MATCHERS} />
         <Plugin.HashTag />
         <HistoryPlugin externalHistoryState={historyState} />
         <RichTextPlugin

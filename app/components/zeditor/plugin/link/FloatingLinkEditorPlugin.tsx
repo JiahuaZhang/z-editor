@@ -8,14 +8,7 @@ import { getSelectedNode } from '../../util/getSelectedNode';
 import { setFloatingElemPositionForLinkEditor } from '../../util/setFloatingElemPositionForLinkEditor';
 import { sanitizeUrl } from '../../util/url';
 
-const FloatingLinkEditor = ({
-  editor,
-  isLink,
-  setIsLink,
-  anchorElem,
-  isLinkEditMode,
-  setIsLinkEditMode,
-}: {
+const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem, isLinkEditMode, setIsLinkEditMode }: {
   editor: LexicalEditor;
   isLink: boolean;
   setIsLink: Dispatch<boolean>;
@@ -248,14 +241,12 @@ const FloatingLinkEditor = ({
         un-px='3'
         un-text='3.75 gray-7'
         className="link-view">
-        <a
-          un-break='~ words'
-          un-text='blue-6'
-          un-max-w='150'
-          un-overflow-y='auto'
+        <a un-break='~ words' un-text='blue-6' un-max-w='150' un-overflow-y='auto'
           href={sanitizeUrl(linkUrl)}
           target="_blank"
-          rel="noopener noreferrer">
+          rel="noopener noreferrer"
+          lexical-editor='float-link'
+        >
           {linkUrl}
         </a>
         <button
@@ -348,6 +339,11 @@ const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLEle
         BLUR_COMMAND,
         payload => {
           const relatedTarget = payload.relatedTarget as HTMLElement;
+
+          if (relatedTarget instanceof HTMLAnchorElement && relatedTarget.getAttribute('lexical-editor') === 'float-link') {
+            return false;
+          }
+
           if (['i-mdi:trash link-trash', 'i-material-symbols-light:edit'].includes(relatedTarget?.className)) {
             return false;
           }

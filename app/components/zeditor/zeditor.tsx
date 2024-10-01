@@ -19,7 +19,7 @@ import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import { MATCHERS, validateUrl } from './util/url';
 
-export const UnoStaticTrick = () => <div un-top='2' un-left='2' />;
+export const UnoStaticTrick = () => <div un-top='12.5' un-left='2' />;
 
 const Plugins = () => {
   const isEditable = useLexicalEditable();
@@ -29,7 +29,7 @@ const Plugins = () => {
     <Plugin.Toolbar />
     <RichTextPlugin
       contentEditable={<ContentEditable un-p='2' un-z='10' />}
-      placeholder={<div un-position='absolute' un-top='2' un-left='2' un-z='1' un-pointer-events='none' >Enter some rich text...</div>}
+      placeholder={<div un-position='absolute' un-top='12.5' un-left='2' un-z='1' un-pointer-events='none' >Enter some rich text...</div>}
       ErrorBoundary={LexicalErrorBoundary}
     />
     <HistoryPlugin />

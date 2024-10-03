@@ -125,23 +125,6 @@ const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem, isLinkEditM
     }
   }, [isLinkEditMode, isLink]);
 
-  useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      if (editor._rootElement?.contains(event.target as Node)) return;
-
-      const getAncestor = (element: HTMLElement): HTMLElement => element.parentElement ? getAncestor(element.parentElement) : element;
-      const ancestor = getAncestor(event.target as HTMLElement);
-      if (ancestor.nodeName !== 'HTML') return;
-
-      setIsLink(false);
-      setIsLinkEditMode(false);
-    };
-
-    window.addEventListener('click', handleClick);
-
-    return () => window.removeEventListener('click', handleClick);
-  }, []);
-
   const monitorInputInteraction = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -348,6 +331,7 @@ const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLEle
             return false;
           }
 
+          console.log('about to blur?', relatedTarget);
           setIsLink(false);
           setIsLinkEditMode(false);
           return false;

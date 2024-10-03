@@ -4,7 +4,7 @@ import { $createListItemNode, $createListNode } from '@lexical/list';
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 import { $createTableCellNode, $createTableNode, $createTableRowNode } from '@lexical/table';
 import { $createLineBreakNode, $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
-import { $createLinkNode } from '@lexical/link';
+import { $createLinkNode, $createAutoLinkNode } from '@lexical/link';
 import { $createStickyNode } from './plugin/sticky-note/StickNote';
 import { $createMentionNode } from './plugin/mention/MentionNode';
 import { $createImageNode } from './plugin/image/ImageNode';
@@ -260,10 +260,11 @@ const $generateLink = () => {
   paragraph2.append(link2);
   root.append(paragraph2);
 
-  const link3 = $createAutoLinkNode('https://www.apple.com');
-  link3.append($createTextNode('apple'));
+  // const link3 = $createAutoLinkNode('https://www.apple.com');
+  // link3.append($createTextNode('apple'));
   const paragraph3 = $createParagraphNode();
-  paragraph3.append(link3);
+  // paragraph3.append(link3);
+  paragraph3.append($createTextNode('https://www.awesome.com'));
   root.append(paragraph3);
 };
 
@@ -284,11 +285,6 @@ export const $generateContent = () => {
   const paragraph = $createParagraphNode();
   paragraph.append($createTextNode(''));
   root.append(paragraph);
-
-  // const mention = $createMentionNode('hello');
-  // const mentionParagraph = $createParagraphNode();
-  // mentionParagraph.append(mention);
-  // root.append(mentionParagraph);
 
   const image = $createImageNode({
     src: 'https://etc.usf.edu/clipart/76000/76095/76095_square_lg.gif',

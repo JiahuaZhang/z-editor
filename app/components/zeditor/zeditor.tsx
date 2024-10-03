@@ -8,6 +8,7 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
+import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
@@ -32,6 +33,7 @@ const Plugins = () => {
       placeholder={<div un-position='absolute' un-top='12.5' un-left='2' un-z='1' un-pointer-events='none' >Enter some rich text...</div>}
       ErrorBoundary={LexicalErrorBoundary}
     />
+    {/* <OnChangePlugin onChange={console.log} /> */}
     <HistoryPlugin />
     <AutoFocusPlugin />
     <ListPlugin />
@@ -41,8 +43,8 @@ const Plugins = () => {
     <Plugin.Table.CellResizer />
     <Plugin.Table.HoverActinos />
     <Plugin.HashTag />
-    <LinkPlugin validateUrl={validateUrl} />
     <AutoLinkPlugin matchers={MATCHERS} />
+    <LinkPlugin validateUrl={validateUrl} />
     <ClickableLinkPlugin disabled={isEditable} />
     <Plugin.Link.Float isLinkEditMode={isLinkEditMode} setIsLinkEditMode={setIsLinkEditMode} />
     <Plugin.Emoji />

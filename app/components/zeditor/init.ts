@@ -259,6 +259,12 @@ const $generateLink = () => {
   const paragraph2 = $createParagraphNode();
   paragraph2.append(link2);
   root.append(paragraph2);
+
+  const link3 = $createAutoLinkNode('https://www.apple.com');
+  link3.append($createTextNode('apple'));
+  const paragraph3 = $createParagraphNode();
+  paragraph3.append(link3);
+  root.append(paragraph3);
 };
 
 export const $generateContent = () => {

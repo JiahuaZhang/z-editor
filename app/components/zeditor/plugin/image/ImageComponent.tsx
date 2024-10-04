@@ -316,8 +316,8 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
         initialEditor={caption}
         initialNodes={[RootNode, TextNode, LineBreakNode, ParagraphNode, LinkNode, AutoLinkNode, HashtagNode]}
       >
-        <LinkPlugin validateUrl={validateUrl} />
         <AutoLinkPlugin matchers={MATCHERS} />
+        <LinkPlugin validateUrl={validateUrl} />
         <Plugin.HashTag />
         <HistoryPlugin externalHistoryState={historyState} />
         <RichTextPlugin

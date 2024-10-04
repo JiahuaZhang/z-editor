@@ -8,13 +8,13 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
 import { useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 import { initialConfig } from './config';
+import { useActiveEditor } from './context/activeEditor';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
@@ -25,6 +25,7 @@ export const UnoStaticTrick = () => <div un-top='12.5' un-left='2' />;
 const Plugins = () => {
   const isEditable = useLexicalEditable();
   const [isLinkEditMode, setIsLinkEditMode] = useState(false);
+  useActiveEditor();
 
   return <>
     <Plugin.Toolbar />
@@ -33,7 +34,6 @@ const Plugins = () => {
       placeholder={<div un-position='absolute' un-top='12.5' un-left='2' un-z='1' un-pointer-events='none' >Enter some rich text...</div>}
       ErrorBoundary={LexicalErrorBoundary}
     />
-    {/* <OnChangePlugin onChange={console.log} /> */}
     <HistoryPlugin />
     <AutoFocusPlugin />
     <ListPlugin />

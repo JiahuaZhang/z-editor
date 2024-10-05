@@ -5,8 +5,12 @@ import { $createHeadingNode, $createQuoteNode, $isHeadingNode, HeadingTagType } 
 import { $setBlocksType } from '@lexical/selection';
 import { $findMatchingParent, $getNearestNodeOfType } from '@lexical/utils';
 import { Select } from 'antd';
+import { useAtomValue } from 'jotai';
 import { $createParagraphNode, $getSelection, $isRangeSelection, $isRootOrShadowRoot, COMMAND_PRIORITY_LOW, LexicalEditor, SELECTION_CHANGE_COMMAND } from 'lexical';
-import { useCallback, useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { activeEditorAtom } from '../../context/activeEditor';
+
+const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));
 
 const formatParagraph = (editor: LexicalEditor) => {
   editor.update(() => {
@@ -107,7 +111,7 @@ const BLOCK_CONVERTERS: Record<typeof BLOCK_FORMATS[number], (editor: LexicalEdi
 
 export const BlockFormatDropDown = ({}: {}) => {
   const [editor] = useLexicalComposerContext();
-  const [isEditable, setIsEditable] = useState(() => editor.isEditable());
+  const activeEditor = useAtomValue(activeEditorAtom);
   const [format, setFormat] = useState(BLOCK_FORMATS[0]);
 
   const $updateToolbar = useCallback(() => {
@@ -129,7 +133,7 @@ export const BlockFormatDropDown = ({}: {}) => {
     }
 
     const elementKey = element.getKey();
-    const elementDOM = editor.getElementByKey(elementKey);
+    const elementDOM = activeEditor?.getElementByKey(elementKey);
 
     if (elementDOM === null) return;
 
@@ -143,10 +147,10 @@ export const BlockFormatDropDown = ({}: {}) => {
         setFormat(type as any);
       }
     }
-  }, [editor]);
+  }, [activeEditor]);
 
   useEffect(() => {
-    return editor.registerCommand(
+    return activeEditor?.registerCommand(
       SELECTION_CHANGE_COMMAND,
       () => {
         $updateToolbar();
@@ -154,28 +158,33 @@ export const BlockFormatDropDown = ({}: {}) => {
       },
       COMMAND_PRIORITY_LOW
     );
-  }, [editor, $updateToolbar]);
+  }, [activeEditor, $updateToolbar]);
 
-  return <Select un-m='1' un-min-w='30' un-border='none hover:blue-6' disabled={!isEditable}
-    value={format}
-    popupClassName='w-auto!'
-    options={BLOCK_FORMATS.map(value => ({ label: BLOCK_LABELS[value], value }))}
-    onChange={value => {
-      setFormat(value);
-      BLOCK_CONVERTERS[value as typeof BLOCK_FORMATS[number]](editor);
-    }}
-    optionRender={args => {
-      return <div un-inline='grid' un-grid-flow='col' un-gap='2' un-items='center' >
-        <span className={BLOCK_ICONS[args.data.value]} />
-        {args.data.label}
-      </div>;
-    }}
-    labelRender={args => {
-      return <div un-inline='grid' un-grid-flow='col' un-gap='2' un-items='center' >
-        <div className={BLOCK_ICONS[args.value as typeof BLOCK_FORMATS[number]]}></div>
-        {args.label}
-      </div>;
-    }}
-    dropdownRender={original => <div un-min-w='80'>{original}</div>}
-  />;
+  if (editor !== activeEditor) return null;
+
+  return <Suspense>
+    <Select un-m='1' un-min-w='30' un-border='none hover:blue-6' disabled={!editor.isEditable()}
+      value={format}
+      popupClassName='w-auto!'
+      options={BLOCK_FORMATS.map(value => ({ label: BLOCK_LABELS[value], value }))}
+      onChange={value => {
+        setFormat(value);
+        BLOCK_CONVERTERS[value as typeof BLOCK_FORMATS[number]](activeEditor!);
+      }}
+      optionRender={args => {
+        return <div un-inline='grid' un-grid-flow='col' un-gap='2' un-items='center' >
+          <span className={BLOCK_ICONS[args.data.value]} />
+          {args.data.label}
+        </div>;
+      }}
+      labelRender={args => {
+        return <div un-inline='grid' un-grid-flow='col' un-gap='2' un-items='center' >
+          <div className={BLOCK_ICONS[args.value as typeof BLOCK_FORMATS[number]]}></div>
+          {args.label}
+        </div>;
+      }}
+      dropdownRender={original => <div un-min-w='80'>{original}</div>}
+    />
+    <Divider />
+  </Suspense>;
 };

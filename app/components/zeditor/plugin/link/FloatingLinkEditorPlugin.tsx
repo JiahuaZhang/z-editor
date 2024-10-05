@@ -332,7 +332,6 @@ const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLEle
             return false;
           }
 
-          console.log('about to blur?', relatedTarget);
           setIsLink(false);
           setIsLinkEditMode(false);
           return false;

@@ -5,6 +5,7 @@ import { useAtomValue } from 'jotai';
 import { $getRoot, BLUR_COMMAND, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, FOCUS_COMMAND, LexicalEditor, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
 import { useEffect, useMemo, useState } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
+import { INSERT_IMAGE_COMMAND } from '../image/ImagePlugin';
 import { $createStickyNode } from '../sticky-note/StickNote';
 import { BlockFormatDropDown } from './BlockFormatDropDown';
 
@@ -15,14 +16,21 @@ const getInsertItems = (editor: LexicalEditor) => [
     key: 'sticky-note',
     label: 'Sticky Note',
     icon: <span className="i-bi:sticky" />,
-    onClick: () => {
-      editor.update(() => {
-        const root = $getRoot();
-        const stickyNode = $createStickyNode(0, 0);
-        root.append(stickyNode);
-      });
-    }
+    onClick: () => editor.update(() => {
+      const root = $getRoot();
+      const stickyNode = $createStickyNode(0, 0);
+      root.append(stickyNode);
+    })
   },
+  {
+    key: 'image',
+    label: 'Random Image',
+    icon: <span className='i-mdi:image-outline' />,
+    onClick: () => editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
+      src: 'https://picsum.photos/200/300',
+      altText: 'random image',
+    })
+  }
 ] as MenuProps['items'];
 
 export const ToolbarPlugin = () => {
@@ -32,7 +40,7 @@ export const ToolbarPlugin = () => {
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
-  const insertItems = useMemo(() => activeEditor ? getInsertItems(activeEditor) : [], [activeEditorAtom]);
+  const insertItems = useMemo(() => activeEditor ? getInsertItems(activeEditor) : [], [activeEditor]);
 
   useEffect(() => {
     return editor.registerEditableListener((editable) => {

@@ -47,6 +47,7 @@ const Plugins = () => {
     <LinkPlugin validateUrl={validateUrl} />
     <ClickableLinkPlugin disabled={isEditable} />
     <Plugin.Link.Float isLinkEditMode={isLinkEditMode} setIsLinkEditMode={setIsLinkEditMode} />
+    <Plugin.Image.Insert />
     <Plugin.Emoji />
   </>;
 };

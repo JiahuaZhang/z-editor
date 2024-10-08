@@ -69,6 +69,9 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
 
     const cursorDir = ew ? 'ew' : ns ? 'ns' : nwse ? 'nwse' : 'nesw';
 
+    if (imageRef.current !== null) {
+      imageRef.current.style.setProperty('cursor', `${cursorDir}-resize`, 'important');
+    };
     if (editorRootElement !== null) {
       editorRootElement.style.setProperty('cursor', `${cursorDir}-resize`, 'important');
     }
@@ -81,6 +84,9 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
   };
 
   const setEndCursor = () => {
+    if (imageRef.current !== null) {
+      imageRef.current.style.removeProperty('cursor');
+    }
     if (editorRootElement !== null) {
       editorRootElement.style.setProperty('cursor', 'text');
     }
@@ -115,7 +121,7 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
     setStartCursor(direction);
     onResizeStart();
 
-    controlWrapper.classList.add('image-control-wrapper--resizing');
+    controlWrapper.style.setProperty('touch-action', 'none');
     image.style.height = `${height}px`;
     image.style.width = `${width}px`;
 
@@ -182,7 +188,7 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
     positioning.currentHeight = 0;
     positioning.isResizing = false;
 
-    controlWrapper.classList.remove('image-control-wrapper--resizing');
+    controlWrapper.style.removeProperty('touch-action');
 
     setEndCursor();
     onResizeEnd(width, height);
@@ -194,7 +200,7 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
   return (
     <div ref={controlWrapperRef}>
       {!showCaption && captionsEnabled && (
-        <button un-position='absolute' un-left='1.5' un-right='1.5' un-bg='neutral-1' un-border='rounded-b' un-outline='2 solid blue-4' un-hover='bg-blue-4 text-white' un-truncate='~'
+        <button un-position='absolute' un-left='1.5' un-right='1.5' un-bg='neutral-1' un-border='rounded-b' un-outline='2 solid blue-4' un-hover='bg-blue-4 text-white' un-focus='bg-blue-4 text-white' un-truncate='~'
           ref={buttonRef}
           onClick={() => setShowCaption(true)}>
           Add Caption

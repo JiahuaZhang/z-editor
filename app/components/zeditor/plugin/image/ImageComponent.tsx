@@ -18,6 +18,8 @@ import { ImageResizer } from '../../ui/ImageResizer';
 import { MATCHERS, validateUrl } from '../../util/url';
 import { Plugin } from '../plugin';
 import { $isImageNode } from './ImageNode';
+import { useAtomValue } from 'jotai';
+import { activeEditorAtom } from '../../context/activeEditor';
 
 const imageCache = new Set();
 
@@ -96,7 +98,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
   const [isResizing, setIsResizing] = useState(false);
   const [editor] = useLexicalComposerContext();
   const [selection, setSelection] = useState<BaseSelection | null>(null);
-  const activeEditorRef = useRef<LexicalEditor | null>(null);
+  const activeEditor = useAtomValue(activeEditorAtom);
   const [isLoadError, setIsLoadError] = useState(false);
 
   const $onDelete = useCallback(
@@ -144,7 +146,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
 
   const $onEscape = useCallback(
     (event: KeyboardEvent) => {
-      if (activeEditorRef.current === caption || buttonRef.current === event?.target) {
+      if (activeEditor === caption || buttonRef.current === event?.target) {
         $setSelection(null);
         editor.update(() => {
           setSelected(true);
@@ -157,7 +159,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
       }
       return false;
     },
-    [caption, editor, setSelected]
+    [caption, editor, setSelected, activeEditor]
   );
 
   const onClick = useCallback(
@@ -207,24 +209,8 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
           setSelection(editorState.read(() => $getSelection()));
         }
       }),
-      editor.registerCommand(
-        SELECTION_CHANGE_COMMAND,
-        (_, activeEditor) => {
-          activeEditorRef.current = activeEditor;
-          return false;
-        },
-        COMMAND_PRIORITY_LOW
-      ),
-      editor.registerCommand<MouseEvent>(
-        CLICK_COMMAND,
-        onClick,
-        COMMAND_PRIORITY_LOW
-      ),
-      editor.registerCommand<MouseEvent>(
-        RIGHT_CLICK_IMAGE_COMMAND,
-        onClick,
-        COMMAND_PRIORITY_LOW,
-      ),
+      editor.registerCommand<MouseEvent>(CLICK_COMMAND, onClick, COMMAND_PRIORITY_LOW),
+      editor.registerCommand<MouseEvent>(RIGHT_CLICK_IMAGE_COMMAND, onClick, COMMAND_PRIORITY_LOW,),
       editor.registerCommand(
         DRAGSTART_COMMAND,
         (event) => {
@@ -236,11 +222,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
         },
         COMMAND_PRIORITY_LOW
       ),
-      editor.registerCommand(
-        KEY_DELETE_COMMAND,
-        $onDelete,
-        COMMAND_PRIORITY_LOW
-      ),
+      editor.registerCommand(KEY_DELETE_COMMAND, $onDelete, COMMAND_PRIORITY_LOW),
       editor.registerCommand(KEY_ENTER_COMMAND, $onEnter, COMMAND_PRIORITY_LOW),
       editor.registerCommand(KEY_ESCAPE_COMMAND, $onEscape, COMMAND_PRIORITY_LOW)
     );

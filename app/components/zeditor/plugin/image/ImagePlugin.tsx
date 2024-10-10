@@ -1,6 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $wrapNodeInElement, CAN_USE_DOM, mergeRegister } from '@lexical/utils';
-import { $createParagraphNode, $getSelection, $insertNodes, $isNodeSelection, $isRootOrShadowRoot, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, LexicalCommand, createCommand } from 'lexical';
+import { $createParagraphNode, $createRangeSelection, $getSelection, $insertNodes, $isNodeSelection, $isRootOrShadowRoot, $setSelection, COMMAND_PRIORITY_LOW, DRAGOVER_COMMAND, DRAGSTART_COMMAND, DROP_COMMAND, LexicalCommand, LexicalEditor, createCommand } from 'lexical';
 import { useEffect } from 'react';
 import { $createImageNode, $isImageNode, ImageNode, ImagePayload } from './ImageNode';
 
@@ -63,6 +63,59 @@ const $onDragStart = (event: DragEvent) => {
   return true;
 };
 
+const canDropImage = (event: DragEvent) => {
+  const { target } = event;
+  // maybe checking only if image is inside lexical.dev editor
+  return (target && target instanceof HTMLElement && !(target instanceof HTMLImageElement));
+};
+
+const $onDragOver = (event: DragEvent) => {
+  const node = $getImageNodeInSelection();
+  if (!node) return false;
+  if (!canDropImage(event)) {
+    event.preventDefault();
+  }
+  return true;
+};
+
+const getDragSelection = (event: DragEvent) => {
+  const target = event.target as null | Element | Document;
+  const targetWindow = target == null ? null : target.nodeType === 9 ? (target as Document).defaultView : (target as Element).ownerDocument.defaultView;
+  const domSelection = getDOMSelection(targetWindow);
+  if (document.caretRangeFromPoint) {
+    return document.caretRangeFromPoint(event.clientX, event.clientY);
+  } else if (event.rangeParent && domSelection !== null) {
+    domSelection.collapse(event.rangeParent, event.rangeOffset || 0);
+    return domSelection.getRangeAt(0);
+  } else {
+    throw Error(`Cannot get the selection when dragging`);
+  }
+};
+
+const $onDrop = (event: DragEvent, editor: LexicalEditor) => {
+  const node = $getImageNodeInSelection();
+  if (!node) return false;
+
+  const dragData = event.dataTransfer?.getData('application/x-lexical-drag');
+  if (!dragData) return false;
+
+  const { data, type } = JSON.parse(dragData);
+  if (type !== 'image' || !data) return false;
+
+  event.preventDefault();
+  if (canDropImage(event)) {
+    const range = getDragSelection(event);
+    node.remove();
+    const rangeSelection = $createRangeSelection();
+    if (range !== null && range !== undefined) {
+      rangeSelection.applyDOMRange(range);
+    }
+    $setSelection(rangeSelection);
+    editor.dispatchCommand(INSERT_IMAGE_COMMAND, data);
+  }
+  return true;
+};
+
 export const ImagePlugin = () => {
   const [editor] = useLexicalComposerContext();
 
@@ -74,6 +127,8 @@ export const ImagePlugin = () => {
     return mergeRegister(
       editor.registerCommand<InsertImagePayload>(INSERT_IMAGE_COMMAND, $insertImage, COMMAND_PRIORITY_LOW),
       editor.registerCommand<DragEvent>(DRAGSTART_COMMAND, $onDragStart, COMMAND_PRIORITY_LOW),
+      editor.registerCommand<DragEvent>(DRAGOVER_COMMAND, $onDragOver, COMMAND_PRIORITY_LOW),
+      editor.registerCommand<DragEvent>(DROP_COMMAND, event => $onDrop(event, editor), COMMAND_PRIORITY_LOW),
     );
   }, [editor]);
 

@@ -174,6 +174,7 @@ const $generateTable = () => {
   const emptyTable = $createTableNode();
   const emptyRow = $createTableRowNode();
   const emptyCell = $createTableCellNode(0);
+  emptyCell.append($createParagraphNode());
   emptyRow.append(emptyCell);
   emptyTable.append(emptyRow);
   root.append(emptyTable);
@@ -181,7 +182,9 @@ const $generateTable = () => {
   const table = $createTableNode();
   const row = $createTableRowNode();
   const cell = $createTableCellNode(0);
-  cell.append($createTextNode('cell'));
+  const cellParagraph = $createParagraphNode();
+  cellParagraph.append($createTextNode('cell'));
+  cell.append(cellParagraph);
 
   row.append(cell);
   table.append(row);
@@ -192,7 +195,9 @@ const $generateTable = () => {
     const rowNode = $createTableRowNode();
     for (const col of [0, 1]) {
       const cell = $createTableCellNode(0);
-      cell.append($createTextNode(`${row}-${col}`));
+      const cellParagraph = $createParagraphNode();
+      cellParagraph.append($createTextNode(`${row}-${col}`));
+      cell.append(cellParagraph);
       rowNode.append(cell);
     }
     table2x2.append(rowNode);
@@ -204,7 +209,9 @@ const $generateTable = () => {
     const rowNode = $createTableRowNode();
     for (const col of [0, 1, 2]) {
       const cell = $createTableCellNode(0);
-      cell.append($createTextNode(`${row}-${col}`));
+      const cellParagraph = $createParagraphNode();
+      cellParagraph.append($createTextNode(`${row}-${col}`));
+      cell.append(cellParagraph);
       rowNode.append(cell);
     }
     table3x3.append(rowNode);
@@ -216,7 +223,9 @@ const $generateTable = () => {
     const rowNode = $createTableRowNode();
     for (const col of [0, 1, 2, 3]) {
       const cell = $createTableCellNode(0);
-      cell.append($createTextNode(`${row}-${col}`));
+      const cellParagraph = $createParagraphNode();
+      cellParagraph.append($createTextNode(`${row}-${col}`));
+      cell.append(cellParagraph);
       rowNode.append(cell);
     }
     table4x4.append(rowNode);
@@ -269,18 +278,18 @@ const $generateLink = () => {
 };
 
 export const $generateContent = () => {
-  $generateH1To6();
+  // $generateH1To6();
   // $generateListContent();
   // $generateCode();
-  // $generateTable();
-  $generateHashTag();
-  $generateLink();
+  $generateTable();
+  // $generateHashTag();
+  // $generateLink();
 
   const root = $getRoot();
 
-  const quote = $createQuoteNode();
-  quote.append($createTextNode('This is a quote node'));
-  root.append(quote);
+  // const quote = $createQuoteNode();
+  // quote.append($createTextNode('This is a quote node'));
+  // root.append(quote);
 
   const paragraph = $createParagraphNode();
   paragraph.append($createTextNode(''));

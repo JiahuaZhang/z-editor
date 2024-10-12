@@ -65,8 +65,12 @@ const $onDragStart = (event: DragEvent) => {
 
 const canDropImage = (event: DragEvent) => {
   const { target } = event;
-  // maybe checking only if image is inside lexical.dev editor
-  return (target && target instanceof HTMLElement && !(target instanceof HTMLImageElement));
+  return (
+    target
+    && target instanceof HTMLElement &&
+    (!(target as HTMLElement).closest('code')?.getAttribute('data-language'))
+    && !(target instanceof HTMLImageElement)
+  );
 };
 
 const $onDragOver = (event: DragEvent) => {

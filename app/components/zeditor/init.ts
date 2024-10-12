@@ -148,6 +148,15 @@ const $generateH1To6 = () => {
 
 const $generateCode = () => {
   const root = $getRoot();
+
+  const paragraph = $createParagraphNode();
+  paragraph.append($createTextNode('Regular paragraph also supports'));
+  const codeText = $createTextNode('inline code format');
+  codeText.toggleFormat('code');
+  paragraph.append(codeText);
+  paragraph.append($createTextNode(', so I am regular paragraph again'));
+  root.append(paragraph);
+
   const code = $createCodeNode('java');
   code.append($createTextNode(`public class HelloWorld {
     public static void main(String[] args) {

@@ -21,6 +21,9 @@ export const initialConfig: InitialConfigType = {
       h5: 'text-lg font-bold text-blue-6 ',
       h6: 'text-base font-bold font-blue-5 '
     },
+    text: {
+      code: 'bg-zinc-1 p-1 rounded text-sm font-mono'
+    },
     list: {
       checklist: 'pl-0',
       listitem: '',

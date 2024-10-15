@@ -8,6 +8,7 @@ import { $createLinkNode, $createAutoLinkNode } from '@lexical/link';
 import { $createStickyNode } from './plugin/sticky-note/StickNote';
 import { $createMentionNode } from './plugin/mention/MentionNode';
 import { $createImageNode } from './plugin/image/ImageNode';
+import { $createInlineImageNode } from './plugin/inline-image/InlineImageNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -286,23 +287,8 @@ const $generateLink = () => {
   root.append(paragraph3);
 };
 
-export const $generateContent = () => {
-  // $generateH1To6();
-  // $generateListContent();
-  // $generateCode();
-  $generateTable();
-  // $generateHashTag();
-  // $generateLink();
-
+const $generateImages = () => {
   const root = $getRoot();
-
-  // const quote = $createQuoteNode();
-  // quote.append($createTextNode('This is a quote node'));
-  // root.append(quote);
-
-  const paragraph = $createParagraphNode();
-  paragraph.append($createTextNode(''));
-  root.append(paragraph);
 
   const image = $createImageNode({
     src: 'https://etc.usf.edu/clipart/76000/76095/76095_square_lg.gif',
@@ -315,6 +301,34 @@ export const $generateContent = () => {
   const imageParagraph = $createParagraphNode();
   imageParagraph.append(image);
   root.append(imageParagraph);
+
+  const inlineImage = $createInlineImageNode({
+    src: 'https://images.dog.ceo/breeds/basenji/n02110806_1778.jpg',
+    altText: 'random image',
+  });
+  const inlineImageParagraph = $createParagraphNode();
+  inlineImageParagraph.append(inlineImage);
+  root.append(inlineImageParagraph);
+};
+
+export const $generateContent = () => {
+  // $generateH1To6();
+  // $generateListContent();
+  $generateCode();
+  // $generateTable();
+  // $generateHashTag();
+  // $generateLink();
+  $generateImages();
+
+  const root = $getRoot();
+
+  const quote = $createQuoteNode();
+  quote.append($createTextNode('This is a quote node'));
+  root.append(quote);
+
+  const paragraph = $createParagraphNode();
+  paragraph.append($createTextNode(''));
+  root.append(paragraph);
 
   // const stickyNode = $createStickyNode(600, 30);
   // root.append(stickyNode);

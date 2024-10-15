@@ -8,6 +8,7 @@ import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
 import { $generateContent } from './init';
 import { EmojiNode } from './plugin/emoji/EmojiNode';
 import { ImageNode } from './plugin/image/ImageNode';
+import { InlineImageNode } from './plugin/inline-image/InlineImageNode';
 import { StickyNode } from './plugin/sticky-note/StickNote';
 
 export const initialConfig: InitialConfigType = {
@@ -90,7 +91,7 @@ export const initialConfig: InitialConfigType = {
     image: 'relative inline-block'
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, EmojiNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode],
   editorState: $generateContent,
   // editable: false
 };

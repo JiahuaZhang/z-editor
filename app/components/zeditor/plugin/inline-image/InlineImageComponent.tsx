@@ -3,7 +3,7 @@ import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection'
 import { mergeRegister } from '@lexical/utils';
 import { Checkbox, Form, Input, Modal, Select } from 'antd';
 import { useAtomValue } from 'jotai';
-import { $getNodeByKey, $getSelection, $isNodeSelection, $setSelection, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, KEY_BACKSPACE_COMMAND, KEY_DELETE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, LexicalEditor, NodeKey, SELECTION_CHANGE_COMMAND } from 'lexical';
+import { $getNodeByKey, $getSelection, $isNodeSelection, $setSelection, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, KEY_BACKSPACE_COMMAND, KEY_DELETE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, NodeKey } from 'lexical';
 import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { $isInlineImageNode, InlineImageNode, Position } from './InlineImageNode';

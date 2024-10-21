@@ -2,6 +2,7 @@ import { CodeHighlightPlugin } from './code/CodeHighlightPlugin';
 import { EmojiPlugin } from './emoji/EmojiPlugin';
 import { HashtagPlugin } from './hashtag/HashTagPlugin';
 import { ImagePlugin } from './image/ImagePlugin';
+import { InlineImagePlugin } from './inline-image/InlineImagePlugin';
 import { FloatingLinkEditorPlugin } from './link/FloatingLinkEditorPlugin';
 import { TableCellResizerPlugin } from './table/TableCellResizer';
 import { TableHoverActionsPlugin } from './table/TableHoverActionsPlugin';
@@ -22,6 +23,7 @@ export namespace Plugin {
   }
   export namespace Image {
     export const Insert = ImagePlugin;
+    export const Inline = InlineImagePlugin;
   }
   export const Toolbar = ToolbarPlugin;
 }

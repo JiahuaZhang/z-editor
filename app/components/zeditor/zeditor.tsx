@@ -19,10 +19,13 @@ import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import { MATCHERS, validateUrl } from './util/url';
+import { TreeView } from '@lexical/react/LexicalTreeView';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
 export const UnoStaticTrick = () => <div un-top='12.5' un-left='2' />;
 
 const Plugins = () => {
+  const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
   const [isLinkEditMode, setIsLinkEditMode] = useState(false);
   useActiveEditor();
@@ -48,7 +51,10 @@ const Plugins = () => {
     <ClickableLinkPlugin disabled={isEditable} />
     <Plugin.Link.Float isLinkEditMode={isLinkEditMode} setIsLinkEditMode={setIsLinkEditMode} />
     <Plugin.Image.Insert />
+    <Plugin.Image.Inline />
+
     <Plugin.Emoji />
+    {/* <TreeView editor={editor} /> */}
   </>;
 };
 

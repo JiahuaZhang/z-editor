@@ -52,7 +52,7 @@ const Plugins = () => {
     <Plugin.Link.Float isLinkEditMode={isLinkEditMode} setIsLinkEditMode={setIsLinkEditMode} />
     <Plugin.Image.Insert />
     <Plugin.Image.Inline />
-    <Plugin.Emoji.Transform />
+    {/* <Plugin.Emoji.Transform /> */}
     <Plugin.Emoji.Picker />
 
     {/* <TreeView editor={editor} /> */}

@@ -79,24 +79,25 @@ export const EmojiPickerPlugin = () => {
     options={options}
     onSelectOption={onSelectOption}
     menuRenderFn={
-      (anchorElement, { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }) => {
-        return (anchorElement.current && options.length > 0 && createPortal(
-          <div un-border='rounded 2 solid blue-1' un-min-w='80' un-bg='white'>
-            <ul>{
-              options.map((option, i) => <EmojiMenuItem key={option.key}
-                index={i}
-                isSelected={selectedIndex === i}
-                onClick={() => {
-                  setHighlightedIndex(i);
-                  selectOptionAndCleanUp(option);
-                }}
-                onMouseEnter={() => setHighlightedIndex(i)}
-                option={option} />)}
-            </ul>
-          </div>,
-          anchorElement.current
-        )) as JSX.Element;
-      }
+      (anchorElement, { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }) =>
+        (anchorElement.current
+          && options.length > 0
+          && createPortal(
+            <div un-border='rounded 2 solid blue-1' un-min-w='80' un-bg='white'>
+              <ul>{
+                options.map((option, i) => <EmojiMenuItem key={option.key}
+                  index={i}
+                  isSelected={selectedIndex === i}
+                  onClick={() => {
+                    setHighlightedIndex(i);
+                    selectOptionAndCleanUp(option);
+                  }}
+                  onMouseEnter={() => setHighlightedIndex(i)}
+                  option={option} />)}
+              </ul>
+            </div>,
+            anchorElement.current
+          )) as JSX.Element
     }
   />;
 };

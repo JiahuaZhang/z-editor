@@ -1,4 +1,5 @@
 import { CodeHighlightPlugin } from './code/CodeHighlightPlugin';
+import { EmojiPickerPlugin } from './emoji/EmojiPickerPlugin';
 import { EmojiPlugin } from './emoji/EmojiPlugin';
 import { HashtagPlugin } from './hashtag/HashTagPlugin';
 import { ImagePlugin } from './image/ImagePlugin';
@@ -16,7 +17,10 @@ export namespace Plugin {
     export const CellResizer = TableCellResizerPlugin;
     export const HoverActinos = TableHoverActionsPlugin;
   }
-  export const Emoji = EmojiPlugin;
+  export namespace Emoji {
+    export const Transform = EmojiPlugin;
+    export const Picker = EmojiPickerPlugin;
+  }
   export const HashTag = HashtagPlugin;
   export namespace Link {
     export const Float = FloatingLinkEditorPlugin;

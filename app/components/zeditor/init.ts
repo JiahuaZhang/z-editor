@@ -290,44 +290,44 @@ const $generateLink = () => {
 const $generateImages = () => {
   const root = $getRoot();
 
-  // const image = $createImageNode({
-  //   src: 'https://etc.usf.edu/clipart/76000/76095/76095_square_lg.gif',
-  //   // src: 'https://images.dog.ceo/breeds/basenji/n02110806_1778.jpg',
-  //   // src: 'https://images.dog.ceo/breeds/danish-swedish-farmdog/ebba_003.jpg',
-  //   // src: `data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==`,
-  //   altText: 'random image',
-  // });
-  // const imageParagraph = $createParagraphNode();
-  // imageParagraph.append(image);
-  // root.append(imageParagraph);
-
-  const inlineImage = $createInlineImageNode({
-    src: 'https://images.dog.ceo/breeds/basenji/n02110806_1778.jpg',
+  const image = $createImageNode({
+    src: 'https://etc.usf.edu/clipart/76000/76095/76095_square_lg.gif',
+    // src: 'https://images.dog.ceo/breeds/basenji/n02110806_1778.jpg',
+    // src: 'https://images.dog.ceo/breeds/danish-swedish-farmdog/ebba_003.jpg',
+    // src: `data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==`,
     altText: 'random image',
-    position: 'left'
   });
-  const inlineImageParagraph = $createParagraphNode();
-  inlineImageParagraph.append(inlineImage);
-  root.append(inlineImageParagraph);
+  const imageParagraph = $createParagraphNode();
+  imageParagraph.append(image);
+  root.append(imageParagraph);
 
-  const inlineImage2 = $createInlineImageNode({
-    src: 'https://i.redd.it/zwfggeplutf61.jpg',
-    altText: 'random cat image',
-    position: 'right',
-  });
-  const inlineImageParagraph2 = $createParagraphNode();
-  inlineImageParagraph.append(inlineImage2);
-  root.append(inlineImageParagraph2);
+  // const inlineImage = $createInlineImageNode({
+  //   src: 'https://images.dog.ceo/breeds/basenji/n02110806_1778.jpg',
+  //   altText: 'random image',
+  //   position: 'left'
+  // });
+  // const inlineImageParagraph = $createParagraphNode();
+  // inlineImageParagraph.append(inlineImage);
+  // root.append(inlineImageParagraph);
 
-  const inlineImage3 = $createInlineImageNode({
-    src: 'https://images.pexels.com/photos/5699519/pexels-photo-5699519.jpeg',
-    altText: 'random drugs image',
-    position: 'full',
-    showCaption: true
-  });
-  const inlineImageParagraph3 = $createParagraphNode();
-  inlineImageParagraph.append(inlineImage3);
-  root.append(inlineImageParagraph3);
+  // const inlineImage2 = $createInlineImageNode({
+  //   src: 'https://i.redd.it/zwfggeplutf61.jpg',
+  //   altText: 'random cat image',
+  //   position: 'right',
+  // });
+  // const inlineImageParagraph2 = $createParagraphNode();
+  // inlineImageParagraph.append(inlineImage2);
+  // root.append(inlineImageParagraph2);
+
+  // const inlineImage3 = $createInlineImageNode({
+  //   src: 'https://images.pexels.com/photos/5699519/pexels-photo-5699519.jpeg',
+  //   altText: 'random drugs image',
+  //   position: 'full',
+  //   showCaption: true
+  // });
+  // const inlineImageParagraph3 = $createParagraphNode();
+  // inlineImageParagraph.append(inlineImage3);
+  // root.append(inlineImageParagraph3);
 };
 
 export const $generateContent = () => {

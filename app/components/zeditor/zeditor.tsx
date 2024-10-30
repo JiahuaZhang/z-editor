@@ -3,6 +3,7 @@ import { AutoLinkPlugin } from '@lexical/react/LexicalAutoLinkPlugin';
 import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 import { ClickableLinkPlugin } from '@lexical/react/LexicalClickableLinkPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
@@ -19,8 +20,6 @@ import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import { MATCHERS, validateUrl } from './util/url';
-import { TreeView } from '@lexical/react/LexicalTreeView';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
 export const UnoStaticTrick = () => <div un-top='12.5' un-left='2' />;
 
@@ -54,6 +53,7 @@ const Plugins = () => {
     <Plugin.Image.Inline />
     {/* <Plugin.Emoji.Transform /> */}
     <Plugin.Emoji.Picker />
+    <Plugin.Excalidraw />
 
     {/* <TreeView editor={editor} /> */}
   </>;

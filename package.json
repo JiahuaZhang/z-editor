@@ -13,6 +13,7 @@
     "update-lexical": "npm install lexical@latest @lexical/dragon@latest @lexical/history@latest @lexical/react@latest @lexical/rich-text@latest @lexical/utils@latest"
   },
   "dependencies": {
+    "@excalidraw/excalidraw": "^0.17.6",
     "@iconify-json/ci": "^1.2.0",
     "@lexical/dragon": "^0.18.0",
     "@lexical/history": "^0.18.0",

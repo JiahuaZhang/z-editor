@@ -7,6 +7,7 @@ import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
 import { $generateContent } from './init';
 import { EmojiNode } from './plugin/emoji/EmojiNode';
+import { ExcalidrawNode } from './plugin/excalidraw/ExcalidrawNode';
 import { ImageNode } from './plugin/image/ImageNode';
 import { InlineImageNode } from './plugin/inline-image/InlineImageNode';
 import { StickyNode } from './plugin/sticky-note/StickNote';
@@ -92,7 +93,7 @@ export const initialConfig: InitialConfigType = {
     inlineImage: 'inline-block'
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode],
   editorState: $generateContent,
   // editable: false
 };

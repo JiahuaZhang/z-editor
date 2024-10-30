@@ -1,6 +1,7 @@
 import { CodeHighlightPlugin } from './code/CodeHighlightPlugin';
 import { EmojiPickerPlugin } from './emoji/EmojiPickerPlugin';
 import { EmojiPlugin } from './emoji/EmojiPlugin';
+import { ExcalidrawPlugin } from './excalidraw/ExcalidrawPlugin';
 import { HashtagPlugin } from './hashtag/HashTagPlugin';
 import { ImagePlugin } from './image/ImagePlugin';
 import { InlineImagePlugin } from './inline-image/InlineImagePlugin';
@@ -30,4 +31,5 @@ export namespace Plugin {
     export const Inline = InlineImagePlugin;
   }
   export const Toolbar = ToolbarPlugin;
+  export const Excalidraw = ExcalidrawPlugin;
 }

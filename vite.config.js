@@ -28,5 +28,8 @@ export default defineConfig({
         'node_modules/emoji-datasource-facebook/img/facebook/64/',
       ),
     }
-  }
+  },
+  define: {
+    "process.env.IS_PREACT": JSON.stringify("true"),
+  },
 })

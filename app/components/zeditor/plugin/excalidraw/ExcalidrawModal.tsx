@@ -5,14 +5,13 @@ import {
   ExcalidrawInitialDataState,
 } from '@excalidraw/excalidraw/types/types';
 import { Modal } from 'antd';
-import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 
 const Excalidraw = lazy(() => import('@excalidraw/excalidraw').then(module => ({ default: module.Excalidraw })));
 
 export type ExcalidrawInitialElements = ExcalidrawInitialDataState['elements'];
 
 type Props = {
-  closeOnClickOutside?: boolean;
   /**
    * The initial set of elements to draw into the scene
    */
@@ -53,76 +52,13 @@ export const useCallbackRefState = () => {
   return [refValue, refCallback] as const;
 };
 
-export const ExcalidrawModal = ({
-  closeOnClickOutside = false,
-  onSave,
-  initialElements,
-  initialAppState,
-  initialFiles,
-  isShown = false,
-  onDelete,
-  onClose,
-}: Props) => {
-  const excaliDrawModelRef = useRef<HTMLDivElement | null>(null);
+export const ExcalidrawModal = ({ onSave, initialElements, initialAppState, initialFiles, isShown, onDelete, onClose }: Props) => {
   const [excalidrawAPI, excalidrawAPIRefCallback] = useCallbackRefState();
   const [elements, setElements] = useState<ExcalidrawInitialElements>(initialElements);
   const [files, setFiles] = useState<BinaryFiles>(initialFiles);
+  const [isConfirmDelete, setIsConfirmDelete] = useState(false);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (excaliDrawModelRef.current !== null) {
-      excaliDrawModelRef.current.focus();
-    }
-  }, []);
-
-  useEffect(() => {
-    let modalOverlayElement: HTMLElement | null = null;
-
-    const clickOutsideHandler = (event: MouseEvent) => {
-      const target = event.target;
-      if (
-        excaliDrawModelRef.current !== null &&
-        !excaliDrawModelRef.current.contains(target as Node) &&
-        closeOnClickOutside
-      ) {
-        onDelete();
-      }
-    };
-
-    if (excaliDrawModelRef.current !== null) {
-      modalOverlayElement = excaliDrawModelRef.current?.parentElement;
-      if (modalOverlayElement !== null) {
-        modalOverlayElement?.addEventListener('click', clickOutsideHandler);
-      }
-    }
-
-    return () => {
-      if (modalOverlayElement !== null) {
-        modalOverlayElement?.removeEventListener('click', clickOutsideHandler);
-      }
-    };
-  }, [closeOnClickOutside, onDelete]);
-
-  useLayoutEffect(() => {
-    const currentModalRef = excaliDrawModelRef.current;
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onDelete();
-      }
-    };
-
-    if (currentModalRef !== null) {
-      currentModalRef.addEventListener('keydown', onKeyDown);
-    }
-
-    return () => {
-      if (currentModalRef !== null) {
-        currentModalRef.removeEventListener('keydown', onKeyDown);
-      }
-    };
-  }, [elements, files, onDelete]);
+  useEffect(() => { if (!isShown) { setIsConfirmDelete(false); } }, [isShown]);
 
   const save = () => {
     if (elements && elements.filter((el) => !el.isDeleted).length > 0) {
@@ -143,50 +79,49 @@ export const ExcalidrawModal = ({
       };
       onSave(elements, partialState, files);
     } else {
-      // delete node if the scene is clear
       onDelete();
     }
   };
-
-  if (isShown === false) {
-    return null;
-  }
 
   const onChange = (els: ExcalidrawInitialElements, _: AppState, fls: BinaryFiles) => {
     setElements(els);
     setFiles(fls);
   };
 
-  return <>
-    <button onClick={() => setIsModalOpen(true)} >open</button>
-    <Modal open={isModalOpen} width={960}
-      footer={<div un-grid='~' un-justify='end' un-grid-flow='col' >
-        <button un-inline='grid' un-grid-flow='col' un-items='center' un-gap='1' un-text='red-5' un-hover='text-white bg-red-5' un-border='rounded' un-p='1' un-pr='2'
-          onClick={() => setIsModalOpen(false)}
-        >
-          <span className="i-mdi:close" un-text='lg' /> Discard
-        </button>
-        <button un-inline='grid' un-grid-flow='col' un-items='center' un-gap='1' un-text='blue-6' un-hover='bg-blue-6 text-white' un-border='rounded' un-p='1' un-pr='2'
-          onClick={save}
-        >
-          <span className="i-material-symbols-light:check" un-text='lg' /> Save
-        </button>
-      </div>}
-      closable={false}
-    >
-      <div un-h='180' >
-        <Suspense>
-          <Excalidraw
-            onChange={onChange}
-            excalidrawAPI={excalidrawAPIRefCallback}
-            initialData={{
-              appState: initialAppState || { isLoading: false },
-              elements: initialElements,
-              files: initialFiles,
-            }}
-          />
-        </Suspense>
-      </div>
-    </Modal>
-  </>;
+  return <Modal open={isShown} width={960} closable={false} onCancel={onClose}
+    footer={<div un-grid='~' un-justify='end' un-grid-flow='col' >
+      {
+        isConfirmDelete
+          ? <button un-inline='grid' un-grid-flow='col' un-items='center' un-gap='1' un-text='red-5' un-hover='text-white bg-red-5' un-border='rounded' un-p='1' un-pr='2'
+            onClick={onDelete}
+          >
+            <span className="i-mdi:trash" un-text='lg' /> Confirm Discard
+          </button>
+          : <button un-inline='grid' un-grid-flow='col' un-items='center' un-gap='1' un-text='orange-6' un-hover='text-white bg-orange-6' un-border='rounded' un-p='1' un-pr='2'
+            onClick={() => setIsConfirmDelete(true)}
+          >
+            <span className="i-mdi:close" un-text='lg' /> Discard
+          </button>
+      }
+      <button un-inline='grid' un-grid-flow='col' un-items='center' un-gap='1' un-text='blue-6' un-hover='bg-blue-6 text-white' un-border='rounded' un-p='1' un-pr='2'
+        onClick={save}
+      >
+        <span className="i-material-symbols-light:check" un-text='lg' /> Save
+      </button>
+    </div>}
+  >
+    <div un-h='180' >
+      <Suspense>
+        <Excalidraw
+          onChange={onChange}
+          excalidrawAPI={excalidrawAPIRefCallback}
+          initialData={{
+            appState: initialAppState || { isLoading: false },
+            elements: initialElements,
+            files: initialFiles,
+          }}
+        />
+      </Suspense>
+    </div>
+  </Modal>;
 };

@@ -5,6 +5,7 @@ import { useAtomValue } from 'jotai';
 import { $getRoot, BLUR_COMMAND, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, FOCUS_COMMAND, LexicalEditor, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
 import { useEffect, useMemo, useState } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
+import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
 import { INSERT_IMAGE_COMMAND } from '../image/ImagePlugin';
 import { $createStickyNode } from '../sticky-note/StickNote';
 import { BlockFormatDropDown } from './BlockFormatDropDown';
@@ -30,6 +31,12 @@ const getInsertItems = (editor: LexicalEditor) => [
       src: 'https://picsum.photos/200/300',
       altText: 'random image',
     })
+  },
+  {
+    key: 'excali-draw',
+    label: 'Excalidraw',
+    icon: <span className="i-ph:graph" />,
+    onClick: () => editor.dispatchCommand(INSERT_EXCALIDRAW_COMMAND, undefined)
   }
 ] as MenuProps['items'];
 
@@ -108,9 +115,7 @@ export const ToolbarPlugin = () => {
 
     <Dropdown menu={{ items: insertItems }} trigger={['click']} >
       <Button un-m='1' un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='1' un-text='sm'>
-        <span className="i-mdi:plus" />
-        Insert
-        <span className="i-ph:caret-down" />
+        <span className="i-mdi:plus" /> Insert <span className="i-ph:caret-down" />
       </Button>
     </Dropdown>
 

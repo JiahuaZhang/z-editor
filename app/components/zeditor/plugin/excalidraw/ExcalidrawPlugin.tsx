@@ -31,8 +31,6 @@ export const ExcalidrawPlugin = () => {
 
   const onClose = () => setModalOpen(false);
 
-  const onDelete = () => setModalOpen(false);
-
   const onSave = (
     elements: ExcalidrawInitialElements,
     appState: Partial<AppState>,
@@ -53,7 +51,6 @@ export const ExcalidrawPlugin = () => {
     initialAppState={{} as AppState}
     initialFiles={{}}
     onClose={onClose}
-    onDelete={onDelete}
     onSave={onSave}
   />;
 };

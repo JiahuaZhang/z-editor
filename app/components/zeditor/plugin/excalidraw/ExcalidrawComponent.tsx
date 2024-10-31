@@ -79,16 +79,6 @@ export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
     );
   }, [clearSelection, editor, isSelected, isResizing, $onDelete, setSelected, isEditable]);
 
-  const deleteNode = useCallback(() => {
-    setModalOpen(false);
-    return editor.update(() => {
-      const node = $getNodeByKey(nodeKey);
-      if (node) {
-        node.remove();
-      }
-    });
-  }, [editor, nodeKey]);
-
   const setData = (els: ExcalidrawInitialElements, aps: Partial<AppState>, fls: BinaryFiles) => {
     return editor.update(() => {
       const node = $getNodeByKey(nodeKey);
@@ -154,7 +144,6 @@ export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
           initialElements={elements}
           initialFiles={files}
           initialAppState={appState}
-          onDelete={deleteNode}
           onClose={closeModal}
           onSave={(els, aps, fls) => {
             setData(els, aps, fls);

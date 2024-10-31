@@ -49,13 +49,11 @@ export const ExcalidrawPlugin = () => {
     setModalOpen(false);
   };
 
-  return <ExcalidrawModal initialElements={[]}
+  return isModalOpen && <ExcalidrawModal initialElements={[]}
     initialAppState={{} as AppState}
     initialFiles={{}}
-    isShown={isModalOpen}
     onClose={onClose}
     onDelete={onDelete}
     onSave={onSave}
-    closeOnClickOutside={false}
   />;
 };

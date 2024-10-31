@@ -1,9 +1,14 @@
+import { AppState, BinaryFiles } from '@excalidraw/excalidraw/types/types';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';
 import { $getNodeByKey, CLICK_COMMAND, COMMAND_PRIORITY_LOW, KEY_BACKSPACE_COMMAND, KEY_DELETE_COMMAND, NodeKey } from 'lexical';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ImageResizer } from '../../ui/ImageResizer';
+import { ExcalidrawImage } from './ExcalidrawImage';
+import { ExcalidrawInitialElements, ExcalidrawModal } from './ExcalidrawModal';
+import { $isExcalidrawNode } from './ExcalidrawNode';
 
 export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
   data: string;
@@ -69,26 +74,10 @@ export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
         },
         COMMAND_PRIORITY_LOW,
       ),
-      editor.registerCommand(
-        KEY_DELETE_COMMAND,
-        $onDelete,
-        COMMAND_PRIORITY_LOW,
-      ),
-      editor.registerCommand(
-        KEY_BACKSPACE_COMMAND,
-        $onDelete,
-        COMMAND_PRIORITY_LOW,
-      ),
+      editor.registerCommand(KEY_DELETE_COMMAND, $onDelete, COMMAND_PRIORITY_LOW),
+      editor.registerCommand(KEY_BACKSPACE_COMMAND, $onDelete, COMMAND_PRIORITY_LOW),
     );
-  }, [
-    clearSelection,
-    editor,
-    isSelected,
-    isResizing,
-    $onDelete,
-    setSelected,
-    isEditable,
-  ]);
+  }, [clearSelection, editor, isSelected, isResizing, $onDelete, setSelected, isEditable]);
 
   const deleteNode = useCallback(() => {
     setModalOpen(false);
@@ -100,61 +89,51 @@ export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
     });
   }, [editor, nodeKey]);
 
-  // const setData = (
-  //   els: ExcalidrawInitialElements,
-  //   aps: Partial<AppState>,
-  //   fls: BinaryFiles,
-  // ) => {
-  //   return editor.update(() => {
-  //     const node = $getNodeByKey(nodeKey);
-  //     if ($isExcalidrawNode(node)) {
-  //       if ((els && els.length > 0) || Object.keys(fls).length > 0) {
-  //         node.setData(
-  //           JSON.stringify({
-  //             appState: aps,
-  //             elements: els,
-  //             files: fls,
-  //           }),
-  //         );
-  //       } else {
-  //         node.remove();
-  //       }
-  //     }
-  //   });
-  // };
+  const setData = (els: ExcalidrawInitialElements, aps: Partial<AppState>, fls: BinaryFiles) => {
+    return editor.update(() => {
+      const node = $getNodeByKey(nodeKey);
+      if ($isExcalidrawNode(node)) {
+        if ((els && els.length > 0) || Object.keys(fls).length > 0) {
+          node.setData(
+            JSON.stringify({
+              appState: aps,
+              elements: els,
+              files: fls,
+            }),
+          );
+        } else {
+          node.remove();
+        }
+      }
+    });
+  };
 
-  // const onResizeStart = () => {
-  //     setIsResizing(true);
-  //   };
+  const onResizeStart = () => {
+    setIsResizing(true);
+  };
 
-  //   const onResizeEnd = (
-  //     nextWidth: 'inherit' | number,
-  //     nextHeight: 'inherit' | number,
-  //   ) => {
-  //     // Delay hiding the resize bars for click case
-  //     setTimeout(() => {
-  //       setIsResizing(false);
-  //     }, 200);
+  const onResizeEnd = (
+    nextWidth: 'inherit' | number,
+    nextHeight: 'inherit' | number,
+  ) => {
+    // Delay hiding the resize bars for click case
+    setTimeout(() => {
+      setIsResizing(false);
+    }, 200);
 
-  //     editor.update(() => {
-  //       const node = $getNodeByKey(nodeKey);
+    editor.update(() => {
+      const node = $getNodeByKey(nodeKey);
 
-  //       if ($isExcalidrawNode(node)) {
-  //         node.setWidth(nextWidth);
-  //         node.setHeight(nextHeight);
-  //       }
-  //     });
-  //   };
+      if ($isExcalidrawNode(node)) {
+        node.setWidth(nextWidth);
+        node.setHeight(nextHeight);
+      }
+    });
+  };
 
-  const openModal = useCallback(() => {
-    setModalOpen(true);
-  }, []);
+  const openModal = useCallback(() => { setModalOpen(true); }, []);
 
-  const {
-    elements = [],
-    files = {},
-    appState = {},
-  } = useMemo(() => JSON.parse(data), [data]);
+  const { elements = [], files = {}, appState = {} } = useMemo(() => JSON.parse(data), [data]);
 
   const closeModal = useCallback(() => {
     setModalOpen(false);
@@ -170,57 +149,57 @@ export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
 
   return (
     <>
-      {/* {isEditable && isModalOpen && (
-          <ExcalidrawModal
-            initialElements={elements}
-            initialFiles={files}
-            initialAppState={appState}
-            isShown={isModalOpen}
-            onDelete={deleteNode}
-            onClose={closeModal}
-            onSave={(els, aps, fls) => {
-              setData(els, aps, fls);
-              setModalOpen(false);
-            }}
-            closeOnClickOutside={false}
+      {isEditable && isModalOpen && (
+        <ExcalidrawModal
+          initialElements={elements}
+          initialFiles={files}
+          initialAppState={appState}
+          onDelete={deleteNode}
+          onClose={closeModal}
+          onSave={(els, aps, fls) => {
+            setData(els, aps, fls);
+            setModalOpen(false);
+          }}
+        />
+      )}
+      {elements.length > 0 && (
+        <button
+          ref={buttonRef}
+          className={`excalidraw-button ${isSelected ? 'selected' : ''}`}>
+          <ExcalidrawImage
+            imageContainerRef={imageContainerRef}
+            className="image"
+            elements={elements}
+            files={files}
+            appState={appState}
+            width={width}
+            height={height}
           />
-        )}
-        {elements.length > 0 && (
-          <button
-            ref={buttonRef}
-            className={`excalidraw-button ${isSelected ? 'selected' : ''}`}>
-            <ExcalidrawImage
-              imageContainerRef={imageContainerRef}
-              className="image"
-              elements={elements}
-              files={files}
-              appState={appState}
-              width={width}
-              height={height}
+          {isSelected && isEditable && (
+            <span un-position='absolute' un-top='2' un-right='2' un-text='2xl'
+              role="button"
+              tabIndex={0}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={openModal}
+            >
+              <span un-border='2px solid blue-8' className="i-material-symbols-light:edit-outline" />
+              <span un-border='2px solid blue-8'>  text </span>
+            </span>
+          )}
+          {(isSelected || isResizing) && isEditable && (
+            <ImageResizer
+              buttonRef={captionButtonRef}
+              showCaption={true}
+              setShowCaption={() => null}
+              imageRef={imageContainerRef}
+              editor={editor}
+              onResizeStart={onResizeStart}
+              onResizeEnd={onResizeEnd}
+              captionsEnabled={true}
             />
-            {isSelected && isEditable && (
-              <div
-                className="image-edit-button"
-                role="button"
-                tabIndex={0}
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={openModal}
-              />
-            )}
-            {(isSelected || isResizing) && isEditable && (
-              <ImageResizer
-                buttonRef={captionButtonRef}
-                showCaption={true}
-                setShowCaption={() => null}
-                imageRef={imageContainerRef}
-                editor={editor}
-                onResizeStart={onResizeStart}
-                onResizeEnd={onResizeEnd}
-                captionsEnabled={true}
-              />
-            )}
-          </button>
-        )} */}
+          )}
+        </button>
+      )}
     </>
   );
 };

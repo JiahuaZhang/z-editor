@@ -9,6 +9,7 @@ import { $createStickyNode } from './plugin/sticky-note/StickNote';
 import { $createMentionNode } from './plugin/mention/MentionNode';
 import { $createImageNode } from './plugin/image/ImageNode';
 import { $createInlineImageNode } from './plugin/inline-image/InlineImageNode';
+import { $createExcalidrawNode } from './plugin/excalidraw/ExcalidrawNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -330,6 +331,22 @@ const $generateImages = () => {
   // root.append(inlineImageParagraph3);
 };
 
+const $generateExcalidarw = () => {
+  const root = $getRoot();
+
+  const excalidarw = $createExcalidrawNode(
+    JSON.stringify({ "appState": { "exportBackground": true, "exportScale": 1, "exportWithDarkMode": false, "isBindingEnabled": true, "isLoading": false, "name": "Untitled-2024-10-31-1941", "theme": "light", "viewBackgroundColor": "#ffffff", "viewModeEnabled": false, "zenModeEnabled": false, "zoom": { "value": 1 } }, "elements": [{ "id": "WyXD0OjViscpmyfBrniN6", "type": "rectangle", "x": 297, "y": 272, "width": 231, "height": 138, "angle": 0, "strokeColor": "#1e1e1e", "backgroundColor": "transparent", "fillStyle": "solid", "strokeWidth": 2, "strokeStyle": "solid", "roughness": 1, "opacity": 100, "groupIds": [], "frameId": null, "roundness": { "type": 3 }, "seed": 1489549535, "version": 29, "versionNonce": 1715676255, "isDeleted": false, "boundElements": null, "updated": 1730418070883, "link": null, "locked": false }], "files": {} }),
+    'inherit',
+    'inherit'
+  );
+
+  root.append(excalidarw);
+
+  // const paragraph = $createParagraphNode();
+  // paragraph.append(excalidarw);
+  // root.append(paragraph);
+};
+
 export const $generateContent = () => {
   $generateH1To6();
   // $generateListContent();
@@ -338,6 +355,7 @@ export const $generateContent = () => {
   // $generateHashTag();
   // $generateLink();
   $generateImages();
+  $generateExcalidarw();
 
   const root = $getRoot();
 

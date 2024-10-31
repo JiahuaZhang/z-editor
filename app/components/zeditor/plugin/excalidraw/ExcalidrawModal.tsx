@@ -5,7 +5,7 @@ import {
   ExcalidrawInitialDataState,
 } from '@excalidraw/excalidraw/types/types';
 import { Modal } from 'antd';
-import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useState } from 'react';
 
 const Excalidraw = lazy(() => import('@excalidraw/excalidraw').then(module => ({ default: module.Excalidraw })));
 
@@ -24,10 +24,6 @@ type Props = {
    * The initial set of elements to draw into the scene
    */
   initialFiles: BinaryFiles;
-  /**
-   * Controls the visibility of the modal
-   */
-  isShown?: boolean;
   /**
    * Callback when closing and discarding the new changes
    */
@@ -52,13 +48,11 @@ export const useCallbackRefState = () => {
   return [refValue, refCallback] as const;
 };
 
-export const ExcalidrawModal = ({ onSave, initialElements, initialAppState, initialFiles, isShown, onDelete, onClose }: Props) => {
+export const ExcalidrawModal = ({ onSave, initialElements, initialAppState, initialFiles, onDelete, onClose }: Props) => {
   const [excalidrawAPI, excalidrawAPIRefCallback] = useCallbackRefState();
   const [elements, setElements] = useState<ExcalidrawInitialElements>(initialElements);
   const [files, setFiles] = useState<BinaryFiles>(initialFiles);
   const [isConfirmDelete, setIsConfirmDelete] = useState(false);
-
-  useEffect(() => { if (!isShown) { setIsConfirmDelete(false); } }, [isShown]);
 
   const save = () => {
     if (elements && elements.filter((el) => !el.isDeleted).length > 0) {
@@ -88,7 +82,7 @@ export const ExcalidrawModal = ({ onSave, initialElements, initialAppState, init
     setFiles(fls);
   };
 
-  return <Modal open={isShown} width={960} closable={false} onCancel={onClose}
+  return <Modal open={true} width={960} closable={false} onCancel={onClose}
     footer={<div un-grid='~' un-justify='end' un-grid-flow='col' >
       {
         isConfirmDelete

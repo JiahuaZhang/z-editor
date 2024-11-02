@@ -20,7 +20,7 @@ export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
   const isEditable = useLexicalEditable();
   const [isModalOpen, setModalOpen] = useState<boolean>(data === '[]' && editor.isEditable());
   const imageContainerRef = useRef<HTMLDivElement | null>(null);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const containerRef = useRef<HTMLButtonElement | null>(null);
   const captionButtonRef = useRef<HTMLButtonElement | null>(null);
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey);
   const [isResizing, setIsResizing] = useState<boolean>(false);
@@ -52,7 +52,7 @@ export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
       editor.registerCommand(
         CLICK_COMMAND,
         (event: MouseEvent) => {
-          const buttonElem = buttonRef.current;
+          const buttonElem = containerRef.current;
           const eventTarget = event.target;
 
           if (isResizing) {
@@ -152,12 +152,10 @@ export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
         />
       )}
       {elements.length > 0 && (
-        <button
-          ref={buttonRef}
-          className={`excalidraw-button ${isSelected ? 'selected' : ''}`}>
+        <span un-inline='block' un-border={`${isSelected && '2 solid blue-4'}`} un-position='relative'
+          ref={containerRef}>
           <ExcalidrawImage
             imageContainerRef={imageContainerRef}
-            className="image"
             elements={elements}
             files={files}
             appState={appState}
@@ -165,15 +163,12 @@ export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
             height={height}
           />
           {isSelected && isEditable && (
-            <span un-position='absolute' un-top='2' un-right='2' un-text='2xl'
-              role="button"
+            <button un-position='absolute' un-top='2' un-right='2' un-text='2xl fuchsia-6' un-border='rounded 1 solid zinc-6' un-inline='grid' un-hover='bg-fuchsia-6 text-white border-white'
               tabIndex={0}
-              onMouseDown={(event) => event.preventDefault()}
               onClick={openModal}
             >
-              <span un-border='2px solid blue-8' className="i-material-symbols-light:edit-outline" />
-              <span un-border='2px solid blue-8'>  text </span>
-            </span>
+              <span className="i-material-symbols-light:edit-outline" />
+            </button>
           )}
           {(isSelected || isResizing) && isEditable && (
             <ImageResizer
@@ -187,7 +182,7 @@ export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
               captionsEnabled={true}
             />
           )}
-        </button>
+        </span>
       )}
     </>
   );

@@ -200,7 +200,16 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
   return (
     <div ref={controlWrapperRef}>
       {!showCaption && captionsEnabled && (
-        <button un-position='absolute' un-left='1.5' un-right='1.5' un-bg='neutral-1' un-border='rounded-b' un-outline='2 solid blue-4' un-hover='bg-blue-4 text-white' un-focus='bg-blue-4 text-white' un-truncate='~'
+        <button un-position='absolute'
+          un-left='1.5'
+          un-right='1.5'
+          un-bg='neutral-1'
+          un-border='rounded-b'
+          un-outline='2 solid blue-4'
+          un-hover='bg-blue-4 text-white'
+          un-focus='bg-blue-4 text-white'
+          un-truncate='~'
+          un-z='1'
           ref={buttonRef}
           onClick={() => setShowCaption(true)}>
           Add Caption
@@ -212,17 +221,17 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
           handlePointerDown(event, Direction.north);
         }}
       />
-      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='-1' un-right='0' un-cursor='ne-resize'
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='-1' un-right='-1' un-cursor='ne-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.north | Direction.east);
         }}
       />
-      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='[calc(50%-4px)]' un-right='0' un-cursor='e-resize'
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='[calc(50%-4px)]' un-right='-1' un-cursor='e-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.east);
         }}
       />
-      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-bottom='-1' un-right='0' un-cursor='se-resize'
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-bottom='-1' un-right='-1' un-cursor='se-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.south | Direction.east);
         }}
@@ -232,17 +241,17 @@ export const ImageResizer = ({ onResizeStart, onResizeEnd, buttonRef, imageRef, 
           handlePointerDown(event, Direction.south);
         }}
       />
-      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-bottom='-1' un-left='0' un-cursor='sw-resize'
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-bottom='-1' un-left='-1' un-cursor='sw-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.south | Direction.west);
         }}
       />
-      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='[calc(50%-4px)]' un-left='0' un-cursor='w-resize'
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='[calc(50%-4px)]' un-left='-1' un-cursor='w-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.west);
         }}
       />
-      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='-1' un-left='0' un-cursor='nw-resize'
+      <div un-w='2' un-h='2' un-bg='indigo-6' un-border='2 solid indigo-6' un-position='absolute' un-top='-1' un-left='-1' un-cursor='nw-resize'
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.north | Direction.west);
         }}

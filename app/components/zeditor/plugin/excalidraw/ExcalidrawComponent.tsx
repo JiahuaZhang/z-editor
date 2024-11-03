@@ -98,18 +98,11 @@ export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
     });
   };
 
-  const onResizeStart = () => {
-    setIsResizing(true);
-  };
+  const onResizeStart = () => setIsResizing(true);
 
-  const onResizeEnd = (
-    nextWidth: 'inherit' | number,
-    nextHeight: 'inherit' | number,
-  ) => {
+  const onResizeEnd = (nextWidth: 'inherit' | number, nextHeight: 'inherit' | number) => {
     // Delay hiding the resize bars for click case
-    setTimeout(() => {
-      setIsResizing(false);
-    }, 200);
+    setTimeout(() => setIsResizing(false), 200);
 
     editor.update(() => {
       const node = $getNodeByKey(nodeKey);

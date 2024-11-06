@@ -10,6 +10,7 @@ import { $createMentionNode } from './plugin/mention/MentionNode';
 import { $createImageNode } from './plugin/image/ImageNode';
 import { $createInlineImageNode } from './plugin/inline-image/InlineImageNode';
 import { $createExcalidrawNode } from './plugin/excalidraw/ExcalidrawNode';
+import { $createEquationNode } from './plugin/equation/EuqationNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -347,6 +348,19 @@ const $generateExcalidarw = () => {
   // root.append(paragraph);
 };
 
+const $generateEquation = () => {
+  const root = $getRoot();
+  const equation = $createEquationNode('a^2 + b^2 = c^2', true);
+  const paragraph = $createParagraphNode();
+  paragraph.append(equation);
+  root.append(paragraph);
+
+  const blockEquation = $createEquationNode('\\sqrt{a} + \\frac{d}{e} = \\log{666}', false);
+  const blockEquationParagraph = $createParagraphNode();
+  blockEquationParagraph.append(blockEquation);
+  root.append(blockEquationParagraph);
+};
+
 export const $generateContent = () => {
   $generateH1To6();
   // $generateListContent();
@@ -355,7 +369,8 @@ export const $generateContent = () => {
   // $generateHashTag();
   // $generateLink();
   $generateImages();
-  $generateExcalidarw();
+  // $generateExcalidarw();
+  $generateEquation();
 
   const root = $getRoot();
 

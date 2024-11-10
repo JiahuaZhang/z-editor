@@ -91,7 +91,8 @@ export const initialConfig: InitialConfigType = {
     keyword: 'prose prose-fuchsia',
     mention: 'bg-blue-2',
     image: 'relative inline-block',
-    inlineImage: 'inline-block'
+    inlineImage: 'inline-block',
+    'editor-equation': 'inline-block'
   },
   onError: console.error,
   nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode],

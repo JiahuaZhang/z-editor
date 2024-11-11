@@ -1,16 +1,15 @@
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
-import { useEffect, useRef } from 'react';
+import { MutableRefObject, useEffect } from 'react';
 
-export const KatexRenderer = ({ equation, inline, onDoubleClick }: Readonly<{
+export const KatexRenderer = ({ equation, inline, onDoubleClick, katexRef, ...rest }: Readonly<{
   equation: string;
   inline: boolean;
   onDoubleClick: () => void;
+  katexRef: MutableRefObject<HTMLSpanElement | null>;
 }>) => {
-  const katexElementRef = useRef(null);
-
   useEffect(() => {
-    const katexElement = katexElementRef.current;
+    const katexElement = katexRef.current;
 
     if (katexElement !== null) {
       katex.render(equation, katexElement, {
@@ -34,7 +33,8 @@ export const KatexRenderer = ({ equation, inline, onDoubleClick }: Readonly<{
         role="button"
         tabIndex={-1}
         onDoubleClick={onDoubleClick}
-        ref={katexElementRef}
+        ref={katexRef}
+        {...rest}
       />
       <img src="#" alt="" />
     </>

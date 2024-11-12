@@ -4,10 +4,11 @@ type BaseEquationEditorProps = {
   equation: string;
   inline: boolean;
   setEquation: (equation: string) => void;
+  onSave: () => void;
 };
 
 const InternalEquationEditor = (
-  { equation, setEquation, inline }: BaseEquationEditorProps,
+  { equation, setEquation, inline, onSave }: BaseEquationEditorProps,
   forwardedRef: Ref<HTMLInputElement | HTMLTextAreaElement>,
 ) => {
   const onChange = (event: ChangeEvent) => setEquation((event.target as HTMLInputElement).value);
@@ -27,8 +28,15 @@ const InternalEquationEditor = (
       <input un-bg='inherit' un-outline='none'
         value={equation}
         onChange={onChange}
-        autoFocus={true}
+        autoFocus
         ref={forwardedRef as RefObject<HTMLInputElement>}
+        onKeyDown={event => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            event.stopPropagation();
+            onSave();
+          }
+        }}
       />
       <span un-text='gray-4'>$</span>
     </span>
@@ -39,6 +47,14 @@ const InternalEquationEditor = (
         value={equation}
         onChange={onChange}
         ref={forwardedRef as RefObject<HTMLTextAreaElement>}
+        autoFocus
+        onKeyDown={event => {
+          if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+            event.preventDefault();
+            event.stopPropagation();
+            onSave();
+          }
+        }}
       />
       <span un-text='gray-4'>{'\n$$'}</span>
     </div>

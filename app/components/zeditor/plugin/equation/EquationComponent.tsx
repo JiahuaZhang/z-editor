@@ -129,9 +129,11 @@ export const EquationComponent = ({
           setEquation={setEquationValue}
           inline={inline}
           ref={inputRef}
+          onSave={() => onHide(true)}
         />
       ) : (
-        <KatexRenderer un-p='0.5' un-border={`${isSelected ? 'rounded 2 blue-4' : ''}`}
+        <KatexRenderer un-p='0.5'
+          un-border={`${isSelected ? 'rounded 2 blue-4' : ''}`}
           katexRef={KatexRef}
           equation={equationValue}
           inline={inline}

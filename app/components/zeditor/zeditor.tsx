@@ -17,7 +17,6 @@ import { ClientOnly } from 'remix-utils/client-only';
 import { initialConfig } from './config';
 import { useActiveEditor } from './context/activeEditor';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
-import { SharedAutocompleteContext } from './plugin/auto-complete/AutoCompleteContext';
 import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import { MATCHERS, validateUrl } from './util/url';
@@ -65,13 +64,11 @@ export const ZEditor = () => {
   return <ClientOnly>{() =>
     <div un-border='~ rounded 2' un-m='2' un-position='relative' >
       <SharedHistoryContext>
-        <SharedAutocompleteContext>
-          <TableContext>
-            <LexicalComposer initialConfig={initialConfig} >
-              <Plugins />
-            </LexicalComposer>
-          </TableContext>
-        </SharedAutocompleteContext>
+        <TableContext>
+          <LexicalComposer initialConfig={initialConfig} >
+            <Plugins />
+          </LexicalComposer>
+        </TableContext>
       </SharedHistoryContext>
     </div>
   }</ClientOnly>;

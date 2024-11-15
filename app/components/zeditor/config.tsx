@@ -6,7 +6,6 @@ import { InitialConfigType } from '@lexical/react/LexicalComposer';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
 import { $generateContent } from './init';
-import { AutocompleteNode } from './plugin/auto-complete/AutoCompleteNode';
 import { EmojiNode } from './plugin/emoji/EmojiNode';
 import { EquationNode } from './plugin/equation/EuqationNode';
 import { ExcalidrawNode } from './plugin/excalidraw/ExcalidrawNode';
@@ -95,7 +94,7 @@ export const initialConfig: InitialConfigType = {
     inlineImage: 'inline-block'
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode, AutocompleteNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode],
   editorState: $generateContent,
   // editable: false
 };

@@ -1,3 +1,4 @@
+import { AutocompletePlugin } from './auto-complete/AutoCompletePlugin';
 import { CodeHighlightPlugin } from './code/CodeHighlightPlugin';
 import { EmojiPickerPlugin } from './emoji/EmojiPickerPlugin';
 import { EmojiPlugin } from './emoji/EmojiPlugin';
@@ -32,4 +33,5 @@ export namespace Plugin {
   }
   export const Toolbar = ToolbarPlugin;
   export const Excalidraw = ExcalidrawPlugin;
+  export const AutoComplete = AutocompletePlugin;
 }

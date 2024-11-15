@@ -17,6 +17,7 @@ import { ClientOnly } from 'remix-utils/client-only';
 import { initialConfig } from './config';
 import { useActiveEditor } from './context/activeEditor';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
+import { SharedAutocompleteContext } from './plugin/auto-complete/AutoCompleteContext';
 import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import { MATCHERS, validateUrl } from './util/url';
@@ -54,6 +55,7 @@ const Plugins = () => {
     {/* <Plugin.Emoji.Transform /> */}
     <Plugin.Emoji.Picker />
     <Plugin.Excalidraw />
+    <Plugin.AutoComplete />
 
     {/* <TreeView editor={editor} /> */}
   </>;
@@ -63,11 +65,13 @@ export const ZEditor = () => {
   return <ClientOnly>{() =>
     <div un-border='~ rounded 2' un-m='2' un-position='relative' >
       <SharedHistoryContext>
-        <TableContext>
-          <LexicalComposer initialConfig={initialConfig} >
-            <Plugins />
-          </LexicalComposer>
-        </TableContext>
+        <SharedAutocompleteContext>
+          <TableContext>
+            <LexicalComposer initialConfig={initialConfig} >
+              <Plugins />
+            </LexicalComposer>
+          </TableContext>
+        </SharedAutocompleteContext>
       </SharedHistoryContext>
     </div>
   }</ClientOnly>;

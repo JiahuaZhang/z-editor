@@ -9,6 +9,7 @@ import { $generateContent } from './init';
 import { EmojiNode } from './plugin/emoji/EmojiNode';
 import { EquationNode } from './plugin/equation/EuqationNode';
 import { ExcalidrawNode } from './plugin/excalidraw/ExcalidrawNode';
+import { HorizontalRuleNode } from './plugin/horizontal-rule/HorizontalRuleNode';
 import { ImageNode } from './plugin/image/ImageNode';
 import { InlineImageNode } from './plugin/inline-image/InlineImageNode';
 import { StickyNode } from './plugin/sticky-note/StickNote';
@@ -91,10 +92,11 @@ export const initialConfig: InitialConfigType = {
     keyword: 'prose prose-fuchsia',
     mention: 'bg-blue-2',
     image: 'relative inline-block',
-    inlineImage: 'inline-block'
+    inlineImage: 'inline-block',
+    hr: 'p-0.5 my-2 border-t-2 border-zinc-4'
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode, HorizontalRuleNode],
   editorState: $generateContent,
   // editable: false
 };

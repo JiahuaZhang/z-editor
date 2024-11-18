@@ -11,6 +11,7 @@ import { $createImageNode } from './plugin/image/ImageNode';
 import { $createInlineImageNode } from './plugin/inline-image/InlineImageNode';
 import { $createExcalidrawNode } from './plugin/excalidraw/ExcalidrawNode';
 import { $createEquationNode } from './plugin/equation/EuqationNode';
+import { $createHorizontalRuleNode } from './plugin/horizontal-rule/HorizontalRuleNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -362,7 +363,12 @@ const $generateEquation = () => {
 };
 
 export const $generateContent = () => {
+  const root = $getRoot();
+
   $generateH1To6();
+  const hr = $createHorizontalRuleNode();
+  root.append(hr);
+
   // $generateListContent();
   // $generateCode();
   // $generateTable();
@@ -371,8 +377,6 @@ export const $generateContent = () => {
   $generateImages();
   // $generateExcalidarw();
   $generateEquation();
-
-  const root = $getRoot();
 
   const quote = $createQuoteNode();
   quote.append($createTextNode('This is a quote node'));

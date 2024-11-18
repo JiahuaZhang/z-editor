@@ -1,6 +1,8 @@
 name:? zEditor
 Zeditor
 
+MarkdownTransformer
+
 # own text editor
 1. Implementing Rich Text Features
 Determine which rich text features are essential for your editor (e.g., bold, italic, underline, lists, links, images) and implement them systematically. This involves:

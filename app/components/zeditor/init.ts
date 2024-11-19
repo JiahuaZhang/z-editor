@@ -12,6 +12,7 @@ import { $createInlineImageNode } from './plugin/inline-image/InlineImageNode';
 import { $createExcalidrawNode } from './plugin/excalidraw/ExcalidrawNode';
 import { $createEquationNode } from './plugin/equation/EuqationNode';
 import { $createHorizontalRuleNode } from './plugin/horizontal-rule/HorizontalRuleNode';
+import { $createTweetNode } from './plugin/twitter/TweetNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -381,6 +382,9 @@ export const $generateContent = () => {
   const quote = $createQuoteNode();
   quote.append($createTextNode('This is a quote node'));
   root.append(quote);
+
+  const tweet = $createTweetNode('1858318917141197107');
+  root.append(tweet);
 
   const paragraph = $createParagraphNode();
   paragraph.append($createTextNode(''));

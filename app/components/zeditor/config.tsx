@@ -13,6 +13,7 @@ import { HorizontalRuleNode } from './plugin/horizontal-rule/HorizontalRuleNode'
 import { ImageNode } from './plugin/image/ImageNode';
 import { InlineImageNode } from './plugin/inline-image/InlineImageNode';
 import { StickyNode } from './plugin/sticky-note/StickNote';
+import { TweetNode } from './plugin/twitter/TweetNode';
 
 export const initialConfig: InitialConfigType = {
   namespace: 'z-editor',
@@ -93,10 +94,14 @@ export const initialConfig: InitialConfigType = {
     mention: 'bg-blue-2',
     image: 'relative inline-block',
     inlineImage: 'inline-block',
-    hr: 'p-0.5 my-2 border-t-2 border-zinc-4'
+    hr: 'p-0.5 my-2 border-t-2 border-zinc-4',
+    embedBlock: {
+      base: 'grid justify-center',
+      focus: 'border-2 border-blue-5'
+    }
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode, HorizontalRuleNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode, HorizontalRuleNode, TweetNode],
   editorState: $generateContent,
   // editable: false
 };

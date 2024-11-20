@@ -363,6 +363,19 @@ const $generateEquation = () => {
   root.append(blockEquationParagraph);
 };
 
+const $generateTweets = () => {
+  const root = $getRoot();
+
+  const tweet = $createTweetNode('1858318917141197107');
+  root.append(tweet);
+
+  const emptyParagraph = $createParagraphNode();
+  root.append(emptyParagraph);
+
+  const tweet2 = $createTweetNode('1858209912691572779');
+  root.append(tweet2);
+};
+
 export const $generateContent = () => {
   const root = $getRoot();
 
@@ -378,13 +391,13 @@ export const $generateContent = () => {
   $generateImages();
   // $generateExcalidarw();
   $generateEquation();
+  $generateTweets();
 
   const quote = $createQuoteNode();
   quote.append($createTextNode('This is a quote node'));
   root.append(quote);
 
-  const tweet = $createTweetNode('1858318917141197107');
-  root.append(tweet);
+
 
   const paragraph = $createParagraphNode();
   paragraph.append($createTextNode(''));

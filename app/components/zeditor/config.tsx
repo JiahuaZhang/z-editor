@@ -96,8 +96,8 @@ export const initialConfig: InitialConfigType = {
     inlineImage: 'inline-block',
     hr: 'p-0.5 my-2 border-t-2 border-zinc-4',
     embedBlock: {
-      base: 'grid justify-center',
-      focus: 'border-2 border-blue-5'
+      base: '',
+      focus: ''
     }
   },
   onError: console.error,

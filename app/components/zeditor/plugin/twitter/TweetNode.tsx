@@ -1,15 +1,12 @@
 import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlignableContents';
 import { DecoratorBlockNode, SerializedDecoratorBlockNode } from '@lexical/react/LexicalDecoratorBlockNode';
+import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { DOMConversionMap, DOMConversionOutput, DOMExportOutput, EditorConfig, ElementFormatType, LexicalEditor, LexicalNode, NodeKey, Spread } from 'lexical';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const WIDGET_SCRIPT_URL = 'https://platform.twitter.com/widgets.js';
 
 type TweetComponentProps = Readonly<{
-  className: Readonly<{
-    base: string;
-    focus: string;
-  }>;
   format: ElementFormatType | null;
   loadingComponent?: JSX.Element | string;
   nodeKey: NodeKey;
@@ -30,7 +27,6 @@ const $convertTweetElement = (domNode: HTMLDivElement): DOMConversionOutput | nu
 let isTwitterScriptLoading = true;
 
 const TweetComponent = ({
-  className,
   format,
   loadingComponent,
   nodeKey,
@@ -41,6 +37,7 @@ const TweetComponent = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const previousTweetIDRef = useRef<string>('');
   const [isTweetLoading, setIsTweetLoading] = useState(false);
+  const [isSelected] = useLexicalNodeSelection(nodeKey);
 
   const createTweet = useCallback(async () => {
     try {
@@ -49,9 +46,7 @@ const TweetComponent = ({
       setIsTweetLoading(false);
       isTwitterScriptLoading = false;
 
-      if (onLoad) {
-        onLoad();
-      }
+      onLoad?.();
     } catch (error) {
       if (onError) {
         onError(String(error));
@@ -84,24 +79,22 @@ const TweetComponent = ({
 
   return (
     <BlockWithAlignableContents
-      className={className}
+      className={{
+        base: 'grid justify-center',
+        focus: ''
+      }}
       format={format}
       nodeKey={nodeKey}>
       {isTweetLoading ? loadingComponent : null}
-      <div
-        style={{ display: 'inline-block', width: '550px' }}
+      <div un-w='[550px]'
+        un-border={`${isSelected ? '2 rounded blue-5' : '2 transparent'}`}
         ref={containerRef}
       />
     </BlockWithAlignableContents>
   );
 };
 
-export type SerializedTweetNode = Spread<
-  {
-    id: string;
-  },
-  SerializedDecoratorBlockNode
->;
+export type SerializedTweetNode = Spread<{ id: string; }, SerializedDecoratorBlockNode>;
 
 export class TweetNode extends DecoratorBlockNode {
   __id: string;
@@ -165,14 +158,8 @@ export class TweetNode extends DecoratorBlockNode {
   }
 
   decorate(editor: LexicalEditor, config: EditorConfig): JSX.Element {
-    const embedBlockTheme = config.theme.embedBlock || {};
-    const className = {
-      base: embedBlockTheme.base || '',
-      focus: embedBlockTheme.focus || '',
-    };
     return (
       <TweetComponent
-        className={className}
         format={this.__format}
         loadingComponent="Loading..."
         nodeKey={this.getKey()}

@@ -13,6 +13,7 @@ import { $createExcalidrawNode } from './plugin/excalidraw/ExcalidrawNode';
 import { $createEquationNode } from './plugin/equation/EuqationNode';
 import { $createHorizontalRuleNode } from './plugin/horizontal-rule/HorizontalRuleNode';
 import { $createTweetNode } from './plugin/twitter/TweetNode';
+import { $createYouTubeNode } from './plugin/youtube/YouTubeNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -366,14 +367,39 @@ const $generateEquation = () => {
 const $generateTweets = () => {
   const root = $getRoot();
 
+  const emptyParagraph1 = $createParagraphNode();
+  root.append(emptyParagraph1);
+
   const tweet = $createTweetNode('1858318917141197107');
   root.append(tweet);
 
-  const emptyParagraph = $createParagraphNode();
-  root.append(emptyParagraph);
+  const emptyParagraph2 = $createParagraphNode();
+  root.append(emptyParagraph2);
 
   const tweet2 = $createTweetNode('1858209912691572779');
   root.append(tweet2);
+
+  const emptyParagraph3 = $createParagraphNode();
+  root.append(emptyParagraph3);
+};
+
+const $generateYoutubes = () => {
+  const root = $getRoot();
+
+  const emptyParagraph1 = $createParagraphNode();
+  root.append(emptyParagraph1);
+
+  const youtube = $createYouTubeNode('gwOhmYGihUw');
+  root.append(youtube);
+
+  const emptyParagraph2 = $createParagraphNode();
+  root.append(emptyParagraph2);
+
+  const youtube2 = $createYouTubeNode('Oj_2r9nurPg');
+  root.append(youtube2);
+
+  const emptyParagraph3 = $createParagraphNode();
+  root.append(emptyParagraph3);
 };
 
 export const $generateContent = () => {
@@ -388,10 +414,11 @@ export const $generateContent = () => {
   // $generateTable();
   // $generateHashTag();
   // $generateLink();
-  $generateImages();
+  // $generateImages();
   // $generateExcalidarw();
-  $generateEquation();
+  // $generateEquation();
   $generateTweets();
+  $generateYoutubes();
 
   const quote = $createQuoteNode();
   quote.append($createTextNode('This is a quote node'));

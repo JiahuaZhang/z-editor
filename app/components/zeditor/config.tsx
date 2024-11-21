@@ -14,6 +14,7 @@ import { ImageNode } from './plugin/image/ImageNode';
 import { InlineImageNode } from './plugin/inline-image/InlineImageNode';
 import { StickyNode } from './plugin/sticky-note/StickNote';
 import { TweetNode } from './plugin/twitter/TweetNode';
+import { YouTubeNode } from './plugin/youtube/YouTubeNode';
 
 export const initialConfig: InitialConfigType = {
   namespace: 'z-editor',
@@ -101,7 +102,7 @@ export const initialConfig: InitialConfigType = {
     }
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode, HorizontalRuleNode, TweetNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode, HorizontalRuleNode, TweetNode, YouTubeNode],
   editorState: $generateContent,
   // editable: false
 };

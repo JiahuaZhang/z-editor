@@ -14,7 +14,7 @@ import { $findMatchingParent, mergeRegister } from '@lexical/utils';
 import { $getNearestNodeFromDOMNode, $getRoot, NodeKey } from 'lexical';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useDebounce } from '../utils';
+import { useDebounce } from '../../util/utils';
 
 const BUTTON_WIDTH_PX = 20;
 

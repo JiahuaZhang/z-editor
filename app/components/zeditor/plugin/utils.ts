@@ -1,3 +1,4 @@
+import { CAN_USE_DOM } from '@lexical/utils';
 import { $isTextNode, LexicalEditor, LexicalNode } from 'lexical';
 import _ from 'lodash';
 import { useMemo, useRef } from 'react';
@@ -137,3 +138,5 @@ export const createRectsFromDOMRange = (editor: LexicalEditor, range: Range) => 
   }
   return selectionRects;
 };
+
+export const getDOMSelection = (targetWindow: null | Window): null | Selection => !CAN_USE_DOM ? null : (targetWindow || window).getSelection();

@@ -11,12 +11,10 @@ import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
 import { $isRootTextContentEmpty } from '@lexical/text';
 import { mergeRegister, registerNestedElementResolver } from '@lexical/utils';
-import useModal from 'antd/es/modal/useModal';
 import { $getNodeByKey, $getRoot, $getSelection, $isRangeSelection, $isTextNode, CLEAR_EDITOR_COMMAND, COMMAND_PRIORITY_EDITOR, createCommand, EditorState, KEY_ESCAPE_COMMAND, LexicalCommand, LexicalEditor, NodeKey, RangeSelection } from 'lexical';
-import { getDOMSelection } from 'node_modules/lexical/LexicalUtils';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { createDOMRange, createRectsFromDOMRange } from '../utils';
+import { createDOMRange, createRectsFromDOMRange, getDOMSelection } from '../utils';
 import { CommentStore, createComment, createThread, Thread, useCommentStore, type Comment, type Comments } from './Comment';
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand('INSERT_INLINE_COMMAND',);
@@ -369,7 +367,7 @@ const CommentsPanelListComment = ({
     (comment.timeStamp - (performance.timeOrigin + performance.now())) / 1000,
   );
   const minutes = Math.round(seconds / 60);
-  const [modal, showModal] = useModal();
+  // const [modal, showModal] = useModal();
 
   return (
     <li className="CommentPlugin_CommentsPanel_List_Comment">
@@ -403,7 +401,7 @@ const CommentsPanelListComment = ({
             className="CommentPlugin_CommentsPanel_List_DeleteButton">
             <i className="delete" />
           </button>
-          {modal}
+          {/* {modal} */}
         </>
       )}
     </li>
@@ -427,7 +425,7 @@ const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef
 }) => {
   const [editor] = useLexicalComposerContext();
   const [counter, setCounter] = useState(0);
-  const [modal, showModal] = useModal();
+  // const [modal, showModal] = useModal();
   const rtf = useMemo(
     () =>
       new Intl.RelativeTimeFormat('en', {

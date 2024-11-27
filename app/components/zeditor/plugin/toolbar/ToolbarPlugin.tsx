@@ -5,6 +5,7 @@ import { useAtomValue } from 'jotai';
 import { $getRoot, BLUR_COMMAND, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, FOCUS_COMMAND, LexicalEditor, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
 import { useEffect, useMemo, useState } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
+import { INSERT_INLINE_COMMAND } from '../comment/CommentPlugin';
 import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
 import { INSERT_IMAGE_COMMAND } from '../image/ImagePlugin';
 import { $createStickyNode } from '../sticky-note/StickNote';
@@ -37,7 +38,13 @@ const getInsertItems = (editor: LexicalEditor) => [
     label: 'Excalidraw',
     icon: <span className="i-ph:graph" />,
     onClick: () => editor.dispatchCommand(INSERT_EXCALIDRAW_COMMAND, undefined)
-  }
+  },
+  {
+    key: 'comment',
+    label: 'Comment',
+    icon: <span className="i-material-symbols-light:comment" />,
+    onClick: () => editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined)
+  },
 ] as MenuProps['items'];
 
 export const ToolbarPlugin = () => {

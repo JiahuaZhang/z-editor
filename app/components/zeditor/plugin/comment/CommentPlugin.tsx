@@ -48,11 +48,10 @@ const AddCommentBox = ({ anchorKey, editor, onAddComment }: {
   useLayoutEffect(updatePosition, [anchorKey, editor, updatePosition]);
 
   return (
-    <div className="CommentPlugin_AddCommentBox" ref={boxRef}>
-      <button
-        className="CommentPlugin_AddCommentBox_button"
+    <div un-position='absolute' un-z='10' ref={boxRef}>
+      <button un-bg='white hover:blue-5' un-py='2' un-px='1' un-border='rounded-full 2 solid zinc-4 hover:none' un-flex='~' un-text='hover:white'
         onClick={onAddComment}>
-        <i className="icon add-comment" />
+        <span className="i-material-symbols-light:comment-outline" un-text='3xl' />
       </button>
     </div>
   );
@@ -805,8 +804,8 @@ export const CommentPlugin = () => {
 
   return (
     <>
-      {showCommentInput &&
-        createPortal(
+      {showCommentInput
+        && createPortal(
           <CommentInputBox
             editor={editor}
             cancelAddComment={cancelAddComment}
@@ -814,10 +813,10 @@ export const CommentPlugin = () => {
           />,
           document.body,
         )}
-      {activeAnchorKey !== null &&
-        activeAnchorKey !== undefined &&
-        !showCommentInput &&
-        createPortal(
+      {activeAnchorKey !== null
+        && activeAnchorKey !== undefined
+        && !showCommentInput
+        && createPortal(
           <AddCommentBox
             anchorKey={activeAnchorKey}
             editor={editor}
@@ -825,16 +824,15 @@ export const CommentPlugin = () => {
           />,
           document.body,
         )}
-      {createPortal(
+      {/* {createPortal(
         <button
-          className={`CommentPlugin_ShowCommentsButton ${showComments ? 'active' : ''
-            }`}
+          className={`CommentPlugin_ShowCommentsButton ${showComments ? 'active' : ''}`}
           onClick={() => setShowComments(!showComments)}
           title={showComments ? 'Hide Comments' : 'Show Comments'}>
-          <i className="comments" />
+          <i className="comments" /> show/hide comment
         </button>,
         document.body,
-      )}
+      )} */}
       {showComments &&
         createPortal(
           <CommentsPanel

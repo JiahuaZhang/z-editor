@@ -17,11 +17,12 @@ import { ClientOnly } from 'remix-utils/client-only';
 import { initialConfig } from './config';
 import { useActiveEditor } from './context/activeEditor';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
+import { CommentSidebar } from './plugin/comment/CommentSidebar';
 import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import { MATCHERS, validateUrl } from './util/url';
 
-export const UnoStaticTrick = () => <div un-top='12.5' un-left='2' />;
+export const UnoStaticTrick = () => <div un-top='2.5' un-left='2.75' />;
 
 const Plugins = () => {
   const [editor] = useLexicalComposerContext();
@@ -31,11 +32,18 @@ const Plugins = () => {
 
   return <>
     <Plugin.Toolbar />
-    <RichTextPlugin
-      contentEditable={<ContentEditable un-p='2' un-z='10' />}
-      placeholder={<div un-position='absolute' un-top='12.5' un-left='2' un-z='1' un-pointer-events='none' >Enter some rich text...</div>}
-      ErrorBoundary={LexicalErrorBoundary}
-    />
+    <div un-flex='~' un-max-w='screen-2xl' un-position='relative' >
+      <RichTextPlugin
+        contentEditable={
+          <ContentEditable un-p='2' un-border='~ rounded 2' un-z='5' un-position='relative' un-max-w='250' un-min-w='90' un-flex='1' />
+        }
+        placeholder={
+          <div un-position='absolute' un-top='2.5' un-left='2.75' un-z='1' un-pointer-events='none' >Enter some rich text...</div>
+        }
+        ErrorBoundary={LexicalErrorBoundary}
+      />
+      <CommentSidebar un-flex='2' />
+    </div >
     <HistoryPlugin />
     <AutoFocusPlugin />
     <ListPlugin />
@@ -61,16 +69,18 @@ const Plugins = () => {
   </>;
 };
 
-export const ZEditor = () => {
+export const ZEditor = ({ ...rest }: {}) => {
   return <ClientOnly>{() =>
-    <div un-border='~ rounded 2' un-m='2' un-position='relative' >
-      <SharedHistoryContext>
-        <TableContext>
-          <LexicalComposer initialConfig={initialConfig} >
-            <Plugins />
-          </LexicalComposer>
-        </TableContext>
-      </SharedHistoryContext>
-    </div>
+    <main un-flex='~' un-justify='center' un-h='100vh' un-overflow-y='auto' {...rest} >
+      <div>
+        <SharedHistoryContext>
+          <TableContext>
+            <LexicalComposer initialConfig={initialConfig} >
+              <Plugins />
+            </LexicalComposer>
+          </TableContext>
+        </SharedHistoryContext>
+      </div>
+    </main>
   }</ClientOnly>;
 };

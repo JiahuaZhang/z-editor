@@ -402,6 +402,14 @@ const $generateYoutubes = () => {
   root.append(emptyParagraph3);
 };
 
+const $generateParagraph = () => {
+  const root = $getRoot();
+  const paragraph = $createParagraphNode();
+  const texts = $createTextNode("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+  paragraph.append(texts);
+  root.append(paragraph);
+};
+
 export const $generateContent = () => {
   const root = $getRoot();
 
@@ -409,6 +417,7 @@ export const $generateContent = () => {
   const hr = $createHorizontalRuleNode();
   root.append(hr);
 
+  $generateParagraph();
   // $generateListContent();
   // $generateCode();
   // $generateTable();
@@ -417,7 +426,7 @@ export const $generateContent = () => {
   // $generateImages();
   // $generateExcalidarw();
   // $generateEquation();
-  $generateTweets();
+  // $generateTweets();
   $generateYoutubes();
 
   const quote = $createQuoteNode();

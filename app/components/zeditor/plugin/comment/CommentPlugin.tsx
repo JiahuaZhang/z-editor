@@ -45,7 +45,7 @@ const AddCommentBox = ({ anchorKey, editor, onAddComment }: {
     return () => window.removeEventListener('resize', updatePosition);
   }, [editor, updatePosition]);
 
-  useLayoutEffect(updatePosition, [anchorKey, editor, updatePosition]);
+  useEffect(updatePosition, [anchorKey, editor, updatePosition]);
 
   return (
     <div un-position='absolute' un-z='10' ref={boxRef}>
@@ -65,8 +65,9 @@ const EscapeHandlerPlugin = ({ onEscape, }: { onEscape: (e: KeyboardEvent) => bo
   return null;
 };
 
+const UnoTrick = () => <div un-left='6' un-top='6' un-text='gray-4' />;
+
 function PlainTextEditor({
-  className,
   autoFocus,
   onEscape,
   onChange,
@@ -83,9 +84,7 @@ function PlainTextEditor({
   const initialConfig = {
     namespace: 'Commenting',
     nodes: [],
-    onError: (error: Error) => {
-      throw error;
-    },
+    onError: (error: Error) => { throw error; }
   };
 
   return (
@@ -93,11 +92,8 @@ function PlainTextEditor({
       <div className="CommentPlugin_CommentInputBox_EditorContainer">
         <PlainTextPlugin
           contentEditable={
-            <ContentEditable aria-placeholder={placeholder} placeholder={
-              <div>
-                {placeholder}
-              </div>
-            } />
+            <ContentEditable un-position='relative' un-min-w='80' un-min-h='25' un-m='2' un-z='5' un-p='2' aria-placeholder={placeholder}
+              placeholder={<div un-position='absolute' un-top='6' un-left='6' un-text='gray-4' >{placeholder}</div>} />
           }
           ErrorBoundary={LexicalErrorBoundary}
         />
@@ -243,19 +239,19 @@ const CommentInputBox = ({ editor, cancelAddComment, submitAddComment }: {
   const onChange = useOnChange(setContent, setCanSubmit);
 
   return (
-    <div className="CommentPlugin_CommentInputBox" ref={boxRef}>
+    <div un-position='absolute' un-bg='white' un-z='10' un-p='2' un-border='rounded' un-shadow='[0_0_5px_0_#ccc]' className="CommentPlugin_CommentInputBox" ref={boxRef}>
       <PlainTextEditor
         className="CommentPlugin_CommentInputBox_Editor"
         onEscape={onEscape}
         onChange={onChange}
       />
-      <div className="CommentPlugin_CommentInputBox_Buttons">
-        <button
+      <div un-flex='~' un-justify='between' un-gap='2' un-mx='2' className="CommentPlugin_CommentInputBox_Buttons">
+        <button un-bg='zinc-2 hover:zinc-3' un-px='2' un-py='1' un-border='rounded' un-flex='1'
           onClick={cancelAddComment}
           className="CommentPlugin_CommentInputBox_Button">
           Cancel
         </button>
-        <button
+        <button un-bg='hover:white disabled:zinc-1 blue-4' un-text='hover:blue-4 white disabled:gray-6' un-font='bold disabled:normal' un-px='2' un-py='1' un-border='rounded' un-cursor='disabled:not-allowed' un-flex='1'
           onClick={submitComment}
           disabled={!canSubmit}
           className="CommentPlugin_CommentInputBox_Button primary">
@@ -813,8 +809,7 @@ export const CommentPlugin = () => {
           />,
           document.body,
         )}
-      {activeAnchorKey !== null
-        && activeAnchorKey !== undefined
+      {activeAnchorKey
         && !showCommentInput
         && createPortal(
           <AddCommentBox

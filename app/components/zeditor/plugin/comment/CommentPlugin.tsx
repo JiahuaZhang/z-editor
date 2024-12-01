@@ -239,7 +239,9 @@ const CommentInputBox = ({ editor, cancelAddComment, submitAddComment }: {
   const onChange = useOnChange(setContent, setCanSubmit);
 
   return (
-    <div un-position='absolute' un-bg='white' un-z='10' un-p='2' un-border='rounded' un-shadow='[0_0_5px_0_#ccc]' className="CommentPlugin_CommentInputBox" ref={boxRef}>
+    <div un-position='absolute' un-bg='white' un-z='10' un-p='2' un-border='rounded' un-shadow='[0_0_5px_0_#ccc]'
+      un-animate='ascend-from-bottom'
+      className='[&:before]:([content:""] position-absolute border-8 border-t-white border-l-white border-b-transparent border-r-transparent border-solid rotate-45 left-[calc(50%-8px)] top--1.8 shadow-[-3px_-3px_3px_0_#eee])' ref={boxRef} >
       <PlainTextEditor
         className="CommentPlugin_CommentInputBox_Editor"
         onEscape={onEscape}

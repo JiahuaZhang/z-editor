@@ -34,7 +34,7 @@ const Plugins = () => {
     <div un-flex='~' un-max-w='screen-2xl' un-position='relative' >
       <RichTextPlugin
         contentEditable={
-          <ContentEditable un-p='2' un-border='~ rounded 2' un-z='5' un-position='relative' un-max-w='250' un-min-w='90' un-flex='1' />
+          <ContentEditable un-p='2' un-border='~ rounded 2' un-z='5' un-position='relative' un-max-w='250' un-min-w='90' un-flex='2' />
         }
         placeholder={
           <div un-position='absolute' un-top='2.5' un-left='2.75' un-z='1' un-pointer-events='none' >Enter some rich text...</div>

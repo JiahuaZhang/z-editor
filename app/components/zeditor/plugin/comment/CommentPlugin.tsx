@@ -89,7 +89,7 @@ function PlainTextEditor({
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div className="CommentPlugin_CommentInputBox_EditorContainer">
+      <div>
         <PlainTextPlugin
           contentEditable={
             <ContentEditable un-position='relative' un-min-w='80' un-min-h='25' un-m='2' un-z='5' un-p='2' aria-placeholder={placeholder}
@@ -242,21 +242,15 @@ const CommentInputBox = ({ editor, cancelAddComment, submitAddComment }: {
     <div un-position='absolute' un-bg='white' un-z='10' un-p='2' un-border='rounded' un-shadow='[0_0_5px_0_#ccc]'
       un-animate='ascend-from-bottom'
       className='[&:before]:([content:""] position-absolute border-8 border-t-white border-l-white border-b-transparent border-r-transparent border-solid rotate-45 left-[calc(50%-8px)] top--1.8 shadow-[-3px_-3px_3px_0_#eee])' ref={boxRef} >
-      <PlainTextEditor
-        className="CommentPlugin_CommentInputBox_Editor"
-        onEscape={onEscape}
-        onChange={onChange}
-      />
-      <div un-flex='~' un-justify='between' un-gap='2' un-mx='2' className="CommentPlugin_CommentInputBox_Buttons">
+      <PlainTextEditor onEscape={onEscape} onChange={onChange} />
+      <div un-flex='~' un-justify='between' un-gap='2' un-mx='2'>
         <button un-bg='zinc-2 hover:zinc-3' un-px='2' un-py='1' un-border='rounded' un-flex='1'
-          onClick={cancelAddComment}
-          className="CommentPlugin_CommentInputBox_Button">
+          onClick={cancelAddComment}>
           Cancel
         </button>
         <button un-bg='hover:white disabled:zinc-1 blue-4' un-text='hover:blue-4 white disabled:gray-6' un-font='bold disabled:normal' un-px='2' un-py='1' un-border='rounded' un-cursor='disabled:not-allowed' un-flex='1'
           onClick={submitComment}
-          disabled={!canSubmit}
-          className="CommentPlugin_CommentInputBox_Button primary">
+          disabled={!canSubmit}>
           Comment
         </button>
       </div>
@@ -821,7 +815,7 @@ export const CommentPlugin = () => {
           />,
           document.body,
         )}
-      {/* {createPortal(
+      {createPortal(
         <button
           className={`CommentPlugin_ShowCommentsButton ${showComments ? 'active' : ''}`}
           onClick={() => setShowComments(!showComments)}
@@ -829,7 +823,7 @@ export const CommentPlugin = () => {
           <i className="comments" /> show/hide comment
         </button>,
         document.body,
-      )} */}
+      )}
       {showComments &&
         createPortal(
           <CommentsPanel

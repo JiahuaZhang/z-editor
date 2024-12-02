@@ -16,6 +16,8 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { createPortal } from 'react-dom';
 import { createDOMRange, createRectsFromDOMRange, getDOMSelection } from '../../util/utils';
 import { CommentStore, createComment, createThread, Thread, useCommentStore, type Comment, type Comments } from './Comment';
+import { atom, useAtom } from 'jotai';
+import { Tooltip } from 'antd';
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand('INSERT_INLINE_COMMAND',);
 
@@ -535,7 +537,7 @@ const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef
 };
 
 const CommentsPanel = ({ activeIDs, deleteCommentOrThread, comments, submitAddComment, markNodeMap }: {
-  activeIDs: Array<string>;
+  activeIDs: string[];
   comments: Comments;
   deleteCommentOrThread: (
     commentOrThread: Comment | Thread,
@@ -553,7 +555,6 @@ const CommentsPanel = ({ activeIDs, deleteCommentOrThread, comments, submitAddCo
 
   return (
     <div className="CommentPlugin_CommentsPanel">
-      <h2 className="CommentPlugin_CommentsPanel_Heading">Comments</h2>
       {isEmpty ? (
         <div className="CommentPlugin_CommentsPanel_Empty">No Comments</div>
       ) : (
@@ -570,7 +571,9 @@ const CommentsPanel = ({ activeIDs, deleteCommentOrThread, comments, submitAddCo
   );
 };
 
-export const CommentPlugin = () => {
+const showCommentSidebarAtom = atom(true);
+
+export const CommentPlugin = ({ ...rest }: {}) => {
   const [editor] = useLexicalComposerContext();
   const commentStore = useMemo(() => new CommentStore(editor), [editor]);
   const comments = useCommentStore(commentStore);
@@ -581,6 +584,7 @@ export const CommentPlugin = () => {
   const [activeIDs, setActiveIDs] = useState<Array<string>>([]);
   const [showCommentInput, setShowCommentInput] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [showSidebar, setShowSidebar] = useAtom(showCommentSidebarAtom);
 
   const cancelAddComment = useCallback(() => {
     editor.update(() => {
@@ -794,6 +798,15 @@ export const CommentPlugin = () => {
     editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined);
   };
 
+  if (!showSidebar) return <button un-position='absolute' un-right='0.2' un-top='1'
+    un-border='2 rounded solid gray-3 hover:blue-4' un-z='10' un-flex='~'
+    onClick={() => setShowSidebar(true)}
+  >
+    <Tooltip title='Expand Comments' >
+      <span className="i-material-symbols-light:keyboard-double-arrow-left" un-text='xl hover:blue-6' />
+    </Tooltip>
+  </button>;
+
   return (
     <>
       {showCommentInput
@@ -815,7 +828,7 @@ export const CommentPlugin = () => {
           />,
           document.body,
         )}
-      {createPortal(
+      {/* {createPortal(
         <button
           className={`CommentPlugin_ShowCommentsButton ${showComments ? 'active' : ''}`}
           onClick={() => setShowComments(!showComments)}
@@ -823,8 +836,21 @@ export const CommentPlugin = () => {
           <i className="comments" /> show/hide comment
         </button>,
         document.body,
-      )}
-      {showComments &&
+      )} */}
+      <aside un-max-w='90' {...rest} >
+        <h1 un-flex='~' un-items='center' un-text='white' un-cursor='pointer' un-w='full'
+          un-px='2' un-py='1' un-bg='blue-5 hover:gray-5'
+          onClick={() => setShowSidebar(false)}
+        >Comments <span className="i-material-symbols-light:keyboard-double-arrow-right" un-text='xl' /></h1>
+        <CommentsPanel
+          comments={comments}
+          submitAddComment={submitAddComment}
+          deleteCommentOrThread={deleteCommentOrThread}
+          activeIDs={activeIDs}
+          markNodeMap={markNodeMap}
+        />
+      </aside>
+      {/* {showComments &&
         createPortal(
           <CommentsPanel
             comments={comments}
@@ -834,7 +860,7 @@ export const CommentPlugin = () => {
             markNodeMap={markNodeMap}
           />,
           document.body,
-        )}
+        )} */}
     </>
   );
 };

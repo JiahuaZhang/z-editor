@@ -17,7 +17,6 @@ import { ClientOnly } from 'remix-utils/client-only';
 import { initialConfig } from './config';
 import { useActiveEditor } from './context/activeEditor';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
-import { CommentSidebar } from './plugin/comment/CommentSidebar';
 import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import { MATCHERS, validateUrl } from './util/url';
@@ -42,7 +41,7 @@ const Plugins = () => {
         }
         ErrorBoundary={LexicalErrorBoundary}
       />
-      <CommentSidebar un-flex='2' />
+      <Plugin.Comment />
     </div >
     <HistoryPlugin />
     <AutoFocusPlugin />
@@ -63,7 +62,6 @@ const Plugins = () => {
     <Plugin.Emoji.Picker />
     <Plugin.Excalidraw />
     {/* <Plugin.AutoComplete /> */}
-    <Plugin.Comment />
 
     {/* <TreeView editor={editor} /> */}
   </>;

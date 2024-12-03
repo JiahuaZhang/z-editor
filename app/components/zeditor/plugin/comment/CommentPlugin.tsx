@@ -11,13 +11,17 @@ import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
 import { $isRootTextContentEmpty } from '@lexical/text';
 import { mergeRegister, registerNestedElementResolver } from '@lexical/utils';
+import { Tooltip } from 'antd';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import { atom, useAtom } from 'jotai';
 import { $getNodeByKey, $getRoot, $getSelection, $isRangeSelection, $isTextNode, CLEAR_EDITOR_COMMAND, COMMAND_PRIORITY_EDITOR, createCommand, EditorState, KEY_ESCAPE_COMMAND, LexicalCommand, LexicalEditor, NodeKey, RangeSelection } from 'lexical';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { createDOMRange, createRectsFromDOMRange, getDOMSelection } from '../../util/utils';
 import { CommentStore, createComment, createThread, Thread, useCommentStore, type Comment, type Comments } from './Comment';
-import { atom, useAtom } from 'jotai';
-import { Tooltip } from 'antd';
+
+dayjs.extend(relativeTime);
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand('INSERT_INLINE_COMMAND',);
 
@@ -341,36 +345,22 @@ const ShowDeleteCommentOrThreadDialog = ({ commentOrThread, deleteCommentOrThrea
   );
 };
 
-const CommentsPanelListComment = ({
-  comment,
-  deleteComment,
-  thread,
-  rtf,
-}: {
+const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
   comment: Comment;
   deleteComment: (
     commentOrThread: Comment | Thread,
     // eslint-disable-next-line no-shadow
     thread?: Thread,
   ) => void;
-  rtf: Intl.RelativeTimeFormat;
   thread?: Thread;
 }) => {
-  const seconds = Math.round(
-    (comment.timeStamp - (performance.timeOrigin + performance.now())) / 1000,
-  );
-  const minutes = Math.round(seconds / 60);
   // const [modal, showModal] = useModal();
 
   return (
-    <li className="CommentPlugin_CommentsPanel_List_Comment">
+    <li un-border='2 blue-4 solid' className="CommentPlugin_CommentsPanel_List_Comment">
       <div className="CommentPlugin_CommentsPanel_List_Details">
-        <span className="CommentPlugin_CommentsPanel_List_Comment_Author">
-          {comment.author}
-        </span>
-        <span className="CommentPlugin_CommentsPanel_List_Comment_Time">
-          · {seconds > -10 ? 'Just now' : rtf.format(minutes, 'minute')}
-        </span>
+        <span un-font='bold' un-p='1'>{comment.author}</span>
+        <span className="CommentPlugin_CommentsPanel_List_Comment_Time">·{dayjs(comment.timeStamp).fromNow()}</span>
       </div>
       <p
         className={
@@ -419,15 +409,6 @@ const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef
   const [editor] = useLexicalComposerContext();
   const [counter, setCounter] = useState(0);
   // const [modal, showModal] = useModal();
-  const rtf = useMemo(
-    () =>
-      new Intl.RelativeTimeFormat('en', {
-        localeMatcher: 'best fit',
-        numeric: 'auto',
-        style: 'short',
-      }),
-    [],
-  );
 
   useEffect(() => {
     // Used to keep the time stamp up to date
@@ -481,13 +462,13 @@ const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef
               onClick={handleClickThread}
               className={`CommentPlugin_CommentsPanel_List_Thread ${markNodeMap.has(id) ? 'interactive' : ''
                 } ${activeIDs.indexOf(id) === -1 ? '' : 'active'}`}>
-              <div className="CommentPlugin_CommentsPanel_List_Thread_QuoteBox">
-                <blockquote className="CommentPlugin_CommentsPanel_List_Thread_Quote">
-                  {'> '}
-                  <span>{commentOrThread.quote}</span>
+              <div un-position='relative'
+                className="CommentPlugin_CommentsPanel_List_Thread_QuoteBox [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100">
+                <blockquote un-p='2' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Thread_Quote">
+                  {'> '} <span un-bg='yellow-2' >{commentOrThread.quote}</span>
                 </blockquote>
                 {/* INTRODUCE DELETE THREAD HERE*/}
-                <button
+                <button un-position='absolute' un-right='1' un-top='1'
                   // onClick={() => {
                   //   showModal('Delete Thread', (onClose) => (
                   //     <ShowDeleteCommentOrThreadDialog
@@ -498,7 +479,7 @@ const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef
                   //   ));
                   // }}
                   className="CommentPlugin_CommentsPanel_List_DeleteButton">
-                  <i className="delete" />
+                  <span className="i-bi:trash3" un-text='hover:orange-6' />
                 </button>
                 {/* {modal} */}
               </div>
@@ -509,7 +490,6 @@ const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef
                     comment={comment}
                     deleteComment={deleteCommentOrThread}
                     thread={commentOrThread}
-                    rtf={rtf}
                   />
                 ))}
               </ul>
@@ -528,7 +508,6 @@ const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef
             key={id}
             comment={commentOrThread}
             deleteComment={deleteCommentOrThread}
-            rtf={rtf}
           />
         );
       })}

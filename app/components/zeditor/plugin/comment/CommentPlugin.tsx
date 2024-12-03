@@ -357,20 +357,17 @@ const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
   // const [modal, showModal] = useModal();
 
   return (
-    <li un-border='2 blue-4 solid' className="CommentPlugin_CommentsPanel_List_Comment">
+    <li un-position='relative' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Comment [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100">
       <div className="CommentPlugin_CommentsPanel_List_Details">
         <span un-font='bold' un-p='1'>{comment.author}</span>
-        <span className="CommentPlugin_CommentsPanel_List_Comment_Time">·{dayjs(comment.timeStamp).fromNow()}</span>
+        <span className="CommentPlugin_CommentsPanel_List_Comment_Time"> · {dayjs(comment.timeStamp).fromNow()}</span>
       </div>
-      <p
-        className={
-          comment.deleted ? 'CommentPlugin_CommentsPanel_DeletedComment' : ''
-        }>
+      <p un-px='2' un-text={`${comment.deleted ? 'gray-4' : 'gray-7'}`}>
         {comment.content}
       </p>
       {!comment.deleted && (
         <>
-          <button
+          <button un-position='absolute' un-right='1' un-top='1'
             onClick={() => {
               // showModal('Delete Comment', (onClose) => (
               //   <ShowDeleteCommentOrThreadDialog
@@ -382,7 +379,7 @@ const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
               // ));
             }}
             className="CommentPlugin_CommentsPanel_List_DeleteButton">
-            <i className="delete" />
+            <span className="i-bi:trash3" un-text='hover:orange-6' />
           </button>
           {/* {modal} */}
         </>

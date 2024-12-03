@@ -144,7 +144,7 @@ const CommentInputBox = ({ editor, cancelAddComment, submitAddComment }: {
     [],
   );
   const selectionRef = useRef<RangeSelection | null>(null);
-  const author = 'Playground User';
+  const author = 'User';
 
   const updateLocation = useCallback(() => {
     editor.getEditorState().read(() => {
@@ -250,7 +250,7 @@ const CommentInputBox = ({ editor, cancelAddComment, submitAddComment }: {
           onClick={cancelAddComment}>
           Cancel
         </button>
-        <button un-bg='hover:white disabled:zinc-1 blue-4' un-text='hover:blue-4 white disabled:gray-6' un-font='bold disabled:normal' un-px='2' un-py='1' un-border='rounded' un-cursor='disabled:not-allowed' un-flex='1'
+        <button un-bg='hover:white disabled:zinc-1 blue-5' un-text='hover:blue-4 white disabled:gray-6' un-font='bold disabled:normal' un-px='2' un-py='1' un-border='rounded' un-cursor='disabled:not-allowed' un-flex='1'
           onClick={submitComment}
           disabled={!canSubmit}>
           Comment
@@ -402,7 +402,7 @@ const CommentsPanelListComment = ({
 };
 
 const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef, submitAddComment, markNodeMap }: {
-  activeIDs: Array<string>;
+  activeIDs: string[];
   comments: Comments;
   deleteCommentOrThread: (
     commentOrThread: Comment | Thread,
@@ -556,7 +556,7 @@ const CommentsPanel = ({ activeIDs, deleteCommentOrThread, comments, submitAddCo
   return (
     <div className="CommentPlugin_CommentsPanel">
       {isEmpty ? (
-        <div className="CommentPlugin_CommentsPanel_Empty">No Comments</div>
+        <div un-text='center gray-4' un-p='2'>No Comments</div>
       ) : (
         <CommentsPanelList
           activeIDs={activeIDs}
@@ -838,8 +838,7 @@ export const CommentPlugin = ({ ...rest }: {}) => {
         </button>,
         document.body,
       )} */}
-      <aside un-w={`${showSidebar ? '80' : '0'}`} un-transition='all' un-duration='500' un-flex='1'
-        {...rest} >
+      <aside un-w={`${showSidebar ? '80' : '0'}`} un-transition='all' un-duration='500' un-flex='1' {...rest} >
         {
           showSidebar && <>
             <h1 un-flex='~' un-items='center' un-text='white' un-cursor='pointer' un-w='full'

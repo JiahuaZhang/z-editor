@@ -71,15 +71,9 @@ const EscapeHandlerPlugin = ({ onEscape, }: { onEscape: (e: KeyboardEvent) => bo
   return null;
 };
 
-const UnoTrick = () => <div un-left='6' un-top='6' un-text='gray-4' />;
+const UnoTrick = () => <div un-left='2' un-top='1' un-text='gray-4' un-pointer-events='none' />;
 
-function PlainTextEditor({
-  autoFocus,
-  onEscape,
-  onChange,
-  editorRef,
-  placeholder = 'Type a comment...',
-}: {
+function PlainTextEditor({ autoFocus, onEscape, onChange, editorRef, placeholder = 'Type a comment...', ...rest }: {
   autoFocus?: boolean;
   className?: string;
   editorRef?: { current: null | LexicalEditor; };
@@ -95,11 +89,13 @@ function PlainTextEditor({
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div>
+      <div un-position='relative' un-m='1' >
         <PlainTextPlugin
           contentEditable={
-            <ContentEditable un-position='relative' un-min-w='80' un-min-h='25' un-m='2' un-z='5' un-p='2' aria-placeholder={placeholder}
-              placeholder={<div un-position='absolute' un-top='6' un-left='6' un-text='gray-4' >{placeholder}</div>} />
+            <ContentEditable un-outline='2 gray-2 solid focus:gray-8' un-p='1' aria-placeholder={placeholder}
+              placeholder={<div un-position='absolute' un-top='1' un-left='2' un-text='gray-4' un-pointer-events='none' >{placeholder}</div>}
+              {...rest}
+            />
           }
           ErrorBoundary={LexicalErrorBoundary}
         />
@@ -248,7 +244,7 @@ const CommentInputBox = ({ editor, cancelAddComment, submitAddComment }: {
     <div un-position='absolute' un-bg='white' un-z='10' un-p='2' un-border='rounded' un-shadow='[0_0_5px_0_#ccc]'
       un-animate='ascend-from-bottom'
       className='[&:before]:([content:""] position-absolute border-8 border-t-white border-l-white border-b-transparent border-r-transparent border-solid rotate-45 left-[calc(50%-8px)] top--1.8 shadow-[-3px_-3px_3px_0_#eee])' ref={boxRef} >
-      <PlainTextEditor onEscape={onEscape} onChange={onChange} />
+      <PlainTextEditor onEscape={onEscape} onChange={onChange} un-min-w='80' un-min-h='25' />
       <div un-flex='~' un-justify='between' un-gap='2' un-mx='2'>
         <button un-bg='zinc-2 hover:zinc-3' un-px='2' un-py='1' un-border='rounded' un-flex='1'
           onClick={cancelAddComment}>
@@ -303,11 +299,11 @@ const CommentsComposer = ({ submitAddComment, thread, placeholder }: {
         editorRef={editorRef}
         placeholder={placeholder}
       />
-      <button
+      <button un-position='absolute' un-top='1' un-right='2' un-cursor={`${canSubmit ? 'pointer' : 'not-allowed'}`} un-text={`${canSubmit ? 'hover:blue-4' : ''}`}
         className="CommentPlugin_CommentsPanel_SendButton"
         onClick={submitComment}
         disabled={!canSubmit}>
-        <i className="send" />
+        <span className="i-bi:send" un-text='2xl' />
       </button>
     </>
   );
@@ -360,7 +356,7 @@ const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
     <li un-position='relative' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Comment [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100">
       <div className="CommentPlugin_CommentsPanel_List_Details">
         <span un-font='bold' un-p='1'>{comment.author}</span>
-        <span className="CommentPlugin_CommentsPanel_List_Comment_Time"> · {dayjs(comment.timeStamp).fromNow()}</span>
+        <span un-text='gray-4' className="CommentPlugin_CommentsPanel_List_Comment_Time"> · {dayjs(comment.timeStamp).fromNow()}</span>
       </div>
       <p un-px='2' un-text={`${comment.deleted ? 'gray-4' : 'gray-7'}`}>
         {comment.content}
@@ -490,7 +486,7 @@ const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef
                   />
                 ))}
               </ul>
-              <div className="CommentPlugin_CommentsPanel_List_Thread_Editor">
+              <div un-position='relative' className="CommentPlugin_CommentsPanel_List_Thread_Editor">
                 <CommentsComposer
                   submitAddComment={submitAddComment}
                   thread={commentOrThread}
@@ -817,10 +813,13 @@ export const CommentPlugin = ({ ...rest }: {}) => {
       <aside un-w={`${showSidebar ? '80' : '0'}`} un-transition='all' un-duration='500' un-flex='1' {...rest} >
         {
           showSidebar && <>
-            <h1 un-flex='~' un-items='center' un-text='white' un-cursor='pointer' un-w='full'
-              un-px='2' un-py='1' un-bg='blue-5 hover:gray-5'
-              onClick={() => setShowSidebar(false)}
-            >Comments <span className="i-material-symbols-light:keyboard-double-arrow-right" un-text='xl' /></h1>
+            <Tooltip title='Hide Comments'>
+              <h1 un-flex='~' un-items='center' un-justify='center' un-text='white' un-cursor='pointer' un-w='full'
+                un-px='2' un-py='1' un-bg='blue-5 hover:gray-5'
+                onClick={() => setShowSidebar(false)}>
+                Comments <span className="i-material-symbols-light:keyboard-double-arrow-right" un-text='xl' />
+              </h1>
+            </Tooltip>
             <CommentsPanel
               comments={comments}
               submitAddComment={submitAddComment}

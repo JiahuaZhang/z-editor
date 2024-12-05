@@ -309,38 +309,6 @@ const CommentsComposer = ({ submitAddComment, thread, placeholder }: {
   );
 };
 
-const ShowDeleteCommentOrThreadDialog = ({ commentOrThread, deleteCommentOrThread, onClose, thread = undefined }: {
-  commentOrThread: Comment | Thread;
-  deleteCommentOrThread: (
-    comment: Comment | Thread,
-    // eslint-disable-next-line no-shadow
-    thread?: Thread,
-  ) => void;
-  onClose: () => void;
-  thread?: Thread;
-}) => {
-  return (
-    <>
-      Are you sure you want to delete this {commentOrThread.type}?
-      <div className="Modal__content">
-        <button
-          onClick={() => {
-            deleteCommentOrThread(commentOrThread, thread);
-            onClose();
-          }}>
-          Delete
-        </button>{' '}
-        <button
-          onClick={() => {
-            onClose();
-          }}>
-          Cancel
-        </button>
-      </div>
-    </>
-  );
-};
-
 const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
   comment: Comment;
   deleteComment: (
@@ -350,10 +318,28 @@ const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
   ) => void;
   thread?: Thread;
 }) => {
-  // const [modal, showModal] = useModal();
+  const [isDeletingComment, setIsDeletingComment] = useState(false);
 
   return (
-    <li un-position='relative' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Comment [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100">
+    <li un-position='relative' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Comment [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100" un-border={`${isDeletingComment && '2 solid red-4 rounded'}`} >
+      <div un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingComment ? '14' : '0'}`} un-opacity={`${isDeletingComment ? '100' : '0'}`} un-transition='all' un-duration='500' >
+        <h1 un-text='center' un-font='bold' un-my='1' >Delete Comment</h1>
+        <div un-flex='~' un-mx='2' >
+          <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-4' className='[&:hover>span]:text-white' un-py='1'
+            onClick={() => {
+              {
+                deleteComment(comment, thread);
+                setIsDeletingComment(false);
+              }
+            }} >
+            <span className="i-bi:trash3" un-text='xl red-4' />
+          </button>
+          <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:blue-4' className='[&:hover>span]:text-white' un-py='1'
+            onClick={() => setIsDeletingComment(false)} >
+            <span className="i-material-symbols-light:close" un-text='xl blue-4' />
+          </button>
+        </div>
+      </div>
       <div className="CommentPlugin_CommentsPanel_List_Details">
         <span un-font='bold' un-p='1'>{comment.author}</span>
         <span un-text='gray-4' className="CommentPlugin_CommentsPanel_List_Comment_Time"> · {dayjs(comment.timeStamp).fromNow()}</span>
@@ -361,24 +347,12 @@ const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
       <p un-px='2' un-text={`${comment.deleted ? 'gray-4' : 'gray-7'}`}>
         {comment.content}
       </p>
-      {!comment.deleted && (
-        <>
-          <button un-position='absolute' un-right='1' un-top='1'
-            onClick={() => {
-              // showModal('Delete Comment', (onClose) => (
-              //   <ShowDeleteCommentOrThreadDialog
-              //     commentOrThread={comment}
-              //     deleteCommentOrThread={deleteComment}
-              //     thread={thread}
-              //     onClose={onClose}
-              //   />
-              // ));
-            }}
-            className="CommentPlugin_CommentsPanel_List_DeleteButton">
-            <span className="i-bi:trash3" un-text='hover:orange-6' />
-          </button>
-          {/* {modal} */}
-        </>
+      {!comment.deleted && !isDeletingComment && (
+        <button un-position='absolute' un-right='1' un-top='1'
+          onClick={() => setIsDeletingComment(true)}
+          className="CommentPlugin_CommentsPanel_List_DeleteButton">
+          <span className="i-bi:trash3" un-text='hover:orange-6' />
+        </button>
       )}
     </li>
   );
@@ -430,11 +404,11 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
     };
 
     return (
-      <li un-bg={`${isActive ? 'zinc-1' : ''}`} un-border-l={`${isActive ? 'solid zinc-2 15' : ''}`}
+      <li un-bg={`${isActive ? 'zinc-1' : ''}`} un-border-l={`${isActive && !isDeletingThread ? 'solid zinc-2 15' : ''}`} un-border={`${isDeletingThread && '2 solid red-4 rounded'}`}
         key={id}
         onClick={handleClickThread}>
         <div un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingThread ? '14' : '0'}`} un-opacity={`${isDeletingThread ? '100' : '0'}`} un-transition='all' un-duration='500' >
-          <h1 un-text='center' un-font='bold' un-my='1' >Confirm to delete thread</h1>
+          <h1 un-text='center' un-font='bold' un-my='1' >Delete Thread?</h1>
           <div un-flex='~' un-mx='2' >
             <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-4' className='[&:hover>span]:text-white' un-py='1'
               onClick={() => deleteCommentOrThread(commentOrThread)} >

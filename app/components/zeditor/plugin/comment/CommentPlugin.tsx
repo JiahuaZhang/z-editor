@@ -400,8 +400,8 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
 }) => {
   const [editor] = useLexicalComposerContext();
   const [isDeletingThread, setIsDeletingThread] = useState(false);
-
   const id = commentOrThread.id;
+
   if (commentOrThread.type === 'thread') {
     const handleClickThread = () => {
       const markNodeKeys = markNodeMap.get(id);
@@ -430,25 +430,22 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
     };
 
     return (
-      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
       <li un-bg={`${isActive ? 'zinc-1' : ''}`} un-border-l={`${isActive ? 'solid zinc-2 15' : ''}`}
         key={id}
         onClick={handleClickThread}>
-        {
-          isDeletingThread && <div un-bg='zinc-1' un-border='rounded' >
-            <h1 un-text='center' un-font='bold' un-my='1' >Confirm to delete thread</h1>
-            <div un-flex='~' un-mx='2' >
-              <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-4' className='[&:hover>span]:text-white' un-py='1'
-                onClick={() => deleteCommentOrThread(commentOrThread)} >
-                <span className="i-bi:trash3" un-text='xl red-4' />
-              </button>
-              <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:blue-4' className='[&:hover>span]:text-white' un-py='1'
-                onClick={() => setIsDeletingThread(false)} >
-                <span className="i-material-symbols-light:close" un-text='xl blue-4' />
-              </button>
-            </div>
+        <div un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingThread ? 'inherit' : '0'}`} un-opacity={`${isDeletingThread ? '100' : '0'}`} un-transition='all' un-duration='500' >
+          <h1 un-text='center' un-font='bold' un-my='1' >Confirm to delete thread</h1>
+          <div un-flex='~' un-mx='2' >
+            <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-4' className='[&:hover>span]:text-white' un-py='1'
+              onClick={() => deleteCommentOrThread(commentOrThread)} >
+              <span className="i-bi:trash3" un-text='xl red-4' />
+            </button>
+            <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:blue-4' className='[&:hover>span]:text-white' un-py='1'
+              onClick={() => setIsDeletingThread(false)} >
+              <span className="i-material-symbols-light:close" un-text='xl blue-4' />
+            </button>
           </div>
-        }
+        </div>
         <div un-position='relative'
           className="CommentPlugin_CommentsPanel_List_Thread_QuoteBox [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100">
           <blockquote un-p='2' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Thread_Quote">
@@ -484,13 +481,12 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
       </li>
     );
   };
-  return (
-    <CommentsPanelListComment
-      key={id}
-      comment={commentOrThread}
-      deleteComment={deleteCommentOrThread}
-    />
-  );
+
+  return <CommentsPanelListComment
+    key={id}
+    comment={commentOrThread}
+    deleteComment={deleteCommentOrThread}
+  />;
 };
 
 const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef, submitAddComment, markNodeMap }: {

@@ -384,6 +384,115 @@ const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
   );
 };
 
+const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteCommentOrThread, submitAddComment }: {
+  commentOrThread: Comment | Thread;
+  markNodeMap: Map<string, Set<NodeKey>>;
+  isActive: boolean;
+  deleteCommentOrThread: (
+    commentOrThread: Comment | Thread,
+    thread?: Thread,
+  ) => void;
+  submitAddComment: (
+    commentOrThread: Comment | Thread,
+    isInlineComment: boolean,
+    thread?: Thread,
+  ) => void;
+}) => {
+  const [editor] = useLexicalComposerContext();
+  const [isDeletingThread, setIsDeletingThread] = useState(false);
+
+  const id = commentOrThread.id;
+  if (commentOrThread.type === 'thread') {
+    const handleClickThread = () => {
+      const markNodeKeys = markNodeMap.get(id);
+      if (markNodeKeys !== undefined && !isActive) {
+        const activeElement = document.activeElement;
+        // Move selection to the start of the mark, so that we
+        // update the UI with the selected thread.
+        editor.update(
+          () => {
+            const markNodeKey = Array.from(markNodeKeys)[0];
+            const markNode = $getNodeByKey<MarkNode>(markNodeKey);
+            if ($isMarkNode(markNode)) {
+              markNode.selectStart();
+            }
+          },
+          {
+            onUpdate() {
+              // Restore selection to the previous element
+              if (activeElement !== null) {
+                (activeElement as HTMLElement).focus();
+              }
+            },
+          },
+        );
+      }
+    };
+
+    return (
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+      <li un-bg={`${isActive ? 'zinc-1' : ''}`} un-border-l={`${isActive ? 'solid zinc-2 15' : ''}`}
+        key={id}
+        onClick={handleClickThread}>
+        {
+          isDeletingThread && <div un-bg='zinc-1' un-border='rounded' >
+            <h1 un-text='center' un-font='bold' un-my='1' >Confirm to delete thread</h1>
+            <div un-flex='~' un-mx='2' >
+              <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-4' className='[&:hover>span]:text-white' un-py='1'
+                onClick={() => deleteCommentOrThread(commentOrThread)} >
+                <span className="i-bi:trash3" un-text='xl red-4' />
+              </button>
+              <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:blue-4' className='[&:hover>span]:text-white' un-py='1'
+                onClick={() => setIsDeletingThread(false)} >
+                <span className="i-material-symbols-light:close" un-text='xl blue-4' />
+              </button>
+            </div>
+          </div>
+        }
+        <div un-position='relative'
+          className="CommentPlugin_CommentsPanel_List_Thread_QuoteBox [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100">
+          <blockquote un-p='2' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Thread_Quote">
+            {'> '} <span un-bg='yellow-2' >{commentOrThread.quote}</span>
+          </blockquote>
+          {
+            !isDeletingThread &&
+            <button un-position='absolute' un-right='1' un-top='1'
+              onClick={() => setIsDeletingThread(true)}
+
+              className="CommentPlugin_CommentsPanel_List_DeleteButton">
+              <span className="i-bi:trash3" un-text='hover:orange-6' />
+            </button>
+          }
+        </div>
+        <ul className="CommentPlugin_CommentsPanel_List_Thread_Comments">
+          {commentOrThread.comments.map((comment) => (
+            <CommentsPanelListComment
+              key={comment.id}
+              comment={comment}
+              deleteComment={deleteCommentOrThread}
+              thread={commentOrThread}
+            />
+          ))}
+        </ul>
+        <div un-position='relative' className="CommentPlugin_CommentsPanel_List_Thread_Editor">
+          <CommentsComposer
+            submitAddComment={submitAddComment}
+            thread={commentOrThread}
+            placeholder="Reply to comment..."
+          />
+        </div>
+      </li>
+    );
+  };
+  return (
+    <CommentsPanelListComment
+      key={id}
+      comment={commentOrThread}
+      deleteComment={deleteCommentOrThread}
+    />
+  );
+};
+
 const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef, submitAddComment, markNodeMap }: {
   activeIDs: string[];
   comments: Comments;
@@ -399,10 +508,7 @@ const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef
     thread?: Thread,
   ) => void;
 }) => {
-  const [editor] = useLexicalComposerContext();
   const [counter, setCounter] = useState(0);
-  // const [modal, showModal] = useModal();
-  const [isDeletingThread, setIsDeletingThread] = useState(true);
 
   useEffect(() => {
     // Used to keep the time stamp up to date
@@ -413,103 +519,7 @@ const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef
 
   return (
     <ul className="CommentPlugin_CommentsPanel_List" ref={listRef}>
-      {comments.map((commentOrThread) => {
-        const id = commentOrThread.id;
-        if (commentOrThread.type === 'thread') {
-          const handleClickThread = () => {
-            const markNodeKeys = markNodeMap.get(id);
-            if (
-              markNodeKeys !== undefined &&
-              (activeIDs === null || activeIDs.indexOf(id) === -1)
-            ) {
-              const activeElement = document.activeElement;
-              // Move selection to the start of the mark, so that we
-              // update the UI with the selected thread.
-              editor.update(
-                () => {
-                  const markNodeKey = Array.from(markNodeKeys)[0];
-                  const markNode = $getNodeByKey<MarkNode>(markNodeKey);
-                  if ($isMarkNode(markNode)) {
-                    markNode.selectStart();
-                  }
-                },
-                {
-                  onUpdate() {
-                    // Restore selection to the previous element
-                    if (activeElement !== null) {
-                      (activeElement as HTMLElement).focus();
-                    }
-                  },
-                },
-              );
-            }
-          };
-
-          return (
-            // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-            <li un-bg={`${activeIDs.includes(id) ? 'zinc-1' : ''}`} un-border-l={`${activeIDs.includes(id) ? 'solid zinc-2 15' : ''}`}
-              key={id}
-              onClick={handleClickThread}
-              className={`CommentPlugin_CommentsPanel_List_Thread ${markNodeMap.has(id) ? 'interactive' : ''
-                } ${activeIDs.indexOf(id) === -1 ? '' : 'active'}`}>
-              {
-                isDeletingThread && <div un-bg='zinc-1' un-border='rounded' >
-                  <h1 un-text='center' un-font='bold' un-my='1' >Confirm to delete thread</h1>
-                  <div un-flex='~' un-mx='2' >
-                    <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-4' className='[&:hover>span]:text-white' un-py='1'
-                      onClick={() => deleteCommentOrThread(commentOrThread)} >
-                      <span className="i-bi:trash3" un-text='xl red-4' />
-                    </button>
-                    <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:blue-4' className='[&:hover>span]:text-white' un-py='1'
-                      onClick={() => setIsDeletingThread(false)} >
-                      <span className="i-material-symbols-light:close" un-text='xl blue-4' />
-                    </button>
-                  </div>
-                </div>
-              }
-              <div un-position='relative'
-                className="CommentPlugin_CommentsPanel_List_Thread_QuoteBox [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100">
-                <blockquote un-p='2' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Thread_Quote">
-                  {'> '} <span un-bg='yellow-2' >{commentOrThread.quote}</span>
-                </blockquote>
-                {
-                  !isDeletingThread &&
-                  <button un-position='absolute' un-right='1' un-top='1'
-                    onClick={() => setIsDeletingThread(true)}
-
-                    className="CommentPlugin_CommentsPanel_List_DeleteButton">
-                    <span className="i-bi:trash3" un-text='hover:orange-6' />
-                  </button>
-                }
-              </div>
-              <ul className="CommentPlugin_CommentsPanel_List_Thread_Comments">
-                {commentOrThread.comments.map((comment) => (
-                  <CommentsPanelListComment
-                    key={comment.id}
-                    comment={comment}
-                    deleteComment={deleteCommentOrThread}
-                    thread={commentOrThread}
-                  />
-                ))}
-              </ul>
-              <div un-position='relative' className="CommentPlugin_CommentsPanel_List_Thread_Editor">
-                <CommentsComposer
-                  submitAddComment={submitAddComment}
-                  thread={commentOrThread}
-                  placeholder="Reply to comment..."
-                />
-              </div>
-            </li>
-          );
-        };
-        return (
-          <CommentsPanelListComment
-            key={id}
-            comment={commentOrThread}
-            deleteComment={deleteCommentOrThread}
-          />
-        );
-      })}
+      {comments.map(item => <ThreadOrComment key={item.id} commentOrThread={item} markNodeMap={markNodeMap} deleteCommentOrThread={deleteCommentOrThread} submitAddComment={submitAddComment} isActive={activeIDs.includes(item.id)} />)}
     </ul >
   );
 };

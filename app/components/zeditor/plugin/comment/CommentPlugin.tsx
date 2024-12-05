@@ -433,7 +433,7 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
       <li un-bg={`${isActive ? 'zinc-1' : ''}`} un-border-l={`${isActive ? 'solid zinc-2 15' : ''}`}
         key={id}
         onClick={handleClickThread}>
-        <div un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingThread ? 'inherit' : '0'}`} un-opacity={`${isDeletingThread ? '100' : '0'}`} un-transition='all' un-duration='500' >
+        <div un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingThread ? '14' : '0'}`} un-opacity={`${isDeletingThread ? '100' : '0'}`} un-transition='all' un-duration='500' >
           <h1 un-text='center' un-font='bold' un-my='1' >Confirm to delete thread</h1>
           <div un-flex='~' un-mx='2' >
             <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-4' className='[&:hover>span]:text-white' un-py='1'

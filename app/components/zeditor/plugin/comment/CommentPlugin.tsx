@@ -92,7 +92,7 @@ function PlainTextEditor({ autoFocus, onEscape, onChange, editorRef, placeholder
       <div un-position='relative' un-m='1' >
         <PlainTextPlugin
           contentEditable={
-            <ContentEditable un-outline='none' un-border='2 gray-2 solid focus:gray-8' un-p='1' aria-placeholder={placeholder}
+            <ContentEditable un-outline='none' un-border='2 gray-2 solid rounded focus:blue-4' un-p='1' aria-placeholder={placeholder}
               placeholder={<div un-position='absolute' un-top='1' un-left='2' un-text='gray-4' un-pointer-events='none' >{placeholder}</div>}
               {...rest}
             />
@@ -273,7 +273,7 @@ const CommentsComposer = ({ submitAddComment, thread, placeholder }: {
   const [content, setContent] = useState('');
   const [canSubmit, setCanSubmit] = useState(false);
   const editorRef = useRef<LexicalEditor>(null);
-  const author = 'Playground User';
+  const author = 'User';
 
   const onChange = useOnChange(setContent, setCanSubmit);
 
@@ -292,14 +292,13 @@ const CommentsComposer = ({ submitAddComment, thread, placeholder }: {
       <PlainTextEditor
         className="CommentPlugin_CommentsPanel_Editor"
         autoFocus={false}
-        onEscape={() => {
-          return true;
-        }}
+        onEscape={() => true}
         onChange={onChange}
         editorRef={editorRef}
         placeholder={placeholder}
       />
-      <button un-position='absolute' un-top='1' un-right='2' un-cursor={`${canSubmit ? 'pointer' : 'not-allowed'}`} un-text={`${canSubmit ? 'hover:blue-4' : ''}`}
+      <button un-position='absolute' un-top='1' un-right='2' un-cursor={`${canSubmit ? 'pointer' : 'not-allowed'}`} un-text={`${canSubmit ? 'hover:blue-4' : ''} focus:blue-4`}
+        un-outline='none'
         className="CommentPlugin_CommentsPanel_SendButton"
         onClick={submitComment}
         disabled={!canSubmit}>
@@ -313,7 +312,6 @@ const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
   comment: Comment;
   deleteComment: (
     commentOrThread: Comment | Thread,
-    // eslint-disable-next-line no-shadow
     thread?: Thread,
   ) => void;
   thread?: Thread;
@@ -321,16 +319,14 @@ const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
   const [isDeletingComment, setIsDeletingComment] = useState(false);
 
   return (
-    <li un-position='relative' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Comment [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100" un-border={`${isDeletingComment && '2 solid red-4 rounded'}`} >
+    <li un-position='relative' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Comment [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100" un-border={`${isDeletingComment && '2 solid red-4 rounded'}`} un-border-l={`${!isDeletingComment && '4 solid zinc-4'}`} un-ml='4' un-grid='~' >
       <div un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingComment ? '14' : '0'}`} un-opacity={`${isDeletingComment ? '100' : '0'}`} un-transition='all' un-duration='500' >
         <h1 un-text='center' un-font='bold' un-my='1' >Delete Comment</h1>
         <div un-flex='~' un-mx='2' >
           <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-4' className='[&:hover>span]:text-white' un-py='1'
             onClick={() => {
-              {
-                deleteComment(comment, thread);
-                setIsDeletingComment(false);
-              }
+              deleteComment(comment, thread);
+              setIsDeletingComment(false);
             }} >
             <span className="i-bi:trash3" un-text='xl red-4' />
           </button>
@@ -429,13 +425,12 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
             !isDeletingThread &&
             <button un-position='absolute' un-right='1' un-top='1'
               onClick={() => setIsDeletingThread(true)}
-
               className="CommentPlugin_CommentsPanel_List_DeleteButton">
               <span className="i-bi:trash3" un-text='hover:orange-6' />
             </button>
           }
         </div>
-        <ul className="CommentPlugin_CommentsPanel_List_Thread_Comments">
+        <ul className="[&>li:first-child]:(border-l-0 ml-2) CommentPlugin_CommentsPanel_List_Thread_Comments">
           {commentOrThread.comments.map((comment) => (
             <CommentsPanelListComment
               key={comment.id}

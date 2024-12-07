@@ -18,6 +18,7 @@ import { atom, useAtom } from 'jotai';
 import { $getNodeByKey, $getRoot, $getSelection, $isRangeSelection, $isTextNode, CLEAR_EDITOR_COMMAND, COMMAND_PRIORITY_EDITOR, createCommand, EditorState, KEY_ESCAPE_COMMAND, LexicalCommand, LexicalEditor, NodeKey, RangeSelection } from 'lexical';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useEscape } from '~/components/util/useEscape';
 import { createDOMRange, createRectsFromDOMRange, getDOMSelection } from '../../util/utils';
 import { CommentStore, createComment, createThread, Thread, useCommentStore, type Comment, type Comments } from './Comment';
 
@@ -317,10 +318,13 @@ const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
   thread?: Thread;
 }) => {
   const [isDeletingComment, setIsDeletingComment] = useState(false);
+  const deleteRef = useRef<HTMLDivElement>(null);
+  useEscape(deleteRef, () => setIsDeletingComment(false));
 
   return (
-    <li un-position='relative' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Comment [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100" un-border={`${isDeletingComment && '2 solid red-4 rounded'}`} un-border-l={`${!isDeletingComment && '4 solid zinc-4'}`} un-ml='4' un-grid='~' >
-      <div un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingComment ? '14' : '0'}`} un-opacity={`${isDeletingComment ? '100' : '0'}`} un-transition='all' un-duration='500' >
+    <li un-position='relative' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Comment [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100" un-border={`${isDeletingComment && '2! solid red-4 rounded'}`} un-border-l={`${!isDeletingComment ? '4 solid zinc-4' : ''}`} un-ml='4' un-grid='~' >
+      <div ref={deleteRef} un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingComment ? '14' : '0'}`} un-opacity={`${isDeletingComment ? '100' : '0'}`} un-transition='all' un-duration='500'
+        un-pointer-events={`${!isDeletingComment && 'none'}`}>
         <h1 un-text='center' un-font='bold' un-my='1' >Delete Comment</h1>
         <div un-flex='~' un-mx='2' >
           <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-4' className='[&:hover>span]:text-white' un-py='1'
@@ -370,6 +374,8 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
 }) => {
   const [editor] = useLexicalComposerContext();
   const [isDeletingThread, setIsDeletingThread] = useState(false);
+  const deleteRef = useRef<HTMLDivElement>(null);
+  useEscape(deleteRef, () => setIsDeletingThread(false));
   const id = commentOrThread.id;
 
   if (commentOrThread.type === 'thread') {
@@ -403,7 +409,8 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
       <li un-bg={`${isActive ? 'zinc-1' : ''}`} un-border-l={`${isActive && !isDeletingThread ? 'solid zinc-2 15' : ''}`} un-border={`${isDeletingThread && '2 solid red-4 rounded'}`}
         key={id}
         onClick={handleClickThread}>
-        <div un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingThread ? '14' : '0'}`} un-opacity={`${isDeletingThread ? '100' : '0'}`} un-transition='all' un-duration='500' >
+        <div ref={deleteRef} un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingThread ? '14' : '0'}`} un-opacity={`${isDeletingThread ? '100' : '0'}`} un-transition='all' un-duration='500'
+          un-pointer-events={`${!isDeletingThread && 'none'}`} >
           <h1 un-text='center' un-font='bold' un-my='1' >Delete Thread?</h1>
           <div un-flex='~' un-mx='2' >
             <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-4' className='[&:hover>span]:text-white' un-py='1'

@@ -18,7 +18,7 @@ import { atom, useAtom } from 'jotai';
 import { $getNodeByKey, $getRoot, $getSelection, $isRangeSelection, $isTextNode, CLEAR_EDITOR_COMMAND, COMMAND_PRIORITY_EDITOR, createCommand, EditorState, KEY_ESCAPE_COMMAND, LexicalCommand, LexicalEditor, NodeKey, RangeSelection } from 'lexical';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useEscape } from '~/components/util/useEscape';
+import { useToggle } from '~/components/util/useToggle';
 import { createDOMRange, createRectsFromDOMRange, getDOMSelection } from '../../util/utils';
 import { CommentStore, createComment, createThread, Thread, useCommentStore, type Comment, type Comments } from './Comment';
 
@@ -291,7 +291,6 @@ const CommentsComposer = ({ submitAddComment, thread, placeholder }: {
   return (
     <>
       <PlainTextEditor
-        className="CommentPlugin_CommentsPanel_Editor"
         autoFocus={false}
         onEscape={() => true}
         onChange={onChange}
@@ -300,7 +299,6 @@ const CommentsComposer = ({ submitAddComment, thread, placeholder }: {
       />
       <button un-position='absolute' un-top='1' un-right='2' un-cursor={`${canSubmit ? 'pointer' : 'not-allowed'}`} un-text={`${canSubmit ? 'hover:blue-4' : ''} focus:blue-4`}
         un-outline='none'
-        className="CommentPlugin_CommentsPanel_SendButton"
         onClick={submitComment}
         disabled={!canSubmit}>
         <span className="i-bi:send" un-text='2xl' />
@@ -317,13 +315,11 @@ const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
   ) => void;
   thread?: Thread;
 }) => {
-  const [isDeletingComment, setIsDeletingComment] = useState(false);
-  const deleteRef = useRef<HTMLDivElement>(null);
-  useEscape(deleteRef, () => setIsDeletingComment(false));
+  const { toggle: isDeletingComment, setToggle: setIsDeletingComment, containerRef } = useToggle();
 
   return (
-    <li un-position='relative' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Comment [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100" un-border={`${isDeletingComment && '2! solid red-4 rounded'}`} un-border-l={`${!isDeletingComment ? '4 solid zinc-4' : ''}`} un-ml='4' un-grid='~' >
-      <div ref={deleteRef} un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingComment ? '14' : '0'}`} un-opacity={`${isDeletingComment ? '100' : '0'}`} un-transition='all' un-duration='500'
+    <li un-position='relative' un-cursor='pointer' className="[&>button>span]:opacity-0 [&:hover>button>span]:opacity-100" un-border={`${isDeletingComment && '2! solid red-4 rounded'}`} un-border-l={`${!isDeletingComment ? '4 solid zinc-4' : ''}`} un-ml='4' un-grid='~' >
+      <div ref={containerRef} un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingComment ? '14' : '0'}`} un-opacity={`${isDeletingComment ? '100' : '0'}`} un-transition='all' un-duration='500'
         un-pointer-events={`${!isDeletingComment && 'none'}`}>
         <h1 un-text='center' un-font='bold' un-my='1' >Delete Comment</h1>
         <div un-flex='~' un-mx='2' >
@@ -340,20 +336,17 @@ const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
           </button>
         </div>
       </div>
-      <div className="CommentPlugin_CommentsPanel_List_Details">
+      <div>
         <span un-font='bold' un-p='1'>{comment.author}</span>
-        <span un-text='gray-4' className="CommentPlugin_CommentsPanel_List_Comment_Time"> · {dayjs(comment.timeStamp).fromNow()}</span>
+        <span un-text='gray-4' > · {dayjs(comment.timeStamp).fromNow()}</span>
       </div>
       <p un-px='2' un-text={`${comment.deleted ? 'gray-4' : 'gray-7'}`}>
         {comment.content}
       </p>
-      {!comment.deleted && !isDeletingComment && (
-        <button un-position='absolute' un-right='1' un-top='1'
-          onClick={() => setIsDeletingComment(true)}
-          className="CommentPlugin_CommentsPanel_List_DeleteButton">
-          <span className="i-bi:trash3" un-text='hover:orange-6' />
-        </button>
-      )}
+      <button un-position='absolute' un-right='1' un-top='1' un-pointer-events={`${(comment.deleted || isDeletingComment) && 'none'}`} un-opacity={`${comment.deleted || isDeletingComment ? '0' : '100'}`}
+        onClick={() => setIsDeletingComment(true)}>
+        <span className="i-bi:trash3" un-text='hover:orange-6' />
+      </button>
     </li>
   );
 };
@@ -373,9 +366,7 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
   ) => void;
 }) => {
   const [editor] = useLexicalComposerContext();
-  const [isDeletingThread, setIsDeletingThread] = useState(false);
-  const deleteRef = useRef<HTMLDivElement>(null);
-  useEscape(deleteRef, () => setIsDeletingThread(false));
+  const { toggle: isDeletingThread, setToggle: setIsDeletingThread, containerRef } = useToggle();
   const id = commentOrThread.id;
 
   if (commentOrThread.type === 'thread') {
@@ -409,7 +400,7 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
       <li un-bg={`${isActive ? 'zinc-1' : ''}`} un-border-l={`${isActive && !isDeletingThread ? 'solid zinc-2 15' : ''}`} un-border={`${isDeletingThread && '2 solid red-4 rounded'}`}
         key={id}
         onClick={handleClickThread}>
-        <div ref={deleteRef} un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingThread ? '14' : '0'}`} un-opacity={`${isDeletingThread ? '100' : '0'}`} un-transition='all' un-duration='500'
+        <div ref={containerRef} un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingThread ? '14' : '0'}`} un-opacity={`${isDeletingThread ? '100' : '0'}`} un-transition='all' un-duration='500'
           un-pointer-events={`${!isDeletingThread && 'none'}`} >
           <h1 un-text='center' un-font='bold' un-my='1' >Delete Thread?</h1>
           <div un-flex='~' un-mx='2' >
@@ -424,20 +415,20 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
           </div>
         </div>
         <div un-position='relative'
-          className="CommentPlugin_CommentsPanel_List_Thread_QuoteBox [&>button>span]:opacity-0 [&:hover>button>span]:opacity-100">
-          <blockquote un-p='2' un-cursor='pointer' className="CommentPlugin_CommentsPanel_List_Thread_Quote">
+          className="[&>button>span]:opacity-0 [&:hover>button>span]:opacity-100">
+          <blockquote un-p='2' un-cursor='pointer' >
             {'> '} <span un-bg='yellow-2' >{commentOrThread.quote}</span>
           </blockquote>
-          {
+          <button un-position='absolute' un-right='1' un-top='1'
+            un-pointer-events={`${isDeletingThread && 'none'}`} un-opacity={`${isDeletingThread ? '0' : '100'}`}
+            onClick={() => setIsDeletingThread(true)}>
+            <span className="i-bi:trash3" un-text='hover:orange-6' />
+          </button>
+          {/* {
             !isDeletingThread &&
-            <button un-position='absolute' un-right='1' un-top='1'
-              onClick={() => setIsDeletingThread(true)}
-              className="CommentPlugin_CommentsPanel_List_DeleteButton">
-              <span className="i-bi:trash3" un-text='hover:orange-6' />
-            </button>
-          }
+          } */}
         </div>
-        <ul className="[&>li:first-child]:(border-l-0 ml-2) CommentPlugin_CommentsPanel_List_Thread_Comments">
+        <ul className="[&>li:first-child]:(border-l-0 ml-2)">
           {commentOrThread.comments.map((comment) => (
             <CommentsPanelListComment
               key={comment.id}
@@ -447,7 +438,7 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
             />
           ))}
         </ul>
-        <div un-position='relative' className="CommentPlugin_CommentsPanel_List_Thread_Editor">
+        <div un-position='relative'>
           <CommentsComposer
             submitAddComment={submitAddComment}
             thread={commentOrThread}
@@ -490,7 +481,7 @@ const CommentsPanelList = ({ activeIDs, comments, deleteCommentOrThread, listRef
   }, [counter]);
 
   return (
-    <ul className="CommentPlugin_CommentsPanel_List" ref={listRef}>
+    <ul ref={listRef}>
       {comments.map(item => <ThreadOrComment key={item.id} commentOrThread={item} markNodeMap={markNodeMap} deleteCommentOrThread={deleteCommentOrThread} submitAddComment={submitAddComment} isActive={activeIDs.includes(item.id)} />)}
     </ul >
   );
@@ -514,7 +505,7 @@ const CommentsPanel = ({ activeIDs, deleteCommentOrThread, comments, submitAddCo
   const isEmpty = comments.length === 0;
 
   return (
-    <div className="CommentPlugin_CommentsPanel">
+    <div>
       {isEmpty ? (
         <div un-text='center gray-4' un-p='2'>No Comments</div>
       ) : (

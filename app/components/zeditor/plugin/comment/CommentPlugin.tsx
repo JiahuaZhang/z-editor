@@ -67,7 +67,7 @@ const AddCommentBox = ({ anchorKey, editor, onAddComment }: {
 const EscapeHandlerPlugin = ({ onEscape, }: { onEscape: (e: KeyboardEvent) => boolean; }) => {
   const [editor] = useLexicalComposerContext();
 
-  useEffect(() => editor.registerCommand(KEY_ESCAPE_COMMAND, (event: KeyboardEvent) => onEscape(event), 2,), [editor, onEscape]);
+  useEffect(() => editor.registerCommand(KEY_ESCAPE_COMMAND, (event: KeyboardEvent) => onEscape(event), 2), [editor, onEscape]);
 
   return null;
 };
@@ -150,46 +150,45 @@ const CommentInputBox = ({ editor, cancelAddComment, submitAddComment }: {
   const updateLocation = useCallback(() => {
     editor.getEditorState().read(() => {
       const selection = $getSelection();
+      if (!$isRangeSelection(selection)) return;
 
-      if ($isRangeSelection(selection)) {
-        selectionRef.current = selection.clone();
-        const anchor = selection.anchor;
-        const focus = selection.focus;
-        const range = createDOMRange(editor, anchor.getNode(), anchor.offset, focus.getNode(), focus.offset);
-        const boxElem = boxRef.current;
-        if (range !== null && boxElem !== null) {
-          const { left, bottom, width } = range.getBoundingClientRect();
-          const selectionRects = createRectsFromDOMRange(editor, range);
-          let correctedLeft = selectionRects.length === 1 ? left + width / 2 - 125 : left - 125;
-          if (correctedLeft < 10) {
-            correctedLeft = 10;
-          }
-          boxElem.style.left = `${correctedLeft}px`;
-          boxElem.style.top = `${bottom + 20 + (window.pageYOffset || document.documentElement.scrollTop)}px`;
-          const selectionRectsLength = selectionRects.length;
-          const { container } = selectionState;
-          const elements: Array<HTMLSpanElement> = selectionState.elements;
-          const elementsLength = elements.length;
+      selectionRef.current = selection.clone();
+      const anchor = selection.anchor;
+      const focus = selection.focus;
+      const range = createDOMRange(editor, anchor.getNode(), anchor.offset, focus.getNode(), focus.offset);
+      const boxElem = boxRef.current;
+      if (range === null || boxElem === null) return;
 
-          for (let i = 0; i < selectionRectsLength; i++) {
-            const selectionRect = selectionRects[i];
-            let elem: HTMLSpanElement = elements[i];
-            if (elem === undefined) {
-              elem = document.createElement('span');
-              elements[i] = elem;
-              container.appendChild(elem);
-            }
-            const color = '255, 212, 0';
-            const style = `position:absolute;top:${selectionRect.top + (window.pageYOffset || document.documentElement.scrollTop)}px;left:${selectionRect.left}px;height:
-            ${selectionRect.height}px;width:${selectionRect.width}px;background-color:rgba(${color}, 0.3);pointer-events:none;z-index:5;`;
-            elem.style.cssText = style;
-          }
-          for (let i = elementsLength - 1; i >= selectionRectsLength; i--) {
-            const elem = elements[i];
-            container.removeChild(elem);
-            elements.pop();
-          }
+      const { left, bottom, width } = range.getBoundingClientRect();
+      const selectionRects = createRectsFromDOMRange(editor, range);
+      let correctedLeft = selectionRects.length === 1 ? left + width / 2 - 125 : left - 125;
+      if (correctedLeft < 10) {
+        correctedLeft = 10;
+      }
+      boxElem.style.left = `${correctedLeft}px`;
+      boxElem.style.top = `${bottom + 20 + (window.scrollY || document.documentElement.scrollTop)}px`;
+      const selectionRectsLength = selectionRects.length;
+      const { container } = selectionState;
+      const elements: HTMLSpanElement[] = selectionState.elements;
+      const elementsLength = elements.length;
+
+      for (let i = 0; i < selectionRectsLength; i++) {
+        const selectionRect = selectionRects[i];
+        let elem: HTMLSpanElement = elements[i];
+        if (elem === undefined) {
+          elem = document.createElement('span');
+          elements[i] = elem;
+          container.appendChild(elem);
         }
+        const color = '255, 212, 0';
+        const style = `position:absolute;top:${selectionRect.top + (window.scrollY || document.documentElement.scrollTop)}px;left:${selectionRect.left}px;height:
+        ${selectionRect.height}px;width:${selectionRect.width}px;background-color:rgba(${color}, 0.3);pointer-events:none;z-index:5;`;
+        elem.style.cssText = style;
+      }
+      for (let i = elementsLength - 1; i >= selectionRectsLength; i--) {
+        const elem = elements[i];
+        container.removeChild(elem);
+        elements.pop();
       }
     });
   }, [editor, selectionState]);
@@ -209,9 +208,7 @@ const CommentInputBox = ({ editor, cancelAddComment, submitAddComment }: {
   useEffect(() => {
     window.addEventListener('resize', updateLocation);
 
-    return () => {
-      window.removeEventListener('resize', updateLocation);
-    };
+    return () => window.removeEventListener('resize', updateLocation);
   }, [updateLocation]);
 
   const onEscape = (event: KeyboardEvent): boolean => {
@@ -221,22 +218,17 @@ const CommentInputBox = ({ editor, cancelAddComment, submitAddComment }: {
   };
 
   const submitComment = () => {
-    if (canSubmit) {
-      let quote = editor.getEditorState().read(() => {
-        const selection = selectionRef.current;
-        return selection ? selection.getTextContent() : '';
-      });
-      if (quote.length > 100) {
-        quote = quote.slice(0, 99) + '…';
-      }
-      submitAddComment(
-        createThread(quote, [createComment(content, author)]),
-        true,
-        undefined,
-        selectionRef.current,
-      );
-      selectionRef.current = null;
+    if (!canSubmit) return;
+
+    let quote = editor.getEditorState().read(() => {
+      const selection = selectionRef.current;
+      return selection ? selection.getTextContent() : '';
+    });
+    if (quote.length > 100) {
+      quote = quote.slice(0, 99) + '…';
     }
+    submitAddComment(createThread(quote, [createComment(content, author)]), true, undefined, selectionRef.current);
+    selectionRef.current = null;
   };
 
   const onChange = useOnChange(setContent, setCanSubmit);
@@ -522,7 +514,7 @@ const CommentsPanel = ({ activeIDs, deleteCommentOrThread, comments, submitAddCo
   );
 };
 
-const showCommentSidebarAtom = atom(true);
+const showCommentSidebarAtom = atom(false);
 
 export const CommentPlugin = ({ ...rest }: {}) => {
   const [editor] = useLexicalComposerContext();
@@ -534,7 +526,6 @@ export const CommentPlugin = ({ ...rest }: {}) => {
   const [activeAnchorKey, setActiveAnchorKey] = useState<NodeKey | null>();
   const [activeIDs, setActiveIDs] = useState<Array<string>>([]);
   const [showCommentInput, setShowCommentInput] = useState(false);
-  const [showComments, setShowComments] = useState(false);
   const [showSidebar, setShowSidebar] = useAtom(showCommentSidebarAtom);
 
   const cancelAddComment = useCallback(() => {
@@ -551,13 +542,9 @@ export const CommentPlugin = ({ ...rest }: {}) => {
   const deleteCommentOrThread = useCallback(
     (comment: Comment | Thread, thread?: Thread) => {
       if (comment.type === 'comment') {
-        const deletionInfo = commentStore.deleteCommentOrThread(
-          comment,
-          thread,
-        );
-        if (!deletionInfo) {
-          return;
-        }
+        const deletionInfo = commentStore.deleteCommentOrThread(comment, thread);
+        if (!deletionInfo) return;
+
         const { markedComment, index } = deletionInfo;
         commentStore.addComment(markedComment, thread, index);
       } else {
@@ -611,27 +598,17 @@ export const CommentPlugin = ({ ...rest }: {}) => {
   );
 
   useEffect(() => {
-    const changedElems: Array<HTMLElement> = [];
-    for (let i = 0; i < activeIDs.length; i++) {
-      const id = activeIDs[i];
-      const keys = markNodeMap.get(id);
-      if (keys !== undefined) {
-        for (const key of keys) {
-          const elem = editor.getElementByKey(key);
-          if (elem !== null) {
-            elem.classList.add('selected');
-            changedElems.push(elem);
-            setShowComments(true);
-          }
-        }
-      }
-    }
-    return () => {
-      for (let i = 0; i < changedElems.length; i++) {
-        const changedElem = changedElems[i];
-        changedElem.classList.remove('selected');
-      }
-    };
+    const changedElems = activeIDs.map(id => markNodeMap.get(id))
+      .filter(keys => keys !== undefined)
+      .flatMap(keys => [...keys])
+      .map(key => editor.getElementByKey(key))
+      .filter(elem => elem !== null)
+      .map(elem => {
+        elem.classList.add('bg-yellow-3');
+        setShowSidebar(true);
+        return elem;
+      });
+    return () => changedElems.forEach(elem => elem.classList.remove('bg-yellow-3'));
   }, [activeIDs, editor, markNodeMap]);
 
   useEffect(() => {
@@ -641,15 +618,10 @@ export const CommentPlugin = ({ ...rest }: {}) => {
       registerNestedElementResolver<MarkNode>(
         editor,
         MarkNode,
-        (from: MarkNode) => {
-          return $createMarkNode(from.getIDs());
-        },
+        (from: MarkNode) => $createMarkNode(from.getIDs()),
         (from: MarkNode, to: MarkNode) => {
           // Merge the IDs
-          const ids = from.getIDs();
-          ids.forEach((id) => {
-            to.addID(id);
-          });
+          from.getIDs().forEach((id) => to.addID(id));
         },
       ),
       editor.registerMutationListener(
@@ -703,10 +675,7 @@ export const CommentPlugin = ({ ...rest }: {}) => {
             const anchorNode = selection.anchor.getNode();
 
             if ($isTextNode(anchorNode)) {
-              const commentIDs = $getMarkIDs(
-                anchorNode,
-                selection.anchor.offset,
-              );
+              const commentIDs = $getMarkIDs(anchorNode, selection.anchor.offset);
               if (commentIDs !== null) {
                 setActiveIDs(commentIDs);
                 hasActiveIds = true;
@@ -745,22 +714,21 @@ export const CommentPlugin = ({ ...rest }: {}) => {
     );
   }, [editor, markNodeMap]);
 
-  const onAddComment = () => {
-    editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined);
-  };
+  const onAddComment = () => editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined);
 
   return (
     <>
-      {showCommentInput
-        && createPortal(
+      {
+        showCommentInput && createPortal(
           <CommentInputBox
             editor={editor}
             cancelAddComment={cancelAddComment}
             submitAddComment={submitAddComment}
           />,
-          document.body,
-        )}
-      {activeAnchorKey
+          document.body)
+      }
+      {
+        activeAnchorKey
         && !showCommentInput
         && createPortal(
           <AddCommentBox
@@ -768,8 +736,8 @@ export const CommentPlugin = ({ ...rest }: {}) => {
             editor={editor}
             onAddComment={onAddComment}
           />,
-          document.body,
-        )}
+          document.body)
+      }
       {
         !showSidebar && <button un-position='absolute' un-right='0.2' un-top='1'
           un-border='2 rounded solid gray-3 hover:blue-4' un-z='10' un-flex='~'
@@ -780,15 +748,6 @@ export const CommentPlugin = ({ ...rest }: {}) => {
           </Tooltip>
         </button>
       }
-      {/* {createPortal(
-        <button
-          className={`CommentPlugin_ShowCommentsButton ${showComments ? 'active' : ''}`}
-          onClick={() => setShowComments(!showComments)}
-          title={showComments ? 'Hide Comments' : 'Show Comments'}>
-          <i className="comments" /> show/hide comment
-        </button>,
-        document.body,
-      )} */}
       <aside un-w={`${showSidebar ? '80' : '0'}`} un-transition='all' un-duration='500' un-flex='1' {...rest} >
         {
           showSidebar && <>
@@ -809,17 +768,6 @@ export const CommentPlugin = ({ ...rest }: {}) => {
           </>
         }
       </aside>
-      {/* {showComments &&
-        createPortal(
-          <CommentsPanel
-            comments={comments}
-            submitAddComment={submitAddComment}
-            deleteCommentOrThread={deleteCommentOrThread}
-            activeIDs={activeIDs}
-            markNodeMap={markNodeMap}
-          />,
-          document.body,
-        )} */}
     </>
   );
 };

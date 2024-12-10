@@ -5,7 +5,7 @@ export const useToggle = () => {
   const containerRef = useRef(null);
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
-    if (!(containerRef.current! as HTMLElement).contains(event.target as Node)) {
+    if (containerRef.current && !(containerRef.current! as HTMLElement).contains(event.target as Node)) {
       setToggle(false);
     }
   }, []);

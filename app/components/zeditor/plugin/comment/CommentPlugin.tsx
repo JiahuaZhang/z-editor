@@ -516,7 +516,7 @@ const CommentsPanel = ({ activeIDs, deleteCommentOrThread, comments, submitAddCo
 
 const showCommentSidebarAtom = atom(false);
 
-export const CommentPlugin = ({ ...rest }: {}) => {
+export const CommentPlugin = ({ onChange = () => {}, ...rest }: { onChange?: (comments: Comments) => void; }) => {
   const [editor] = useLexicalComposerContext();
   const commentStore = useMemo(() => new CommentStore(editor), [editor]);
   const comments = useCommentStore(commentStore);
@@ -527,6 +527,8 @@ export const CommentPlugin = ({ ...rest }: {}) => {
   const [activeIDs, setActiveIDs] = useState<Array<string>>([]);
   const [showCommentInput, setShowCommentInput] = useState(false);
   const [showSidebar, setShowSidebar] = useAtom(showCommentSidebarAtom);
+
+  useEffect(() => onChange(comments), [comments, onChange]);
 
   const cancelAddComment = useCallback(() => {
     editor.update(() => {

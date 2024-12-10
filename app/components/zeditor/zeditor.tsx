@@ -41,7 +41,9 @@ const Plugins = () => {
         }
         ErrorBoundary={LexicalErrorBoundary}
       />
-      <Plugin.Comment />
+      <Plugin.Comment onChange={comments => {
+        // persist comments
+      }} />
     </div >
     <HistoryPlugin />
     <AutoFocusPlugin />

@@ -7,6 +7,9 @@ import { InitialConfigType } from '@lexical/react/LexicalComposer';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
 import { $generateContent } from './init';
+import { CollapsibleContainerNode } from './plugin/collapsible/CollapsibleContainerNode';
+import { CollapsibleContentNode } from './plugin/collapsible/CollapsibleContentNode';
+import { CollapsibleTitleNode } from './plugin/collapsible/CollapsibleTitleNode';
 import { EmojiNode } from './plugin/emoji/EmojiNode';
 import { EquationNode } from './plugin/equation/EuqationNode';
 import { ExcalidrawNode } from './plugin/excalidraw/ExcalidrawNode';
@@ -100,10 +103,12 @@ export const initialConfig: InitialConfigType = {
     embedBlock: {
       base: '',
       focus: ''
-    }
+    },
+    details: 'border-1 border-rounded border-zinc-3 bg-zinc-50 position-relative p-1 [&[open]>summary:before]:(border-x-4 border-y-6 top-3 left-2.25 border-t-black border-l-transparent)',
+    summary: 'cursor-pointer list-none px-4 [&:before]:(absolute [content:""] left-2.5 border-transparent border-x-6 border-y-4 top-3 border-l-black)',
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode, HorizontalRuleNode, TweetNode, YouTubeNode, MarkNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode, HorizontalRuleNode, TweetNode, YouTubeNode, MarkNode, CollapsibleContainerNode, CollapsibleTitleNode, CollapsibleContentNode],
   editorState: $generateContent,
   // editable: false
 };

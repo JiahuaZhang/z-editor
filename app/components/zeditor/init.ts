@@ -14,6 +14,9 @@ import { $createEquationNode } from './plugin/equation/EuqationNode';
 import { $createHorizontalRuleNode } from './plugin/horizontal-rule/HorizontalRuleNode';
 import { $createTweetNode } from './plugin/twitter/TweetNode';
 import { $createYouTubeNode } from './plugin/youtube/YouTubeNode';
+import { $createCollapsibleContainerNode } from './plugin/collapsible/CollapsibleContainerNode';
+import { $createCollapsibleContentNode } from './plugin/collapsible/CollapsibleContentNode';
+import { $createCollapsibleTitleNode } from './plugin/collapsible/CollapsibleTitleNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -410,6 +413,20 @@ const $generateParagraph = () => {
   root.append(paragraph);
 };
 
+const $generateCollapsible = () => {
+  const root = $getRoot();
+  const container = $createCollapsibleContainerNode(true);
+  const title = $createCollapsibleTitleNode();
+  title.append($createTextNode('This is a collapsible title node'));
+  const content = $createCollapsibleContentNode();
+  const contentParagraph = $createParagraphNode();
+  contentParagraph.append($createTextNode('This is a collapsible content node'));
+  content.append(contentParagraph);
+  container.append(title);
+  container.append(content);
+  root.append(container);
+};
+
 export const $generateContent = () => {
   const root = $getRoot();
 
@@ -417,6 +434,7 @@ export const $generateContent = () => {
   const hr = $createHorizontalRuleNode();
   root.append(hr);
 
+  $generateCollapsible();
   $generateParagraph();
   // $generateListContent();
   // $generateCode();
@@ -432,8 +450,6 @@ export const $generateContent = () => {
   const quote = $createQuoteNode();
   quote.append($createTextNode('This is a quote node'));
   root.append(quote);
-
-
 
   const paragraph = $createParagraphNode();
   paragraph.append($createTextNode(''));

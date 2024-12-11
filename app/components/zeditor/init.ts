@@ -17,6 +17,7 @@ import { $createYouTubeNode } from './plugin/youtube/YouTubeNode';
 import { $createCollapsibleContainerNode } from './plugin/collapsible/CollapsibleContainerNode';
 import { $createCollapsibleContentNode } from './plugin/collapsible/CollapsibleContentNode';
 import { $createCollapsibleTitleNode } from './plugin/collapsible/CollapsibleTitleNode';
+import { $createPageBreakNode } from './plugin/page-break/PageBreakNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -427,6 +428,12 @@ const $generateCollapsible = () => {
   root.append(container);
 };
 
+const $generatePageBreak = () => {
+  const root = $getRoot();
+  const pageBreak = $createPageBreakNode();
+  root.append(pageBreak);
+};
+
 export const $generateContent = () => {
   const root = $getRoot();
 
@@ -435,6 +442,7 @@ export const $generateContent = () => {
   root.append(hr);
 
   $generateCollapsible();
+  $generatePageBreak();
   $generateParagraph();
   // $generateListContent();
   // $generateCode();

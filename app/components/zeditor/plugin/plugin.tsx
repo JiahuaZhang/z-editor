@@ -7,6 +7,7 @@ import { ExcalidrawPlugin } from './excalidraw/ExcalidrawPlugin';
 import { HashtagPlugin } from './hashtag/HashTagPlugin';
 import { ImagePlugin } from './image/ImagePlugin';
 import { InlineImagePlugin } from './inline-image/InlineImagePlugin';
+import { LayoutPlugin } from './layout/LayoutPlugin';
 import { FloatingLinkEditorPlugin } from './link/FloatingLinkEditorPlugin';
 import { TableCellResizerPlugin } from './table/TableCellResizer';
 import { TableHoverActionsPlugin } from './table/TableHoverActionsPlugin';
@@ -36,4 +37,5 @@ export namespace Plugin {
   export const Excalidraw = ExcalidrawPlugin;
   export const AutoComplete = AutocompletePlugin;
   export const Comment = CommentPlugin;
+  export const Layout = LayoutPlugin;
 }

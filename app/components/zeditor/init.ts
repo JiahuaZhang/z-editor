@@ -18,6 +18,8 @@ import { $createCollapsibleContainerNode } from './plugin/collapsible/Collapsibl
 import { $createCollapsibleContentNode } from './plugin/collapsible/CollapsibleContentNode';
 import { $createCollapsibleTitleNode } from './plugin/collapsible/CollapsibleTitleNode';
 import { $createPageBreakNode } from './plugin/page-break/PageBreakNode';
+import { $createLayoutContainerNode } from './plugin/layout/LayoutContainerNode';
+import { $createLayoutItemNode } from './plugin/layout/LayoutItemNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -434,6 +436,22 @@ const $generatePageBreak = () => {
   root.append(pageBreak);
 };
 
+const $generateLayout = () => {
+  const root = $getRoot();
+  const layout = $createLayoutContainerNode('1fr 1fr');
+  const item1 = $createLayoutItemNode();
+  const item2 = $createLayoutItemNode();
+  const paragraph1 = $createParagraphNode();
+  paragraph1.append($createTextNode('This is a layout node'));
+  item1.append(paragraph1);
+  const paragraph2 = $createParagraphNode();
+  paragraph2.append($createTextNode('This is a layout node'));
+  item2.append(paragraph2);
+  layout.append(item1);
+  layout.append(item2);
+  root.append(layout);
+};
+
 export const $generateContent = () => {
   const root = $getRoot();
 
@@ -444,6 +462,7 @@ export const $generateContent = () => {
   $generateCollapsible();
   $generatePageBreak();
   $generateParagraph();
+  $generateLayout();
   // $generateListContent();
   // $generateCode();
   // $generateTable();

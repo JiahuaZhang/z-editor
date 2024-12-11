@@ -64,6 +64,7 @@ const Plugins = () => {
     <Plugin.Emoji.Picker />
     <Plugin.Excalidraw />
     {/* <Plugin.AutoComplete /> */}
+    <Plugin.Layout />
 
     {/* <TreeView editor={editor} /> */}
   </>;

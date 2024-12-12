@@ -19,7 +19,10 @@ export const LayoutPlugin = () => {
 
     const $onEscape = (before: boolean) => {
       const selection = $getSelection();
-      if ($isRangeSelection(selection) && selection.isCollapsed() && selection.anchor.offset === 0) {
+      if (!$isRangeSelection(selection) || !selection.isCollapsed()) return false;
+
+      const node = getSelectedNode(selection);
+      if ((!before && node.getTextContentSize() === selection.anchor.offset) || (before && selection.anchor.offset === 0)) {
         const container = $findMatchingParent(selection.anchor.getNode(), $isLayoutContainerNode);
 
         if ($isLayoutContainerNode(container)) {

@@ -19,6 +19,7 @@ import { InlineImageNode } from './plugin/inline-image/InlineImageNode';
 import { LayoutContainerNode } from './plugin/layout/LayoutContainerNode';
 import { LayoutItemNode } from './plugin/layout/LayoutItemNode';
 import { PageBreakNode } from './plugin/page-break/PageBreakNode';
+import { SpecialTextNode } from './plugin/special/SpecialTextNode';
 import { StickyNode } from './plugin/sticky-note/StickNote';
 import { TweetNode } from './plugin/twitter/TweetNode';
 import { YouTubeNode } from './plugin/youtube/YouTubeNode';
@@ -110,10 +111,11 @@ export const initialConfig: InitialConfigType = {
     details: 'border-1 border-rounded border-zinc-3 bg-zinc-50 position-relative p-1 [&[open]>summary:before]:(border-x-4 border-y-6 top-3 left-2.25 border-t-black border-l-transparent)',
     summary: 'cursor-pointer list-none px-4 [&:before]:(absolute [content:""] left-2.5 border-transparent border-x-6 border-y-4 top-3 border-l-black)',
     layoutContainer: 'grid gap-2 my-1',
-    layoutItem: 'border-1 border-rounded border-dashed border-zinc-3'
+    layoutItem: 'border-1 border-rounded border-dashed border-zinc-3',
+    specialText: 'prose-rose prose'
   },
   onError: console.error,
-  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode, HorizontalRuleNode, TweetNode, YouTubeNode, MarkNode, CollapsibleContainerNode, CollapsibleTitleNode, CollapsibleContentNode, PageBreakNode, LayoutContainerNode, LayoutItemNode],
+  nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode, HorizontalRuleNode, TweetNode, YouTubeNode, MarkNode, CollapsibleContainerNode, CollapsibleTitleNode, CollapsibleContentNode, PageBreakNode, LayoutContainerNode, LayoutItemNode, SpecialTextNode],
   editorState: $generateContent,
   // editable: false
 };

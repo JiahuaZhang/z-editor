@@ -20,6 +20,7 @@ import { $createCollapsibleTitleNode } from './plugin/collapsible/CollapsibleTit
 import { $createPageBreakNode } from './plugin/page-break/PageBreakNode';
 import { $createLayoutContainerNode } from './plugin/layout/LayoutContainerNode';
 import { $createLayoutItemNode } from './plugin/layout/LayoutItemNode';
+import { $createSpecialTextNode } from './plugin/special/SpecialTextNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -470,6 +471,14 @@ const $generateLayout = () => {
   root.append(layout2);
 };
 
+const $generateSpecialText = () => {
+  const root = $getRoot();
+  const paragraph = $createParagraphNode();
+  const text = $createSpecialTextNode('[cool-name]');
+  paragraph.append(text);
+  root.append(paragraph);
+};
+
 export const $generateContent = () => {
   const root = $getRoot();
 
@@ -481,6 +490,7 @@ export const $generateContent = () => {
   $generatePageBreak();
   $generateParagraph();
   $generateLayout();
+  $generateSpecialText();
   // $generateListContent();
   // $generateCode();
   // $generateTable();

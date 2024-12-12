@@ -1,7 +1,8 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, $insertNodeToNearestRoot, mergeRegister } from '@lexical/utils';
-import { $createParagraphNode, $getNodeByKey, $getSelection, $isRangeSelection, COMMAND_PRIORITY_EDITOR, COMMAND_PRIORITY_LOW, createCommand, ElementNode, KEY_ARROW_DOWN_COMMAND, KEY_ARROW_LEFT_COMMAND, KEY_ARROW_RIGHT_COMMAND, KEY_ARROW_UP_COMMAND, LexicalCommand, LexicalNode, NodeKey } from 'lexical';
+import { $createParagraphNode, $getNodeByKey, $getSelection, $isRangeSelection, COMMAND_PRIORITY_EDITOR, COMMAND_PRIORITY_LOW, createCommand, ElementNode, KEY_ARROW_DOWN_COMMAND, KEY_ARROW_LEFT_COMMAND, KEY_ARROW_RIGHT_COMMAND, KEY_ARROW_UP_COMMAND, KEY_TAB_COMMAND, LexicalCommand, LexicalNode, NodeKey } from 'lexical';
 import { useEffect } from 'react';
+import { getSelectedNode } from '../../util/getSelectedNode';
 import { $createLayoutContainerNode, $isLayoutContainerNode, LayoutContainerNode } from './LayoutContainerNode';
 import { $createLayoutItemNode, $isLayoutItemNode, LayoutItemNode } from './LayoutItemNode';
 
@@ -123,7 +124,32 @@ export const LayoutPlugin = () => {
         },
         COMMAND_PRIORITY_EDITOR,
       ),
+      editor.registerCommand(KEY_TAB_COMMAND, (event) => {
+        const selection = $getSelection();
+        if (!$isRangeSelection(selection)) return false;
 
+        const node = getSelectedNode(selection);
+        const layoutItem = $findMatchingParent(node, $isLayoutItemNode);
+        if (layoutItem === null) return false;
+
+        event.preventDefault();
+        if (event.shiftKey) {
+          const prevSibling = layoutItem.getPreviousSibling();
+          if (prevSibling !== null) {
+            prevSibling.selectStart();
+          } else {
+            layoutItem.getParent<LayoutContainerNode>()?.getPreviousSibling()?.selectEnd();
+          }
+        } else {
+          const nextSibling = layoutItem.getNextSibling();
+          if (nextSibling !== null) {
+            nextSibling.selectStart();
+          } else {
+            layoutItem.getParent<LayoutContainerNode>()?.getNextSibling()?.selectStart();
+          }
+        }
+        return true;
+      }, COMMAND_PRIORITY_LOW),
       editor.registerNodeTransform(LayoutItemNode, (node) => {
         // Structure enforcing transformers for each node type. In case nesting structure is not
         // "Container > Item" it'll unwrap nodes and convert it back

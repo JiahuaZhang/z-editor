@@ -450,6 +450,24 @@ const $generateLayout = () => {
   layout.append(item1);
   layout.append(item2);
   root.append(layout);
+
+  const layout2 = $createLayoutContainerNode('1fr 1fr 1fr');
+  const item21 = $createLayoutItemNode();
+  const item22 = $createLayoutItemNode();
+  const item23 = $createLayoutItemNode();
+  const paragraph21 = $createParagraphNode();
+  paragraph21.append($createTextNode('This is a layout node'));
+  item21.append(paragraph21);
+  const paragraph22 = $createParagraphNode();
+  paragraph22.append($createTextNode('This is a layout node'));
+  item22.append(paragraph22);
+  const paragraph23 = $createParagraphNode();
+  paragraph23.append($createTextNode('This is a layout node'));
+  item23.append(paragraph23);
+  layout2.append(item21);
+  layout2.append(item22);
+  layout2.append(item23);
+  root.append(layout2);
 };
 
 export const $generateContent = () => {

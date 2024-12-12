@@ -9,6 +9,7 @@ import { ImagePlugin } from './image/ImagePlugin';
 import { InlineImagePlugin } from './inline-image/InlineImagePlugin';
 import { LayoutPlugin } from './layout/LayoutPlugin';
 import { FloatingLinkEditorPlugin } from './link/FloatingLinkEditorPlugin';
+import { SpecialTextPlugin } from './special/SpecialTextPlugin';
 import { TableCellResizerPlugin } from './table/TableCellResizer';
 import { TableHoverActionsPlugin } from './table/TableHoverActionsPlugin';
 import { ToolbarPlugin } from './toolbar/ToolbarPlugin';
@@ -38,4 +39,5 @@ export namespace Plugin {
   export const AutoComplete = AutocompletePlugin;
   export const Comment = CommentPlugin;
   export const Layout = LayoutPlugin;
+  export const SpecialText = SpecialTextPlugin;
 }

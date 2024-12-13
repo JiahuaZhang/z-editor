@@ -750,7 +750,7 @@ export const CommentPlugin = ({ onChange = () => {}, ...rest }: { onChange?: (co
           </Tooltip>
         </button>
       }
-      <aside un-w={`${showSidebar ? '80' : '0'}`} un-transition='all' un-duration='500' un-flex='1' {...rest} >
+      <aside un-w={`${showSidebar ? '80' : '0'}`} un-transition='all' un-duration='500' {...rest} >
         {
           showSidebar && <>
             <Tooltip title='Hide Comments'>

@@ -155,10 +155,7 @@ export const StickyComponent = ({
   const { historyState } = useSharedHistoryContext();
 
   return (
-    <div ref={stickyContainerRef}
-      un-w='72'
-      un-h='50'
-      un-position='absolute'
+    <div ref={stickyContainerRef} un-w='72' un-h='50' un-position='absolute' un-z='20'
     >
       <div un-h='full'
         un-bg={`${color === 'yellow' ? '[linear-gradient(135deg,#ff8_81%,#ff8_82%,#ff8_82%,#ffffc6)]' : '[linear-gradient(135deg,#f7cbe8_81%,#f7cbe8_82%,#f7cbe8_82%,#e7bfe1)]'} `}

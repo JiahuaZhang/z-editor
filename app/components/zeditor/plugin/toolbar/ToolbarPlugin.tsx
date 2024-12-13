@@ -1,5 +1,5 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { mergeRegister } from '@lexical/utils';
+import { mergeRegister, IS_CHROME, IS_APPLE } from '@lexical/utils';
 import { Button, Dropdown, MenuProps, Tooltip } from 'antd';
 import { useAtomValue } from 'jotai';
 import { $getRoot, BLUR_COMMAND, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, FOCUS_COMMAND, LexicalEditor, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
@@ -101,20 +101,20 @@ export const ToolbarPlugin = () => {
     );
   }, [activeEditor]);
 
-  return <div un-position='sticky' un-top='0' un-border-b='1px solid gray-4' un-bg={`${isFocus ? 'gradient-to-r' : 'white'}`} un-z='10'
+  return <div un-position='sticky' un-max-w='250' un-min-w='90' un-w='full' un-top='0' un-border-b='1px solid gray-4' un-bg={`${isFocus ? 'gradient-to-r' : 'white'}`} un-z='10'
     un-from='blue-50' un-to='purple-50' un-text='2xl' un-grid='~' un-grid-flow='col' un-justify='start' un-items='center' un-gap='1'>
     <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' disabled={!canUndo || !isEditable}
       onClick={() => activeEditor?.dispatchCommand(UNDO_COMMAND, undefined)}
     >
-      <Tooltip title="Undo" >
-        <span className="i-material-symbols-light:undo" un-text='blue-6'  ></span>
+      <Tooltip title={`${IS_APPLE ? 'Undo (⌘Z)' : 'Undo (Ctrl+Z)'}`} >
+        <span className="i-material-symbols-light:undo" un-text='blue-6' ></span>
       </Tooltip>
     </button>
     <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' disabled={!canRedo || !isEditable}
       onClick={() => activeEditor?.dispatchCommand(REDO_COMMAND, undefined)}
     >
-      <Tooltip title="Redo" >
-        <span className="i-material-symbols-light:redo" un-text='blue-6'  ></span>
+      <Tooltip title={IS_APPLE ? 'Redo (⇧⌘Z)' : 'Redo (Ctrl+Y)'} >
+        <span className="i-material-symbols-light:redo" un-text='blue-6' ></span>
       </Tooltip>
     </button>
     <Divider />

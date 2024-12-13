@@ -17,19 +17,21 @@ import { ClientOnly } from 'remix-utils/client-only';
 import { initialConfig } from './config';
 import { useActiveEditor } from './context/activeEditor';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
+import { useToolbarContext } from './context/ToolbarContext';
 import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import { MATCHERS, validateUrl } from './util/url';
 
 export const UnoStaticTrick = () => <div un-top='2.5' un-left='2.75' />;
 
-const Plugins = () => {
+const Plugins = ({ ...rest }) => {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
   const [isLinkEditMode, setIsLinkEditMode] = useState(false);
   useActiveEditor();
+  useToolbarContext();
 
-  return <>
+  return <main un-h='100vh' un-overflow-y='auto' un-flex='~ col' un-items='center' {...rest} >
     <Plugin.Toolbar />
     <div un-flex='~' un-max-w='screen-2xl' un-position='relative' >
       <RichTextPlugin
@@ -68,21 +70,17 @@ const Plugins = () => {
     {/* <Plugin.SpecialText /> */}
 
     {/* <TreeView editor={editor} /> */}
-  </>;
+  </main>;
 };
 
 export const ZEditor = ({ ...rest }: {}) => {
   return <ClientOnly>{() =>
-    <main un-flex='~' un-justify='center' un-h='100vh' un-overflow-y='auto' {...rest} >
-      <div>
-        <SharedHistoryContext>
-          <TableContext>
-            <LexicalComposer initialConfig={initialConfig} >
-              <Plugins />
-            </LexicalComposer>
-          </TableContext>
-        </SharedHistoryContext>
-      </div>
-    </main>
+    <SharedHistoryContext>
+      <TableContext>
+        <LexicalComposer initialConfig={initialConfig} >
+          <Plugins {...rest} />
+        </LexicalComposer>
+      </TableContext>
+    </SharedHistoryContext>
   }</ClientOnly>;
 };

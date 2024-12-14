@@ -20,14 +20,13 @@ const BUTTON_WIDTH_PX = 20;
 
 const getMouseInfo = ({ target }: MouseEvent) => {
   if (target && target instanceof HTMLElement) {
-    const tableDOMNode = target.closest<HTMLElement>('td.zeditor-table-cell, th.zeditor-table-cell',);
+    const tableDOMNode = target.closest<HTMLElement>('td.zeditor-table-cell, th.zeditor-table-cell');
     const isOutside = !(
       tableDOMNode
-      || target.closest<HTMLElement>('button.zeditor-table-add-row',)
-      || target.closest<HTMLElement>('button.zeditor-table-add-column',)
+      || target.closest<HTMLElement>('button.zeditor-table-add-row')
+      || target.closest<HTMLElement>('button.zeditor-table-add-column')
       || target.closest<HTMLElement>('div.zeditor-tabel-cell-resizer')
     );
-
     return { isOutside, tableDOMNode };
   } else {
     return { isOutside: true, tableDOMNode: null };
@@ -53,7 +52,7 @@ const TableHoverActionsContainer = ({ anchorElem }: { anchorElem: HTMLElement; }
         return;
       }
 
-      if (!tableDOMNode) { return; }
+      if (!tableDOMNode) return;
 
       tableDOMNodeRef.current = tableDOMNode;
       let hoveredRowNode: TableCellNode | null = null;
@@ -103,7 +102,7 @@ const TableHoverActionsContainer = ({ anchorElem }: { anchorElem: HTMLElement; }
           setRowPosition({
             height: BUTTON_WIDTH_PX,
             left: tableElemX,
-            top: tableElemBottom - editorElemY + 5,
+            top: tableElemBottom - editorElemY,
             width: tableElemWidth,
           });
         } else {
@@ -195,7 +194,7 @@ const TableHoverActionsContainer = ({ anchorElem }: { anchorElem: HTMLElement; }
   return (
     <>
       {isShownRow && (
-        <button
+        <button un-z='5'
           className='zeditor-table-add-row'
           un-position='absolute'
           un-border='~ 2 solid blue-3 rounded-b'
@@ -209,7 +208,7 @@ const TableHoverActionsContainer = ({ anchorElem }: { anchorElem: HTMLElement; }
         </button>
       )}
       {isShownColumn && (
-        <button
+        <button un-z='5'
           className='zeditor-table-add-column'
           un-position='absolute'
           un-border='~ 2 solid blue-3 rounded-b'

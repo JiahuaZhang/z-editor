@@ -33,7 +33,7 @@ const Plugins = ({ ...rest }) => {
 
   return <main un-h='100vh' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
     <Plugin.Toolbar />
-    <div un-grid='~' un-grid-flow='col' un-w='full' un-position='relative' >
+    <div un-grid='~' un-grid-flow='col' un-auto-cols='[1fr_max-content]' un-w='full' un-position='relative' >
       <RichTextPlugin
         contentEditable={
           <ContentEditable un-p='2' un-border='' un-z='5' un-position='relative' />

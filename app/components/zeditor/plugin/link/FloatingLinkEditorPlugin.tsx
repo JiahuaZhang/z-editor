@@ -160,7 +160,7 @@ const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem, isLinkEditM
     setIsLinkEditMode(false);
   };
 
-  return <div ref={editorRef}
+  return <div ref={editorRef} un-z='5'
     un-position='absolute'
     un-top='0'
     un-left='0'

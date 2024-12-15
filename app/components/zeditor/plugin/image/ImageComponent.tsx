@@ -303,7 +303,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
         <Plugin.HashTag />
         <HistoryPlugin externalHistoryState={historyState} />
         <RichTextPlugin
-          contentEditable={<ContentEditable un-position='relative' un-border='rounded-b top-0 solid x-2 b-2 blue-1 focus-within:blue-6' un-p='1' un-outline='none' un-text='sm' un-bg='white' />}
+          contentEditable={<ContentEditable un-position='relative' un-border='rounded-b top-0 solid x-2 b-2 blue-1 focus-within:blue-6' un-p='1' un-outline='none' un-text='sm' un-bg='white' role='lexical-image-caption' />}
           placeholder={
             <div un-position='absolute' un-top='[calc(100%-26px)]' un-pointer-events='none' un-left='[9px]' un-text='gray-5 sm'>
               Enter a caption...

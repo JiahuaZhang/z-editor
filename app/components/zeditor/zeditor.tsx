@@ -17,7 +17,6 @@ import { ClientOnly } from 'remix-utils/client-only';
 import { initialConfig } from './config';
 import { useActiveEditor } from './context/activeEditor';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
-import { useToolbarContext } from './context/ToolbarContext';
 import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import { MATCHERS, validateUrl } from './util/url';
@@ -29,7 +28,6 @@ const Plugins = ({ ...rest }) => {
   const isEditable = useLexicalEditable();
   const [isLinkEditMode, setIsLinkEditMode] = useState(false);
   useActiveEditor();
-  useToolbarContext();
 
   return <main un-h='100vh' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
     <Plugin.Toolbar />

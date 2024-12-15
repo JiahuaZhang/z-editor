@@ -1,11 +1,11 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { IS_APPLE, mergeRegister } from '@lexical/utils';
 import { Button, Dropdown, MenuProps, Tooltip } from 'antd';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { $getRoot, BLUR_COMMAND, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, FOCUS_COMMAND, LexicalEditor, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
 import { useEffect, useMemo, useState } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
-import { useToolbarContext } from '../../context/ToolbarContext';
+import { toolbarContextAtom, useToolbarContext } from '../../context/ToolbarContext';
 import { INSERT_INLINE_COMMAND } from '../comment/CommentPlugin';
 import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
 import { INSERT_IMAGE_COMMAND } from '../image/ImagePlugin';
@@ -57,6 +57,7 @@ export const ToolbarPlugin = () => {
   const [isFocus, setIsFocus] = useState(false);
   const insertItems = useMemo(() => activeEditor ? getInsertItems(activeEditor) : [], [activeEditor]);
   useToolbarContext();
+  const [toolbarContext, setToolbarContext] = useAtom(toolbarContextAtom);
 
   useEffect(() => {
     return editor.registerEditableListener((editable) => {
@@ -121,7 +122,7 @@ export const ToolbarPlugin = () => {
     </button>
     <Divider />
 
-    <BlockFormatDropDown />
+    <BlockFormatDropDown blockType={toolbarContext.blockType} />
 
     <Dropdown menu={{ items: insertItems }} trigger={['click']} >
       <Button un-m='1' un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='1' un-text='sm'>

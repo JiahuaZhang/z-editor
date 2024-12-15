@@ -1,14 +1,14 @@
 import { $createCodeNode } from '@lexical/code';
-import { $isListNode, INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, ListNode } from '@lexical/list';
+import { INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from '@lexical/list';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $createHeadingNode, $createQuoteNode, $isHeadingNode, HeadingTagType } from '@lexical/rich-text';
+import { $createHeadingNode, $createQuoteNode, HeadingTagType } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
-import { $findMatchingParent, $getNearestNodeOfType } from '@lexical/utils';
 import { Select } from 'antd';
 import { useAtomValue } from 'jotai';
-import { $createParagraphNode, $getSelection, $isRangeSelection, $isRootOrShadowRoot, COMMAND_PRIORITY_LOW, LexicalEditor, SELECTION_CHANGE_COMMAND } from 'lexical';
-import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { $createParagraphNode, $getSelection, $isRangeSelection, LexicalEditor } from 'lexical';
+import { lazy, Suspense } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
+import { blockTypeToBlockName } from '../../context/ToolbarContext';
 
 const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));
 
@@ -74,34 +74,43 @@ const formatCode = (editor: LexicalEditor) => {
   });
 };
 
-const BLOCK_FORMATS = ['paragraph', 'h1', 'h2', 'h3', 'bullet', 'number', 'check', 'quote', 'code'] as const;
-const BLOCK_LABELS: Record<typeof BLOCK_FORMATS[number], string> = {
+const COMMON_BLOCK_FORMATS = ['paragraph', 'h1', 'h2', 'h3', 'bullet', 'number', 'check', 'quote', 'code'] as const;
+const BLOCK_LABELS: Record<keyof typeof blockTypeToBlockName, string> = {
   paragraph: 'Normal',
   h1: 'Heading 1',
   h2: 'Heading 2',
   h3: 'Heading 3',
+  h4: 'Heading 4',
+  h5: 'Heading 5',
+  h6: 'Heading 6',
   bullet: 'Bullet List',
   number: 'Numbered List',
   check: 'Check List',
   quote: 'Quote',
   code: 'Code Block'
 };
-const BLOCK_ICONS: Record<typeof BLOCK_FORMATS[number], string> = {
+const BLOCK_ICONS: Record<keyof typeof blockTypeToBlockName, string> = {
   paragraph: 'i-system-uicons:paragraph-left',
   h1: 'i-ci:heading-h1',
   h2: 'i-ci:heading-h2',
   h3: 'i-ci:heading-h3',
+  h4: 'i-ci:heading-h4',
+  h5: 'i-ci:heading-h5',
+  h6: 'i-ci:heading-h6',
   bullet: 'i-ph:list-bullets',
   number: 'i-ph:list-numbers',
   check: 'i-material-symbols-light:check-box-outline',
   quote: 'i-mdi:format-quote-open',
   code: 'i-ph:code-bold',
 };
-const BLOCK_CONVERTERS: Record<typeof BLOCK_FORMATS[number], (editor: LexicalEditor) => void> = {
+const BLOCK_CONVERTERS: Record<keyof typeof blockTypeToBlockName, (editor: LexicalEditor) => void> = {
   paragraph: formatParagraph,
   h1: formatHeading('h1'),
   h2: formatHeading('h2'),
   h3: formatHeading('h3'),
+  h4: formatHeading('h4'),
+  h5: formatHeading('h5'),
+  h6: formatHeading('h6'),
   bullet: formatBulletList,
   number: formatNumberedList,
   check: formatCheckList,
@@ -109,68 +118,18 @@ const BLOCK_CONVERTERS: Record<typeof BLOCK_FORMATS[number], (editor: LexicalEdi
   code: formatCode
 };
 
-export const BlockFormatDropDown = ({}: {}) => {
+export const BlockFormatDropDown = ({ blockType }: { blockType: keyof typeof blockTypeToBlockName; }) => {
   const [editor] = useLexicalComposerContext();
   const activeEditor = useAtomValue(activeEditorAtom);
-  const [format, setFormat] = useState(BLOCK_FORMATS[0]);
-
-  const $updateToolbar = useCallback(() => {
-    const selection = $getSelection();
-    if (!$isRangeSelection(selection)) {
-      return;
-    }
-
-    const anchorNode = selection.anchor.getNode();
-    let element = anchorNode.getKey() === 'root'
-      ? anchorNode
-      : $findMatchingParent(anchorNode, (e) => {
-        const parent = e.getParent();
-        return parent !== null && $isRootOrShadowRoot(parent);
-      });
-
-    if (element === null) {
-      element = anchorNode.getTopLevelElementOrThrow();
-    }
-
-    const elementKey = element.getKey();
-    const elementDOM = activeEditor?.getElementByKey(elementKey);
-
-    if (elementDOM === null) return;
-
-    if ($isListNode(element)) {
-      const parentList = $getNearestNodeOfType(anchorNode, ListNode);
-      const type = parentList ? parentList.getListType() : element.getListType();
-      setFormat(type as any);
-    } else {
-      const type = $isHeadingNode(element) ? element.getTag() : element.getType();
-      if (BLOCK_FORMATS.includes(type as any)) {
-        setFormat(type as any);
-      }
-    }
-  }, [activeEditor]);
-
-  useEffect(() => {
-    return activeEditor?.registerCommand(
-      SELECTION_CHANGE_COMMAND,
-      () => {
-        $updateToolbar();
-        return false;
-      },
-      COMMAND_PRIORITY_LOW
-    );
-  }, [activeEditor, $updateToolbar]);
 
   if (editor !== activeEditor) return null;
 
   return <Suspense>
     <Select un-m='1' un-min-w='30' un-border='none hover:blue-6' disabled={!editor.isEditable()}
-      value={format}
+      value={blockType}
       popupClassName='w-auto!'
-      options={BLOCK_FORMATS.map(value => ({ label: BLOCK_LABELS[value], value }))}
-      onChange={value => {
-        setFormat(value);
-        BLOCK_CONVERTERS[value as typeof BLOCK_FORMATS[number]](activeEditor!);
-      }}
+      options={COMMON_BLOCK_FORMATS.map(value => ({ label: BLOCK_LABELS[value], value }))}
+      onChange={value => BLOCK_CONVERTERS[value as keyof typeof blockTypeToBlockName](activeEditor!)}
       optionRender={args => {
         return <div un-inline='grid' un-grid-flow='col' un-gap='2' un-items='center' >
           <span className={BLOCK_ICONS[args.data.value]} />
@@ -179,8 +138,8 @@ export const BlockFormatDropDown = ({}: {}) => {
       }}
       labelRender={args => {
         return <div un-inline='grid' un-grid-flow='col' un-gap='2' un-items='center' >
-          <div className={BLOCK_ICONS[args.value as typeof BLOCK_FORMATS[number]]}></div>
-          {args.label}
+          <span className={BLOCK_ICONS[args.value as keyof typeof blockTypeToBlockName]} />
+          {BLOCK_LABELS[args.value as keyof typeof blockTypeToBlockName]}
         </div>;
       }}
       dropdownRender={original => <div un-min-w='80'>{original}</div>}

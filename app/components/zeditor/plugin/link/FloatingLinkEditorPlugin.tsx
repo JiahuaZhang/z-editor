@@ -1,7 +1,7 @@
 import { $createLinkNode, $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister } from '@lexical/utils';
-import { useAtomValue } from 'jotai';
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { $getSelection, $isLineBreakNode, $isRangeSelection, BaseSelection, BLUR_COMMAND, CLICK_COMMAND, COMMAND_PRIORITY_CRITICAL, COMMAND_PRIORITY_HIGH, COMMAND_PRIORITY_LOW, KEY_ESCAPE_COMMAND, LexicalEditor, SELECTION_CHANGE_COMMAND } from 'lexical';
 import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -10,19 +10,20 @@ import { getSelectedNode } from '../../util/getSelectedNode';
 import { setFloatingElemPositionForLinkEditor } from '../../util/setFloatingElemPositionForLinkEditor';
 import { sanitizeUrl } from '../../util/url';
 
-const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem, isLinkEditMode, setIsLinkEditMode }: {
+export const isLinkEditModeAtom = atom(false);
+
+const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem }: {
   editor: LexicalEditor;
   isLink: boolean;
   setIsLink: Dispatch<boolean>;
   anchorElem: HTMLElement;
-  isLinkEditMode: boolean;
-  setIsLinkEditMode: Dispatch<boolean>;
 }) => {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [linkUrl, setLinkUrl] = useState('');
   const [editedLinkUrl, setEditedLinkUrl] = useState('https://');
   const [lastSelection, setLastSelection] = useState<BaseSelection | null>(null);
+  const [isLinkEditMode, setIsLinkEditMode] = useAtom(isLinkEditModeAtom);
 
   const $updateLinkEditor = useCallback(() => {
     const selection = $getSelection();
@@ -259,9 +260,10 @@ const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem, isLinkEditM
   </div>;
 };
 
-const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLElement, isLinkEditMode: boolean, setIsLinkEditMode: Dispatch<boolean>) => {
+const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLElement) => {
   const activeEditor = useAtomValue(activeEditorAtom);
   const [isLink, setIsLink] = useState(false);
+  const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
 
   useEffect(() => {
     const $updateToolbar = () => {
@@ -347,16 +349,12 @@ const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLEle
       isLink={isLink}
       anchorElem={anchorElem}
       setIsLink={setIsLink}
-      isLinkEditMode={isLinkEditMode}
-      setIsLinkEditMode={setIsLinkEditMode}
     />,
     anchorElem,
   );
 };
 
-export const FloatingLinkEditorPlugin = (
-  { anchorElem = document.body, isLinkEditMode, setIsLinkEditMode }: { anchorElem?: HTMLElement; isLinkEditMode: boolean, setIsLinkEditMode: Dispatch<boolean>; }
-) => {
+export const FloatingLinkEditorPlugin = ({ anchorElem = document.body }: { anchorElem?: HTMLElement; }) => {
   const [editor] = useLexicalComposerContext();
-  return useFloatingLinkEditorToolbar(editor, anchorElem, isLinkEditMode, setIsLinkEditMode);
+  return useFloatingLinkEditorToolbar(editor, anchorElem);
 };

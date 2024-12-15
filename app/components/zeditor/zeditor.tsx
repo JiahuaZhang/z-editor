@@ -12,7 +12,6 @@ import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
-import { useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 import { initialConfig } from './config';
 import { useActiveEditor } from './context/activeEditor';
@@ -26,7 +25,6 @@ export const UnoStaticTrick = () => <div un-top='2.5' un-left='2.75' />;
 const Plugins = ({ ...rest }) => {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
-  const [isLinkEditMode, setIsLinkEditMode] = useState(false);
   useActiveEditor();
 
   return <main un-h='100vh' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
@@ -57,7 +55,7 @@ const Plugins = ({ ...rest }) => {
     <AutoLinkPlugin matchers={MATCHERS} />
     <LinkPlugin validateUrl={validateUrl} />
     <ClickableLinkPlugin disabled={isEditable} />
-    <Plugin.Link.Float isLinkEditMode={isLinkEditMode} setIsLinkEditMode={setIsLinkEditMode} />
+    <Plugin.Link.Float />
     <Plugin.Image.Insert />
     <Plugin.Image.Inline />
     {/* <Plugin.Emoji.Transform /> */}

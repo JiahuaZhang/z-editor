@@ -1,0 +1,245 @@
+import { $isCodeNode, CODE_LANGUAGE_MAP } from '@lexical/code';
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
+import { $isListNode, ListNode } from '@lexical/list';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $isHeadingNode } from '@lexical/rich-text';
+import { $getSelectionStyleValueForProperty, $isParentElementRTL, $patchStyleText } from '@lexical/selection';
+import { $isTableNode, $isTableSelection } from '@lexical/table';
+import { $findMatchingParent, $getNearestNodeOfType, $isEditorIsNestedEditor, mergeRegister } from '@lexical/utils';
+import { atom, useAtom, useAtomValue } from 'jotai';
+import { $getNodeByKey, $getSelection, $isElementNode, $isRangeSelection, $isRootOrShadowRoot, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, ElementFormatType, LexicalNode, NodeKey } from 'lexical';
+import { useCallback, useEffect, useState } from 'react';
+import { INSERT_IMAGE_COMMAND, InsertImagePayload } from '../plugin/image/ImagePlugin';
+import { isLinkEditModeAtom } from '../plugin/link/FloatingLinkEditorPlugin';
+import { getSelectedNode } from '../util/getSelectedNode';
+import { sanitizeUrl } from '../util/url';
+import { activeEditorAtom } from './activeEditor';
+
+export const MIN_ALLOWED_FONT_SIZE = 8;
+export const MAX_ALLOWED_FONT_SIZE = 72;
+export const DEFAULT_FONT_SIZE = 15;
+
+const rootTypeToRootName = {
+  root: 'Root',
+  table: 'Table',
+};
+
+export const blockTypeToBlockName = {
+  bullet: 'Bulleted List',
+  check: 'Check List',
+  code: 'Code Block',
+  h1: 'Heading 1',
+  h2: 'Heading 2',
+  h3: 'Heading 3',
+  h4: 'Heading 4',
+  h5: 'Heading 5',
+  h6: 'Heading 6',
+  number: 'Numbered List',
+  paragraph: 'Normal',
+  quote: 'Quote',
+};
+
+const INITIAL_TOOLBAR_STATE = {
+  bgColor: '#fff',
+  blockType: 'paragraph' as keyof typeof blockTypeToBlockName,
+  canRedo: false,
+  canUndo: false,
+  codeLanguage: '',
+  elementFormat: 'left' as ElementFormatType,
+  fontColor: '#000',
+  fontFamily: 'Arial',
+  // Current font size in px
+  fontSize: `${DEFAULT_FONT_SIZE}px`,
+  // Font size input value - for controlled input
+  fontSizeInputValue: `${DEFAULT_FONT_SIZE}`,
+  isBold: false,
+  isCode: false,
+  isImageCaption: false,
+  isItalic: false,
+  isLink: false,
+  isRTL: false,
+  isStrikethrough: false,
+  isSubscript: false,
+  isSuperscript: false,
+  isUnderline: false,
+  rootType: 'root' as keyof typeof rootTypeToRootName,
+};
+
+type ToolbarState = typeof INITIAL_TOOLBAR_STATE;
+
+// Utility type to get keys and infer value types
+type ToolbarStateKey = keyof ToolbarState;
+type ToolbarStateValue<Key extends ToolbarStateKey> = ToolbarState[Key];
+
+type ContextShape = {
+  toolbarState: ToolbarState;
+  updateToolbarState<Key extends ToolbarStateKey>(
+    key: Key,
+    value: ToolbarStateValue<Key>,
+  ): void;
+};
+
+export const toolbarContextAtom = atom<ToolbarState>(INITIAL_TOOLBAR_STATE);
+
+export const useToolbarContext = () => {
+  const [editor] = useLexicalComposerContext();
+  const activeEditor = useAtomValue(activeEditorAtom);
+  const [toolbarContext, setToolbarContext] = useAtom(toolbarContextAtom);
+  const [selectedElementKey, setSelectedElementKey] = useState<NodeKey>('');
+  const [isLinkEditMode, setIsLinkEditMode] = useAtom(isLinkEditModeAtom);
+
+  // image -> caption
+  // sticky note
+
+  const $updateToolbar = useCallback(() => {
+    console.log('update toolbar');
+
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      setToolbarContext(prev => ({ ...prev, isRTL: $isParentElementRTL(selection) }));
+
+      const node = getSelectedNode(selection);
+      const parent = node.getParent();
+      const isLink = $isLinkNode(parent) || $isLinkNode(node);
+      setToolbarContext(prev => ({ ...prev, isLink }));
+
+      const tableNode = $findMatchingParent(node, $isTableNode);
+      setToolbarContext(prev => ({ ...prev, rootType: $isTableNode(tableNode) ? 'table' : 'root' }));
+
+      if (activeEditor !== editor && $isEditorIsNestedEditor(activeEditor!)) {
+        const rootElement = activeEditor?.getRootElement();
+        const isImageCaption = rootElement?.role === 'lexical-image-caption';
+        setToolbarContext(prev => ({ ...prev, isImageCaption }));
+      } else {
+        setToolbarContext(prev => ({ ...prev, isImageCaption: false }));
+      }
+
+      const anchorNode = selection.anchor.getNode();
+      let element = anchorNode.getKey() === 'root'
+        ? anchorNode
+        : $findMatchingParent(anchorNode, (e) => {
+          const parent = e.getParent();
+          return parent !== null && $isRootOrShadowRoot(parent);
+        });
+
+      if (element === null) {
+        element = anchorNode.getTopLevelElementOrThrow();
+      }
+      const elementKey = element.getKey();
+      const elementDOM = activeEditor!.getElementByKey(elementKey);
+
+      if (elementDOM !== null) {
+        setSelectedElementKey(elementKey);
+        if ($isListNode(element)) {
+          const parentList = $getNearestNodeOfType<ListNode>(anchorNode, ListNode);
+          const blockType = parentList ? parentList.getListType() : element.getListType();
+          setToolbarContext(prev => ({ ...prev, blockType }));
+        } else {
+          const type = $isHeadingNode(element) ? element.getTag() : element.getType();
+          if (type in blockTypeToBlockName) {
+            setToolbarContext(prev => ({ ...prev, blockType: type as keyof typeof blockTypeToBlockName, }));
+          }
+          if ($isCodeNode(element)) {
+            const language = element.getLanguage() as keyof typeof CODE_LANGUAGE_MAP;
+            setToolbarContext(prev => ({ ...prev, codeLanguage: language ? CODE_LANGUAGE_MAP[language] ?? language : '' }));
+            return;
+          }
+        }
+      }
+
+      setToolbarContext(prev => ({ ...prev, fontColor: $getSelectionStyleValueForProperty(selection, 'color', '#000') }));
+      setToolbarContext(prev => ({ ...prev, fontColor: $getSelectionStyleValueForProperty(selection, 'background-color', '#fff') }));
+      setToolbarContext(prev => ({ ...prev, fontColor: $getSelectionStyleValueForProperty(selection, 'font-family', 'Arial') }));
+
+      let matchingParent: LexicalNode | null;
+      if ($isLinkNode(parent)) {
+        matchingParent = $findMatchingParent(node, parentNode => $isElementNode(parentNode) && !parentNode.isInline());
+      }
+      setToolbarContext(prev => ({
+        ...prev, elementFormat: $isElementNode(matchingParent)
+          ? matchingParent.getFormatType() : $isElementNode(node)
+            ? node.getFormatType() : parent?.getFormatType() ?? 'left'
+      }));
+    }
+
+    if ($isRangeSelection(selection) || $isTableSelection(selection)) {
+      setToolbarContext(prev => ({ ...prev, isBold: selection.hasFormat('bold') }));
+      setToolbarContext(prev => ({ ...prev, isItalic: selection.hasFormat('italic') }));
+      setToolbarContext(prev => ({ ...prev, isUnderline: selection.hasFormat('underline') }));
+      setToolbarContext(prev => ({ ...prev, isStrikethrough: selection.hasFormat('strikethrough') }));
+      setToolbarContext(prev => ({ ...prev, isSubscript: selection.hasFormat('subscript') }));
+      setToolbarContext(prev => ({ ...prev, isSuperscript: selection.hasFormat('superscript') }));
+      setToolbarContext(prev => ({ ...prev, isCode: selection.hasFormat('code') }));
+      setToolbarContext(prev => ({ ...prev, fontSize: $getSelectionStyleValueForProperty(selection, 'font-size', '15px') }));
+    }
+
+  }, [editor, activeEditor, setToolbarContext]);
+
+  useEffect(() => activeEditor?.getEditorState().read($updateToolbar), [activeEditor, $updateToolbar]);
+
+  useEffect(() => {
+    if (!activeEditor) return;
+
+    return mergeRegister(
+      activeEditor.registerUpdateListener(({ editorState }) => editorState.read($updateToolbar)),
+      activeEditor.registerCommand(CAN_UNDO_COMMAND, canUndo => {
+        setToolbarContext(prev => ({ ...prev, canUndo }));
+        return false;
+      }, COMMAND_PRIORITY_CRITICAL),
+      activeEditor.registerCommand(CAN_REDO_COMMAND, canRedo => {
+        setToolbarContext(prev => ({ ...prev, canRedo }));
+        return false;
+      }, COMMAND_PRIORITY_CRITICAL)
+    );
+  }, [editor, activeEditor, $updateToolbar]);
+
+  const applyStyleText = useCallback(
+    (styles: Record<string, string>, skipHistoryStack?: boolean) => {
+      activeEditor?.update(() => {
+        const selection = $getSelection();
+        if (selection !== null) {
+          $patchStyleText(selection, styles);
+        };
+        skipHistoryStack ? { tag: 'history' } : {};
+      });
+    },
+    [activeEditor]
+  );
+
+  const onFontColorSelect = useCallback(
+    (color: string, skipHistoryStack: boolean) => applyStyleText({ color }, skipHistoryStack),
+    [applyStyleText]
+  );
+
+  const onBgColorSelect = useCallback(
+    (value: string, skipHistoryStack: boolean) => applyStyleText({ 'background-color': value }, skipHistoryStack),
+    [applyStyleText]
+  );
+
+  const insertLink = useCallback(() => {
+    if (!toolbarContext.isLink) {
+      setIsLinkEditMode(true);
+      activeEditor?.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl('https://'));
+    } else {
+      setIsLinkEditMode(false);
+      activeEditor?.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+    }
+  }, [activeEditor, toolbarContext.isLink, setIsLinkEditMode]);
+
+  const onCodeLanguageSelect = useCallback(
+    (value: string) => activeEditor?.update(() => {
+      if (selectedElementKey === null) return;
+
+      const node = $getNodeByKey(selectedElementKey);
+      if ($isCodeNode(node)) {
+        node.setLanguage(value);
+      }
+    }),
+    [activeEditor, selectedElementKey]
+  );
+
+  const insertGifOnClick = (payload: InsertImagePayload) => activeEditor?.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
+
+  const canViewerSeeInsertDropdown = !toolbarContext.isImageCaption;
+  const canViewerSeeInsertCodeButton = !toolbarContext.isImageCaption;
+};

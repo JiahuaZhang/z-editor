@@ -14,7 +14,7 @@ import { BlockFormatDropDown } from './BlockFormatDropDown';
 import { CodeLanguageDropDown } from './CodeLanguageDropDown';
 import { FontDropDown } from './FontDropDown';
 
-export const Divider = () => <span un-bg='neutral' un-w='2px' un-h='60%' un-border='rounded-full' />;
+export const Divider = () => <span un-bg='neutral' un-w='2px' un-h='60%' un-border='rounded-full' un-mx='1' />;
 
 const getInsertItems = (editor: LexicalEditor) => [
   {
@@ -126,11 +126,11 @@ export const ToolbarPlugin = () => {
     }
     {
       toolbarContext.blockType !== 'code'
-      && <FontDropDown />
+      && <FontDropDown font={toolbarContext.fontFamily} />
     }
 
     <Dropdown menu={{ items: insertItems }} trigger={['click']} >
-      <Button un-m='1' un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='1' un-text='sm'>
+      <Button un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='1' un-text='sm'>
         <span className="i-mdi:plus" /> Insert <span className="i-ph:caret-down" />
       </Button>
     </Dropdown>

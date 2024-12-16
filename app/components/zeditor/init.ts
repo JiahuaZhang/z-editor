@@ -185,7 +185,7 @@ const $generateCode = () => {
       System.out.println("Hello, World");
   }
 }`);
-  const codeParagarph = $createCodeNode('java`');
+  const codeParagarph = $createCodeNode('java');
   codeParagarph.append(codeHighlight);
   root.append(codeParagarph);
 };

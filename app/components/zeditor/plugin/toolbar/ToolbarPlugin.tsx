@@ -11,6 +11,7 @@ import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
 import { INSERT_IMAGE_COMMAND } from '../image/ImagePlugin';
 import { $createStickyNode } from '../sticky-note/StickNote';
 import { BlockFormatDropDown } from './BlockFormatDropDown';
+import { CodeLanguageDropDown } from './CodeLanguageDropDown';
 
 export const Divider = () => <span un-bg='neutral' un-w='2px' un-h='60%' un-border='rounded-full' />;
 
@@ -56,7 +57,7 @@ export const ToolbarPlugin = () => {
   const [canRedo, setCanRedo] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
   const insertItems = useMemo(() => activeEditor ? getInsertItems(activeEditor) : [], [activeEditor]);
-  useToolbarContext();
+  const { onCodeLanguageSelect } = useToolbarContext();
   const [toolbarContext, setToolbarContext] = useAtom(toolbarContextAtom);
 
   useEffect(() => {
@@ -123,6 +124,10 @@ export const ToolbarPlugin = () => {
     <Divider />
 
     <BlockFormatDropDown blockType={toolbarContext.blockType} />
+    {
+      toolbarContext.blockType === 'code'
+      && <CodeLanguageDropDown language={toolbarContext.codeLanguage} onChange={onCodeLanguageSelect} />
+    }
 
     <Dropdown menu={{ items: insertItems }} trigger={['click']} >
       <Button un-m='1' un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='1' un-text='sm'>

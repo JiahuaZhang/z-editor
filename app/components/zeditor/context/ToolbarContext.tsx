@@ -242,4 +242,6 @@ export const useToolbarContext = () => {
 
   const canViewerSeeInsertDropdown = !toolbarContext.isImageCaption;
   const canViewerSeeInsertCodeButton = !toolbarContext.isImageCaption;
+
+  return { onCodeLanguageSelect };
 };

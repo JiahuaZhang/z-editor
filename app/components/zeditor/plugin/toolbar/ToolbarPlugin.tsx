@@ -12,6 +12,7 @@ import { INSERT_IMAGE_COMMAND } from '../image/ImagePlugin';
 import { $createStickyNode } from '../sticky-note/StickNote';
 import { BlockFormatDropDown } from './BlockFormatDropDown';
 import { CodeLanguageDropDown } from './CodeLanguageDropDown';
+import { FontDropDown } from './FontDropDown';
 
 export const Divider = () => <span un-bg='neutral' un-w='2px' un-h='60%' un-border='rounded-full' />;
 
@@ -52,19 +53,12 @@ const getInsertItems = (editor: LexicalEditor) => [
 export const ToolbarPlugin = () => {
   const [editor] = useLexicalComposerContext();
   const activeEditor = useAtomValue(activeEditorAtom);
-  const [isEditable, setIsEditable] = useState(() => editor.isEditable());
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
   const insertItems = useMemo(() => activeEditor ? getInsertItems(activeEditor) : [], [activeEditor]);
   const { onCodeLanguageSelect } = useToolbarContext();
   const [toolbarContext, setToolbarContext] = useAtom(toolbarContextAtom);
-
-  useEffect(() => {
-    return editor.registerEditableListener((editable) => {
-      setIsEditable(editable);
-    });
-  }, [editor]);
 
   useEffect(() => {
     if (!activeEditor) return;
@@ -105,16 +99,18 @@ export const ToolbarPlugin = () => {
     );
   }, [activeEditor]);
 
+  if (!editor.isEditable()) return null;
+
   return <div un-position='sticky' un-w='full' un-top='0' un-border-b='1px solid gray-4' un-bg={`${isFocus ? 'gradient-to-r' : 'white'}`} un-z='10'
     un-from='blue-50' un-to='purple-50' un-text='2xl' un-grid='~' un-grid-flow='col' un-justify='start' un-items='center' un-gap='1'>
-    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' disabled={!canUndo || !isEditable}
+    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' disabled={!canUndo}
       onClick={() => activeEditor?.dispatchCommand(UNDO_COMMAND, undefined)}
     >
       <Tooltip title={`${IS_APPLE ? 'Undo (⌘Z)' : 'Undo (Ctrl+Z)'}`} >
         <span className="i-material-symbols-light:undo" un-text='blue-6' ></span>
       </Tooltip>
     </button>
-    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' disabled={!canRedo || !isEditable}
+    <button un-hover='bg-blue-6 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-4 hover:bg-transparent cursor-not-allowed' disabled={!canRedo}
       onClick={() => activeEditor?.dispatchCommand(REDO_COMMAND, undefined)}
     >
       <Tooltip title={IS_APPLE ? 'Redo (⇧⌘Z)' : 'Redo (Ctrl+Y)'} >
@@ -127,6 +123,10 @@ export const ToolbarPlugin = () => {
     {
       toolbarContext.blockType === 'code'
       && <CodeLanguageDropDown language={toolbarContext.codeLanguage} onChange={onCodeLanguageSelect} />
+    }
+    {
+      toolbarContext.blockType !== 'code'
+      && <FontDropDown />
     }
 
     <Dropdown menu={{ items: insertItems }} trigger={['click']} >

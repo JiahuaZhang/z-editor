@@ -9,6 +9,7 @@ import { ImagePlugin } from './image/ImagePlugin';
 import { InlineImagePlugin } from './inline-image/InlineImagePlugin';
 import { LayoutPlugin } from './layout/LayoutPlugin';
 import { FloatingLinkEditorPlugin } from './link/FloatingLinkEditorPlugin';
+import { ShortcutsPlugin } from './shortcut/ShortcutsPlugin';
 import { SpecialTextPlugin } from './special/SpecialTextPlugin';
 import { TableCellResizerPlugin } from './table/TableCellResizer';
 import { TableHoverActionsPlugin } from './table/TableHoverActionsPlugin';
@@ -40,4 +41,5 @@ export namespace Plugin {
   export const Comment = CommentPlugin;
   export const Layout = LayoutPlugin;
   export const SpecialText = SpecialTextPlugin;
+  export const Shortcuts = ShortcutsPlugin;
 }

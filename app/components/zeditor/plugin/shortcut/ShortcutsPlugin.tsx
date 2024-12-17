@@ -1,0 +1,120 @@
+import { TOGGLE_LINK_COMMAND } from '@lexical/link';
+import { HeadingTagType } from '@lexical/rich-text';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { COMMAND_PRIORITY_NORMAL, FORMAT_ELEMENT_COMMAND, FORMAT_TEXT_COMMAND, INDENT_CONTENT_COMMAND, KEY_MODIFIER_COMMAND, OUTDENT_CONTENT_COMMAND } from 'lexical';
+import { useEffect } from 'react';
+import { activeEditorAtom } from '../../context/activeEditor';
+import { toolbarContextAtom } from '../../context/ToolbarContext';
+import { sanitizeUrl } from '../../util/url';
+import { calculateNextFontSize, clearFormatting, formatBulletList, formatCheckList, formatCode, formatHeading, formatNumberedList, formatParagraph, formatQuote, updateFontSizeInSelection, UpdateFontSizeType } from '../../util/utils';
+import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
+import { isCapitalize, isCenterAlign, isClearFormatting, isDecreaseFontSize, isFormatBulletList, isFormatCheckList, isFormatCode, isFormatHeading, isFormatNumberedList, isFormatParagraph, isFormatQuote, isIncreaseFontSize, isIndent, isInsertCodeBlock, isInsertLink, isJustifyAlign, isLeftAlign, isLowercase, isOutdent, isRightAlign, isStrikeThrough, isSubscript, isSuperscript, isUppercase } from './shortcut';
+
+export const ShortcutsPlugin = () => {
+  const editor = useAtomValue(activeEditorAtom);
+  const toolbarContext = useAtomValue(toolbarContextAtom);
+  const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const keyboardShortcutsHandler = (payload: KeyboardEvent) => {
+      const event: KeyboardEvent = payload;
+
+      if (isFormatParagraph(event)) {
+        event.preventDefault();
+        formatParagraph(editor);
+      } else if (isFormatHeading(event)) {
+        event.preventDefault();
+        const { code } = event;
+        const headingSize = `h${code[code.length - 1]}` as HeadingTagType;
+        formatHeading(editor, toolbarContext.blockType, headingSize);
+      } else if (isFormatBulletList(event)) {
+        event.preventDefault();
+        formatBulletList(editor, toolbarContext.blockType);
+      } else if (isFormatNumberedList(event)) {
+        event.preventDefault();
+        formatNumberedList(editor, toolbarContext.blockType);
+      } else if (isFormatCheckList(event)) {
+        event.preventDefault();
+        formatCheckList(editor, toolbarContext.blockType);
+      } else if (isFormatCode(event)) {
+        event.preventDefault();
+        formatCode(editor, toolbarContext.blockType);
+      } else if (isFormatQuote(event)) {
+        event.preventDefault();
+        formatQuote(editor, toolbarContext.blockType);
+      } else if (isStrikeThrough(event)) {
+        event.preventDefault();
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
+      } else if (isLowercase(event)) {
+        event.preventDefault();
+        // editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'lowercase');
+      } else if (isUppercase(event)) {
+        event.preventDefault();
+        // editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'uppercase');
+      } else if (isCapitalize(event)) {
+        event.preventDefault();
+        // editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'capitalize');
+      } else if (isIndent(event)) {
+        event.preventDefault();
+        editor.dispatchCommand(INDENT_CONTENT_COMMAND, undefined);
+      } else if (isOutdent(event)) {
+        event.preventDefault();
+        editor.dispatchCommand(OUTDENT_CONTENT_COMMAND, undefined);
+      } else if (isCenterAlign(event)) {
+        event.preventDefault();
+        editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
+      } else if (isLeftAlign(event)) {
+        event.preventDefault();
+        editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
+      } else if (isRightAlign(event)) {
+        event.preventDefault();
+        editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
+      } else if (isJustifyAlign(event)) {
+        event.preventDefault();
+        editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify');
+      } else if (isSubscript(event)) {
+        event.preventDefault();
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'subscript');
+      } else if (isSuperscript(event)) {
+        event.preventDefault();
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'superscript');
+      } else if (isInsertCodeBlock(event)) {
+        event.preventDefault();
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
+      } else if (isIncreaseFontSize(event)) {
+        event.preventDefault();
+        if (!toolbarContext.fontSizeInputValue) {
+          const nextFontSize = calculateNextFontSize(Number(toolbarContext.fontSizeInputValue), UpdateFontSizeType.increment);
+          updateFontSizeInSelection(editor, String(nextFontSize) + 'px', null);
+        } else {
+          updateFontSizeInSelection(editor, null, UpdateFontSizeType.increment);
+        }
+      } else if (isDecreaseFontSize(event)) {
+        event.preventDefault();
+        if (!toolbarContext.fontSizeInputValue) {
+          const nextFontSize = calculateNextFontSize(Number(toolbarContext.fontSizeInputValue), UpdateFontSizeType.decrement);
+          updateFontSizeInSelection(editor, String(nextFontSize) + 'px', null);
+        } else {
+          updateFontSizeInSelection(editor, null, UpdateFontSizeType.decrement);
+        }
+      } else if (isClearFormatting(event)) {
+        event.preventDefault();
+        clearFormatting(editor);
+      } else if (isInsertLink(event)) {
+        event.preventDefault();
+        const url = toolbarContext.isLink ? null : sanitizeUrl('https://');
+        setIsLinkEditMode(!toolbarContext.isLink);
+
+        editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
+      }
+
+      return false;
+    };
+
+    return editor.registerCommand(KEY_MODIFIER_COMMAND, keyboardShortcutsHandler, COMMAND_PRIORITY_NORMAL);
+  }, [editor, toolbarContext.isLink, toolbarContext.blockType, toolbarContext.fontSizeInputValue, setIsLinkEditMode]);
+
+  return null;
+};

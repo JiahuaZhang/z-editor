@@ -64,6 +64,7 @@ const Plugins = ({ ...rest }) => {
     {/* <Plugin.AutoComplete /> */}
     <Plugin.Layout />
     {/* <Plugin.SpecialText /> */}
+    <Plugin.Shortcuts />
 
     {/* <TreeView editor={editor} /> */}
   </main>;

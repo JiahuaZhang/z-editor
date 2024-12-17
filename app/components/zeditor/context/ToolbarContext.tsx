@@ -6,7 +6,7 @@ import { $isHeadingNode } from '@lexical/rich-text';
 import { $getSelectionStyleValueForProperty, $isParentElementRTL, $patchStyleText } from '@lexical/selection';
 import { $isTableNode, $isTableSelection } from '@lexical/table';
 import { $findMatchingParent, $getNearestNodeOfType, $isEditorIsNestedEditor, mergeRegister } from '@lexical/utils';
-import { atom, useAtom, useAtomValue } from 'jotai';
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { $getNodeByKey, $getSelection, $isElementNode, $isRangeSelection, $isRootOrShadowRoot, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, ElementFormatType, LexicalNode, NodeKey } from 'lexical';
 import { useCallback, useEffect, useState } from 'react';
 import { INSERT_IMAGE_COMMAND, InsertImagePayload } from '../plugin/image/ImagePlugin';
@@ -65,31 +65,14 @@ const INITIAL_TOOLBAR_STATE = {
   rootType: 'root' as keyof typeof rootTypeToRootName,
 };
 
-type ToolbarState = typeof INITIAL_TOOLBAR_STATE;
-
-// Utility type to get keys and infer value types
-type ToolbarStateKey = keyof ToolbarState;
-type ToolbarStateValue<Key extends ToolbarStateKey> = ToolbarState[Key];
-
-type ContextShape = {
-  toolbarState: ToolbarState;
-  updateToolbarState<Key extends ToolbarStateKey>(
-    key: Key,
-    value: ToolbarStateValue<Key>,
-  ): void;
-};
-
-export const toolbarContextAtom = atom<ToolbarState>(INITIAL_TOOLBAR_STATE);
+export const toolbarContextAtom = atom<typeof INITIAL_TOOLBAR_STATE>(INITIAL_TOOLBAR_STATE);
 
 export const useToolbarContext = () => {
   const [editor] = useLexicalComposerContext();
   const activeEditor = useAtomValue(activeEditorAtom);
   const [toolbarContext, setToolbarContext] = useAtom(toolbarContextAtom);
   const [selectedElementKey, setSelectedElementKey] = useState<NodeKey>('');
-  const [isLinkEditMode, setIsLinkEditMode] = useAtom(isLinkEditModeAtom);
-
-  // image -> caption
-  // sticky note
+  const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
 
   const $updateToolbar = useCallback(() => {
     console.log('update toolbar');
@@ -148,8 +131,8 @@ export const useToolbarContext = () => {
       }
 
       setToolbarContext(prev => ({ ...prev, fontColor: $getSelectionStyleValueForProperty(selection, 'color', '#000') }));
-      setToolbarContext(prev => ({ ...prev, fontColor: $getSelectionStyleValueForProperty(selection, 'background-color', '#fff') }));
-      setToolbarContext(prev => ({ ...prev, fontColor: $getSelectionStyleValueForProperty(selection, 'font-family', 'Arial') }));
+      setToolbarContext(prev => ({ ...prev, bgColor: $getSelectionStyleValueForProperty(selection, 'background-color', '#fff') }));
+      setToolbarContext(prev => ({ ...prev, fontFamily: $getSelectionStyleValueForProperty(selection, 'font-family', 'Arial') }));
 
       let matchingParent: LexicalNode | null;
       if ($isLinkNode(parent)) {

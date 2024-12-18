@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { toolbarContextAtom } from '../../context/ToolbarContext';
 import { sanitizeUrl } from '../../util/url';
-import { calculateNextFontSize, clearFormatting, formatBulletList, formatCheckList, formatCode, formatHeading, formatNumberedList, formatParagraph, formatQuote, updateFontSizeInSelection, UpdateFontSizeType } from '../../util/utils';
+import { clearFormatting, formatBulletList, formatCheckList, formatCode, formatHeading, formatNumberedList, formatParagraph, formatQuote, updateFontSize, UpdateFontSizeType } from '../../util/utils';
 import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
 import { isCapitalize, isCenterAlign, isClearFormatting, isDecreaseFontSize, isFormatBulletList, isFormatCheckList, isFormatCode, isFormatHeading, isFormatNumberedList, isFormatParagraph, isFormatQuote, isIncreaseFontSize, isIndent, isInsertCodeBlock, isInsertLink, isJustifyAlign, isLeftAlign, isLowercase, isOutdent, isRightAlign, isStrikeThrough, isSubscript, isSuperscript, isUppercase } from './shortcut';
 
@@ -85,20 +85,10 @@ export const ShortcutsPlugin = () => {
         editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
       } else if (isIncreaseFontSize(event)) {
         event.preventDefault();
-        if (!toolbarContext.fontSizeInputValue) {
-          const nextFontSize = calculateNextFontSize(Number(toolbarContext.fontSizeInputValue), UpdateFontSizeType.increment);
-          updateFontSizeInSelection(editor, String(nextFontSize) + 'px', null);
-        } else {
-          updateFontSizeInSelection(editor, null, UpdateFontSizeType.increment);
-        }
+        updateFontSize(editor, UpdateFontSizeType.increment, toolbarContext.fontSizeInputValue);
       } else if (isDecreaseFontSize(event)) {
         event.preventDefault();
-        if (!toolbarContext.fontSizeInputValue) {
-          const nextFontSize = calculateNextFontSize(Number(toolbarContext.fontSizeInputValue), UpdateFontSizeType.decrement);
-          updateFontSizeInSelection(editor, String(nextFontSize) + 'px', null);
-        } else {
-          updateFontSizeInSelection(editor, null, UpdateFontSizeType.decrement);
-        }
+        updateFontSize(editor, UpdateFontSizeType.decrement, toolbarContext.fontSizeInputValue);
       } else if (isClearFormatting(event)) {
         event.preventDefault();
         clearFormatting(editor);

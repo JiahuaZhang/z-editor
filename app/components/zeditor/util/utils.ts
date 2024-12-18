@@ -223,6 +223,15 @@ export const updateFontSizeInSelection = (editor: LexicalEditor, newFontSize: st
   });
 };
 
+export const updateFontSize = (editor: LexicalEditor, updateType: UpdateFontSizeType, inputValue: string) => {
+  if (inputValue !== '') {
+    const nextFontSize = calculateNextFontSize(Number(inputValue), updateType);
+    updateFontSizeInSelection(editor, String(nextFontSize) + 'px', null);
+  } else {
+    updateFontSizeInSelection(editor, null, updateType);
+  }
+};
+
 export const formatParagraph = (editor: LexicalEditor) => editor.update(() => {
   const selection = $getSelection();
   if ($isRangeSelection(selection)) {

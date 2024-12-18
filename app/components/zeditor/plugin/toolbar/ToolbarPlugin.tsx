@@ -13,6 +13,7 @@ import { $createStickyNode } from '../sticky-note/StickNote';
 import { BlockFormatDropDown } from './BlockFormatDropDown';
 import { CodeLanguageDropDown } from './CodeLanguageDropDown';
 import { FontDropDown } from './FontDropDown';
+import { FontSize } from './FontSize';
 
 export const Divider = () => <span un-bg='neutral' un-w='2px' un-h='60%' un-border='rounded-full' un-mx='1' />;
 
@@ -126,7 +127,10 @@ export const ToolbarPlugin = () => {
     }
     {
       toolbarContext.blockType !== 'code'
-      && <FontDropDown font={toolbarContext.fontFamily} />
+      && <>
+        <FontDropDown font={toolbarContext.fontFamily} />
+        <FontSize fontSize={toolbarContext.fontSize.slice(0, -2)} />
+      </>
     }
 
     <Dropdown menu={{ items: insertItems }} trigger={['click']} >

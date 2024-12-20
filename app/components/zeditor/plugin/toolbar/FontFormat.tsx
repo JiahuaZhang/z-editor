@@ -5,7 +5,6 @@ import { FORMAT_TEXT_COMMAND } from 'lexical';
 import { lazy, Suspense } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { toolbarContextAtom } from '../../context/ToolbarContext';
-import { sanitizeUrl } from '../../util/url';
 import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
 import { SHORTCUTS } from '../shortcut/shortcut';
 
@@ -52,7 +51,7 @@ export const FontFormat = ({}: {}) => {
         onClick={() => {
           if (!toolbarContext.isLink) {
             setIsLinkEditMode(true);
-            editor?.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl('https://'));
+            editor?.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://');
           } else {
             setIsLinkEditMode(false);
             editor?.dispatchCommand(TOGGLE_LINK_COMMAND, null);

@@ -2,28 +2,25 @@ import { $createLinkNode, $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } fr
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister } from '@lexical/utils';
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { $getSelection, $isLineBreakNode, $isRangeSelection, BaseSelection, BLUR_COMMAND, CLICK_COMMAND, COMMAND_PRIORITY_CRITICAL, COMMAND_PRIORITY_HIGH, COMMAND_PRIORITY_LOW, KEY_ESCAPE_COMMAND, LexicalEditor, SELECTION_CHANGE_COMMAND } from 'lexical';
-import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
+import { $getSelection, $isRangeSelection, BaseSelection, BLUR_COMMAND, CLICK_COMMAND, COMMAND_PRIORITY_CRITICAL, COMMAND_PRIORITY_HIGH, COMMAND_PRIORITY_LOW, KEY_ESCAPE_COMMAND, LexicalEditor, SELECTION_CHANGE_COMMAND } from 'lexical';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { activeEditorAtom } from '../../context/activeEditor';
+import { toolbarContextAtom } from '../../context/ToolbarContext';
 import { getSelectedNode } from '../../util/getSelectedNode';
 import { setFloatingElemPositionForLinkEditor } from '../../util/setFloatingElemPositionForLinkEditor';
 import { sanitizeUrl } from '../../util/url';
 
 export const isLinkEditModeAtom = atom(false);
 
-const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem }: {
-  editor: LexicalEditor;
-  isLink: boolean;
-  setIsLink: Dispatch<boolean>;
-  anchorElem: HTMLElement;
-}) => {
+const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anchorElem: HTMLElement; }) => {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [linkUrl, setLinkUrl] = useState('');
   const [editedLinkUrl, setEditedLinkUrl] = useState('https://');
   const [lastSelection, setLastSelection] = useState<BaseSelection | null>(null);
   const [isLinkEditMode, setIsLinkEditMode] = useAtom(isLinkEditModeAtom);
+  const [toolbarContext, setToolbarContext] = useAtom(toolbarContextAtom);
 
   const $updateLinkEditor = useCallback(() => {
     const selection = $getSelection();
@@ -109,8 +106,8 @@ const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem }: {
       editor.registerCommand(
         KEY_ESCAPE_COMMAND,
         () => {
-          if (isLink) {
-            setIsLink(false);
+          if (toolbarContext.isLink) {
+            setToolbarContext(prev => ({ ...prev, isLink: false }));
             return true;
           }
           return false;
@@ -118,7 +115,7 @@ const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem }: {
         COMMAND_PRIORITY_HIGH,
       ),
     );
-  }, [editor, $updateLinkEditor, setIsLink, isLink]);
+  }, [editor, $updateLinkEditor, toolbarContext.isLink, setToolbarContext]);
 
   useEffect(() => { editor.getEditorState().read($updateLinkEditor); }, [editor, $updateLinkEditor]);
 
@@ -126,7 +123,7 @@ const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem }: {
     if (isLinkEditMode && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [isLinkEditMode, isLink]);
+  }, [isLinkEditMode, toolbarContext.isLink]);
 
   const monitorInputInteraction = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
@@ -166,13 +163,13 @@ const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem }: {
     un-top='0'
     un-left='0'
     un-bg='#fff'
-    un-shadow={`${isLink ? '[0_0_4px_2px_#7dd3fc]' : ''}`}
+    un-shadow={`${toolbarContext.isLink ? '[0_0_4px_2px_#7dd3fc]' : ''}`}
     un-border='rounded'
     un-transition='opacity'
     un-duration='500'
   >
     {
-      isLink && isLinkEditMode && <div un-grid='~ flow-col'
+      toolbarContext.isLink && isLinkEditMode && <div un-grid='~ flow-col'
         un-grid-cols='[1fr_max-content_max-content]'
         un-items='center'
         un-gap='2'
@@ -217,7 +214,7 @@ const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem }: {
     }
 
     {
-      isLink && !isLinkEditMode && <div
+      toolbarContext.isLink && !isLinkEditMode && <div
         un-grid='~ flow-col'
         un-grid-cols='[1fr_max-content_max-content]'
         un-items='center'
@@ -262,48 +259,12 @@ const FloatingLinkEditor = ({ editor, isLink, setIsLink, anchorElem }: {
 
 const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLElement) => {
   const activeEditor = useAtomValue(activeEditorAtom);
-  const [isLink, setIsLink] = useState(false);
+  // const [isLink, setIsLink] = useState(false);
+  const setToolbarContext = useSetAtom(toolbarContextAtom);
   const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
 
   useEffect(() => {
-    const $updateToolbar = () => {
-      const selection = $getSelection();
-      if (!$isRangeSelection(selection)) return;
-
-      const focusNode = getSelectedNode(selection);
-      const focusLinkNode = $findMatchingParent(focusNode, $isLinkNode);
-      const focusAutoLinkNode = $findMatchingParent(focusNode, $isAutoLinkNode,);
-      if (!(focusLinkNode || focusAutoLinkNode)) {
-        setIsLink(false);
-        return;
-      }
-
-      const badNode = selection
-        .getNodes()
-        .filter((node) => !$isLineBreakNode(node))
-        .find((node) => {
-          const linkNode = $findMatchingParent(node, $isLinkNode);
-          const autoLinkNode = $findMatchingParent(node, $isAutoLinkNode);
-          return (
-            (focusLinkNode && !focusLinkNode.is(linkNode))
-            || (linkNode && !linkNode.is(focusLinkNode))
-            || (focusAutoLinkNode && !focusAutoLinkNode.is(autoLinkNode))
-            || (autoLinkNode && (!autoLinkNode.is(focusAutoLinkNode) || autoLinkNode.getIsUnlinked()))
-          );
-        });
-      setIsLink(!badNode);
-    };
-
     return mergeRegister(
-      editor.registerUpdateListener(({ editorState }) => editorState.read($updateToolbar)),
-      editor.registerCommand(
-        SELECTION_CHANGE_COMMAND,
-        (_payload, _newEditor) => {
-          $updateToolbar();
-          return false;
-        },
-        COMMAND_PRIORITY_CRITICAL,
-      ),
       editor.registerCommand(
         CLICK_COMMAND,
         (payload) => {
@@ -334,7 +295,7 @@ const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLEle
             return false;
           }
 
-          setIsLink(false);
+          setToolbarContext(prev => ({ ...prev, isLink: false }));
           setIsLinkEditMode(false);
           return false;
         },
@@ -344,12 +305,7 @@ const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLEle
   }, [editor]);
 
   return activeEditor && createPortal(
-    <FloatingLinkEditor
-      editor={activeEditor}
-      isLink={isLink}
-      anchorElem={anchorElem}
-      setIsLink={setIsLink}
-    />,
+    <FloatingLinkEditor editor={activeEditor} anchorElem={anchorElem} />,
     anchorElem,
   );
 };

@@ -288,7 +288,7 @@ const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLEle
         payload => {
           const relatedTarget = payload.relatedTarget as HTMLElement;
 
-          if (relatedTarget.getAttribute('lexical-editor') === 'float-link') {
+          if (relatedTarget instanceof HTMLElement && relatedTarget.getAttribute('lexical-editor') === 'float-link') {
             return false;
           }
 

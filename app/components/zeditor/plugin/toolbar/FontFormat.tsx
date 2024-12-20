@@ -1,8 +1,10 @@
+import { presetPrimaryColors } from '@ant-design/colors';
 import { TOGGLE_LINK_COMMAND } from '@lexical/link';
-import { Tooltip } from 'antd';
+import { $patchStyleText } from '@lexical/selection';
+import { ColorPicker, Tooltip } from 'antd';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { FORMAT_TEXT_COMMAND } from 'lexical';
-import { lazy, Suspense } from 'react';
+import { $getSelection, FORMAT_TEXT_COMMAND } from 'lexical';
+import { lazy, Suspense, useCallback } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { toolbarContextAtom } from '../../context/ToolbarContext';
 import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
@@ -10,10 +12,21 @@ import { SHORTCUTS } from '../shortcut/shortcut';
 
 const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));
 
+const preset = { colors: [...new Set(Object.values(presetPrimaryColors))], label: 'primary' };
+
 export const FontFormat = ({}: {}) => {
   const editor = useAtomValue(activeEditorAtom);
   const toolbarContext = useAtomValue(toolbarContextAtom);
   const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
+
+  const applyStyleText = useCallback((styles: Record<string, string>) => {
+    editor?.update(() => {
+      const selection = $getSelection();
+      if (selection === null) return;
+
+      $patchStyleText(selection, styles);
+    });
+  }, [editor]);
 
   return <Suspense>
     <Tooltip title={`Bold (${SHORTCUTS.BOLD})`} >
@@ -63,7 +76,13 @@ export const FontFormat = ({}: {}) => {
       </button>
     </Tooltip>
 
-    {/* text color dropdown */}
+    <ColorPicker defaultValue={toolbarContext.fontColor} presets={[preset]}
+      onChangeComplete={color => applyStyleText({ 'color': `#${color.toHex()}` })}
+    >
+      <Tooltip title='Text color' >
+        <span un-cursor='pointer' className="i-flowbite:font-color-alt-solid" style={{ color: toolbarContext.fontColor }} />
+      </Tooltip>
+    </ColorPicker>
 
     {/* background color dropdown */}
 

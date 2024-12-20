@@ -21,21 +21,21 @@ export const FontFormat = ({}: {}) => {
       <button un-flex='~' un-bg={`${toolbarContext.isBold && 'zinc-4'}`} un-p='1' un-border='rounded'
         onClick={() => editor!.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')}
       >
-        <span className="i-tabler:bold" un-text={`${toolbarContext.isBold && 'white'}`} />
+        <span className="i-tabler:bold" un-text={`${toolbarContext.isBold ? 'white' : 'gray-6'}`} />
       </button>
     </Tooltip>
     <Tooltip title={`Italic (${SHORTCUTS.ITALIC})`} >
       <button un-flex='~' un-bg={`${toolbarContext.isItalic && 'zinc-4'}`} un-p='1' un-border='rounded'
         onClick={() => editor!.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic')}
       >
-        <span className="i-ci:italic" un-text={`${toolbarContext.isItalic && 'white'}`} />
+        <span className="i-ci:italic" un-text={`${toolbarContext.isItalic ? 'white' : 'gray-6'}`} />
       </button>
     </Tooltip>
     <Tooltip title={`Underline (${SHORTCUTS.UNDERLINE})`} >
       <button un-flex='~' un-bg={`${toolbarContext.isUnderline && 'zinc-4'}`} un-p='1' un-border='rounded'
         onClick={() => editor!.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline')}
       >
-        <span className="i-ci:underline" un-text={`${toolbarContext.isUnderline && 'white'}`} />
+        <span className="i-ci:underline" un-text={`${toolbarContext.isUnderline ? 'white' : 'gray-6'}`} />
       </button>
     </Tooltip>
     {
@@ -43,7 +43,7 @@ export const FontFormat = ({}: {}) => {
         <button un-flex='~' un-bg={`${toolbarContext.isCode && 'zinc-4'}`} un-p='1' un-border='rounded'
           onClick={() => editor!.dispatchCommand(FORMAT_TEXT_COMMAND, 'code')}
         >
-          <span className="i-mdi:code" un-text={`${toolbarContext.isCode && 'white'}`} />
+          <span className="i-mdi:code" un-text={`${toolbarContext.isCode ? 'white' : 'gray-6'}`} />
         </button>
       </Tooltip>
     }
@@ -59,7 +59,7 @@ export const FontFormat = ({}: {}) => {
           }
         }}
       >
-        <span className="i-ci:link" un-text={`${toolbarContext.isLink && 'white'}`} />
+        <span className="i-ci:link" un-text={`${toolbarContext.isLink ? 'white' : 'gray-6'}`} />
       </button>
     </Tooltip>
 

@@ -55,7 +55,7 @@ export const FontSize = ({ fontSize }: { fontSize: string; }) => {
   return <Suspense>
     <div un-flex='~' un-items='center' un-gap='1' >
       <Tooltip title={`Decrease font size (${SHORTCUTS.DECREASE_FONT_SIZE})`}>
-        <button un-text='disabled:gray-3' aria-label="Decrease font size"
+        <button un-text='disabled:gray-3 gray-5' un-translate-y='-0.25' aria-label="Decrease font size"
           disabled={fontSize === '' || Number(value) <= MIN_ALLOWED_FONT_SIZE}
           onClick={() => updateFontSize(editor!, UpdateFontSizeType.decrement, value)}
         >-</button>
@@ -70,7 +70,7 @@ export const FontSize = ({ fontSize }: { fontSize: string; }) => {
         />
       </Tooltip>
       <Tooltip title={`Decrease font size (${SHORTCUTS.INCREASE_FONT_SIZE})`}>
-        <button un-text='disabled:gray-3' aria-label="Increase font size"
+        <button un-text='disabled:gray-3 gray-5' un-translate-y='-0.25' aria-label="Increase font size"
           disabled={fontSize === '' || Number(value) >= MAX_ALLOWED_FONT_SIZE}
           onClick={() => updateFontSize(editor!, UpdateFontSizeType.increment, value)}
         >+</button>

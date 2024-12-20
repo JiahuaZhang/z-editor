@@ -13,8 +13,8 @@ export const FontDropDown = ({ font }: { font: string; }) => {
   const [editor] = useLexicalComposerContext();
 
   return <Suspense>
-    <Select un-min-w='38' options={options} value={font}
-      labelRender={value => <div un-flex='~' un-items='center' un-gap='1'  ><span className="i-bi:fonts" /> {value.value} </div>}
+    <Select options={options} value={font} popupClassName='w-40!'
+      labelRender={_ => <div un-flex='~' ><span className="i-bi:fonts" /> </div>}
       onChange={font => editor.update(() => {
         const selection = $getSelection();
         if (selection === null) return;

@@ -125,7 +125,7 @@ export const BlockFormatDropDown = ({ blockType }: { blockType: keyof typeof blo
   if (editor !== activeEditor) return null;
 
   return <Suspense>
-    <Select un-m='1' un-min-w='30' un-border='none hover:blue-6'
+    <Select un-m='1' un-border='none hover:blue-6'
       value={blockType}
       popupClassName='w-auto!'
       options={COMMON_BLOCK_FORMATS.map(value => ({ label: BLOCK_LABELS[value], value }))}
@@ -136,12 +136,9 @@ export const BlockFormatDropDown = ({ blockType }: { blockType: keyof typeof blo
           {args.data.label}
         </div>;
       }}
-      labelRender={args => {
-        return <div un-inline='grid' un-grid-flow='col' un-gap='2' un-items='center' >
-          <span className={BLOCK_ICONS[args.value as keyof typeof blockTypeToBlockName]} />
-          {BLOCK_LABELS[args.value as keyof typeof blockTypeToBlockName]}
-        </div>;
-      }}
+      labelRender={args => <div un-flex='~' >
+        <span className={BLOCK_ICONS[args.value as keyof typeof blockTypeToBlockName]} />
+      </div>}
       dropdownRender={original => <div un-min-w='80'>{original}</div>}
     />
     <Divider />

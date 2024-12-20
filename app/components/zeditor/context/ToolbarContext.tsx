@@ -3,7 +3,7 @@ import { $isLinkNode } from '@lexical/link';
 import { $isListNode, ListNode } from '@lexical/list';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $isHeadingNode } from '@lexical/rich-text';
-import { $getSelectionStyleValueForProperty, $isParentElementRTL, $patchStyleText } from '@lexical/selection';
+import { $getSelectionStyleValueForProperty, $isParentElementRTL } from '@lexical/selection';
 import { $isTableNode, $isTableSelection } from '@lexical/table';
 import { $findMatchingParent, $getNearestNodeOfType, $isEditorIsNestedEditor, mergeRegister } from '@lexical/utils';
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -174,29 +174,6 @@ export const useToolbarContext = () => {
       }, COMMAND_PRIORITY_CRITICAL)
     );
   }, [editor, activeEditor, $updateToolbar]);
-
-  const applyStyleText = useCallback(
-    (styles: Record<string, string>, skipHistoryStack?: boolean) => {
-      activeEditor?.update(() => {
-        const selection = $getSelection();
-        if (selection !== null) {
-          $patchStyleText(selection, styles);
-        };
-        skipHistoryStack ? { tag: 'history' } : {};
-      });
-    },
-    [activeEditor]
-  );
-
-  const onFontColorSelect = useCallback(
-    (color: string, skipHistoryStack: boolean) => applyStyleText({ color }, skipHistoryStack),
-    [applyStyleText]
-  );
-
-  const onBgColorSelect = useCallback(
-    (value: string, skipHistoryStack: boolean) => applyStyleText({ 'background-color': value }, skipHistoryStack),
-    [applyStyleText]
-  );
 
   const onCodeLanguageSelect = useCallback(
     (value: string) => activeEditor?.update(() => {

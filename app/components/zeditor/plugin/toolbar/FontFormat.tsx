@@ -84,7 +84,13 @@ export const FontFormat = ({}: {}) => {
       </Tooltip>
     </ColorPicker>
 
-    {/* background color dropdown */}
+    <ColorPicker defaultValue={toolbarContext.bgColor} presets={[preset]}
+      onChangeComplete={color => applyStyleText({ 'background-color': `#${color.toHex()}` })}
+    >
+      <Tooltip title='Background color' >
+        <span un-cursor='pointer' className="i-icon-park-outline:background-color" />
+      </Tooltip>
+    </ColorPicker>
 
     {/* other minor formats */}
     {/* lowercase, uppercase, capitalize, strikethrough, subscript, superscript, clear formats */}

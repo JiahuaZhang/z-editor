@@ -48,6 +48,7 @@ export const FontFormat = ({}: {}) => {
     }
     <Tooltip title={`Insert link (${SHORTCUTS.INSERT_LINK})`} >
       <button un-flex='~' un-bg={`${toolbarContext.isLink && 'zinc-4'}`} un-p='1' un-border='rounded'
+        lexical-editor='float-link'
         onClick={() => {
           if (!toolbarContext.isLink) {
             setIsLinkEditMode(true);

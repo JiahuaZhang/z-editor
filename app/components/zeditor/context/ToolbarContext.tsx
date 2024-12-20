@@ -1,5 +1,5 @@
 import { $isCodeNode, CODE_LANGUAGE_MAP } from '@lexical/code';
-import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
+import { $isLinkNode } from '@lexical/link';
 import { $isListNode, ListNode } from '@lexical/list';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $isHeadingNode } from '@lexical/rich-text';
@@ -12,7 +12,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { INSERT_IMAGE_COMMAND, InsertImagePayload } from '../plugin/image/ImagePlugin';
 import { isLinkEditModeAtom } from '../plugin/link/FloatingLinkEditorPlugin';
 import { getSelectedNode } from '../util/getSelectedNode';
-import { sanitizeUrl } from '../util/url';
 import { activeEditorAtom } from './activeEditor';
 
 export const MIN_ALLOWED_FONT_SIZE = 8;
@@ -198,16 +197,6 @@ export const useToolbarContext = () => {
     (value: string, skipHistoryStack: boolean) => applyStyleText({ 'background-color': value }, skipHistoryStack),
     [applyStyleText]
   );
-
-  const insertLink = useCallback(() => {
-    if (!toolbarContext.isLink) {
-      setIsLinkEditMode(true);
-      activeEditor?.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl('https://'));
-    } else {
-      setIsLinkEditMode(false);
-      activeEditor?.dispatchCommand(TOGGLE_LINK_COMMAND, null);
-    }
-  }, [activeEditor, toolbarContext.isLink, setIsLinkEditMode]);
 
   const onCodeLanguageSelect = useCallback(
     (value: string) => activeEditor?.update(() => {

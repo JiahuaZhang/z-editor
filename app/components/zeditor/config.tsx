@@ -36,7 +36,17 @@ export const initialConfig: InitialConfigType = {
       h6: 'text-base font-bold font-blue-5 '
     },
     text: {
-      code: 'bg-zinc-1 p-1 rounded text-sm font-mono'
+      bold: '',
+      capitalize: 'uppercase',
+      code: 'bg-zinc-1 p-1 rounded text-sm font-mono',
+      italic: '',
+      lowercase: 'lowercase',
+      strikethrough: 'PlaygroundEditorTheme__textStrikethrough',
+      subscript: 'PlaygroundEditorTheme__textSubscript',
+      superscript: 'PlaygroundEditorTheme__textSuperscript',
+      underline: 'underline',
+      underlineStrikethrough: 'PlaygroundEditorTheme__textUnderlineStrikethrough',
+      uppercase: 'PlaygroundEditorTheme__textUppercase',
     },
     list: {
       checklist: 'pl-0',

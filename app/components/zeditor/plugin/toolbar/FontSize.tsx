@@ -53,7 +53,7 @@ export const FontSize = ({ fontSize }: { fontSize: string; }) => {
   useEffect(() => setValue(fontSize), [fontSize]);
 
   return <Suspense>
-    <div un-flex='~'>
+    <div un-flex='~' un-items='center' un-gap='1' >
       <Tooltip title={`Decrease font size (${SHORTCUTS.DECREASE_FONT_SIZE})`}>
         <button un-text='disabled:gray-3' aria-label="Decrease font size"
           disabled={fontSize === '' || Number(value) <= MIN_ALLOWED_FONT_SIZE}
@@ -61,7 +61,7 @@ export const FontSize = ({ fontSize }: { fontSize: string; }) => {
         >-</button>
       </Tooltip>
       <Tooltip title='Font Size' >
-        <input un-border='2 solid zinc-3 rounded' un-w='6' un-text='base center'
+        <input un-border='2 solid zinc-3 rounded' un-w='8' un-text='sm center'
           className='[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none' type='number'
           value={value} onChange={event => setValue(event.target.value)}
           min={MIN_ALLOWED_FONT_SIZE} max={MAX_ALLOWED_FONT_SIZE}

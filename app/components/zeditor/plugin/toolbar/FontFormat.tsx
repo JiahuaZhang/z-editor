@@ -88,7 +88,7 @@ export const FontFormat = ({}: {}) => {
       onChangeComplete={color => applyStyleText({ 'background-color': `#${color.toHex()}` })}
     >
       <Tooltip title='Background color' >
-        <span un-cursor='pointer' className="i-icon-park-outline:background-color" />
+        <span un-cursor='pointer' className="i-icon-park-outline:background-color" un-text='gray-6' />
       </Tooltip>
     </ColorPicker>
 

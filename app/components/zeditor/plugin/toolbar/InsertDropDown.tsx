@@ -7,14 +7,21 @@ import { INSERT_INLINE_COMMAND } from '../comment/CommentPlugin';
 import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
 import { INSERT_HORIZONTAL_RULE_COMMAND } from '../horizontal-rule/HorizontalRuleNode';
 import { INSERT_IMAGE_COMMAND } from '../image/ImagePlugin';
+import { INSERT_PAGE_BREAK } from '../page-break/PageBreakPlugin';
 import { $createStickyNode } from '../sticky-note/StickNote';
 
 const getInsertItems = (editor: LexicalEditor) => [
   {
-    key: 'horizontal-line',
-    label: 'Horizontal Line',
+    key: 'horizontal-rule',
+    label: 'Horizontal Rule',
     icon: <span className="i-material-symbols-light:horizontal-rule" un-text='xl!' />,
     onClick: () => editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined)
+  },
+  {
+    key: 'page-break',
+    label: 'Page Break',
+    icon: <span className="i-mdi:scissors" un-text='xl!' />,
+    onClick: () => editor.dispatchCommand(INSERT_PAGE_BREAK, undefined)
   },
   {
     key: 'sticky-note',

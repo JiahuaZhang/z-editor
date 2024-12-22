@@ -60,6 +60,7 @@ const Plugins = ({ ...rest }) => {
     <Plugin.Image.Inline />
     {/* <Plugin.Emoji.Transform /> */}
     <Plugin.HorizontalRule />
+    <Plugin.PageBreak />
     <Plugin.Emoji.Picker />
     <Plugin.Excalidraw />
     {/* <Plugin.AutoComplete /> */}

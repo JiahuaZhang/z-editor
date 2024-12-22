@@ -41,7 +41,7 @@ export const initialConfig: InitialConfigType = {
       code: 'bg-zinc-1 p-1 rounded text-sm font-mono',
       italic: '',
       lowercase: 'lowercase',
-      strikethrough: 'PlaygroundEditorTheme__textStrikethrough',
+      strikethrough: 'line-through',
       subscript: 'PlaygroundEditorTheme__textSubscript',
       superscript: 'PlaygroundEditorTheme__textSuperscript',
       underline: 'underline',

@@ -22,7 +22,7 @@ const getInsertItems = (editor: LexicalEditor) => [
   {
     key: 'sticky-note',
     label: 'Sticky Note',
-    icon: <span className="i-bi:sticky" />,
+    icon: <span className="i-bi:sticky" un-text='xl!' />,
     onClick: () => editor.update(() => {
       const root = $getRoot();
       const stickyNode = $createStickyNode(0, 0);
@@ -32,7 +32,7 @@ const getInsertItems = (editor: LexicalEditor) => [
   {
     key: 'image',
     label: 'Random Image',
-    icon: <span className='i-mdi:image-outline' />,
+    icon: <span className='i-mdi:image-outline' un-text='xl!' />,
     onClick: () => editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
       src: 'https://picsum.photos/200/300',
       altText: 'random image',
@@ -41,13 +41,13 @@ const getInsertItems = (editor: LexicalEditor) => [
   {
     key: 'excali-draw',
     label: 'Excalidraw',
-    icon: <span className="i-ph:graph" />,
+    icon: <span className="i-ph:graph" un-text='xl!' />,
     onClick: () => editor.dispatchCommand(INSERT_EXCALIDRAW_COMMAND, undefined)
   },
   {
     key: 'comment',
     label: 'Comment',
-    icon: <span className="i-material-symbols-light:comment" />,
+    icon: <span className="i-material-symbols-light:comment" un-text='xl!' />,
     onClick: () => editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined)
   },
 ] as MenuProps['items'];

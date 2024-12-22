@@ -1,12 +1,13 @@
 import { presetPrimaryColors } from '@ant-design/colors';
 import { TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { $patchStyleText } from '@lexical/selection';
-import { ColorPicker, Tooltip } from 'antd';
+import { Button, ColorPicker, Dropdown, Tooltip } from 'antd';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { $getSelection, FORMAT_TEXT_COMMAND } from 'lexical';
-import { lazy, Suspense, useCallback } from 'react';
+import { $getSelection, FORMAT_TEXT_COMMAND, LexicalEditor } from 'lexical';
+import { lazy, Suspense, useCallback, useMemo } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { toolbarContextAtom } from '../../context/ToolbarContext';
+import { clearFormatting } from '../../util/utils';
 import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
 import { SHORTCUTS } from '../shortcut/shortcut';
 
@@ -14,10 +15,63 @@ const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: 
 
 const preset = { colors: [...new Set(Object.values(presetPrimaryColors))], label: 'primary' };
 
+const getFormatItems = (editor: LexicalEditor) => [
+  {
+    key: 'lowercase',
+    label: 'Lowercase',
+    icon: <span className="i-mdi:format-lowercase" un-text='xl!' />,
+    extra: SHORTCUTS.LOWERCASE,
+    onClick: () => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'lowercase'),
+  },
+  {
+    key: 'uppercase',
+    label: 'Uppercase',
+    icon: <span className="i-mdi:format-uppercase" un-text='xl!' />,
+    extra: SHORTCUTS.UPPERCASE,
+    onClick: () => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'uppercase'),
+  },
+  {
+    key: 'capitalize',
+    label: 'Capitalize',
+    icon: <span className="i-mdi:format-text" un-text='xl!' />,
+    extra: SHORTCUTS.CAPITALIZE,
+    onClick: () => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'capitalize'),
+  },
+  {
+    key: 'strikethrough',
+    label: 'Strikethrough',
+    icon: <span className="i-mdi:format-strikethrough" un-text='xl!' />,
+    extra: SHORTCUTS.STRIKETHROUGH,
+    onClick: () => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough'),
+  },
+  {
+    key: 'subscript',
+    label: 'Subscript',
+    icon: <span className="i-mdi:format-subscript" un-text='xl!' />,
+    extra: SHORTCUTS.SUBSCRIPT,
+    onClick: () => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'subscript'),
+  },
+  {
+    key: 'superscript',
+    label: 'Superscript',
+    icon: <span className="i-mdi:format-superscript" un-text='xl!' />,
+    extra: SHORTCUTS.SUPERSCRIPT,
+    onClick: () => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'superscript'),
+  },
+  {
+    key: 'clear',
+    label: 'Clear Formatting',
+    icon: <span className="i-mdi:format-clear" un-text='xl!' />,
+    extra: SHORTCUTS.CLEAR_FORMATTING,
+    onClick: () => clearFormatting(editor),
+  },
+];
+
 export const FontFormat = ({}: {}) => {
   const editor = useAtomValue(activeEditorAtom);
   const toolbarContext = useAtomValue(toolbarContextAtom);
   const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
+  const formatItems = useMemo(() => editor ? getFormatItems(editor) : [], [editor]);
 
   const applyStyleText = useCallback((styles: Record<string, string>) => {
     editor?.update(() => {
@@ -79,7 +133,7 @@ export const FontFormat = ({}: {}) => {
     <ColorPicker defaultValue={toolbarContext.fontColor} presets={[preset]}
       onChangeComplete={color => applyStyleText({ 'color': `#${color.toHex()}` })}
     >
-      <Tooltip title='Text color' >
+      <Tooltip className='mx-0.5' title='Text color' >
         <span un-cursor='pointer' className="i-flowbite:font-color-alt-solid" style={{ color: toolbarContext.fontColor }} />
       </Tooltip>
     </ColorPicker>
@@ -87,13 +141,16 @@ export const FontFormat = ({}: {}) => {
     <ColorPicker defaultValue={toolbarContext.bgColor} presets={[preset]}
       onChangeComplete={color => applyStyleText({ 'background-color': `#${color.toHex()}` })}
     >
-      <Tooltip title='Background color' >
+      <Tooltip className='mx-0.5' title='Background color' >
         <span un-cursor='pointer' className="i-icon-park-outline:background-color" un-text='gray-6' />
       </Tooltip>
     </ColorPicker>
 
-    {/* other minor formats */}
-    {/* lowercase, uppercase, capitalize, strikethrough, subscript, superscript, clear formats */}
+    <Dropdown menu={{ items: formatItems }} trigger={['click']} className='[&>div]:(border-2! border-blue-4! border-solid!)' overlayClassName='[&>ul>li]:(text-blue-4 text-base)' >
+      <Button un-mx='0.5' un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='0' un-text='xl gray-6' un-px='1' un-pr='0' >
+        <span className="i-ci:font" /> <span className="i-ph:caret-down" un-text='lg gray-4' />
+      </Button>
+    </Dropdown>
     <Divider />
   </Suspense>;
 };

@@ -132,7 +132,7 @@ export const BlockFormatDropDown = ({ blockType }: { blockType: keyof typeof blo
       onChange={value => BLOCK_CONVERTERS[value as keyof typeof blockTypeToBlockName](activeEditor!)}
       optionRender={args => {
         return <div un-inline='grid' un-grid-flow='col' un-gap='2' un-items='center' >
-          <span className={BLOCK_ICONS[args.data.value]} />
+          <span className={BLOCK_ICONS[args.data.value]} un-text='lg' />
           {args.data.label}
         </div>;
       }}

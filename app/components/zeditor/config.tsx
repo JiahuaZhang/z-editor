@@ -42,10 +42,10 @@ export const initialConfig: InitialConfigType = {
       italic: '',
       lowercase: 'lowercase',
       strikethrough: 'line-through',
-      subscript: 'PlaygroundEditorTheme__textSubscript',
-      superscript: 'PlaygroundEditorTheme__textSuperscript',
+      subscript: '',
+      superscript: '',
       underline: 'underline',
-      underlineStrikethrough: 'PlaygroundEditorTheme__textUnderlineStrikethrough',
+      underlineStrikethrough: 'underline line-through',
       uppercase: 'PlaygroundEditorTheme__textUppercase',
     },
     list: {

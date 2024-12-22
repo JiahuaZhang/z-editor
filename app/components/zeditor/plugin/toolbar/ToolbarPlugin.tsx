@@ -1,56 +1,19 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { IS_APPLE, mergeRegister } from '@lexical/utils';
-import { Button, Dropdown, MenuProps, Tooltip } from 'antd';
+import { Tooltip } from 'antd';
 import { useAtom, useAtomValue } from 'jotai';
-import { $getRoot, BLUR_COMMAND, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, FOCUS_COMMAND, LexicalEditor, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
-import { useEffect, useMemo, useState } from 'react';
+import { BLUR_COMMAND, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, FOCUS_COMMAND, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
+import { useEffect, useState } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { toolbarContextAtom, useToolbarContext } from '../../context/ToolbarContext';
-import { INSERT_INLINE_COMMAND } from '../comment/CommentPlugin';
-import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
-import { INSERT_IMAGE_COMMAND } from '../image/ImagePlugin';
-import { $createStickyNode } from '../sticky-note/StickNote';
 import { BlockFormatDropDown } from './BlockFormatDropDown';
 import { CodeLanguageDropDown } from './CodeLanguageDropDown';
 import { FontDropDown } from './FontDropDown';
 import { FontFormat } from './FontFormat';
 import { FontSize } from './FontSize';
+import { InsertDropDown } from './InsertDropDown';
 
 export const Divider = () => <span un-bg='neutral' un-w='2px' un-h='60%' un-border='rounded-full' un-mx='1' />;
-
-const getInsertItems = (editor: LexicalEditor) => [
-  {
-    key: 'sticky-note',
-    label: 'Sticky Note',
-    icon: <span className="i-bi:sticky" un-text='xl!' />,
-    onClick: () => editor.update(() => {
-      const root = $getRoot();
-      const stickyNode = $createStickyNode(0, 0);
-      root.append(stickyNode);
-    })
-  },
-  {
-    key: 'image',
-    label: 'Random Image',
-    icon: <span className='i-mdi:image-outline' un-text='xl!' />,
-    onClick: () => editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-      src: 'https://picsum.photos/200/300',
-      altText: 'random image',
-    })
-  },
-  {
-    key: 'excali-draw',
-    label: 'Excalidraw',
-    icon: <span className="i-ph:graph" un-text='xl!' />,
-    onClick: () => editor.dispatchCommand(INSERT_EXCALIDRAW_COMMAND, undefined)
-  },
-  {
-    key: 'comment',
-    label: 'Comment',
-    icon: <span className="i-material-symbols-light:comment" un-text='xl!' />,
-    onClick: () => editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined)
-  },
-] as MenuProps['items'];
 
 export const ToolbarPlugin = () => {
   const [editor] = useLexicalComposerContext();
@@ -58,7 +21,6 @@ export const ToolbarPlugin = () => {
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
-  const insertItems = useMemo(() => activeEditor ? getInsertItems(activeEditor) : [], [activeEditor]);
   const { onCodeLanguageSelect } = useToolbarContext();
   const [toolbarContext, setToolbarContext] = useAtom(toolbarContextAtom);
 
@@ -135,11 +97,6 @@ export const ToolbarPlugin = () => {
       </>
     }
 
-    <Dropdown menu={{ items: insertItems }} trigger={['click']} >
-      <Button un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='0.25' un-px='1' un-text='sm gray-6'>
-        <span className="i-mdi:plus" un-text='lg' /> Insert <span className="i-ph:caret-down" un-text='lg' />
-      </Button>
-    </Dropdown>
-
+    <InsertDropDown />
   </div>;
 };

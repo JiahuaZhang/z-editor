@@ -59,6 +59,7 @@ const Plugins = ({ ...rest }) => {
     <Plugin.Image.Insert />
     <Plugin.Image.Inline />
     {/* <Plugin.Emoji.Transform /> */}
+    <Plugin.HorizontalRule />
     <Plugin.Emoji.Picker />
     <Plugin.Excalidraw />
     {/* <Plugin.AutoComplete /> */}

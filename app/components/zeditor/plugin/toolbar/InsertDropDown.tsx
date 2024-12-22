@@ -5,10 +5,17 @@ import { useMemo } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { INSERT_INLINE_COMMAND } from '../comment/CommentPlugin';
 import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
+import { INSERT_HORIZONTAL_RULE_COMMAND } from '../horizontal-rule/HorizontalRuleNode';
 import { INSERT_IMAGE_COMMAND } from '../image/ImagePlugin';
 import { $createStickyNode } from '../sticky-note/StickNote';
 
 const getInsertItems = (editor: LexicalEditor) => [
+  {
+    key: 'horizontal-line',
+    label: 'Horizontal Line',
+    icon: <span className="i-material-symbols-light:horizontal-rule" un-text='xl!' />,
+    onClick: () => editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined)
+  },
   {
     key: 'sticky-note',
     label: 'Sticky Note',

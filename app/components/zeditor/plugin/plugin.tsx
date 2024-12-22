@@ -5,6 +5,7 @@ import { EmojiPickerPlugin } from './emoji/EmojiPickerPlugin';
 import { EmojiPlugin } from './emoji/EmojiPlugin';
 import { ExcalidrawPlugin } from './excalidraw/ExcalidrawPlugin';
 import { HashtagPlugin } from './hashtag/HashTagPlugin';
+import { HorizontalRulePlugin } from './horizontal-rule/HorizontalRulePlugin';
 import { ImagePlugin } from './image/ImagePlugin';
 import { InlineImagePlugin } from './inline-image/InlineImagePlugin';
 import { LayoutPlugin } from './layout/LayoutPlugin';
@@ -42,4 +43,5 @@ export namespace Plugin {
   export const Layout = LayoutPlugin;
   export const SpecialText = SpecialTextPlugin;
   export const Shortcuts = ShortcutsPlugin;
+  export const HorizontalRule = HorizontalRulePlugin;
 }

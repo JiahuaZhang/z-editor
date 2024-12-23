@@ -128,54 +128,42 @@ export const InsertDropDown = () => {
         </Form>
       </Modal>
     }
-    <Modal open={isImageFileMode} footer={null} onCancel={() => setIsImageFileMode(false)} title='Insert Image'>
-      <Form un-mt='6' labelCol={{ span: 5 }} className='[&>div:last-child]:m-0'
-        onFinish={values => {
-          console.log('finish upload', values);
-          const { images: { fileList } } = values;
-          if (Array.isArray(fileList)) {
-            for (const image of fileList) {
-              console.log(image);
-              insertImage({ src: URL.createObjectURL(image.originFileObj), altText: image.name });
+    {
+      isImageFileMode &&
+      <Modal open={true} footer={null} onCancel={() => setIsImageFileMode(false)} title='Insert Image'>
+        <Form un-mt='6' labelCol={{ span: 5 }} className='[&>div:last-child]:m-0'
+          onFinish={values => {
+            const { images: { fileList } } = values;
+            if (Array.isArray(fileList)) {
+              fileList.forEach(image => insertImage({ src: URL.createObjectURL(image.originFileObj), altText: image.name }));
             }
-          }
-          setIsImageFileMode(false);
-        }}
-      >
-        <Form.Item label='File' name='images' valuePropName='images' rules={[{ required: true, message: 'Please upload image!' }]} >
-          <Upload.Dragger listType='picture' accept='image/*' onPreview={() => {}}
-            // action={file => {
-            //   console.log(file);
-            //   return Promise.resolve('done');
-            // }}
-            beforeUpload={(file, fileList) => {
-              // console.log('before upload', file, fileList);
-              return false;
-            }}
-            itemRender={(originalNode, file, fileList) => {
-              // console.log(file, fileList);
-              return <div>
-                {originalNode}
-                custom item render
-              </div>;
-            }}
-          >
-            <span className="i-material-symbols-light:upload" un-text='6xl blue-6' />
-            <p>Click or drag file to this area to upload</p>
-          </Upload.Dragger>
-        </Form.Item>
-        <Form.Item label='Alt Text' name='alt' >
-          <Input placeholder='Random unsplash image' />
-        </Form.Item>
-        <Form.Item label={null} wrapperCol={{ offset: 20 }} >
-          <Button un-bg='blue-6' type='primary' htmlType='submit' >
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-    </Modal>
+            setIsImageFileMode(false);
+          }}
+        >
+          <Form.Item label='File' name='images' valuePropName='images' rules={[{ required: true, message: 'Please upload image!' }]} >
+            <Upload.Dragger listType='picture' accept='image/*' onPreview={() => {}}
+              beforeUpload={() => false}
+              itemRender={(originalNode, file, _fileList) => {
+                return <div>
+                  {originalNode}
+                  <div un-flex='~' un-gap='1' mt='1' un-items='center' >
+                    Alt Text:
+                    <input un-flex-grow='1' un-border='rounded 2 solid gray-2' un-p='0.5' defaultValue={file.name} onChange={event => file.name = event.target.value} />
+                  </div>
+                </div>;
+              }}
+            >
+              <span className="i-material-symbols-light:upload" un-text='6xl blue-6' />
+              <p>Click or drag file to this area to upload</p>
+            </Upload.Dragger>
+          </Form.Item>
+          <Form.Item label={null} wrapperCol={{ offset: 20 }} >
+            <Button un-bg='blue-6' type='primary' htmlType='submit' >
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+    }
   </>;
 };
-
-// todo, upload 1 image, submit; then try 2 files
-// update, allow multiple files with customized alt-text

@@ -1,4 +1,4 @@
-import { Button, Dropdown, Form, Input, MenuProps, Modal } from 'antd';
+import { Button, Dropdown, Form, Input, MenuProps, Modal, Upload } from 'antd';
 import { useAtomValue } from 'jotai';
 import { $getRoot } from 'lexical';
 import { useCallback, useMemo, useState } from 'react';
@@ -12,7 +12,8 @@ import { $createStickyNode } from '../sticky-note/StickNote';
 
 export const InsertDropDown = () => {
   const [isInsertingImage, setIsInsertingImage] = useState(false);
-  const [isImageUrlMode, setIsImageUrlMode] = useState(true);
+  const [isImageUrlMode, setIsImageUrlMode] = useState(false);
+  const [isImageFileMode, setIsImageFileMode] = useState(true);
   const activeEditor = useAtomValue(activeEditorAtom);
   const insertItems = useMemo(() => {
     if (!activeEditor) return [];
@@ -91,7 +92,12 @@ export const InsertDropDown = () => {
             setIsImageUrlMode(true);
           }}
         >URL</button>
-        <button un-bg='blue-5 hover:white' un-mx='30' un-border='rounded blue-5 2' un-text='white lg hover:blue-5' un-p='2' >File</button>
+        <button un-bg='blue-5 hover:white' un-mx='30' un-border='rounded blue-5 2' un-text='white lg hover:blue-5' un-p='2'
+          onClick={() => {
+            setIsInsertingImage(false);
+            setIsImageFileMode(true);
+          }}
+        >File</button>
       </div>
     </Modal>
     <Modal open={isImageUrlMode} footer={null} onCancel={() => setIsImageUrlMode(false)} title='Insert Image' >
@@ -102,6 +108,33 @@ export const InsertDropDown = () => {
           rules={[{ required: true, message: 'Please input image URL!' }, { type: 'url' }]}
         >
           <Input placeholder='i.e. https://source.unsplash.com/random' />
+        </Form.Item>
+        <Form.Item label='Alt Text' name='alt' >
+          <Input placeholder='Random unsplash image' />
+        </Form.Item>
+        <Form.Item label={null} wrapperCol={{ offset: 20 }} >
+          <Button un-bg='blue-6' type='primary' htmlType='submit' >
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
+    </Modal>
+    <Modal open={isImageFileMode} footer={null} onCancel={() => setIsImageFileMode(false)} title='Insert Image'>
+      <Form un-mt='6' labelCol={{ span: 5 }} className='[&>div:last-child]:m-0'>
+        <Form.Item label='File' >
+          <Upload.Dragger listType='picture' accept='image/*' onPreview={() => {}}
+            action={file => {
+              console.log(file);
+              return Promise.resolve('done');
+            }}
+            beforeUpload={(file, fileList) => {
+              console.log('before upload', file, fileList);
+              return false;
+            }}
+          >
+            <span className="i-material-symbols-light:upload" un-text='6xl blue-6' />
+            <p>Click or drag file to this area to upload</p>
+          </Upload.Dragger>
         </Form.Item>
         <Form.Item label='Alt Text' name='alt' >
           <Input placeholder='Random unsplash image' />

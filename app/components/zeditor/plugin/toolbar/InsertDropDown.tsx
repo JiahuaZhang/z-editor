@@ -84,7 +84,10 @@ export const InsertDropDown = () => {
     <Modal open={isInsertingImage} footer={null} onCancel={() => setIsInsertingImage(false)} title='Insert Image' >
       <div un-grid='~' un-gap='6' un-mt='2' >
         <button un-bg='blue-5 hover:white' un-mx='30' un-border='rounded blue-5 2' un-text='white lg hover:blue-5' un-p='2'
-          onClick={() => insertImage({})}
+          onClick={() => {
+            setIsInsertingImage(false);
+            insertImage({});
+          }}
         >Random</button>
         <button un-bg='blue-5 hover:white' un-mx='30' un-border='rounded blue-5 2' un-text='white lg hover:blue-5' un-p='2'
           onClick={() => {
@@ -100,36 +103,61 @@ export const InsertDropDown = () => {
         >File</button>
       </div>
     </Modal>
-    <Modal open={isImageUrlMode} footer={null} onCancel={() => setIsImageUrlMode(false)} title='Insert Image' >
-      <Form un-mt='6' labelCol={{ span: 5 }} className='[&>div:last-child]:m-0'
-        onFinish={insertImage}
-      >
-        <Form.Item label='Image URL' name='src'
-          rules={[{ required: true, message: 'Please input image URL!' }, { type: 'url' }]}
+    {
+      isImageUrlMode &&
+      <Modal open footer={null} onCancel={() => setIsImageUrlMode(false)} title='Insert Image' >
+        <Form un-mt='6' labelCol={{ span: 5 }} className='[&>div:last-child]:m-0'
+          onFinish={values => {
+            insertImage(values);
+            setIsImageUrlMode(false);
+          }}
         >
-          <Input placeholder='i.e. https://source.unsplash.com/random' />
-        </Form.Item>
-        <Form.Item label='Alt Text' name='alt' >
-          <Input placeholder='Random unsplash image' />
-        </Form.Item>
-        <Form.Item label={null} wrapperCol={{ offset: 20 }} >
-          <Button un-bg='blue-6' type='primary' htmlType='submit' >
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-    </Modal>
+          <Form.Item label='Image URL' name='src'
+            rules={[{ required: true, message: 'Please input image URL!' }, { type: 'url' }]}
+          >
+            <Input placeholder='i.e. https://source.unsplash.com/random' />
+          </Form.Item>
+          <Form.Item label='Alt Text' name='alt' >
+            <Input placeholder='Random unsplash image' />
+          </Form.Item>
+          <Form.Item label={null} wrapperCol={{ offset: 20 }} >
+            <Button un-bg='blue-6' type='primary' htmlType='submit' >
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+    }
     <Modal open={isImageFileMode} footer={null} onCancel={() => setIsImageFileMode(false)} title='Insert Image'>
-      <Form un-mt='6' labelCol={{ span: 5 }} className='[&>div:last-child]:m-0'>
-        <Form.Item label='File' >
+      <Form un-mt='6' labelCol={{ span: 5 }} className='[&>div:last-child]:m-0'
+        onFinish={values => {
+          console.log('finish upload', values);
+          const { images: { fileList } } = values;
+          if (Array.isArray(fileList)) {
+            for (const image of fileList) {
+              console.log(image);
+              insertImage({ src: URL.createObjectURL(image.originFileObj), altText: image.name });
+            }
+          }
+          setIsImageFileMode(false);
+        }}
+      >
+        <Form.Item label='File' name='images' valuePropName='images' rules={[{ required: true, message: 'Please upload image!' }]} >
           <Upload.Dragger listType='picture' accept='image/*' onPreview={() => {}}
-            action={file => {
-              console.log(file);
-              return Promise.resolve('done');
-            }}
+            // action={file => {
+            //   console.log(file);
+            //   return Promise.resolve('done');
+            // }}
             beforeUpload={(file, fileList) => {
-              console.log('before upload', file, fileList);
+              // console.log('before upload', file, fileList);
               return false;
+            }}
+            itemRender={(originalNode, file, fileList) => {
+              // console.log(file, fileList);
+              return <div>
+                {originalNode}
+                custom item render
+              </div>;
             }}
           >
             <span className="i-material-symbols-light:upload" un-text='6xl blue-6' />
@@ -148,3 +176,6 @@ export const InsertDropDown = () => {
     </Modal>
   </>;
 };
+
+// todo, upload 1 image, submit; then try 2 files
+// update, allow multiple files with customized alt-text

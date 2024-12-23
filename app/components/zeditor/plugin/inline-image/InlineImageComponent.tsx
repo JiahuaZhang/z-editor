@@ -1,7 +1,7 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';
-import { Checkbox, Form, Input, Modal, Select } from 'antd';
+import { Checkbox, Form, Input, Modal, Radio } from 'antd';
 import { useAtomValue } from 'jotai';
 import { $getNodeByKey, $getSelection, $isNodeSelection, $setSelection, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, KEY_BACKSPACE_COMMAND, KEY_DELETE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, NodeKey } from 'lexical';
 import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
@@ -47,11 +47,6 @@ const LazyImage = ({ altText, className, imageRef, src, width, height, position,
   );
 };
 
-const options = [
-  { value: 'left', label: 'Left' },
-  { value: 'right', label: 'Right' },
-  { value: 'full', label: 'Full Width' },
-];
 const InlineModal = ({ nodeKey, isModalOpen, setIsModalOpen }: {
   nodeKey: NodeKey;
   isModalOpen: boolean;
@@ -97,10 +92,11 @@ const InlineModal = ({ nodeKey, isModalOpen, setIsModalOpen }: {
   >
     <Form labelCol={{ span: 6 }} >
       <Form.Item label="Position">
-        <Select options={options}
-          defaultValue='left'
-          value={position}
-          onChange={value => setPosition(value as Position)} />
+        <Radio.Group optionType='button' block value={position} onChange={e => setPosition(e.target.value as Position)} >
+          <Radio value='left'>Left</Radio>
+          <Radio value='full'>Full Width</Radio>
+          <Radio value='right'>Right</Radio>
+        </Radio.Group>
       </Form.Item>
       <Form.Item label="Caption (Alt Text)">
         <Input placeholder="Image Caption" value={altText} onChange={e => setAltText(e.target.value)} />

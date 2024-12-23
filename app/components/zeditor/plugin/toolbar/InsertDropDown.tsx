@@ -15,7 +15,7 @@ export const InsertDropDown = () => {
   const [isInsertingImage, setIsInsertingImage] = useState(false);
   const [isImageUrlMode, setIsImageUrlMode] = useState(false);
   const [isImageFileMode, setIsImageFileMode] = useState(false);
-  const [isInlineImageInsertMode, setIsInlineImageInsertMode] = useState(true);
+  const [isInlineImageInsertMode, setIsInlineImageInsertMode] = useState(false);
   const activeEditor = useAtomValue(activeEditorAtom);
   const insertItems = useMemo(() => {
     if (!activeEditor) return [];

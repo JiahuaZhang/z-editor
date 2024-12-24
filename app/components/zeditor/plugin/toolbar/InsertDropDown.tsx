@@ -1,4 +1,5 @@
-import { Button, Checkbox, Dropdown, Form, Input, MenuProps, Modal, Radio, Upload } from 'antd';
+import { INSERT_TABLE_COMMAND } from '@lexical/table';
+import { Button, Checkbox, Dropdown, Form, Input, InputNumber, MenuProps, Modal, Radio, Upload } from 'antd';
 import { useAtomValue } from 'jotai';
 import { $getRoot } from 'lexical';
 import { useCallback, useMemo, useState } from 'react';
@@ -16,6 +17,7 @@ export const InsertDropDown = () => {
   const [isImageUrlMode, setIsImageUrlMode] = useState(false);
   const [isImageFileMode, setIsImageFileMode] = useState(false);
   const [isInlineImageInsertMode, setIsInlineImageInsertMode] = useState(false);
+  const [isInsertingTable, setIsInsertingTable] = useState(true);
   const activeEditor = useAtomValue(activeEditorAtom);
   const insertItems = useMemo(() => {
     if (!activeEditor) return [];
@@ -46,6 +48,12 @@ export const InsertDropDown = () => {
         onClick: () => setIsInlineImageInsertMode(true),
       },
       {
+        key: 'excali-draw',
+        label: 'Excalidraw',
+        icon: <span className="i-ph:graph" un-text='xl!' />,
+        onClick: () => activeEditor.dispatchCommand(INSERT_EXCALIDRAW_COMMAND, undefined)
+      },
+      {
         key: 'sticky-note',
         label: 'Sticky Note',
         icon: <span className="i-bi:sticky" un-text='xl!' />,
@@ -56,17 +64,17 @@ export const InsertDropDown = () => {
         })
       },
       {
-        key: 'excali-draw',
-        label: 'Excalidraw',
-        icon: <span className="i-ph:graph" un-text='xl!' />,
-        onClick: () => activeEditor.dispatchCommand(INSERT_EXCALIDRAW_COMMAND, undefined)
-      },
-      {
         key: 'comment',
         label: 'Comment',
         icon: <span className="i-material-symbols-light:comment" un-text='xl!' />,
         onClick: () => activeEditor.dispatchCommand(INSERT_INLINE_COMMAND, undefined)
       },
+      {
+        key: 'table',
+        label: 'Table',
+        icon: <span className="i-material-symbols-light:table-outline" un-text='xl!' />,
+        onClick: () => setIsInsertingTable(true)
+      }
     ] as MenuProps['items'];
   }, [activeEditor, setIsInsertingImage]);
 
@@ -211,5 +219,29 @@ export const InsertDropDown = () => {
         </Form>
       </Modal>
     }
+    <Modal className='w-80!' un-w='200!' open={isInsertingTable} footer={null} onCancel={() => setIsInsertingTable(false)} title='Insert Table'>
+      <Form un-mt='6' labelCol={{ span: 8 }} className='[&>div:last-child]:m-0'
+        onFinish={({ rows, columns }) => {
+          activeEditor?.dispatchCommand(INSERT_TABLE_COMMAND, { rows, columns });
+          setIsInsertingTable(false);
+        }}
+      >
+        <Form.Item label='Rows' name='rows' initialValue={5}
+          rules={[{ required: true, message: 'Please input table rows!' }, { type: 'number' }]}
+        >
+          <InputNumber />
+        </Form.Item>
+        <Form.Item label='Columns' name='columns' initialValue={5}
+          rules={[{ required: true, message: 'Please input table columns!' }, { type: 'number' }]}
+        >
+          <InputNumber />
+        </Form.Item>
+        <Form.Item label={null} wrapperCol={{ offset: 18 }} >
+          <Button un-bg='blue-6' type='primary' htmlType='submit' >
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
+    </Modal>
   </>;
 };

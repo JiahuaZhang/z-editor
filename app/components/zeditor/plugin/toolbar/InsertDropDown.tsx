@@ -9,15 +9,32 @@ import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
 import { INSERT_HORIZONTAL_RULE_COMMAND } from '../horizontal-rule/HorizontalRuleNode';
 import { INSERT_IMAGE_COMMAND } from '../image/ImagePlugin';
 import { INSERT_INLINE_IMAGE_COMMAND } from '../inline-image/InlineImagePlugin';
+import { INSERT_LAYOUT_COMMAND } from '../layout/LayoutPlugin';
 import { INSERT_PAGE_BREAK } from '../page-break/PageBreakPlugin';
 import { $createStickyNode } from '../sticky-note/StickNote';
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const UnoTrick = <div un-auto-cols='[2fr_1fr] [3fr_1fr] [1fr_3fr] [1fr_2fr_1fr]' />;
+
+const DEFAULT_LAYOUTS = [
+  { layout: '1fr_1fr', children: [1, 1] },
+  { layout: '2fr_1fr', children: [2, 1] },
+  { layout: '1fr_2fr', children: [1, 2] },
+  { layout: '3fr_1fr', children: [1, 3] },
+  { layout: '1fr_3fr', children: [3, 1] },
+  { layout: '1fr_1fr_1fr', children: [1, 1, 1] },
+  { layout: '1fr_2fr_1fr', children: [1, 2, 1] },
+  { layout: '1fr_1fr_1fr_1fr', children: [1, 1, 1, 1] },
+];
+
 
 export const InsertDropDown = () => {
   const [isInsertingImage, setIsInsertingImage] = useState(false);
   const [isImageUrlMode, setIsImageUrlMode] = useState(false);
   const [isImageFileMode, setIsImageFileMode] = useState(false);
   const [isInlineImageInsertMode, setIsInlineImageInsertMode] = useState(false);
-  const [isInsertingTable, setIsInsertingTable] = useState(true);
+  const [isInsertingTable, setIsInsertingTable] = useState(false);
+  const [isInsertingColumnLayout, setIsInsertingColumnLayout] = useState(false);
   const activeEditor = useAtomValue(activeEditorAtom);
   const insertItems = useMemo(() => {
     if (!activeEditor) return [];
@@ -74,6 +91,12 @@ export const InsertDropDown = () => {
         label: 'Table',
         icon: <span className="i-material-symbols-light:table-outline" un-text='xl!' />,
         onClick: () => setIsInsertingTable(true)
+      },
+      {
+        key: 'column-layout',
+        label: 'Column Layout',
+        icon: <span className="i-material-symbols-light:view-column-outline" un-text='xl!' />,
+        onClick: () => setIsInsertingColumnLayout(true)
       }
     ] as MenuProps['items'];
   }, [activeEditor, setIsInsertingImage]);
@@ -153,7 +176,7 @@ export const InsertDropDown = () => {
               itemRender={(originalNode, file, _fileList) => {
                 return <div>
                   {originalNode}
-                  <div un-flex='~' un-gap='1' mt='1' un-items='center' >
+                  <div un-flex='~' un-gap='1' un-mt='1' un-items='center' >
                     Alt Text:
                     <input un-flex-grow='1' un-border='rounded 2 solid gray-2' un-p='0.5' defaultValue={file.name} onChange={event => file.name = event.target.value} />
                   </div>
@@ -190,7 +213,7 @@ export const InsertDropDown = () => {
               itemRender={(originalNode, file, _fileList) => {
                 return <div>
                   {originalNode}
-                  <div un-flex='~' un-gap='1' mt='1' un-items='center' >
+                  <div un-flex='~' un-gap='1' un-mt='1' un-items='center' >
                     Alt Text:
                     <input un-flex-grow='1' un-border='rounded 2 solid gray-2' un-p='0.5' defaultValue={file.name} onChange={event => file.name = event.target.value} />
                   </div>
@@ -219,7 +242,7 @@ export const InsertDropDown = () => {
         </Form>
       </Modal>
     }
-    <Modal className='w-80!' un-w='200!' open={isInsertingTable} footer={null} onCancel={() => setIsInsertingTable(false)} title='Insert Table'>
+    <Modal className='w-80!' open={isInsertingTable} footer={null} onCancel={() => setIsInsertingTable(false)} title='Insert Table'>
       <Form un-mt='6' labelCol={{ span: 8 }} className='[&>div:last-child]:m-0'
         onFinish={({ rows, columns }) => {
           activeEditor?.dispatchCommand(INSERT_TABLE_COMMAND, { rows, columns });
@@ -242,6 +265,24 @@ export const InsertDropDown = () => {
           </Button>
         </Form.Item>
       </Form>
+    </Modal>
+    <Modal open={isInsertingColumnLayout} footer={null} onCancel={() => setIsInsertingColumnLayout(false)} title='Insert Column Layout'>
+      <div un-grid='~' un-justify='center' >
+        {
+          DEFAULT_LAYOUTS.map(item =>
+            <button un-w='100' un-p='2' un-grid='~' un-grid-flow='col' un-gap='2' un-border='rounded' un-bg='hover:blue-3' un-auto-cols={`[${item.layout}]`}
+              key={item.layout}
+              onClick={() => {
+                activeEditor?.dispatchCommand(INSERT_LAYOUT_COMMAND, item.layout.replaceAll('_', ' '));
+                setIsInsertingColumnLayout(false);
+              }}
+            >
+              {
+                item.children.map((child, index) => <div key={index} un-border='rounded 2 dashed gray-4' un-text='center' >{child}</div>)
+              }
+            </button>)
+        }
+      </div>
     </Modal>
   </>;
 };

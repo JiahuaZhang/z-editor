@@ -3,6 +3,7 @@ import { CodeHighlightPlugin } from './code/CodeHighlightPlugin';
 import { CommentPlugin } from './comment/CommentPlugin';
 import { EmojiPickerPlugin } from './emoji/EmojiPickerPlugin';
 import { EmojiPlugin } from './emoji/EmojiPlugin';
+import { EquationPlugin } from './equation/EquationPlugin';
 import { ExcalidrawPlugin } from './excalidraw/ExcalidrawPlugin';
 import { HashtagPlugin } from './hashtag/HashTagPlugin';
 import { HorizontalRulePlugin } from './horizontal-rule/HorizontalRulePlugin';
@@ -46,4 +47,5 @@ export namespace Plugin {
   export const Shortcuts = ShortcutsPlugin;
   export const HorizontalRule = HorizontalRulePlugin;
   export const PageBreak = PageBreakPlugin;
+  export const Equation = EquationPlugin;
 }

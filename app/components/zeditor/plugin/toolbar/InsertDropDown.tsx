@@ -2,9 +2,11 @@ import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import { Button, Checkbox, Dropdown, Form, Input, InputNumber, MenuProps, Modal, Radio, Upload } from 'antd';
 import { useAtomValue } from 'jotai';
 import { $getRoot } from 'lexical';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { INSERT_INLINE_COMMAND } from '../comment/CommentPlugin';
+import { INSERT_EQUATION_COMMAND } from '../equation/EquationPlugin';
+import { KatexRenderer } from '../equation/KatexRenderer';
 import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
 import { INSERT_HORIZONTAL_RULE_COMMAND } from '../horizontal-rule/HorizontalRuleNode';
 import { INSERT_IMAGE_COMMAND } from '../image/ImagePlugin';
@@ -35,6 +37,9 @@ export const InsertDropDown = () => {
   const [isInlineImageInsertMode, setIsInlineImageInsertMode] = useState(false);
   const [isInsertingTable, setIsInsertingTable] = useState(false);
   const [isInsertingColumnLayout, setIsInsertingColumnLayout] = useState(false);
+  const [isInsertEquationMode, setIsInsertEquationMode] = useState(true);
+  const [equation, setEquation] = useState('');
+  const katexRef = useRef(null);
   const activeEditor = useAtomValue(activeEditorAtom);
   const insertItems = useMemo(() => {
     if (!activeEditor) return [];
@@ -71,16 +76,6 @@ export const InsertDropDown = () => {
         onClick: () => activeEditor.dispatchCommand(INSERT_EXCALIDRAW_COMMAND, undefined)
       },
       {
-        key: 'sticky-note',
-        label: 'Sticky Note',
-        icon: <span className="i-bi:sticky" un-text='xl!' />,
-        onClick: () => activeEditor.update(() => {
-          const root = $getRoot();
-          const stickyNode = $createStickyNode(0, 0);
-          root.append(stickyNode);
-        })
-      },
-      {
         key: 'comment',
         label: 'Comment',
         icon: <span className="i-material-symbols-light:comment" un-text='xl!' />,
@@ -97,7 +92,23 @@ export const InsertDropDown = () => {
         label: 'Column Layout',
         icon: <span className="i-material-symbols-light:view-column-outline" un-text='xl!' />,
         onClick: () => setIsInsertingColumnLayout(true)
-      }
+      },
+      {
+        key: 'equation',
+        label: 'Equation',
+        icon: <span className="i-ph:plus-minus" un-text='xl!' />,
+        onClick: () => setIsInsertEquationMode(true)
+      },
+      {
+        key: 'sticky-note',
+        label: 'Sticky Note',
+        icon: <span className="i-bi:sticky" un-text='xl!' />,
+        onClick: () => activeEditor.update(() => {
+          const root = $getRoot();
+          const stickyNode = $createStickyNode(0, 0);
+          root.append(stickyNode);
+        })
+      },
     ] as MenuProps['items'];
   }, [activeEditor, setIsInsertingImage]);
 
@@ -284,5 +295,30 @@ export const InsertDropDown = () => {
         }
       </div>
     </Modal>
+    {
+      isInsertEquationMode &&
+      <Modal open={true} footer={null} onCancel={() => setIsInsertEquationMode(false)} title='Insert Equation'>
+        <Form labelCol={{}} className='[&>div]:m-0'
+          onFinish={({ inline, equation }) => {
+            activeEditor?.dispatchCommand(INSERT_EQUATION_COMMAND, { equation, inline });
+            setIsInsertEquationMode(false);
+            setEquation('');
+          }}
+        >
+          <Form.Item label='Inline' name='inline' valuePropName='checked' wrapperCol={{ offset: 20 }} >
+            <Checkbox />
+          </Form.Item>
+          <Form.Item label='Equation' name='equation' labelCol={{ span: 24 }}>
+            <Input value={equation} onChange={e => setEquation(e.target.value)} />
+          </Form.Item>
+          <KatexRenderer equation={equation} inline={false} onDoubleClick={() => {}} katexRef={katexRef} />
+          <Form.Item label={null} wrapperCol={{ offset: 20 }} >
+            <Button un-bg='blue-6' type='primary' htmlType='submit' >
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+    }
   </>;
 };

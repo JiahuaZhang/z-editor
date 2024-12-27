@@ -68,6 +68,7 @@ const Plugins = ({ ...rest }) => {
     {/* <Plugin.SpecialText /> */}
     <Plugin.Shortcuts />
     <Plugin.Equation />
+    <Plugin.Collapsible />
 
     {/* <TreeView editor={editor} /> */}
   </main>;

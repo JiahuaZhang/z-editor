@@ -1,5 +1,6 @@
 import { AutocompletePlugin } from './auto-complete/AutoCompletePlugin';
 import { CodeHighlightPlugin } from './code/CodeHighlightPlugin';
+import { CollapsiblePlugin } from './collapsible/CollapsiblePlugin';
 import { CommentPlugin } from './comment/CommentPlugin';
 import { EmojiPickerPlugin } from './emoji/EmojiPickerPlugin';
 import { EmojiPlugin } from './emoji/EmojiPlugin';
@@ -48,4 +49,5 @@ export namespace Plugin {
   export const HorizontalRule = HorizontalRulePlugin;
   export const PageBreak = PageBreakPlugin;
   export const Equation = EquationPlugin;
+  export const Collapsible = CollapsiblePlugin;
 }

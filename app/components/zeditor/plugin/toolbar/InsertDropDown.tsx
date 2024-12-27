@@ -4,6 +4,7 @@ import { useAtomValue } from 'jotai';
 import { $getRoot } from 'lexical';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
+import { INSERT_COLLAPSIBLE_COMMAND } from '../collapsible/CollapsiblePlugin';
 import { INSERT_INLINE_COMMAND } from '../comment/CommentPlugin';
 import { INSERT_EQUATION_COMMAND } from '../equation/EquationPlugin';
 import { KatexRenderer } from '../equation/KatexRenderer';
@@ -37,7 +38,7 @@ export const InsertDropDown = () => {
   const [isInlineImageInsertMode, setIsInlineImageInsertMode] = useState(false);
   const [isInsertingTable, setIsInsertingTable] = useState(false);
   const [isInsertingColumnLayout, setIsInsertingColumnLayout] = useState(false);
-  const [isInsertEquationMode, setIsInsertEquationMode] = useState(true);
+  const [isInsertEquationMode, setIsInsertEquationMode] = useState(false);
   const [equation, setEquation] = useState('');
   const katexRef = useRef(null);
   const activeEditor = useAtomValue(activeEditorAtom);
@@ -109,6 +110,12 @@ export const InsertDropDown = () => {
           root.append(stickyNode);
         })
       },
+      {
+        key: 'collapsable',
+        label: 'Collapsable container',
+        icon: <span className="i-mdi:triangle" un-text='xl!' un-rotate='90' />,
+        onClick: () => activeEditor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined)
+      }
     ] as MenuProps['items'];
   }, [activeEditor, setIsInsertingImage]);
 

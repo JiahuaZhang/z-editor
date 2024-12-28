@@ -18,6 +18,8 @@ import { SpecialTextPlugin } from './special/SpecialTextPlugin';
 import { TableCellResizerPlugin } from './table/TableCellResizer';
 import { TableHoverActionsPlugin } from './table/TableHoverActionsPlugin';
 import { ToolbarPlugin } from './toolbar/ToolbarPlugin';
+import { TwitterPlugin } from './twitter/TwitterPlugin';
+import { YouTubePlugin } from './youtube/YouTubePlugin';
 
 export namespace Plugin {
   export namespace Code {
@@ -50,4 +52,6 @@ export namespace Plugin {
   export const PageBreak = PageBreakPlugin;
   export const Equation = EquationPlugin;
   export const Collapsible = CollapsiblePlugin;
+  export const YouTube = YouTubePlugin;
+  export const Twitter = TwitterPlugin;
 }

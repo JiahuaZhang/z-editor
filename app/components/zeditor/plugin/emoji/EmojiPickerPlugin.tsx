@@ -83,19 +83,18 @@ export const EmojiPickerPlugin = () => {
         (anchorElement.current
           && options.length > 0
           && createPortal(
-            <div un-border='rounded 2 solid blue-1' un-min-w='80' un-bg='white'>
-              <ul>{
-                options.map((option, i) => <EmojiMenuItem key={option.key}
-                  index={i}
-                  isSelected={selectedIndex === i}
-                  onClick={() => {
-                    setHighlightedIndex(i);
-                    selectOptionAndCleanUp(option);
-                  }}
-                  onMouseEnter={() => setHighlightedIndex(i)}
-                  option={option} />)}
-              </ul>
-            </div>,
+            <ul un-border='rounded 2 solid blue-1' un-min-w='80' un-bg='white' un-position='relative' un-z='5' >{
+              options.map((option, i) => <EmojiMenuItem key={option.key}
+                index={i}
+                isSelected={selectedIndex === i}
+                onClick={() => {
+                  setHighlightedIndex(i);
+                  selectOptionAndCleanUp(option);
+                }}
+                onMouseEnter={() => setHighlightedIndex(i)}
+                option={option} />)}
+            </ul>
+            ,
             anchorElement.current
           )) as JSX.Element
     }

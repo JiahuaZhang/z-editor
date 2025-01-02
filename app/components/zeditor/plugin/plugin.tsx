@@ -2,6 +2,7 @@ import { AutocompletePlugin } from './auto-complete/AutoCompletePlugin';
 import { CodeHighlightPlugin } from './code/CodeHighlightPlugin';
 import { CollapsiblePlugin } from './collapsible/CollapsiblePlugin';
 import { CommentPlugin } from './comment/CommentPlugin';
+import { EmbedPlugin } from './embed/EmbedPlugin';
 import { EmojiPickerPlugin } from './emoji/EmojiPickerPlugin';
 import { EmojiPlugin } from './emoji/EmojiPlugin';
 import { EquationPlugin } from './equation/EquationPlugin';
@@ -54,4 +55,5 @@ export namespace Plugin {
   export const Collapsible = CollapsiblePlugin;
   export const YouTube = YouTubePlugin;
   export const Twitter = TwitterPlugin;
+  export const Embed = EmbedPlugin;
 }

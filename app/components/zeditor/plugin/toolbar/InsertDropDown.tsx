@@ -304,7 +304,7 @@ export const InsertDropDown = () => {
     </Modal>
     {
       isInsertEquationMode &&
-      <Modal open={true} footer={null} onCancel={() => setIsInsertEquationMode(false)} title='Insert Equation'>
+      <Modal open footer={null} onCancel={() => setIsInsertEquationMode(false)} title='Insert Equation'>
         <Form labelCol={{}} className='[&>div]:m-0'
           onFinish={({ inline, equation }) => {
             activeEditor?.dispatchCommand(INSERT_EQUATION_COMMAND, { equation, inline });

@@ -1,8 +1,8 @@
 import { AutoEmbedOption, EmbedConfig, EmbedMatchResult, LexicalAutoEmbedPlugin } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { Modal } from 'antd';
-import { COMMAND_PRIORITY_EDITOR, createCommand, LexicalCommand, LexicalEditor, LexicalNode } from 'lexical';
-import { useEffect, useState } from 'react';
+import { Button, Form, Input, Modal } from 'antd';
+import { LexicalEditor, LexicalNode } from 'lexical';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { INSERT_TWEET_COMMAND } from '../twitter/TwitterPlugin';
 import { INSERT_YOUTUBE_COMMAND } from '../youtube/YouTubePlugin';
@@ -12,12 +12,14 @@ type PlaygroundEmbedConfig = EmbedConfig & {
   contentName: string;
   // Icon for display.
   icon?: JSX.Element;
+  largeIcon?: JSX.Element;
   // An example of a matching url https://twitter.com/jack/status/20
   exampleUrl: string;
   // For extra searching.
   keywords: string[];
   // Embed a Figma Project.
   description?: string;
+  error?: string;
 };
 
 export const YoutubeEmbedConfig: PlaygroundEmbedConfig = {
@@ -25,10 +27,11 @@ export const YoutubeEmbedConfig: PlaygroundEmbedConfig = {
   exampleUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw',
   // Icon for display.
   icon: <span className="i-mdi:youtube" un-text='[#f00]' />,
+  largeIcon: <span className="i-mdi:youtube" un-text='[#f00] xl!' />,
   insertNode: (editor: LexicalEditor, result: EmbedMatchResult) => editor.dispatchCommand(INSERT_YOUTUBE_COMMAND, result.id),
   keywords: ['youtube', 'video'],
   // Determine if a given URL is a match and return url data.
-  parseUrl: async (url: string) => {
+  parseUrl: (url: string) => {
     const match = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/.exec(url);
     const id = match ? (match?.[2].length === 11 ? match[2] : null) : null;
     if (id != null) return { id, url };
@@ -36,12 +39,14 @@ export const YoutubeEmbedConfig: PlaygroundEmbedConfig = {
     return null;
   },
   type: 'youtube-video',
+  error: 'Invalid YouTube URL',
 };
 
 export const TwitterEmbedConfig: PlaygroundEmbedConfig = {
   contentName: 'Tweet',
   exampleUrl: 'https://twitter.com/jack/status/20',
   icon: <span className="i-mdi:twitter" un-text='[#1da1f2]' />,
+  largeIcon: <span className="i-mdi:twitter" un-text='[#1da1f2] xl!' />,
   insertNode: (editor: LexicalEditor, result: EmbedMatchResult) => editor.dispatchCommand(INSERT_TWEET_COMMAND, result.id),
   // For extra searching.
   keywords: ['tweet', 'twitter'],
@@ -51,13 +56,11 @@ export const TwitterEmbedConfig: PlaygroundEmbedConfig = {
 
     return null;
   },
-
   type: 'tweet',
+  error: 'Invalid Twitter URL',
 };
 
 export const EmbedConfigs = [TwitterEmbedConfig, YoutubeEmbedConfig];
-
-export const INSERT_EMBED_COMMAND: LexicalCommand<string> = createCommand('INSERT_EMBED_COMMAND');
 
 class EmbedOption extends AutoEmbedOption {
   config?: PlaygroundEmbedConfig;
@@ -119,27 +122,38 @@ export const EmbedPlugin = () => {
   const [editor] = useLexicalComposerContext();
   const [embed, setEmbed] = useState('');
 
-  useEffect(() => editor.registerCommand(INSERT_EMBED_COMMAND, (config) => {
-    setEmbed(config);
-    return false;
-  }, COMMAND_PRIORITY_EDITOR), [editor]);
-
-  // const getMenuOptions = 
-
   return <>
-    {
-      embed === 'youtube-video' && <Modal open>
-        Insert Youtube Video dialog
-      </Modal>
-    }
-    {
-      embed === 'twitter' && <Modal open>
-        Insert Twitter dialog
-      </Modal>
-    }
+    {EmbedConfigs.map(config => embed === config.type && <Modal open key={config.type} footer={null} onCancel={() => setEmbed('')} title={`Embed ${config.contentName}`} >
+      <Form un-mt='6' className='[&>div:last-child]:m-0'
+        onFinish={({ url }) => {
+          config.insertNode(editor, config.parseUrl(url) as EmbedMatchResult);
+          setEmbed('');
+        }}
+      >
+        <Form.Item name='url' rules={[
+          { required: true, },
+          () => ({
+            validator: (_, value) => {
+              if (value === '') return Promise.resolve();
+
+              if (config.parseUrl(value)) {
+                return Promise.resolve();
+              } else {
+                return Promise.reject(new Error(config.error));
+              }
+            },
+          })
+        ]} >
+          <Input ref={r => setTimeout(() => r?.focus(), 0)} placeholder={`${config.exampleUrl}`} />
+        </Form.Item>
+        <Form.Item wrapperCol={{ offset: 20 }} >
+          <Button un-bg='blue-6' type='primary' htmlType='submit'>Embed</Button>
+        </Form.Item>
+      </Form>
+    </Modal>)}
     <LexicalAutoEmbedPlugin<PlaygroundEmbedConfig>
       embedConfigs={EmbedConfigs}
-      onOpenEmbedModalForConfig={() => {}}
+      onOpenEmbedModalForConfig={config => setEmbed(config.type)}
       getMenuOptions={getMenuOptions}
       menuRenderFn={(anchorElementRef, { selectedIndex, options, selectOptionAndCleanUp, setHighlightedIndex }) => {
         return anchorElementRef.current ? createPortal(

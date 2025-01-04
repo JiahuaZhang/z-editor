@@ -1,3 +1,4 @@
+import { INSERT_EMBED_COMMAND } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import { Button, Checkbox, Dropdown, Form, Input, InputNumber, MenuProps, Modal, Radio, Upload } from 'antd';
 import { useAtomValue } from 'jotai';
@@ -6,6 +7,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../collapsible/CollapsiblePlugin';
 import { INSERT_INLINE_COMMAND } from '../comment/CommentPlugin';
+import { TwitterEmbedConfig, YoutubeEmbedConfig } from '../embed/EmbedPlugin';
 import { INSERT_EQUATION_COMMAND } from '../equation/EquationPlugin';
 import { KatexRenderer } from '../equation/KatexRenderer';
 import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
@@ -115,6 +117,18 @@ export const InsertDropDown = () => {
         label: 'Collapsable container',
         icon: <span className="i-mdi:triangle" un-text='xl!' un-rotate='90' />,
         onClick: () => activeEditor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined)
+      },
+      {
+        key: YoutubeEmbedConfig.type,
+        label: YoutubeEmbedConfig.contentName,
+        icon: YoutubeEmbedConfig.largeIcon,
+        onClick: () => activeEditor.dispatchCommand(INSERT_EMBED_COMMAND, YoutubeEmbedConfig.type)
+      },
+      {
+        key: TwitterEmbedConfig.type,
+        label: TwitterEmbedConfig.contentName,
+        icon: TwitterEmbedConfig.largeIcon,
+        onClick: () => activeEditor.dispatchCommand(INSERT_EMBED_COMMAND, TwitterEmbedConfig.type)
       }
     ] as MenuProps['items'];
   }, [activeEditor, setIsInsertingImage]);
@@ -242,8 +256,8 @@ export const InsertDropDown = () => {
               <p>Click or drag file to this area to upload</p>
             </Upload.Dragger>
           </Form.Item>
-          <Form.Item label='Position' name='position' >
-            <Radio.Group optionType='button' block defaultValue='left' >
+          <Form.Item label='Position' name='position' initialValue={'left'} >
+            <Radio.Group optionType='button' block >
               <Radio value='left'>Left</Radio>
               <Radio value='full'>Full Width</Radio>
               <Radio value='right'>Right</Radio>

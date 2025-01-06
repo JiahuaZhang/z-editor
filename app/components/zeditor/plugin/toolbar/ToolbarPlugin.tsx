@@ -1,13 +1,14 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { IS_APPLE, mergeRegister } from '@lexical/utils';
 import { Tooltip } from 'antd';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { BLUR_COMMAND, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, FOCUS_COMMAND, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
 import { useEffect, useState } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { toolbarContextAtom, useToolbarContext } from '../../context/ToolbarContext';
 import { BlockFormatDropDown } from './BlockFormatDropDown';
 import { CodeLanguageDropDown } from './CodeLanguageDropDown';
+import { ElementFormatDropDown } from './ElementFormatDropDown';
 import { FontDropDown } from './FontDropDown';
 import { FontFormat } from './FontFormat';
 import { FontSize } from './FontSize';
@@ -22,7 +23,7 @@ export const ToolbarPlugin = () => {
   const [canRedo, setCanRedo] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
   const { onCodeLanguageSelect } = useToolbarContext();
-  const [toolbarContext, setToolbarContext] = useAtom(toolbarContextAtom);
+  const toolbarContext = useAtomValue(toolbarContextAtom);
 
   useEffect(() => {
     if (!activeEditor) return;
@@ -98,5 +99,6 @@ export const ToolbarPlugin = () => {
     }
 
     <InsertDropDown />
+    <ElementFormatDropDown elementFormat={toolbarContext.elementFormat} isRTL={toolbarContext.isRTL} />
   </div>;
 };

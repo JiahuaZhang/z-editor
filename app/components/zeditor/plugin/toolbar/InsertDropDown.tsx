@@ -3,7 +3,7 @@ import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import { Button, Checkbox, Dropdown, Form, Input, InputNumber, MenuProps, Modal, Radio, Upload } from 'antd';
 import { useAtomValue } from 'jotai';
 import { $getRoot } from 'lexical';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useMemo, useRef, useState } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../collapsible/CollapsiblePlugin';
 import { INSERT_INLINE_COMMAND } from '../comment/CommentPlugin';
@@ -21,6 +21,8 @@ import { $createStickyNode } from '../sticky-note/StickNote';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const UnoTrick = <div un-auto-cols='[2fr_1fr] [3fr_1fr] [1fr_3fr] [1fr_2fr_1fr]' />;
 
+const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));
+
 const DEFAULT_LAYOUTS = [
   { layout: '1fr_1fr', children: [1, 1] },
   { layout: '2fr_1fr', children: [2, 1] },
@@ -31,7 +33,6 @@ const DEFAULT_LAYOUTS = [
   { layout: '1fr_2fr_1fr', children: [1, 2, 1] },
   { layout: '1fr_1fr_1fr_1fr', children: [1, 1, 1, 1] },
 ];
-
 
 export const InsertDropDown = () => {
   const [isInsertingImage, setIsInsertingImage] = useState(false);
@@ -137,12 +138,13 @@ export const InsertDropDown = () => {
     activeEditor!.dispatchCommand(INSERT_IMAGE_COMMAND, { src, altText });
   }, [activeEditor]);
 
-  return <>
+  return <Suspense>
     <Dropdown menu={{ items: insertItems }} trigger={['click']} >
       <Button un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='0.25' un-px='1' un-text='sm gray-6'>
         <span className="i-mdi:plus" un-text='lg' /> Insert <span className="i-ph:caret-down" un-text='lg' />
       </Button>
     </Dropdown>
+    <Divider />
     <Modal open={isInsertingImage} footer={null} onCancel={() => setIsInsertingImage(false)} title='Insert Image' >
       <div un-grid='~' un-gap='6' un-mt='2' >
         <button un-bg='blue-5 hover:white' un-mx='30' un-border='rounded blue-5 2' un-text='white lg hover:blue-5' un-p='2'
@@ -341,5 +343,5 @@ export const InsertDropDown = () => {
         </Form>
       </Modal>
     }
-  </>;
+  </Suspense>;
 };

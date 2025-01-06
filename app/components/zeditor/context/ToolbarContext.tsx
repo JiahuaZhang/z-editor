@@ -6,11 +6,9 @@ import { $isHeadingNode } from '@lexical/rich-text';
 import { $getSelectionStyleValueForProperty, $isParentElementRTL } from '@lexical/selection';
 import { $isTableNode, $isTableSelection } from '@lexical/table';
 import { $findMatchingParent, $getNearestNodeOfType, $isEditorIsNestedEditor, mergeRegister } from '@lexical/utils';
-import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { atom, useAtomValue, useSetAtom } from 'jotai';
 import { $getNodeByKey, $getSelection, $isElementNode, $isRangeSelection, $isRootOrShadowRoot, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, ElementFormatType, LexicalNode, NodeKey } from 'lexical';
 import { useCallback, useEffect, useState } from 'react';
-import { INSERT_IMAGE_COMMAND, InsertImagePayload } from '../plugin/image/ImagePlugin';
-import { isLinkEditModeAtom } from '../plugin/link/FloatingLinkEditorPlugin';
 import { getSelectedNode } from '../util/getSelectedNode';
 import { activeEditorAtom } from './activeEditor';
 
@@ -69,13 +67,10 @@ export const toolbarContextAtom = atom<typeof INITIAL_TOOLBAR_STATE>(INITIAL_TOO
 export const useToolbarContext = () => {
   const [editor] = useLexicalComposerContext();
   const activeEditor = useAtomValue(activeEditorAtom);
-  const [toolbarContext, setToolbarContext] = useAtom(toolbarContextAtom);
+  const setToolbarContext = useSetAtom(toolbarContextAtom);
   const [selectedElementKey, setSelectedElementKey] = useState<NodeKey>('');
-  const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
 
   const $updateToolbar = useCallback(() => {
-    console.log('update toolbar');
-
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
       setToolbarContext(prev => ({ ...prev, isRTL: $isParentElementRTL(selection) }));
@@ -138,9 +133,10 @@ export const useToolbarContext = () => {
         matchingParent = $findMatchingParent(node, parentNode => $isElementNode(parentNode) && !parentNode.isInline());
       }
       setToolbarContext(prev => ({
-        ...prev, elementFormat: $isElementNode(matchingParent)
+        ...prev,
+        elementFormat: $isElementNode(matchingParent)
           ? matchingParent.getFormatType() : $isElementNode(node)
-            ? node.getFormatType() : parent?.getFormatType() ?? 'left'
+            ? node.getFormatType() : parent?.getFormatType() || 'left'
       }));
     }
 
@@ -186,11 +182,6 @@ export const useToolbarContext = () => {
     }),
     [activeEditor, selectedElementKey]
   );
-
-  const insertGifOnClick = (payload: InsertImagePayload) => activeEditor?.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
-
-  const canViewerSeeInsertDropdown = !toolbarContext.isImageCaption;
-  const canViewerSeeInsertCodeButton = !toolbarContext.isImageCaption;
 
   return { onCodeLanguageSelect };
 };

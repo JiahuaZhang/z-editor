@@ -49,13 +49,13 @@ export const ShortcutsPlugin = () => {
         editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
       } else if (isLowercase(event)) {
         event.preventDefault();
-        // editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'lowercase');
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'lowercase');
       } else if (isUppercase(event)) {
         event.preventDefault();
-        // editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'uppercase');
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'uppercase');
       } else if (isCapitalize(event)) {
         event.preventDefault();
-        // editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'capitalize');
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'capitalize');
       } else if (isIndent(event)) {
         event.preventDefault();
         editor.dispatchCommand(INDENT_CONTENT_COMMAND, undefined);

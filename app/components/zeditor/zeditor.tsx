@@ -72,6 +72,7 @@ const Plugins = ({ ...rest }) => {
     <Plugin.YouTube />
     <Plugin.Twitter />
     <Plugin.Embed />
+    <Plugin.DragDropPaste />
 
     {/* <TreeView editor={editor} /> */}
   </main>;

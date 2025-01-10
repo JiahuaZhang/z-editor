@@ -1,6 +1,7 @@
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { AutoLinkPlugin } from '@lexical/react/LexicalAutoLinkPlugin';
 import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
+import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
 import { ClickableLinkPlugin } from '@lexical/react/LexicalClickableLinkPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -73,7 +74,10 @@ const Plugins = ({ ...rest }) => {
     <Plugin.Twitter />
     <Plugin.Embed />
     <Plugin.DragDropPaste />
+    <Plugin.ComponentPicker />
+    <ClearEditorPlugin />
 
+    {/* <SelectionAlwaysOnDisplay /> */}
     {/* <TreeView editor={editor} /> */}
   </main>;
 };

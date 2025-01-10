@@ -2,6 +2,7 @@ import { AutocompletePlugin } from './auto-complete/AutoCompletePlugin';
 import { CodeHighlightPlugin } from './code/CodeHighlightPlugin';
 import { CollapsiblePlugin } from './collapsible/CollapsiblePlugin';
 import { CommentPlugin } from './comment/CommentPlugin';
+import { ComponentPickerMenuPlugin } from './component-picker/ComponentPickerPlugin';
 import { DragDropPastePlugin } from './drag-drop-paste/DragDropPastePlugin';
 import { EmbedPlugin } from './embed/EmbedPlugin';
 import { EmojiPickerPlugin } from './emoji/EmojiPickerPlugin';
@@ -58,4 +59,5 @@ export namespace Plugin {
   export const Twitter = TwitterPlugin;
   export const Embed = EmbedPlugin;
   export const DragDropPaste = DragDropPastePlugin;
+  export const ComponentPicker = ComponentPickerMenuPlugin;
 }

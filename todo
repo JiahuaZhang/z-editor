@@ -1,6 +1,11 @@
 name:? zEditor
 Zeditor
 
+Component Picker Plugin?
+smarter regex ? 
+reduce? + callbacks, if (true) early return.
+all-regular-expressions: for example /3x => 3x1, 3x2, 3x3 ... table, and quit early
+
 MarkdownTransformer
 
 # own text editor

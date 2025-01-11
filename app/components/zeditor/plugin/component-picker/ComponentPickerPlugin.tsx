@@ -7,6 +7,7 @@ import { LexicalTypeaheadMenuPlugin, useBasicTypeaheadTriggerMatch } from '@lexi
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
+import { useSetAtom } from 'jotai';
 import { $createParagraphNode, $getSelection, $isRangeSelection, FORMAT_ELEMENT_COMMAND, LexicalEditor, TextNode } from 'lexical';
 import { useCallback, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -15,6 +16,7 @@ import { EmbedConfigs } from '../embed/EmbedPlugin';
 import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
 import { INSERT_HORIZONTAL_RULE_COMMAND } from '../horizontal-rule/HorizontalRuleNode';
 import { INSERT_PAGE_BREAK } from '../page-break/PageBreakPlugin';
+import { isInsertingColumnLayoutAtom, isInsertingImageAtom, isInsertingTableAtom, isIsInsertEquationModeAtom } from '../toolbar/InsertDropDown';
 
 class ComponentPickerOption extends MenuOption {
   // What shows up in the editor
@@ -75,39 +77,33 @@ const ComponentPickerMenuItem = ({ index, isSelected, onClick, onMouseEnter, opt
   );
 };
 
-const getDynamicOptions = (editor: LexicalEditor, queryString: string) => {
-  const options: ComponentPickerOption[] = [];
-
-  if (queryString == null) {
-    return options;
-  }
+const getDynamicOptions = (editor: LexicalEditor, queryString: string): ComponentPickerOption[] => {
+  if (!queryString) return [];
 
   const tableMatch = queryString.match(/^([1-9]\d?)(?:x([1-9]\d?)?)?$/);
+  if (!tableMatch) return [];
 
-  if (tableMatch !== null) {
-    const rows = tableMatch[1];
-    const colOptions = tableMatch[2] ? [tableMatch[2]] : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(String);
-
-    options.push(
-      ...colOptions.map(
-        (columns) =>
-          new ComponentPickerOption(`${rows}x${columns} Table`, {
-            icon: <i className="i-material-symbols-light:table-outline" un-text='xl' />,
-            keywords: ['table'],
-            onSelect: () =>
-              editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
-          }),
-      ),
-    );
-  }
-
-  return options;
+  const rows = tableMatch[1];
+  const colOptions = tableMatch[2] ? [tableMatch[2]] : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(String);
+  return colOptions.map(columns =>
+    new ComponentPickerOption(`${rows}x${columns} Table`, {
+      icon: <i className="i-material-symbols-light:table-outline" un-text='xl' />,
+      keywords: ['table'],
+      onSelect: () =>
+        editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
+    }),
+  );
 };
 
-// type ShowModal = ReturnType<typeof useModal>[1];
-
-const getBaseOptions = (editor: LexicalEditor) => {
-  return [
+export const ComponentPickerMenuPlugin = () => {
+  const [editor] = useLexicalComposerContext();
+  const [queryString, setQueryString] = useState<string | null>(null);
+  const checkForTriggerMatch = useBasicTypeaheadTriggerMatch('/', { minLength: 0 });
+  const setIsInsertingImage = useSetAtom(isInsertingImageAtom);
+  const setIsInsertingTable = useSetAtom(isInsertingTableAtom);
+  const setIsInsertEquationMode = useSetAtom(isIsInsertEquationModeAtom);
+  const setIsInsertingColumnLayout = useSetAtom(isInsertingColumnLayoutAtom);
+  const baseOptions = useMemo(() => [
     new ComponentPickerOption('Paragraph', {
       icon: <i className="i-system-uicons:paragraph-left" un-text='xl' />,
       keywords: ['normal', 'paragraph', 'p', 'text'],
@@ -136,10 +132,7 @@ const getBaseOptions = (editor: LexicalEditor) => {
     new ComponentPickerOption('Table', {
       icon: <i className="i-material-symbols-light:table-outline" un-text='xl' />,
       keywords: ['table', 'grid', 'spreadsheet', 'rows', 'columns'],
-      onSelect: () => {}
-      // showModal('Insert Table', (onClose) => (
-      //   <InsertTableDialog activeEditor={editor} onClose={onClose} />
-      // )),
+      onSelect: () => setIsInsertingTable(true),
     }),
     new ComponentPickerOption('Numbered List', {
       icon: <i className="i-ph:list-numbers" un-text='xl' />,
@@ -219,32 +212,22 @@ const getBaseOptions = (editor: LexicalEditor) => {
     new ComponentPickerOption('Equation', {
       icon: <i className="i-ph:plus-minus" un-text='xl' />,
       keywords: ['equation', 'latex', 'math'],
-      onSelect: () => {}
-      // showModal('Insert Equation', (onClose) => (
-      //   <InsertEquationDialog activeEditor={editor} onClose={onClose} />
-      // )),
+      onSelect: () => setIsInsertEquationMode(true)
     }),
     new ComponentPickerOption('Image', {
       icon: <i className="i-mdi:image-outline" un-text='xl' />,
       keywords: ['image', 'photo', 'picture', 'file'],
-      onSelect: () => {}
-      // showModal('Insert Image', (onClose) => (
-      //   <InsertImageDialog activeEditor={editor} onClose={onClose} />
-      // )),
+      onSelect: () => setIsInsertingImage(true)
     }),
     new ComponentPickerOption('Collapsible', {
       icon: <span className="i-mdi:triangle" un-text='xl' un-rotate='90' />,
       keywords: ['collapse', 'collapsible', 'toggle'],
-      onSelect: () =>
-        editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined),
+      onSelect: () => editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined),
     }),
     new ComponentPickerOption('Columns Layout', {
       icon: <i className="i-material-symbols-light:view-column-outline" un-text='xl' />,
       keywords: ['columns', 'layout', 'grid'],
-      onSelect: () => {}
-      // showModal('Insert Columns Layout', (onClose) => (
-      //   <InsertLayoutDialog activeEditor={editor} onClose={onClose} />
-      // )),
+      onSelect: () => setIsInsertingColumnLayout(true)
     }),
     ...(['left', 'center', 'right', 'justify'] as const).map(
       (alignment) =>
@@ -255,30 +238,17 @@ const getBaseOptions = (editor: LexicalEditor) => {
             editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, alignment),
         }),
     ),
-  ];
-};
-
-export const ComponentPickerMenuPlugin = () => {
-  const [editor] = useLexicalComposerContext();
-  // const [modal, showModal] = useModal();
-  const [queryString, setQueryString] = useState<string | null>(null);
-  const checkForTriggerMatch = useBasicTypeaheadTriggerMatch('/', { minLength: 0 });
+  ], [editor]);
 
   const options = useMemo(() => {
-    const baseOptions = getBaseOptions(editor);
-
-    if (!queryString) {
-      return baseOptions;
-    }
+    if (!queryString) return baseOptions;
 
     const regex = new RegExp(queryString, 'i');
-
     return [
       ...getDynamicOptions(editor, queryString),
-      ...baseOptions.filter(
-        (option) =>
-          regex.test(option.title) ||
-          option.keywords.some((keyword) => regex.test(keyword)),
+      ...baseOptions.filter(option =>
+        regex.test(option.title) ||
+        option.keywords.some((keyword) => regex.test(keyword)),
       ),
     ];
   }, [editor, queryString]);
@@ -289,19 +259,16 @@ export const ComponentPickerMenuPlugin = () => {
       nodeToRemove: TextNode | null,
       closeMenu: () => void,
       matchingString: string,
-    ) => {
-      editor.update(() => {
-        nodeToRemove?.remove();
-        selectedOption.onSelect(matchingString);
-        closeMenu();
-      });
-    },
+    ) => editor.update(() => {
+      nodeToRemove?.remove();
+      selectedOption.onSelect(matchingString);
+      closeMenu();
+    }),
     [editor],
   );
 
   return (
     <>
-      {/* {modal} */}
       <LexicalTypeaheadMenuPlugin<ComponentPickerOption>
         onQueryChange={setQueryString}
         onSelectOption={onSelectOption}
@@ -309,11 +276,12 @@ export const ComponentPickerMenuPlugin = () => {
         options={options}
         menuRenderFn={(
           anchorElementRef,
-          { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex },
+          { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex, options },
+          matchingString
         ) =>
           anchorElementRef.current && options.length
             ? createPortal(
-              <ul un-w='50' un-h='auto' un-max-h='50' un-overflow-y='auto' un-border='rounded 2 solid blue-1' un-bg='white' un-position='relative' un-z='5'>
+              <ul un-w='50' un-max-h='50' un-overflow-y='auto' un-border='rounded 2 solid blue-1' un-bg='white' un-position='relative' un-z='5'>
                 {options.map((option, index) => (
                   <ComponentPickerMenuItem
                     index={index}
@@ -322,9 +290,7 @@ export const ComponentPickerMenuPlugin = () => {
                       setHighlightedIndex(index);
                       selectOptionAndCleanUp(option);
                     }}
-                    onMouseEnter={() => {
-                      setHighlightedIndex(index);
-                    }}
+                    onMouseEnter={() => setHighlightedIndex(index)}
                     key={option.key}
                     option={option}
                   />

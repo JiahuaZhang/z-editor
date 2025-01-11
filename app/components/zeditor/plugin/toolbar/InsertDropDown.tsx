@@ -1,7 +1,7 @@
 import { INSERT_EMBED_COMMAND } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import { Button, Checkbox, Dropdown, Form, Input, InputNumber, MenuProps, Modal, Radio, Upload } from 'antd';
-import { useAtomValue } from 'jotai';
+import { atom, useAtom, useAtomValue } from 'jotai';
 import { $getRoot } from 'lexical';
 import { lazy, Suspense, useCallback, useMemo, useRef, useState } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
@@ -23,6 +23,11 @@ const UnoTrick = <div un-auto-cols='[2fr_1fr] [3fr_1fr] [1fr_3fr] [1fr_2fr_1fr]'
 
 const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));
 
+export const isInsertingImageAtom = atom(false);
+export const isInsertingTableAtom = atom(false);
+export const isIsInsertEquationModeAtom = atom(false);
+export const isInsertingColumnLayoutAtom = atom(false);
+
 const DEFAULT_LAYOUTS = [
   { layout: '1fr_1fr', children: [1, 1] },
   { layout: '2fr_1fr', children: [2, 1] },
@@ -35,13 +40,13 @@ const DEFAULT_LAYOUTS = [
 ];
 
 export const InsertDropDown = () => {
-  const [isInsertingImage, setIsInsertingImage] = useState(false);
+  const [isInsertingImage, setIsInsertingImage] = useAtom(isInsertingImageAtom);
   const [isImageUrlMode, setIsImageUrlMode] = useState(false);
   const [isImageFileMode, setIsImageFileMode] = useState(false);
   const [isInlineImageInsertMode, setIsInlineImageInsertMode] = useState(false);
-  const [isInsertingTable, setIsInsertingTable] = useState(false);
-  const [isInsertingColumnLayout, setIsInsertingColumnLayout] = useState(false);
-  const [isInsertEquationMode, setIsInsertEquationMode] = useState(false);
+  const [isInsertingTable, setIsInsertingTable] = useAtom(isInsertingTableAtom);
+  const [isInsertingColumnLayout, setIsInsertingColumnLayout] = useAtom(isInsertingColumnLayoutAtom);
+  const [isInsertEquationMode, setIsInsertEquationMode] = useAtom(isIsInsertEquationModeAtom);
   const [equation, setEquation] = useState('');
   const katexRef = useRef(null);
   const activeEditor = useAtomValue(activeEditorAtom);

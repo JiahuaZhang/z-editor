@@ -16,6 +16,7 @@ import { EmbedConfigs } from '../embed/EmbedPlugin';
 import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
 import { INSERT_HORIZONTAL_RULE_COMMAND } from '../horizontal-rule/HorizontalRuleNode';
 import { INSERT_PAGE_BREAK } from '../page-break/PageBreakPlugin';
+import { TOGGLE_SPEECH_TO_TEXT_COMMAND } from '../speech/SpeechToTextPlugin';
 import { isInsertingColumnLayoutAtom, isInsertingImageAtom, isInsertingTableAtom, isIsInsertEquationModeAtom } from '../toolbar/InsertDropDown';
 
 class ComponentPickerOption extends MenuOption {
@@ -89,8 +90,7 @@ const getDynamicOptions = (editor: LexicalEditor, queryString: string): Componen
     new ComponentPickerOption(`${rows}x${columns} Table`, {
       icon: <i className="i-material-symbols-light:table-outline" un-text='xl' />,
       keywords: ['table'],
-      onSelect: () =>
-        editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
+      onSelect: () => editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
     }),
   );
 };
@@ -238,6 +238,11 @@ export const ComponentPickerMenuPlugin = () => {
             editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, alignment),
         }),
     ),
+    new ComponentPickerOption('Speech to Text', {
+      icon: <span className="i-material-symbols-light:mic" />,
+      keywords: ['speech to text', 'stt'],
+      onSelect: () => editor.dispatchCommand(TOGGLE_SPEECH_TO_TEXT_COMMAND, undefined),
+    })
   ], [editor]);
 
   const options = useMemo(() => {

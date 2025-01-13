@@ -18,6 +18,7 @@ import { FloatingLinkEditorPlugin } from './link/FloatingLinkEditorPlugin';
 import { PageBreakPlugin } from './page-break/PageBreakPlugin';
 import { ShortcutsPlugin } from './shortcut/ShortcutsPlugin';
 import { SpecialTextPlugin } from './special/SpecialTextPlugin';
+import { SpeechToTextPlugin } from './speech/SpeechToTextPlugin';
 import { TableCellResizerPlugin } from './table/TableCellResizer';
 import { TableHoverActionsPlugin } from './table/TableHoverActionsPlugin';
 import { ToolbarPlugin } from './toolbar/ToolbarPlugin';
@@ -60,4 +61,5 @@ export namespace Plugin {
   export const Embed = EmbedPlugin;
   export const DragDropPaste = DragDropPastePlugin;
   export const ComponentPicker = ComponentPickerMenuPlugin;
+  export const SpeechToText = SpeechToTextPlugin;
 }

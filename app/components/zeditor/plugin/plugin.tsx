@@ -16,6 +16,7 @@ import { InlineImagePlugin } from './inline-image/InlineImagePlugin';
 import { LayoutPlugin } from './layout/LayoutPlugin';
 import { FloatingLinkEditorPlugin } from './link/FloatingLinkEditorPlugin';
 import { PageBreakPlugin } from './page-break/PageBreakPlugin';
+import { MarkdownPlugin } from './shortcut/Markdown';
 import { ShortcutsPlugin } from './shortcut/ShortcutsPlugin';
 import { SpecialTextPlugin } from './special/SpecialTextPlugin';
 import { SpeechToTextPlugin } from './speech/SpeechToTextPlugin';
@@ -62,4 +63,5 @@ export namespace Plugin {
   export const DragDropPaste = DragDropPastePlugin;
   export const ComponentPicker = ComponentPickerMenuPlugin;
   export const SpeechToText = SpeechToTextPlugin;
+  export const Markdown = MarkdownPlugin;
 }

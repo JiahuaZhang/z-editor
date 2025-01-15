@@ -76,6 +76,7 @@ const Plugins = ({ ...rest }) => {
     <Plugin.DragDropPaste />
     <Plugin.ComponentPicker />
     <Plugin.SpeechToText />
+    <Plugin.Markdown />
     <ClearEditorPlugin />
 
     {/* <SelectionAlwaysOnDisplay /> */}

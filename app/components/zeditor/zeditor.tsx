@@ -77,6 +77,7 @@ const Plugins = ({ ...rest }) => {
     <Plugin.ComponentPicker />
     <Plugin.SpeechToText />
     <Plugin.Markdown />
+    {/* <Plugin.TabFocus /> */}
     <ClearEditorPlugin />
 
     {/* <SelectionAlwaysOnDisplay /> */}

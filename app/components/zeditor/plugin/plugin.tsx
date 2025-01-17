@@ -20,6 +20,7 @@ import { MarkdownPlugin } from './shortcut/Markdown';
 import { ShortcutsPlugin } from './shortcut/ShortcutsPlugin';
 import { SpecialTextPlugin } from './special/SpecialTextPlugin';
 import { SpeechToTextPlugin } from './speech/SpeechToTextPlugin';
+import { TabFocusPlugin } from './tab-focus/TabFocusPlugin';
 import { TableCellResizerPlugin } from './table/TableCellResizer';
 import { TableHoverActionsPlugin } from './table/TableHoverActionsPlugin';
 import { ToolbarPlugin } from './toolbar/ToolbarPlugin';
@@ -64,4 +65,5 @@ export namespace Plugin {
   export const ComponentPicker = ComponentPickerMenuPlugin;
   export const SpeechToText = SpeechToTextPlugin;
   export const Markdown = MarkdownPlugin;
+  export const TabFocus = TabFocusPlugin;
 }

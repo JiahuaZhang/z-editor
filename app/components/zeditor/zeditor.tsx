@@ -11,6 +11,7 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
 import { ClientOnly } from 'remix-utils/client-only';
@@ -31,9 +32,11 @@ const Plugins = ({ ...rest }) => {
   return <main un-h='100vh' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
     <Plugin.Toolbar />
     <div un-grid='~' un-grid-flow='col' un-auto-cols='[1fr_max-content]' un-w='full' un-position='relative' >
-      <RichTextPlugin
+    <RichTextPlugin
         contentEditable={
-          <ContentEditable un-p='2' un-border='' un-z='5' un-position='relative' />
+          <div>
+            <ContentEditable un-p='2' un-pl='6' un-z='5' un-position='relative' id='lexical-content-deitable' />
+          </div>
         }
         placeholder={
           <div un-position='absolute' un-top='2.5' un-left='2.75' un-z='1' un-pointer-events='none' >Enter some rich text...</div>
@@ -78,6 +81,9 @@ const Plugins = ({ ...rest }) => {
     <Plugin.SpeechToText />
     <Plugin.Markdown />
     {/* <Plugin.TabFocus /> */}
+    <TabIndentationPlugin />
+    <Plugin.DraggableBlock />
+
     <ClearEditorPlugin />
 
     {/* <SelectionAlwaysOnDisplay /> */}

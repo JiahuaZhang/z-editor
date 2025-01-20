@@ -4,6 +4,7 @@ import { CollapsiblePlugin } from './collapsible/CollapsiblePlugin';
 import { CommentPlugin } from './comment/CommentPlugin';
 import { ComponentPickerMenuPlugin } from './component-picker/ComponentPickerPlugin';
 import { DragDropPastePlugin } from './drag-drop-paste/DragDropPastePlugin';
+import { DraggableBlockPlugin } from './draggable/DraggableBlockPlugin';
 import { EmbedPlugin } from './embed/EmbedPlugin';
 import { EmojiPickerPlugin } from './emoji/EmojiPickerPlugin';
 import { EmojiPlugin } from './emoji/EmojiPlugin';
@@ -66,4 +67,5 @@ export namespace Plugin {
   export const SpeechToText = SpeechToTextPlugin;
   export const Markdown = MarkdownPlugin;
   export const TabFocus = TabFocusPlugin;
+  export const DraggableBlock = DraggableBlockPlugin;
 }

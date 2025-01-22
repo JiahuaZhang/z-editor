@@ -179,15 +179,35 @@ const $generateCode = () => {
 }`));
   root.append(code);
 
-  const codeHighlight = $createCodeHighlightNode(`public class HelloWorld {
-  public static void main(String[] args) {
-      // Prints "Hello, World" to the console
-      System.out.println("Hello, World");
-  }
-}`);
-  const codeParagarph = $createCodeNode('java');
-  codeParagarph.append(codeHighlight);
-  root.append(codeParagarph);
+  const jsCode = $createCodeNode('javascript');
+  jsCode.append($createTextNode(`// Example of modern JavaScript features
+const calculateArea = (radius) => {
+    return Math.PI * radius * radius;
+};
+
+class Circle {
+    constructor(radius) {
+        this.radius = radius;
+    }
+    
+    getArea() {
+        return calculateArea(this.radius);
+    }
+}
+
+const circle = new Circle(5);
+console.log(\`Area of circle: \${circle.getArea().toFixed(2)}\`);`));
+  root.append(jsCode);
+
+//   const codeHighlight = $createCodeHighlightNode(`public class HelloWorld {
+//   public static void main(String[] args) {
+//       // Prints "Hello, World" to the console
+//       System.out.println("Hello, World");
+//   }
+// }`);
+//   const codeParagarph = $createCodeNode('java');
+//   codeParagarph.append(codeHighlight);
+//   root.append(codeParagarph);
 };
 
 const $generateTable = () => {
@@ -487,12 +507,12 @@ export const $generateContent = () => {
   root.append(hr);
 
   $generateCollapsible();
-  $generatePageBreak();
+  // $generatePageBreak();
   $generateParagraph();
-  $generateLayout();
-  $generateSpecialText();
+  // $generateLayout();
+  // $generateSpecialText();
   // $generateListContent();
-  // $generateCode();
+  $generateCode();
   // $generateTable();
   // $generateHashTag();
   // $generateLink();
@@ -500,7 +520,7 @@ export const $generateContent = () => {
   // $generateExcalidarw();
   // $generateEquation();
   // $generateTweets();
-  $generateYoutubes();
+  // $generateYoutubes();
 
   const quote = $createQuoteNode();
   quote.append($createTextNode('This is a quote node'));
@@ -510,6 +530,6 @@ export const $generateContent = () => {
   paragraph.append($createTextNode(''));
   root.append(paragraph);
 
-  // const stickyNode = $createStickyNode(600, 30);
+  // const stickyNode = $createStickyNode(0, 0);
   // root.append(stickyNode);
 };

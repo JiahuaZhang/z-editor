@@ -61,7 +61,7 @@ export const initialConfig: InitialConfigType = {
       olDepth: [],
     },
     quote: 'm-2 text-md text-gray-6 border-l-4 border-l-gray-4 pl-2',
-    code: 'bg-zinc-1 text-sm font-mono relative block my-2 pl-7 [&:before]:[content:attr(data-gutter)] [&:before]:absolute [&:before]:bg-gray-2 [&:before]:left-0 [&:before]:min-w-6 [&:before]:text-right [&:before]:border-r-2 [&:before]:border-r-gray-6 [&:before]:pr-1',
+    code: 'bg-zinc-1 text-sm font-mono relative block my-2 pl-7 [&:before]:[content:attr(data-gutter)] [&:before]:absolute [&:before]:bg-gray-2 [&:before]:left-0 [&:before]:min-w-6 [&:before]:text-right [&:before]:border-r-2 [&:before]:border-r-gray-6 [&:before]:pr-1 lexical-code-locator',
     codeHighlight: {
       atrule: 'text-purple-600',
       attr: 'text-sky-600',

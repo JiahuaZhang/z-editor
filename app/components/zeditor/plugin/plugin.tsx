@@ -1,4 +1,5 @@
 import { AutocompletePlugin } from './auto-complete/AutoCompletePlugin';
+import { CodeActionMenuPlugin } from './code/CodeActionMenuPlugin';
 import { CodeHighlightPlugin } from './code/CodeHighlightPlugin';
 import { CollapsiblePlugin } from './collapsible/CollapsiblePlugin';
 import { CommentPlugin } from './comment/CommentPlugin';
@@ -31,6 +32,7 @@ import { YouTubePlugin } from './youtube/YouTubePlugin';
 export namespace Plugin {
   export namespace Code {
     export const Highlight = CodeHighlightPlugin;
+    export const ActionMenu = CodeActionMenuPlugin;
   }
   export namespace Table {
     export const CellResizer = TableCellResizerPlugin;

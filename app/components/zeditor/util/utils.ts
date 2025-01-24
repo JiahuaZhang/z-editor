@@ -15,7 +15,7 @@ export enum UpdateFontSizeType {
   decrement,
 }
 
-export const useDebounce = <T extends (...args: never[]) => void>(fn: T, ms: number, maxWait: number) => {
+export const useDebounce = <T extends (...args: never[]) => void>(fn: T, ms: number, maxWait?: number) => {
   const funcRef = useRef<T | null>(null);
   funcRef.current = fn;
 

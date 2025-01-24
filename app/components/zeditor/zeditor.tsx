@@ -52,6 +52,7 @@ const Plugins = ({ ...rest }) => {
     <ListPlugin />
     <CheckListPlugin />
     <Plugin.Code.Highlight />
+    <Plugin.Code.ActionMenu />
     <TablePlugin />
     <Plugin.Table.CellResizer />
     <Plugin.Table.HoverActinos />

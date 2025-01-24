@@ -1,10 +1,11 @@
-import { $isCodeNode, CodeNode, getLanguageFriendlyName, normalizeCodeLang } from '@lexical/code';
+import { $isCodeNode, CodeNode, getLanguageFriendlyName } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $getNearestNodeFromDOMNode, isHTMLElement } from 'lexical';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useDebounce } from '../../util/utils';
 import { CopyButton } from './component/CopyButton';
+import { PrettierButton } from './component/PrettierButton';
 
 const CODE_PADDING = 8;
 
@@ -99,24 +100,16 @@ const CodeActionMenuContainer = ({ anchorElem }: { anchorElem: HTMLElement }) =>
     );
   }, [editor]);
 
-  const normalizedLang = normalizeCodeLang(lang);
-  const codeFriendlyName = getLanguageFriendlyName(lang);
-
   return (
     <>
       {isShown ? (
         <div className="lexical-code-menu-locator" style={{ ...position }}
           un-position='absolute' un-z='5' un-select='none' un-text='gray-5' un-flex='~' un-gap='1' un-items='end'
+          un-border=' solid purple-4'
         >
-          <div un-text='sm'>{codeFriendlyName}</div>
+          <div un-text='sm'>{getLanguageFriendlyName(lang)}</div>
           <CopyButton editor={editor} getCodeDOMNode={() => codeDOMNodeRef.current} />
-          {/* {canBePrettier(normalizedLang) ? (
-            <PrettierButton
-              editor={editor}
-              getCodeDOMNode={getCodeDOMNode}
-              lang={normalizedLang}
-            />
-          ) : null} */}
+          <PrettierButton lang={lang} editor={editor} getCodeDOMNode={() => codeDOMNodeRef.current} />
         </div>
       ) : null}
     </>

@@ -17,6 +17,7 @@ import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
 import { ClientOnly } from 'remix-utils/client-only';
 import { initialConfig } from './config';
 import { useActiveEditor } from './context/activeEditor';
+import { useFloatingAnchor } from './context/floatingAnchor';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
@@ -28,6 +29,7 @@ const Plugins = ({ ...rest }) => {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
   useActiveEditor();
+  useFloatingAnchor();
 
   return <main un-h='100vh' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
     <Plugin.Toolbar />

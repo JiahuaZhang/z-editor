@@ -1,8 +1,10 @@
 import { $isCodeNode, CodeNode, getLanguageFriendlyName } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useAtomValue } from 'jotai';
 import { $getNearestNodeFromDOMNode, isHTMLElement } from 'lexical';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { floatingAnchorAtom } from '../../context/floatingAnchor';
 import { useDebounce } from '../../util/utils';
 import { CopyButton } from './component/CopyButton';
 import { PrettierButton } from './component/PrettierButton';
@@ -117,10 +119,6 @@ const CodeActionMenuContainer = ({ anchorElem }: { anchorElem: HTMLElement }) =>
 }
 
 export const CodeActionMenuPlugin = () => {
-  const [editor] = useLexicalComposerContext();
-  const [anchor, setAnchor] = useState<HTMLElement>(document.body);
-
-  useEffect(() => setAnchor(editor.getRootElement()?.parentElement ?? document.body), [editor]);
-
-  return createPortal(<CodeActionMenuContainer anchorElem={anchor} />, anchor);
+  const anchor = useAtomValue(floatingAnchorAtom);
+  return anchor && createPortal(<CodeActionMenuContainer anchorElem={anchor} />, anchor);
 }

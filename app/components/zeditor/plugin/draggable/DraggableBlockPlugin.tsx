@@ -1,22 +1,18 @@
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { DraggableBlockPlugin_EXPERIMENTAL } from '@lexical/react/LexicalDraggableBlockPlugin';
-import { useEffect, useRef, useState } from 'react';
+import { useAtomValue } from 'jotai';
+import { useRef } from 'react';
+import { floatingAnchorAtom } from '../../context/floatingAnchor';
 
 const DRAGGABLE_BLOCK_MENU_CLASSNAME = 'draggable-block-menu';
 
 const isOnMenu = (element: HTMLElement) => !!element.closest(`.${DRAGGABLE_BLOCK_MENU_CLASSNAME}`);
 
-export const DraggableBlockPlugin = ({ anchorElem = document.body }: { anchorElem?: HTMLElement; }) => {
-  const [editor] = useLexicalComposerContext();
+export const DraggableBlockPlugin = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const targetLineRef = useRef<HTMLDivElement>(null);
-  const [anchor, setAnchor] = useState<HTMLElement>(anchorElem);
+  const anchor = useAtomValue(floatingAnchorAtom);
 
-  useEffect(() => {
-    setAnchor(editor.getRootElement()?.parentElement ?? anchorElem);
-  }, [editor]);
-
-  return (
+  return (anchor &&
     <DraggableBlockPlugin_EXPERIMENTAL
       anchorElem={anchor}
       menuRef={menuRef}

@@ -95,7 +95,7 @@ export const initialConfig: InitialConfigType = {
       variable: 'text-red-400',
     },
     table: 'w-max border border-gray-3 border-rounded m-2',
-    tableCell: 'min-w-16 border border-gray-4 zeditor-table-cell',
+    tableCell: 'min-w-24 p-1 border border-gray-4 zeditor-table-cell',
     // tableCellActionButton: 'PlaygroundEditorTheme__tableCellActionButton',
     // tableCellActionButtonContainer: 'PlaygroundEditorTheme__tableCellActionButtonContainer',
     // tableCellEditing: 'PlaygroundEditorTheme__tableCellEditing',

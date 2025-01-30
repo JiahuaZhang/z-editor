@@ -58,6 +58,7 @@ const Plugins = ({ ...rest }) => {
     <TablePlugin />
     <Plugin.Table.CellResizer />
     <Plugin.Table.HoverActinos />
+    <Plugin.Table.ActionMenu />
     <Plugin.HashTag />
     <AutoLinkPlugin matchers={MATCHERS} />
     <LinkPlugin validateUrl={validateUrl} />

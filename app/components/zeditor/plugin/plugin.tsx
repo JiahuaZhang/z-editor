@@ -23,6 +23,7 @@ import { ShortcutsPlugin } from './shortcut/ShortcutsPlugin';
 import { SpecialTextPlugin } from './special/SpecialTextPlugin';
 import { SpeechToTextPlugin } from './speech/SpeechToTextPlugin';
 import { TabFocusPlugin } from './tab-focus/TabFocusPlugin';
+import { TableActionMenuPlugin } from './table/TableActionMenuPlugin';
 import { TableCellResizerPlugin } from './table/TableCellResizer';
 import { TableHoverActionsPlugin } from './table/TableHoverActionsPlugin';
 import { ToolbarPlugin } from './toolbar/ToolbarPlugin';
@@ -37,6 +38,7 @@ export namespace Plugin {
   export namespace Table {
     export const CellResizer = TableCellResizerPlugin;
     export const HoverActinos = TableHoverActionsPlugin;
+    export const ActionMenu = TableActionMenuPlugin;
   }
   export namespace Emoji {
     export const Transform = EmojiPlugin;

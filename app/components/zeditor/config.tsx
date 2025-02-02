@@ -102,7 +102,7 @@ export const initialConfig: InitialConfigType = {
     // tableCellHeader: 'PlaygroundEditorTheme__tableCellHeader',
     // tableCellPrimarySelected: 'PlaygroundEditorTheme__tableCellPrimarySelected',
     // tableCellResizer: 'PlaygroundEditorTheme__tableCellResizer',
-    // tableCellSelected: 'PlaygroundEditorTheme__tableCellSelected',
+    tableCellSelected: 'bg-blue-1',
     // tableCellSortedIndicator: 'PlaygroundEditorTheme__tableCellSortedIndicator',
     // tableResizeRuler: 'PlaygroundEditorTheme__tableCellResizeRuler',
     // tableSelected: 'PlaygroundEditorTheme__tableSelected',

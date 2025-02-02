@@ -42,8 +42,8 @@ const TableCellActionMenuContainer = ({ anchorElem, cellMerge, }: {
     const activeElement = document.activeElement;
     const disable = () => {
       if (menu) {
-        menu.classList.remove('table-cell-action-button-container--active');
-        menu.classList.add('table-cell-action-button-container--inactive');
+        // menu.classList.remove('pointer-events-auto', 'opacity-100');
+        menu.classList.add('pointer-events-none', 'opacity-0');
       }
       setTableMenuCellNode(null);
     }
@@ -96,14 +96,15 @@ const TableCellActionMenuContainer = ({ anchorElem, cellMerge, }: {
       return disable();
     }
     const enabled = !tableObserver || !tableObserver.isSelecting;
-    menu.classList.toggle('table-cell-action-button-container--active', enabled);
-    menu.classList.toggle('table-cell-action-button-container--inactive', !enabled,);
+    menu.classList.toggle('pointer-events-none', !enabled,);
+    menu.classList.toggle('opacity-0', !enabled,);
     if (enabled) {
       const tableCellRect = tableCellParentNodeDOM.getBoundingClientRect();
       const anchorRect = anchorElem.getBoundingClientRect();
-      const top = tableCellRect.top - anchorRect.top;
-      const left = tableCellRect.right - anchorRect.left;
-      menu.style.transform = `translate(${left}px, ${top}px)`;
+      const top = tableCellRect.top - anchorRect.top + (tableCellRect.height - menuRootRef.current?.clientHeight!) / 2;
+      const left = tableCellRect.right - anchorRect.left - menuRootRef?.current?.clientWidth! - 4;
+      menu.style.top = `${top}px`;
+      menu.style.left = `${left}px`;
     }
   }, [editor, anchorElem]);
 
@@ -148,12 +149,11 @@ const TableCellActionMenuContainer = ({ anchorElem, cellMerge, }: {
   }, [prevTableCellDOM, tableCellNode]);
 
   return (
-    <div un-z='5' un-position='absolute' un-top='1.5' un-left='-6.5' className="table-cell-action-button-container" ref={menuButtonRef}>
+    <div un-z='5' un-position='absolute' ref={menuButtonRef}>
       {tableCellNode != null && (
         <>
           <button un-border='rounded-lg' un-bg='gray-2' un-w='6' un-h='5' un-flex='~' un-items='center' un-justify='center'
             type="button"
-            className="table-cell-action-button chevron-down"
             onClick={(e) => {
               e.stopPropagation();
               setIsMenuOpen(!isMenuOpen);

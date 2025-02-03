@@ -13,7 +13,7 @@ import { SHORTCUTS } from '../shortcut/shortcut';
 
 const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));
 
-const preset = { colors: [...new Set(Object.values(presetPrimaryColors))], label: 'primary' };
+export const ColorPreset = { colors: [...new Set(Object.values(presetPrimaryColors))], label: 'primary' };
 
 const getFormatItems = (editor: LexicalEditor) => [
   {
@@ -130,7 +130,7 @@ export const FontFormat = ({}: {}) => {
       </button>
     </Tooltip>
 
-    <ColorPicker defaultValue={toolbarContext.fontColor} presets={[preset]}
+    <ColorPicker defaultValue={toolbarContext.fontColor} presets={[ColorPreset]}
       onChangeComplete={color => applyStyleText({ 'color': `#${color.toHex()}` })}
     >
       <Tooltip className='mx-0.5' title='Text color' >
@@ -138,7 +138,7 @@ export const FontFormat = ({}: {}) => {
       </Tooltip>
     </ColorPicker>
 
-    <ColorPicker defaultValue={toolbarContext.bgColor} presets={[preset]}
+    <ColorPicker defaultValue={toolbarContext.bgColor} presets={[ColorPreset]}
       onChangeComplete={color => applyStyleText({ 'background-color': `#${color.toHex()}` })}
     >
       <Tooltip className='mx-0.5' title='Background color' >

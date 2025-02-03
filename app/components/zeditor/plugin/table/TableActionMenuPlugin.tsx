@@ -176,7 +176,7 @@ const TableCellActionMenuContainer = ({ anchorElem, cellMerge, }: {
   );
 }
 
-export const TableActionMenuPlugin = ({ cellMerge = false }: { cellMerge?: boolean; }) => {
+export const TableActionMenuPlugin = ({ cellMerge = true }: { cellMerge?: boolean; }) => {
   const isEditable = useLexicalEditable();
   const anchor = useAtomValue(floatingAnchorAtom);
 

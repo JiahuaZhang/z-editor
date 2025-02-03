@@ -31,10 +31,10 @@ import {
   $isTextNode,
   isDOMNode
 } from 'lexical';
-import type { JSX } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { invariant } from '../../util/invariant';
+import { ColorPreset } from '../toolbar/FontFormat';
 
 const computeSelectionCount = (selection: TableSelection) => {
   const selectionShape = selection.getShape();
@@ -68,7 +68,6 @@ const $cellContainsEmptyParagraph = (cell: TableCellNode) => {
   return true;
 }
 
-
 const $selectLastDescendant = (node: ElementNode) => {
   const lastDescendant = node.getLastDescendant();
   if ($isTextNode(lastDescendant)) {
@@ -100,7 +99,6 @@ type TableCellActionMenuProps = Readonly<{
   tableCellNode: TableCellNode;
   cellMerge: boolean;
 }>;
-
 
 export const TableActionMenu = ({
   onClose,
@@ -426,157 +424,116 @@ export const TableActionMenu = ({
     [editor],
   );
 
-  let mergeCellButton: null | JSX.Element = null;
-  if (cellMerge) {
-    if (canMergeCells) {
-      mergeCellButton = (
-        <button
-          type="button"
-          className="item"
-          onClick={() => mergeTableCellsAtSelection()}
-          data-test-id="table-merge-cells">
-          <span className="text">Merge cells</span>
-        </button>
-      );
-    } else if (canUnmergeCell) {
-      mergeCellButton = (
-        <button
-          type="button"
-          className="item"
-          onClick={() => unmergeTableCellsAtSelection()}
-          data-test-id="table-unmerge-cells">
-          <span className="text">Unmerge cells</span>
-        </button>
-      );
-    }
-  }
-
   return createPortal(
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div un-border='rounded 1 solid blue-4' un-position='absolute' un-z='5' un-bg='white' un-grid='~' un-gap='1' un-p='1'
-      className="dropdown"
+    <div un-border='rounded 1 solid blue-4' un-position='fixed' un-z='5' un-bg='white' un-grid='~' un-gap='1' un-p='1' un-shadow='2xl gray-4'
       ref={dropDownRef}
       onClick={(e) => e.stopPropagation()}>
-      {mergeCellButton}
+      {
+        !showColorPicker && cellMerge && canMergeCells
+        && <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+          type="button"
+          onClick={() => mergeTableCellsAtSelection()}
+          data-test-id="table-merge-cells">
+          Merge cells
+        </button>
+      }
+      {
+        !showColorPicker && cellMerge && canUnmergeCell
+        && <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+          type="button"
+          onClick={() => unmergeTableCellsAtSelection()}
+          data-test-id="table-unmerge-cells">
+          Unmerge cells
+        </button>
+      }
       <ColorPicker
         open={showColorPicker}
+        presets={[ColorPreset]}
         defaultValue={backgroundColor}
         onChangeComplete={color => handleCellBackgroundColor(`#${color.toHex()}`)}
       >
         <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
           type="button"
-          className="item"
           onClick={() => setShowColorPicker(true)}
           data-test-id="table-background-color">
-          <span className="text">Background color</span>
+          Background color
         </button>
-
       </ColorPicker>
-      <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
-        type="button"
-        className="item"
-        onClick={() => toggleRowStriping()}
-        data-test-id="table-row-striping">
-        <span className="text">Toggle Row Striping</span>
-      </button>
-      <hr />
-      <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
-        type="button"
-        className="item"
-        onClick={() => insertTableRowAtSelection(false)}
-        data-test-id="table-insert-row-above">
-        <span className="text">
+      {!showColorPicker && <>
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+          type="button"
+          onClick={() => toggleRowStriping()}
+          data-test-id="table-row-striping">
+          Toggle Row Striping
+        </button>
+        <hr />
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+          type="button"
+          onClick={() => insertTableRowAtSelection(false)}
+          data-test-id="table-insert-row-above">
           Insert{' '}
           {selectionCounts.rows === 1 ? 'row' : `${selectionCounts.rows} rows`}{' '}
           above
-        </span>
-      </button>
-      <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
-        type="button"
-        className="item"
-        onClick={() => insertTableRowAtSelection(true)}
-        data-test-id="table-insert-row-below">
-        <span className="text">
+        </button>
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+          type="button"
+          onClick={() => insertTableRowAtSelection(true)}
+          data-test-id="table-insert-row-below">
           Insert{' '}
           {selectionCounts.rows === 1 ? 'row' : `${selectionCounts.rows} rows`}{' '}
           below
-        </span>
-      </button>
-      <hr />
-      <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
-        type="button"
-        className="item"
-        onClick={() => insertTableColumnAtSelection(false)}
-        data-test-id="table-insert-column-before">
-        <span className="text">
+        </button>
+        <hr />
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+          type="button"
+          onClick={() => insertTableColumnAtSelection(false)}
+          data-test-id="table-insert-column-before">
           Insert{' '}
-          {selectionCounts.columns === 1
-            ? 'column'
-            : `${selectionCounts.columns} columns`}{' '}
+          {selectionCounts.columns === 1 ? 'column' : `${selectionCounts.columns} columns`}{' '}
           left
-        </span>
-      </button>
-      <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
-        type="button"
-        className="item"
-        onClick={() => insertTableColumnAtSelection(true)}
-        data-test-id="table-insert-column-after">
-        <span className="text">
+        </button>
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+          type="button"
+          onClick={() => insertTableColumnAtSelection(true)}
+          data-test-id="table-insert-column-after">
           Insert{' '}
-          {selectionCounts.columns === 1
-            ? 'column'
-            : `${selectionCounts.columns} columns`}{' '}
+          {selectionCounts.columns === 1 ? 'column' : `${selectionCounts.columns} columns`}{' '}
           right
-        </span>
-      </button>
-      <hr />
-      <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
-        type="button"
-        className="item"
-        onClick={() => deleteTableColumnAtSelection()}
-        data-test-id="table-delete-columns">
-        <span className="text">Delete column</span>
-      </button>
-      <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
-        type="button"
-        className="item"
-        onClick={() => deleteTableRowAtSelection()}
-        data-test-id="table-delete-rows">
-        <span className="text">Delete row</span>
-      </button>
-      <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
-        type="button"
-        className="item"
-        onClick={() => deleteTableAtSelection()}
-        data-test-id="table-delete">
-        <span className="text">Delete table</span>
-      </button>
-      <hr />
-      <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
-        type="button"
-        className="item"
-        onClick={() => toggleTableRowIsHeader()}>
-        <span className="text">
-          {(tableCellNode.__headerState & TableCellHeaderStates.ROW) ===
-            TableCellHeaderStates.ROW
-            ? 'Remove'
-            : 'Add'}{' '}
+        </button>
+        <hr />
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+          type="button"
+          onClick={() => deleteTableColumnAtSelection()}
+          data-test-id="table-delete-columns">
+          Delete column
+        </button>
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+          type="button"
+          onClick={() => deleteTableRowAtSelection()}
+          data-test-id="table-delete-rows">
+          Delete row
+        </button>
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+          type="button"
+          onClick={() => deleteTableAtSelection()}
+          data-test-id="table-delete">
+          Delete table
+        </button>
+        <hr />
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+          type="button"
+          onClick={() => toggleTableRowIsHeader()}>
+          {(tableCellNode.__headerState & TableCellHeaderStates.ROW) === TableCellHeaderStates.ROW ? 'Remove' : 'Add'}{' '}
           row header
-        </span>
-      </button>
-      <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
-        type="button"
-        className="item"
-        onClick={() => toggleTableColumnIsHeader()}
-        data-test-id="table-column-header">
-        <span className="text">
-          {(tableCellNode.__headerState & TableCellHeaderStates.COLUMN) ===
-            TableCellHeaderStates.COLUMN
-            ? 'Remove'
-            : 'Add'}{' '}
+        </button>
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+          type="button"
+          onClick={() => toggleTableColumnIsHeader()}
+          data-test-id="table-column-header">
+          {(tableCellNode.__headerState & TableCellHeaderStates.COLUMN) === TableCellHeaderStates.COLUMN ? 'Remove' : 'Add'}{' '}
           column header
-        </span>
-      </button>
+        </button>
+      </>}
     </div>,
     document.body,
   )

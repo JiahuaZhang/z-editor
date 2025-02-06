@@ -105,6 +105,7 @@ export const initialConfig: InitialConfigType = {
     tableCellSelected: 'bg-blue-1',
     // tableCellSortedIndicator: 'PlaygroundEditorTheme__tableCellSortedIndicator',
     // tableResizeRuler: 'PlaygroundEditorTheme__tableCellResizeRuler',
+    tableRowStriping: 'even:[&>tr]:bg-teal-1',
     // tableSelected: 'PlaygroundEditorTheme__tableSelected',
     // tableSelection: 'PlaygroundEditorTheme__tableSelection',
     hashtag: 'bg-blue-2 border-b-blue-4 border-b-2',

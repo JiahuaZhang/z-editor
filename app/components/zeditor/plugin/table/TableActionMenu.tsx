@@ -109,23 +109,22 @@ export const TableActionMenu = ({
 }: TableCellActionMenuProps) => {
   const [editor] = useLexicalComposerContext();
   const dropDownRef = useRef<HTMLDivElement | null>(null);
-  const [tableCellNode, updateTableCellNode] = useState(_tableCellNode);
+  const [tableCellNode, setTableCellNode] = useState(_tableCellNode);
   const [selectionCounts, updateSelectionCounts] = useState({ columns: 1, rows: 1, });
   const [canMergeCells, setCanMergeCells] = useState(false);
   const [canUnmergeCell, setCanUnmergeCell] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState(() => currentCellBackgroundColor(editor) || '');
-  const [showColorPicker, setShowColorPicker] = useState(false)
+  const [showColorPicker, setShowColorPicker] = useState(false);
 
   useEffect(() => {
     return editor.registerMutationListener(
       TableCellNode,
       (nodeMutations) => {
-        const nodeUpdated =
-          nodeMutations.get(tableCellNode.getKey()) === 'updated';
+        const nodeUpdated = nodeMutations.get(tableCellNode.getKey()) === 'updated';
 
         if (nodeUpdated) {
           editor.getEditorState().read(() => {
-            updateTableCellNode(tableCellNode.getLatest());
+            setTableCellNode(tableCellNode.getLatest());
           });
           setBackgroundColor(currentCellBackgroundColor(editor) || '');
         }
@@ -140,10 +139,8 @@ export const TableActionMenu = ({
       // Merge cells
       if ($isTableSelection(selection)) {
         const currentSelectionCounts = computeSelectionCount(selection);
-        updateSelectionCounts(computeSelectionCount(selection));
-        setCanMergeCells(
-          currentSelectionCounts.columns > 1 || currentSelectionCounts.rows > 1,
-        );
+        updateSelectionCounts(currentSelectionCounts);
+        setCanMergeCells(currentSelectionCounts.columns > 1 || currentSelectionCounts.rows > 1);
       }
       // Unmerge cell
       setCanUnmergeCell($canUnmerge());
@@ -154,41 +151,34 @@ export const TableActionMenu = ({
     const menuButtonElement = contextRef.current;
     const dropDownElement = dropDownRef.current;
     const rootElement = editor.getRootElement();
+    if (menuButtonElement == null || dropDownElement == null || rootElement == null) return;
 
+    const rootEleRect = rootElement.getBoundingClientRect();
+    const menuButtonRect = menuButtonElement.getBoundingClientRect();
+    const dropDownElementRect = dropDownElement.getBoundingClientRect();
+    const margin = 5;
+    let leftPosition = menuButtonRect.right + margin;
     if (
-      menuButtonElement != null
-      && dropDownElement != null
-      && rootElement != null
+      leftPosition + dropDownElementRect.width > window.innerWidth
+      || leftPosition + dropDownElementRect.width > rootEleRect.right
     ) {
-      const rootEleRect = rootElement.getBoundingClientRect();
-      const menuButtonRect = menuButtonElement.getBoundingClientRect();
-      dropDownElement.style.opacity = '1';
-      const dropDownElementRect = dropDownElement.getBoundingClientRect();
-      const margin = 5;
-      let leftPosition = menuButtonRect.right + margin;
-      if (
-        leftPosition + dropDownElementRect.width > window.innerWidth
-        || leftPosition + dropDownElementRect.width > rootEleRect.right
-      ) {
-        const position = menuButtonRect.left - dropDownElementRect.width - margin;
-        leftPosition = (position < 0 ? margin : position) + window.pageXOffset;
-      }
-      dropDownElement.style.left = `${leftPosition + window.pageXOffset}px`;
-
-      let topPosition = menuButtonRect.top;
-      if (topPosition + dropDownElementRect.height > window.innerHeight) {
-        const position = menuButtonRect.bottom - dropDownElementRect.height;
-        topPosition = (position < 0 ? margin : position) + window.pageYOffset;
-      }
-      dropDownElement.style.top = `${topPosition + +window.pageYOffset}px`;
+      const position = menuButtonRect.left - dropDownElementRect.width - margin;
+      leftPosition = (position < 0 ? margin : position) + window.scrollX;
     }
+    dropDownElement.style.left = `${leftPosition + window.scrollX}px`;
+
+    let topPosition = menuButtonRect.top;
+    if (topPosition + dropDownElementRect.height > window.innerHeight) {
+      const position = menuButtonRect.bottom - dropDownElementRect.height;
+      topPosition = (position < 0 ? margin : position) + window.scrollY;
+    }
+    dropDownElement.style.top = `${topPosition + +window.scrollY}px`;
   }, [contextRef, dropDownRef, editor]);
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
-        !showColorPicker
-        && dropDownRef.current != null
+        dropDownRef.current != null
         && contextRef.current != null
         && isDOMNode(event.target)
         && !dropDownRef.current.contains(event.target)
@@ -201,7 +191,7 @@ export const TableActionMenu = ({
     window.addEventListener('click', handleClickOutside);
 
     return () => window.removeEventListener('click', handleClickOutside);
-  }, [setIsMenuOpen, contextRef, showColorPicker]);
+  }, [setIsMenuOpen, contextRef]);
 
   const clearTableSelection = useCallback(() => {
     editor.update(() => {
@@ -217,7 +207,7 @@ export const TableActionMenu = ({
         }
 
         tableNode.markDirty();
-        updateTableCellNode(tableCellNode.getLatest());
+        setTableCellNode(tableCellNode.getLatest());
       }
 
       const rootNode = $getRoot();
@@ -228,38 +218,38 @@ export const TableActionMenu = ({
   const mergeTableCellsAtSelection = () => {
     editor.update(() => {
       const selection = $getSelection();
-      if ($isTableSelection(selection)) {
-        const { columns, rows } = computeSelectionCount(selection);
-        const nodes = selection.getNodes();
-        let firstCell: null | TableCellNode = null;
-        for (let i = 0; i < nodes.length; i++) {
-          const node = nodes[i];
-          if ($isTableCellNode(node)) {
-            if (firstCell === null) {
-              node.setColSpan(columns).setRowSpan(rows);
-              firstCell = node;
-              const isEmpty = $cellContainsEmptyParagraph(node);
-              let firstChild;
-              if (isEmpty && $isParagraphNode((firstChild = node.getFirstChild()))) {
-                firstChild.remove();
-              }
-            } else if ($isTableCellNode(firstCell)) {
-              const isEmpty = $cellContainsEmptyParagraph(node);
-              if (!isEmpty) {
-                firstCell.append(...node.getChildren());
-              }
-              node.remove();
+      if (!$isTableSelection(selection)) return;
+
+      const { columns, rows } = computeSelectionCount(selection);
+      const nodes = selection.getNodes();
+      let firstCell: null | TableCellNode = null;
+      for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+        if ($isTableCellNode(node)) {
+          if (firstCell === null) {
+            node.setColSpan(columns).setRowSpan(rows);
+            firstCell = node;
+            const isEmpty = $cellContainsEmptyParagraph(node);
+            let firstChild;
+            if (isEmpty && $isParagraphNode((firstChild = node.getFirstChild()))) {
+              firstChild.remove();
             }
+          } else if ($isTableCellNode(firstCell)) {
+            const isEmpty = $cellContainsEmptyParagraph(node);
+            if (!isEmpty) {
+              firstCell.append(...node.getChildren());
+            }
+            node.remove();
           }
         }
-        if (firstCell !== null) {
-          if (firstCell.getChildrenSize() === 0) {
-            firstCell.append($createParagraphNode());
-          }
-          $selectLastDescendant(firstCell);
-        }
-        onClose();
       }
+      if (firstCell !== null) {
+        if (firstCell.getChildrenSize() === 0) {
+          firstCell.append($createParagraphNode());
+        }
+        $selectLastDescendant(firstCell);
+      }
+      onClose();
     });
   };
 
@@ -316,9 +306,7 @@ export const TableActionMenu = ({
   const toggleTableRowIsHeader = useCallback(() => {
     editor.update(() => {
       const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-
       const tableRowIndex = $getTableRowIndexFromTableCellNode(tableCellNode);
-
       const tableRows = tableNode.getChildren();
 
       if (tableRowIndex >= tableRows.length || tableRowIndex < 0) {
@@ -326,7 +314,6 @@ export const TableActionMenu = ({
       }
 
       const tableRow = tableRows[tableRowIndex];
-
       if (!$isTableRowNode(tableRow)) {
         throw new Error('Expected table row');
       }
@@ -348,9 +335,7 @@ export const TableActionMenu = ({
   const toggleTableColumnIsHeader = useCallback(() => {
     editor.update(() => {
       const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-
       const tableColumnIndex = $getTableColumnIndexFromTableCellNode(tableCellNode);
-
       const tableRows = tableNode.getChildren<TableRowNode>();
       const maxRowsLength = Math.max(...tableRows.map((row) => row.getChildren().length));
 
@@ -373,7 +358,6 @@ export const TableActionMenu = ({
         }
 
         const tableCell = tableCells[tableColumnIndex];
-
         if (!$isTableCellNode(tableCell)) {
           throw new Error('Expected table cell');
         }
@@ -432,7 +416,7 @@ export const TableActionMenu = ({
         !showColorPicker && cellMerge && canMergeCells
         && <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
           type="button"
-          onClick={() => mergeTableCellsAtSelection()}
+          onClick={mergeTableCellsAtSelection}
           data-test-id="table-merge-cells">
           Merge cells
         </button>
@@ -441,7 +425,7 @@ export const TableActionMenu = ({
         !showColorPicker && cellMerge && canUnmergeCell
         && <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
           type="button"
-          onClick={() => unmergeTableCellsAtSelection()}
+          onClick={unmergeTableCellsAtSelection}
           data-test-id="table-unmerge-cells">
           Unmerge cells
         </button>
@@ -462,7 +446,7 @@ export const TableActionMenu = ({
       {!showColorPicker && <>
         <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
           type="button"
-          onClick={() => toggleRowStriping()}
+          onClick={toggleRowStriping}
           data-test-id="table-row-striping">
           Toggle Row Striping
         </button>
@@ -503,32 +487,32 @@ export const TableActionMenu = ({
         <hr />
         <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
           type="button"
-          onClick={() => deleteTableColumnAtSelection()}
+          onClick={deleteTableColumnAtSelection}
           data-test-id="table-delete-columns">
           Delete column
         </button>
         <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
           type="button"
-          onClick={() => deleteTableRowAtSelection()}
+          onClick={deleteTableRowAtSelection}
           data-test-id="table-delete-rows">
           Delete row
         </button>
         <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
           type="button"
-          onClick={() => deleteTableAtSelection()}
+          onClick={deleteTableAtSelection}
           data-test-id="table-delete">
           Delete table
         </button>
         <hr />
         <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
           type="button"
-          onClick={() => toggleTableRowIsHeader()}>
+          onClick={toggleTableRowIsHeader}>
           {(tableCellNode.__headerState & TableCellHeaderStates.ROW) === TableCellHeaderStates.ROW ? 'Remove' : 'Add'}{' '}
           row header
         </button>
         <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
           type="button"
-          onClick={() => toggleTableColumnIsHeader()}
+          onClick={toggleTableColumnIsHeader}
           data-test-id="table-column-header">
           {(tableCellNode.__headerState & TableCellHeaderStates.COLUMN) === TableCellHeaderStates.COLUMN ? 'Remove' : 'Add'}{' '}
           column header

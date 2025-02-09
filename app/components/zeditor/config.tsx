@@ -37,7 +37,7 @@ export const initialConfig: InitialConfigType = {
     },
     text: {
       bold: '',
-      capitalize: 'uppercase',
+      capitalize: 'capitalize',
       code: 'bg-zinc-1 p-1 rounded text-sm font-mono',
       italic: '',
       lowercase: 'lowercase',
@@ -46,7 +46,7 @@ export const initialConfig: InitialConfigType = {
       superscript: '',
       underline: 'underline',
       underlineStrikethrough: 'underline line-through',
-      uppercase: 'PlaygroundEditorTheme__textUppercase',
+      uppercase: 'uppercase',
     },
     list: {
       checklist: 'pl-0',

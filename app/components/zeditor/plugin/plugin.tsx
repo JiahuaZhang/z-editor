@@ -26,6 +26,7 @@ import { TabFocusPlugin } from './tab-focus/TabFocusPlugin';
 import { TableActionMenuPlugin } from './table/TableActionMenuPlugin';
 import { TableCellResizerPlugin } from './table/TableCellResizer';
 import { TableHoverActionsPlugin } from './table/TableHoverActionsPlugin';
+import { FloatingTextFormatToolbarPlugin } from './toolbar/FloatingTextFormatToolbarPlugin';
 import { ToolbarPlugin } from './toolbar/ToolbarPlugin';
 import { TwitterPlugin } from './twitter/TwitterPlugin';
 import { YouTubePlugin } from './youtube/YouTubePlugin';
@@ -52,7 +53,10 @@ export namespace Plugin {
     export const Insert = ImagePlugin;
     export const Inline = InlineImagePlugin;
   }
-  export const Toolbar = ToolbarPlugin;
+  export namespace Toolbar {
+    export const Top = ToolbarPlugin;
+    export const Floating = FloatingTextFormatToolbarPlugin;
+  }
   export const Excalidraw = ExcalidrawPlugin;
   export const AutoComplete = AutocompletePlugin;
   export const Comment = CommentPlugin;

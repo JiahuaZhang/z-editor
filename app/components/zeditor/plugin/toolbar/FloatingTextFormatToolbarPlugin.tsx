@@ -22,7 +22,6 @@ import { getSelectedNode } from '../../util/getSelectedNode';
 import { setFloatingElemPosition } from '../../util/setFloatingElemPosition';
 import { INSERT_INLINE_COMMAND } from '../comment/CommentPlugin';
 import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
-// import './index.css';
 
 const TextFormatFloatingToolbar = ({ editor, anchorElem, isLink, isBold, isItalic, isUnderline, isUppercase, isLowercase, isCapitalize, isCode, isStrikethrough, isSubscript, isSuperscript, setIsLinkEditMode }: {
   editor: LexicalEditor;
@@ -254,6 +253,7 @@ export const FloatingTextFormatToolbarPlugin = () => {
   const [isSubscript, setIsSubscript] = useState(false);
   const [isSuperscript, setIsSuperscript] = useState(false);
   const [isCode, setIsCode] = useState(false);
+  const [isShow, setIsShow] = useState(false);
 
   const updatePopup = useCallback(() => {
     editor.getEditorState().read(() => {
@@ -324,6 +324,19 @@ export const FloatingTextFormatToolbarPlugin = () => {
   }, [updatePopup]);
 
   useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      if (isText) setIsShow(true);
+    };
+
+    window.addEventListener('contextmenu', handleClick);
+    return () => window.removeEventListener('contextmenu', handleClick);
+  }, [editor, isText])
+
+  useEffect(() => {
+    if (!isText) setIsShow(false);
+  }, [isText]);
+
+  useEffect(() => {
     return mergeRegister(
       editor.registerUpdateListener(updatePopup),
       editor.registerRootListener(() => {
@@ -334,7 +347,7 @@ export const FloatingTextFormatToolbarPlugin = () => {
     );
   }, [editor, updatePopup]);
 
-  if (!isText) return null;
+  if (!isShow) return null;
 
   return anchor && createPortal(
     <TextFormatFloatingToolbar

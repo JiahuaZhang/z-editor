@@ -1,4 +1,5 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
 import {
   $getTableColumnIndexFromTableCellNode,
   $getTableRowIndexFromTableCellNode,
@@ -226,6 +227,7 @@ const TableHoverActionsContainer = ({ anchorElem }: { anchorElem: HTMLElement; }
 };
 
 export const TableHoverActionsPlugin = ({ anchorElem }: { anchorElem?: HTMLElement; }) => {
+  const isEditable = useLexicalEditable(); 
   anchorElem = anchorElem ?? document.body;
-  return createPortal(<TableHoverActionsContainer anchorElem={anchorElem} />, anchorElem);
+  return isEditable && createPortal(<TableHoverActionsContainer anchorElem={anchorElem} />, anchorElem);
 };

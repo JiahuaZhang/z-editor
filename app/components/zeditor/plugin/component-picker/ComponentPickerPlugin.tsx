@@ -9,7 +9,7 @@ import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import { useSetAtom } from 'jotai';
-import { $createParagraphNode, $getSelection, $isRangeSelection, FORMAT_ELEMENT_COMMAND, LexicalEditor, TextNode } from 'lexical';
+import { $createParagraphNode, $getSelection, $isRangeSelection, CLEAR_EDITOR_COMMAND, FORMAT_ELEMENT_COMMAND, LexicalEditor, TextNode } from 'lexical';
 import { useCallback, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../collapsible/CollapsiblePlugin';
@@ -240,19 +240,29 @@ export const ComponentPickerMenuPlugin = () => {
         }),
     ),
     new ComponentPickerOption('Speech to Text', {
-      icon: <span className="i-material-symbols-light:mic" />,
+      icon: <span className="i-material-symbols-light:mic" un-text='xl' />,
       keywords: ['speech to text', 'stt'],
       onSelect: () => editor.dispatchCommand(TOGGLE_SPEECH_TO_TEXT_COMMAND, undefined),
     }),
     new ComponentPickerOption('Import', {
-      icon: <div className="i-circum:import"></div>,
+      icon: <span className="i-circum:import" un-text='xl' />,
       keywords: ['import', 'file'],
       onSelect: () => importFile(editor)
     }),
     new ComponentPickerOption('Export', {
-      icon: <div className="i-circum:export"></div>,
+      icon: <span className="i-circum:export" un-text='xl' />,
       keywords: ['export', 'file'],
       onSelect: () => exportFile(editor)
+    }),
+    new ComponentPickerOption('Clear', {
+      icon: <span className="i-mdi:trash" un-text='xl red-6' />,
+      keywords: ['clear', 'trash'],
+      onSelect: () => editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined)
+    }),
+    new ComponentPickerOption('Read-Only Mode', {
+      icon: <span className="i-mdi:lock" un-text='xl zinc-4' />,
+      keywords: ['lock', 'read-only', 'read'],
+      onSelect: () => editor.setEditable(false)
     }),
   ], [editor]);
 

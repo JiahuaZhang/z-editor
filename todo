@@ -155,3 +155,9 @@ sticky note?
 
 生成式 ui
 https://github.com/vercel-labs/ai-sdk-preview-rsc-genui
+
+table of contents:
+https://github.com/facebook/lexical/blob/main/packages/lexical-playground/src/plugins/TableOfContentsPlugin/index.tsx
+
+context menu (right click menu)
+https://github.com/facebook/lexical/blob/main/packages/lexical-playground/src/plugins/ContextMenuPlugin/index.tsx

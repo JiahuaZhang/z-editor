@@ -10,13 +10,14 @@
     "profile": "remix vite:build --profile",
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc",
-    "update-lexical": "npm install lexical@latest @lexical/dragon@latest @lexical/history@latest @lexical/react@latest @lexical/rich-text@latest @lexical/utils@latest",
+    "update-lexical": "npm install lexical@latest @lexical/dragon@latest @lexical/history@latest @lexical/react@latest @lexical/rich-text@latest @lexical/utils@latest @lexical/file@latest",
     "upgrade-remix": "npx upgrade-remix"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.17.6",
     "@iconify-json/ci": "^1.2.0",
     "@lexical/dragon": "^0.24.0",
+    "@lexical/file": "^0.24.0",
     "@lexical/history": "^0.24.0",
     "@lexical/react": "^0.24.0",
     "@lexical/rich-text": "^0.24.0",
@@ -51,6 +52,7 @@
   "devDependencies": {
     "@iconify-json/bi": "^1.2.0",
     "@iconify-json/carbon": "^1.1.28",
+    "@iconify-json/circum": "^1.2.2",
     "@iconify-json/flowbite": "^1.2.3",
     "@iconify-json/icon-park-outline": "^1.2.2",
     "@iconify-json/logos": "^1.2.4",

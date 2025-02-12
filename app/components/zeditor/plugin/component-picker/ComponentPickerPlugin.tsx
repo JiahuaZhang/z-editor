@@ -1,4 +1,5 @@
 import { $createCodeNode } from '@lexical/code';
+import { exportFile, importFile } from '@lexical/file';
 import { INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from '@lexical/list';
 import { INSERT_EMBED_COMMAND } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -242,7 +243,17 @@ export const ComponentPickerMenuPlugin = () => {
       icon: <span className="i-material-symbols-light:mic" />,
       keywords: ['speech to text', 'stt'],
       onSelect: () => editor.dispatchCommand(TOGGLE_SPEECH_TO_TEXT_COMMAND, undefined),
-    })
+    }),
+    new ComponentPickerOption('Import', {
+      icon: <div className="i-circum:import"></div>,
+      keywords: ['import', 'file'],
+      onSelect: () => importFile(editor)
+    }),
+    new ComponentPickerOption('Export', {
+      icon: <div className="i-circum:export"></div>,
+      keywords: ['export', 'file'],
+      onSelect: () => exportFile(editor)
+    }),
   ], [editor]);
 
   const options = useMemo(() => {

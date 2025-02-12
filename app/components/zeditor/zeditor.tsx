@@ -23,7 +23,7 @@ import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import { MATCHERS, validateUrl } from './util/url';
 
-export const UnoStaticTrick = () => <div un-top='2.5' un-left='2.75' />;
+export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' />;
 
 const Plugins = ({ ...rest }) => {
   const [editor] = useLexicalComposerContext();
@@ -37,11 +37,11 @@ const Plugins = ({ ...rest }) => {
     <RichTextPlugin
         contentEditable={
           <div>
-            <ContentEditable un-p='2' un-pl='6' un-z='5' un-position='relative' id='lexical-content-deitable' />
+            <ContentEditable un-p='2' un-pl='6' un-z='5' un-position='relative' id='lexical-content-deitable' un-min-h='100' un-border='rounded-b 1 solid zinc-4' />
           </div>
         }
         placeholder={
-          <div un-position='absolute' un-top='2.5' un-left='2.75' un-z='1' un-pointer-events='none' >Enter some rich text...</div>
+          <div un-position='absolute' un-top='2.25' un-left='6.5' un-z='1' un-pointer-events='none' >Enter some rich text...</div>
         }
         ErrorBoundary={LexicalErrorBoundary}
       />

@@ -1,8 +1,11 @@
 import { Select } from 'antd';
 import { useAtomValue } from 'jotai';
 import { ElementFormatType, FORMAT_ELEMENT_COMMAND, INDENT_CONTENT_COMMAND, OUTDENT_CONTENT_COMMAND } from 'lexical';
+import { lazy, Suspense } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { SHORTCUTS } from '../shortcut/shortcut';
+
+const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));
 
 const FORMATS = {
   left: {
@@ -70,33 +73,37 @@ export const ElementFormatDropDown = ({ elementFormat, isRTL }: { elementFormat:
 
   if (!activeEditor) return null;
 
-  return <Select un-m='1' un-border='none hover:blue-6' className='[&>div]:(pr-0 pl-1)! [&>span]:(mr--2.25!)'
-    value={elementFormat || 'left'}
-    popupClassName='w-auto!'
-    listHeight={300}
-    options={options}
-    onChange={value => {
-      const format = FORMATS[value as keyof typeof FORMATS];
-      activeEditor.dispatchCommand(format.command, format.arg as any);
-    }}
-    optionRender={args => {
-      return <div un-inline='grid' un-grid-flow='col' un-gap='4' un-items='center' un-w='full'
-        un-grid-cols='[max-content_1fr_max-content]'
-      >
+  return <Suspense>
+    <Select un-m='1' un-border='none hover:blue-6' className='[&>div]:(pr-0 pl-1)! [&>span]:(mr--2.25!)'
+      disabled={!activeEditor.isEditable()}
+      value={elementFormat || 'left'}
+      popupClassName='w-auto!'
+      listHeight={300}
+      options={options}
+      onChange={value => {
+        const format = FORMATS[value as keyof typeof FORMATS];
+        activeEditor.dispatchCommand(format.command, format.arg as any);
+      }}
+      optionRender={args => {
+        return <div un-inline='grid' un-grid-flow='col' un-gap='4' un-items='center' un-w='full'
+          un-grid-cols='[max-content_1fr_max-content]'
+        >
+          {FORMATS[args.value as keyof typeof FORMATS].icon}
+          <span>
+            {FORMATS[args.value as keyof typeof FORMATS].content}
+          </span>
+          <span>
+            {FORMATS[args.value as keyof typeof FORMATS].shortcut}
+          </span>
+        </div>;
+      }}
+      labelRender={args => <div un-flex='~' un-mr='-3' un-items='center' un-gap='2' >
         {FORMATS[args.value as keyof typeof FORMATS].icon}
         <span>
           {FORMATS[args.value as keyof typeof FORMATS].content}
         </span>
-        <span>
-          {FORMATS[args.value as keyof typeof FORMATS].shortcut}
-        </span>
-      </div>;
-    }}
-    labelRender={args => <div un-flex='~' un-mr='-3' un-items='center' un-gap='2' >
-      {FORMATS[args.value as keyof typeof FORMATS].icon}
-      <span>
-        {FORMATS[args.value as keyof typeof FORMATS].content}
-      </span>
-    </div>}
-  />;
+      </div>}
+    />
+    <Divider />
+  </Suspense>
 };

@@ -1,4 +1,5 @@
 import { INSERT_EMBED_COMMAND } from '@lexical/react/LexicalAutoEmbedPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import { Button, Checkbox, Dropdown, Form, Input, InputNumber, MenuProps, Modal, Radio, Upload } from 'antd';
 import { atom, useAtom, useAtomValue } from 'jotai';
@@ -40,6 +41,7 @@ const DEFAULT_LAYOUTS = [
 ];
 
 export const InsertDropDown = () => {
+  const [editor] = useLexicalComposerContext();
   const [isInsertingImage, setIsInsertingImage] = useAtom(isInsertingImageAtom);
   const [isImageUrlMode, setIsImageUrlMode] = useState(false);
   const [isImageFileMode, setIsImageFileMode] = useState(false);
@@ -144,7 +146,7 @@ export const InsertDropDown = () => {
   }, [activeEditor]);
 
   return <Suspense>
-    <Dropdown menu={{ items: insertItems }} trigger={['click']} >
+    <Dropdown disabled={!editor.isEditable()} menu={{ items: insertItems }} trigger={['click']} >
       <Button un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='0.25' un-px='1' un-text='sm gray-6'>
         <span className="i-mdi:plus" un-text='lg' /> Insert <span className="i-ph:caret-down" un-text='lg' />
       </Button>

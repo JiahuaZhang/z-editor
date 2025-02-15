@@ -14,6 +14,7 @@ export const FontDropDown = ({ font }: { font: string; }) => {
 
   return <Suspense>
     <Select options={options} value={font} popupClassName='w-40!' className='[&>div]:(pr-0! pl-1!) [&>span]:(mr--1.5!)'
+      disabled={!editor.isEditable()}
       labelRender={_ => <div un-flex='~' ><span className="i-bi:fonts" un-text='lg' /> </div>}
       onChange={font => editor.update(() => {
         const selection = $getSelection();

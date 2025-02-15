@@ -126,6 +126,7 @@ export const BlockFormatDropDown = ({ blockType }: { blockType: keyof typeof blo
 
   return <Suspense>
     <Select un-m='1' un-border='none hover:blue-6' className='[&>div]:(pr-0 pl-1)! [&>span]:(mr--1.5!)'
+      disabled={!editor.isEditable()}
       value={blockType}
       popupClassName='w-auto!'
       options={COMMON_BLOCK_FORMATS.map(value => ({ label: BLOCK_LABELS[value], value }))}

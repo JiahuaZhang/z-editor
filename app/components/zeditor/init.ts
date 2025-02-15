@@ -512,8 +512,8 @@ export const $generateContent = () => {
   // $generateLayout();
   // $generateSpecialText();
   // $generateListContent();
-  $generateCode();
-  // $generateTable();
+  // $generateCode();
+  $generateTable();
   // $generateHashTag();
   // $generateLink();
   // $generateImages();

@@ -161,3 +161,6 @@ https://github.com/facebook/lexical/blob/main/packages/lexical-playground/src/pl
 
 context menu (right click menu)
 https://github.com/facebook/lexical/blob/main/packages/lexical-playground/src/plugins/ContextMenuPlugin/index.tsx
+
+markdown convert
+https://github.com/facebook/lexical/blob/main/packages/lexical-playground/src/plugins/ActionsPlugin/index.tsx#L170

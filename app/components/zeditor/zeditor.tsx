@@ -23,7 +23,7 @@ import { Plugin } from './plugin/plugin';
 import { TableContext } from './plugin/table/TablePlugin';
 import { MATCHERS, validateUrl } from './util/url';
 
-export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' />;
+export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zinc-6' />;
 
 const Plugins = ({ ...rest }) => {
   const [editor] = useLexicalComposerContext();
@@ -41,7 +41,7 @@ const Plugins = ({ ...rest }) => {
           </div>
         }
         placeholder={
-          <div un-position='absolute' un-top='2.25' un-left='6.5' un-z='1' un-pointer-events='none' >Enter some rich text...</div>
+          <div un-position='absolute' un-top='2.25' un-left='6.5' un-z='1' un-pointer-events='none' un-text='zinc-6' >Enter some rich text...</div>
         }
         ErrorBoundary={LexicalErrorBoundary}
       />

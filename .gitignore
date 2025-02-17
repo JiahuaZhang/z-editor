@@ -7,3 +7,5 @@ node_modules
 
 .vscode
 app/styles/uno.css
+
+.react-router/

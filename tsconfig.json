@@ -3,7 +3,8 @@
     "env.d.ts",
     "shims.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    ".react-router/types/**/*",
   ],
   "compilerOptions": {
     "lib": [
@@ -28,7 +29,9 @@
       ]
     },
     // Remix takes care of building everything in `remix build`.
-    "noEmit": true
+    "noEmit": true,
+    "types": ["@react-router/node", "vite/client"],
+    "rootDirs": [".", "./.react-router/types"]
   },
   "skipLibCheck": true
 }

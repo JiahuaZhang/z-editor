@@ -1,22 +1,13 @@
-import { vitePlugin as remix } from '@remix-run/dev'
-import { installGlobals } from '@remix-run/node'
+import { reactRouter } from '@react-router/dev/vite';
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import path from 'path'
 
-// installGlobals();
-
 export default defineConfig({
-  ssr: {
-    noExternal: [],
-    optimizeDeps: {
-      include: []
-    }
-  },
   plugins: [
     UnoCSS(),
-    remix({
+    reactRouter({
       ignoredRouteFiles: ['**/.*']
     }),
     tsconfigPaths()

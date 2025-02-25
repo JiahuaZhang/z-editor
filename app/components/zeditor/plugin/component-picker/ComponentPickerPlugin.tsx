@@ -4,7 +4,7 @@ import { INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERE
 import { INSERT_EMBED_COMMAND } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { MenuOption } from '@lexical/react/LexicalNodeMenuPlugin';
-import { LexicalTypeaheadMenuPlugin, useBasicTypeaheadTriggerMatch } from '@lexical/react/LexicalTypeaheadMenuPlugin';
+import { LexicalTypeaheadMenuPlugin } from '@lexical/react/LexicalTypeaheadMenuPlugin';
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
@@ -19,6 +19,8 @@ import { INSERT_HORIZONTAL_RULE_COMMAND } from '../horizontal-rule/HorizontalRul
 import { INSERT_PAGE_BREAK } from '../page-break/PageBreakPlugin';
 import { TOGGLE_SPEECH_TO_TEXT_COMMAND } from '../speech/SpeechToTextPlugin';
 import { isInsertingColumnLayoutAtom, isInsertingImageAtom, isInsertingTableAtom, isIsInsertEquationModeAtom } from '../toolbar/InsertDropDown';
+import { generateOption } from './generate-option';
+import { slashPattern } from './trigger-pattern';
 
 class ComponentPickerOption extends MenuOption {
   // What shows up in the editor
@@ -99,7 +101,7 @@ const getDynamicOptions = (editor: LexicalEditor, queryString: string): Componen
 export const ComponentPickerMenuPlugin = () => {
   const [editor] = useLexicalComposerContext();
   const [queryString, setQueryString] = useState<string | null>(null);
-  const checkForTriggerMatch = useBasicTypeaheadTriggerMatch('/', { minLength: 0 });
+  // const checkForTriggerMatch = useBasicTypeaheadTriggerMatch('/', { minLength: 0 });
   const setIsInsertingImage = useSetAtom(isInsertingImageAtom);
   const setIsInsertingTable = useSetAtom(isInsertingTableAtom);
   const setIsInsertEquationMode = useSetAtom(isIsInsertEquationModeAtom);
@@ -269,6 +271,9 @@ export const ComponentPickerMenuPlugin = () => {
   const options = useMemo(() => {
     if (!queryString) return baseOptions;
 
+    const dynamicOptions = generateOption(editor, queryString);
+    if (dynamicOptions.end) return dynamicOptions.result;
+
     const regex = new RegExp(queryString, 'i');
     return [
       ...getDynamicOptions(editor, queryString),
@@ -298,7 +303,7 @@ export const ComponentPickerMenuPlugin = () => {
       <LexicalTypeaheadMenuPlugin<ComponentPickerOption>
         onQueryChange={setQueryString}
         onSelectOption={onSelectOption}
-        triggerFn={checkForTriggerMatch}
+        triggerFn={slashPattern}
         options={options}
         menuRenderFn={(
           anchorElementRef,

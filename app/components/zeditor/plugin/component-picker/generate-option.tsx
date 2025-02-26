@@ -4,12 +4,12 @@ import { $setBlocksType } from '@lexical/selection';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import { $getSelection, $isRangeSelection, LexicalEditor } from "lexical";
 
-class ComponentPickerOption extends MenuOption {
+export class ComponentPickerOption extends MenuOption {
   title: string;
   icon?: JSX.Element;
   keywords: string[];
   keyboardShortcut?: string;
-  onSelect: (queryString: string) => void;
+  onSelect: (editor: LexicalEditor, queryString: string) => void;
 
   constructor(
     title: string,
@@ -17,7 +17,7 @@ class ComponentPickerOption extends MenuOption {
       icon?: JSX.Element;
       keywords?: string[];
       keyboardShortcut?: string;
-      onSelect: (queryString: string) => void;
+      onSelect: (editor: LexicalEditor, queryString: string) => void;
     },
   ) {
     super(title);
@@ -32,10 +32,10 @@ class ComponentPickerOption extends MenuOption {
 export const generateOption = (editor: LexicalEditor, text: string) => {
   if (!text) return { end: true, result: [] };
 
-  const headingOptions = generateHeadingOption(editor, text);
+  const headingOptions = generateHeadingOption(text);
   if (headingOptions.end) return headingOptions;
 
-  const tableOptions = generateTableOption(editor, text);
+  const tableOptions = generateTableOption(text);
   if (tableOptions.end) return tableOptions;
 
   return {
@@ -46,7 +46,7 @@ export const generateOption = (editor: LexicalEditor, text: string) => {
 
 export const fullHeaderRegexp = /^(h|H)(ead|eading|eader)?\s?(?<level>[1-6])$/;
 export const partialHeaderRegExp = /^(h|H)(?:e(?:a(?:d(?:e(?:r)?|i(?:n(?:g)?)?)?)?)?)?\s?$/i;
-const generateHeadingOption = (editor: LexicalEditor, text: string) => {
+const generateHeadingOption = (text: string) => {
   let match = fullHeaderRegexp.exec(text);
   if (match) {
     const level = match.groups?.level;
@@ -54,7 +54,7 @@ const generateHeadingOption = (editor: LexicalEditor, text: string) => {
       end: true,
       result: [new ComponentPickerOption(`Heading ${level}`, {
         icon: <i className={`i-ci:heading-h${level}`} un-text='xl' />,
-        onSelect: () =>
+        onSelect: (editor: LexicalEditor, queryString: string) =>
           editor.update(() => {
             const selection = $getSelection();
             if ($isRangeSelection(selection)) {
@@ -73,7 +73,7 @@ const generateHeadingOption = (editor: LexicalEditor, text: string) => {
     end: true,
     result: [1, 2, 3, 4, 5, 6].map(level => new ComponentPickerOption(`${header}${level}`, {
       icon: <i className={`i-ci:heading-h${level}`} un-text='xl' />,
-      onSelect: () =>
+      onSelect: (editor: LexicalEditor, queryString: string) =>
         editor.update(() => {
           const selection = $getSelection();
           if ($isRangeSelection(selection)) {
@@ -84,7 +84,7 @@ const generateHeadingOption = (editor: LexicalEditor, text: string) => {
   }
 }
 
-const generateTableOption = (editor: LexicalEditor, text: string) => {
+const generateTableOption = (text: string) => {
   const tableMatch = text.match(/^([1-9]\d?)(?:x([1-9]\d?)?)?$/);
 
   if (!tableMatch) return { end: false, result: [] };
@@ -95,7 +95,7 @@ const generateTableOption = (editor: LexicalEditor, text: string) => {
     end: true, result: colOptions.map(columns => new ComponentPickerOption(`${rows}x${columns} Table`, {
       icon: <i className="i-material-symbols-light:table-outline" un-text='xl' />,
       keywords: ['table'],
-      onSelect: () => editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
+      onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
     }))
   }
 }

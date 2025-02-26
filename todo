@@ -2,37 +2,7 @@ Zeditor
 
 type / slash to trigger dropdown, includes customized command
 
-/(empty) => headings, basic blocks
-* interactable => headings => expand to h1 ~ h6
-*   basic blocks => all blocks available
-
-/h => headings only
-/h1, h2, h3, h4, h5, h6
-/heading1, heading2, heading3, heading4, heading5, heading6
-/heading 1, heading 2, heading 3, heading 4, heading 5, heading 6
-smart match?
-
-/p /paragraph /text
-/blockquote
-/list
-/order list
-/unordered list
-/check-list
-/checklist
-/numbered list
-/ol
-/ul
-
-/
-only => default dropdown
-* should be interactable..
-
-/ + Escape = ignore this / only
-
 slash dropdown
-/p, /paragraph,
-/blockquote
-/list-item
 /bold, /underline, /strike, /code, /heading, /link
 
 smart match

@@ -3,11 +3,9 @@ import { exportFile, importFile } from '@lexical/file';
 import { INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from '@lexical/list';
 import { INSERT_EMBED_COMMAND } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { MenuOption } from '@lexical/react/LexicalNodeMenuPlugin';
 import { LexicalTypeaheadMenuPlugin } from '@lexical/react/LexicalTypeaheadMenuPlugin';
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
-import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import { useSetAtom } from 'jotai';
 import { $createParagraphNode, $getSelection, $isRangeSelection, CLEAR_EDITOR_COMMAND, FORMAT_ELEMENT_COMMAND, LexicalEditor, TextNode } from 'lexical';
 import { useCallback, useMemo, useState } from 'react';
@@ -19,38 +17,8 @@ import { INSERT_HORIZONTAL_RULE_COMMAND } from '../horizontal-rule/HorizontalRul
 import { INSERT_PAGE_BREAK } from '../page-break/PageBreakPlugin';
 import { TOGGLE_SPEECH_TO_TEXT_COMMAND } from '../speech/SpeechToTextPlugin';
 import { isInsertingColumnLayoutAtom, isInsertingImageAtom, isInsertingTableAtom, isIsInsertEquationModeAtom } from '../toolbar/InsertDropDown';
-import { generateOption } from './generate-option';
+import { ComponentPickerOption, generateOption } from './generate-option';
 import { slashPattern } from './trigger-pattern';
-
-class ComponentPickerOption extends MenuOption {
-  // What shows up in the editor
-  title: string;
-  // Icon for display
-  icon?: JSX.Element;
-  // For extra searching.
-  keywords: string[];
-  // TBD
-  keyboardShortcut?: string;
-  // What happens when you select this option?
-  onSelect: (queryString: string) => void;
-
-  constructor(
-    title: string,
-    options: {
-      icon?: JSX.Element;
-      keywords?: string[];
-      keyboardShortcut?: string;
-      onSelect: (queryString: string) => void;
-    },
-  ) {
-    super(title);
-    this.title = title;
-    this.keywords = options.keywords || [];
-    this.icon = options.icon;
-    this.keyboardShortcut = options.keyboardShortcut;
-    this.onSelect = options.onSelect.bind(this);
-  }
-}
 
 const ComponentPickerMenuItem = ({ index, isSelected, onClick, onMouseEnter, option }: {
   index: number;
@@ -81,27 +49,9 @@ const ComponentPickerMenuItem = ({ index, isSelected, onClick, onMouseEnter, opt
   );
 };
 
-const getDynamicOptions = (editor: LexicalEditor, queryString: string): ComponentPickerOption[] => {
-  if (!queryString) return [];
-
-  const tableMatch = queryString.match(/^([1-9]\d?)(?:x([1-9]\d?)?)?$/);
-  if (!tableMatch) return [];
-
-  const rows = tableMatch[1];
-  const colOptions = tableMatch[2] ? [tableMatch[2]] : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(String);
-  return colOptions.map(columns =>
-    new ComponentPickerOption(`${rows}x${columns} Table`, {
-      icon: <i className="i-material-symbols-light:table-outline" un-text='xl' />,
-      keywords: ['table'],
-      onSelect: () => editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
-    }),
-  );
-};
-
 export const ComponentPickerMenuPlugin = () => {
   const [editor] = useLexicalComposerContext();
   const [queryString, setQueryString] = useState<string | null>(null);
-  // const checkForTriggerMatch = useBasicTypeaheadTriggerMatch('/', { minLength: 0 });
   const setIsInsertingImage = useSetAtom(isInsertingImageAtom);
   const setIsInsertingTable = useSetAtom(isInsertingTableAtom);
   const setIsInsertEquationMode = useSetAtom(isIsInsertEquationModeAtom);
@@ -110,7 +60,7 @@ export const ComponentPickerMenuPlugin = () => {
     new ComponentPickerOption('Paragraph', {
       icon: <i className="i-system-uicons:paragraph-left" un-text='xl' />,
       keywords: ['normal', 'paragraph', 'p', 'text'],
-      onSelect: () =>
+      onSelect: (editor: LexicalEditor, queryString: string) =>
         editor.update(() => {
           const selection = $getSelection();
           if ($isRangeSelection(selection)) {
@@ -123,7 +73,7 @@ export const ComponentPickerMenuPlugin = () => {
         new ComponentPickerOption(`Heading ${n}`, {
           icon: <i className={`i-ci:heading-h${n}`} un-text='xl' />,
           keywords: ['heading', 'header', `h${n}`],
-          onSelect: () =>
+          onSelect: (editor: LexicalEditor, queryString: string) =>
             editor.update(() => {
               const selection = $getSelection();
               if ($isRangeSelection(selection)) {
@@ -135,30 +85,30 @@ export const ComponentPickerMenuPlugin = () => {
     new ComponentPickerOption('Table', {
       icon: <i className="i-material-symbols-light:table-outline" un-text='xl' />,
       keywords: ['table', 'grid', 'spreadsheet', 'rows', 'columns'],
-      onSelect: () => setIsInsertingTable(true),
+      onSelect: (editor: LexicalEditor, queryString: string) => setIsInsertingTable(true),
     }),
     new ComponentPickerOption('Numbered List', {
       icon: <i className="i-ph:list-numbers" un-text='xl' />,
-      keywords: ['numbered list', 'ordered list', 'ol'],
-      onSelect: () =>
+      keywords: ['numbered list', 'ordered list', 'ol', 'list'],
+      onSelect: (editor: LexicalEditor, queryString: string) =>
         editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined),
     }),
     new ComponentPickerOption('Bulleted List', {
       icon: <i className="i-ph:list-bullets" un-text='xl' />,
-      keywords: ['bulleted list', 'unordered list', 'ul'],
-      onSelect: () =>
+      keywords: ['bulleted list', 'unordered list', 'ul', 'list'],
+      onSelect: (editor: LexicalEditor, queryString: string) =>
         editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined),
     }),
     new ComponentPickerOption('Check List', {
       icon: <i className="i-material-symbols-light:check-box-outline" un-text='xl' />,
-      keywords: ['check list', 'todo list'],
-      onSelect: () =>
+      keywords: ['checklist', 'check list', 'todo list', 'list'],
+      onSelect: (editor: LexicalEditor, queryString: string) =>
         editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, undefined),
     }),
     new ComponentPickerOption('Quote', {
       icon: <i className="i-mdi:format-quote-open" un-text='xl' />,
       keywords: ['block quote'],
-      onSelect: () =>
+      onSelect: (editor: LexicalEditor, queryString: string) =>
         editor.update(() => {
           const selection = $getSelection();
           if ($isRangeSelection(selection)) {
@@ -169,7 +119,7 @@ export const ComponentPickerMenuPlugin = () => {
     new ComponentPickerOption('Code', {
       icon: <i className="i-ph:code-bold" un-text='xl' />,
       keywords: ['javascript', 'python', 'js', 'codeblock'],
-      onSelect: () =>
+      onSelect: (editor: LexicalEditor, queryString: string) =>
         editor.update(() => {
           const selection = $getSelection();
 
@@ -189,18 +139,18 @@ export const ComponentPickerMenuPlugin = () => {
     new ComponentPickerOption('Divider', {
       icon: <i className="i-material-symbols-light:horizontal-rule" un-text='xl' />,
       keywords: ['horizontal rule', 'divider', 'hr'],
-      onSelect: () =>
+      onSelect: (editor: LexicalEditor, queryString: string) =>
         editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined),
     }),
     new ComponentPickerOption('Page Break', {
       icon: <i className="i-mdi:scissors" un-text='xl' />,
       keywords: ['page break', 'divider'],
-      onSelect: () => editor.dispatchCommand(INSERT_PAGE_BREAK, undefined),
+      onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(INSERT_PAGE_BREAK, undefined),
     }),
     new ComponentPickerOption('Excalidraw', {
       icon: <i className="i-ph:graph" un-text='xl' />,
       keywords: ['excalidraw', 'diagram', 'drawing'],
-      onSelect: () =>
+      onSelect: (editor: LexicalEditor, queryString: string) =>
         editor.dispatchCommand(INSERT_EXCALIDRAW_COMMAND, undefined),
     }),
     ...EmbedConfigs.map(
@@ -208,65 +158,65 @@ export const ComponentPickerMenuPlugin = () => {
         new ComponentPickerOption(`Embed ${embedConfig.contentName}`, {
           icon: embedConfig.icon,
           keywords: [...embedConfig.keywords, 'embed'],
-          onSelect: () =>
+          onSelect: (editor: LexicalEditor, queryString: string) =>
             editor.dispatchCommand(INSERT_EMBED_COMMAND, embedConfig.type),
         }),
     ),
     new ComponentPickerOption('Equation', {
       icon: <i className="i-ph:plus-minus" un-text='xl' />,
       keywords: ['equation', 'latex', 'math'],
-      onSelect: () => setIsInsertEquationMode(true)
+      onSelect: (editor: LexicalEditor, queryString: string) => setIsInsertEquationMode(true)
     }),
     new ComponentPickerOption('Image', {
       icon: <i className="i-mdi:image-outline" un-text='xl' />,
       keywords: ['image', 'photo', 'picture', 'file'],
-      onSelect: () => setIsInsertingImage(true)
+      onSelect: (editor: LexicalEditor, queryString: string) => setIsInsertingImage(true)
     }),
     new ComponentPickerOption('Collapsible', {
       icon: <span className="i-mdi:triangle" un-text='xl' un-rotate='90' />,
       keywords: ['collapse', 'collapsible', 'toggle'],
-      onSelect: () => editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined),
+      onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined),
     }),
     new ComponentPickerOption('Columns Layout', {
       icon: <i className="i-material-symbols-light:view-column-outline" un-text='xl' />,
       keywords: ['columns', 'layout', 'grid'],
-      onSelect: () => setIsInsertingColumnLayout(true)
+      onSelect: (editor: LexicalEditor, queryString: string) => setIsInsertingColumnLayout(true)
     }),
     ...(['left', 'center', 'right', 'justify'] as const).map(
       (alignment) =>
         new ComponentPickerOption(`Align ${alignment}`, {
           icon: <i className={`i-mdi:format-align-${alignment}`} un-text='lg' />,
           keywords: ['align', 'justify', alignment],
-          onSelect: () =>
+          onSelect: (editor: LexicalEditor, queryString: string) =>
             editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, alignment),
         }),
     ),
     new ComponentPickerOption('Speech to Text', {
       icon: <span className="i-material-symbols-light:mic" un-text='xl' />,
       keywords: ['speech to text', 'stt'],
-      onSelect: () => editor.dispatchCommand(TOGGLE_SPEECH_TO_TEXT_COMMAND, undefined),
+      onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(TOGGLE_SPEECH_TO_TEXT_COMMAND, undefined),
     }),
     new ComponentPickerOption('Import', {
       icon: <span className="i-circum:import" un-text='xl' />,
       keywords: ['import', 'file'],
-      onSelect: () => importFile(editor)
+      onSelect: (editor: LexicalEditor, queryString: string) => importFile(editor)
     }),
     new ComponentPickerOption('Export', {
       icon: <span className="i-circum:export" un-text='xl' />,
       keywords: ['export', 'file'],
-      onSelect: () => exportFile(editor)
+      onSelect: (editor: LexicalEditor, queryString: string) => exportFile(editor)
     }),
     new ComponentPickerOption('Clear', {
       icon: <span className="i-mdi:trash" un-text='xl red-6' />,
       keywords: ['clear', 'trash'],
-      onSelect: () => editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined)
+      onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined)
     }),
     new ComponentPickerOption('Read-Only Mode', {
       icon: <span className="i-mdi:lock" un-text='xl zinc-4' />,
       keywords: ['lock', 'read-only', 'read'],
-      onSelect: () => editor.setEditable(false)
+      onSelect: (editor: LexicalEditor, queryString: string) => editor.setEditable(false)
     }),
-  ], [editor]);
+  ], []);
 
   const options = useMemo(() => {
     if (!queryString) return baseOptions;
@@ -274,14 +224,11 @@ export const ComponentPickerMenuPlugin = () => {
     const dynamicOptions = generateOption(editor, queryString);
     if (dynamicOptions.end) return dynamicOptions.result;
 
-    const regex = new RegExp(queryString, 'i');
-    return [
-      ...getDynamicOptions(editor, queryString),
-      ...baseOptions.filter(option =>
-        regex.test(option.title) ||
-        option.keywords.some((keyword) => regex.test(keyword)),
-      ),
-    ];
+    const regex = new RegExp(`^${queryString}`, 'i');
+    return baseOptions.filter(option =>
+      regex.test(option.title) ||
+      option.keywords.some((keyword) => regex.test(keyword)),
+    )
   }, [editor, queryString]);
 
   const onSelectOption = useCallback(
@@ -292,7 +239,7 @@ export const ComponentPickerMenuPlugin = () => {
       matchingString: string,
     ) => editor.update(() => {
       nodeToRemove?.remove();
-      selectedOption.onSelect(matchingString);
+      selectedOption.onSelect(editor, matchingString);
       closeMenu();
     }),
     [editor],

@@ -44,7 +44,7 @@ test('simple', () => {
     [' /hello', true],
     ['(/good', true],
     ['       (     (      (      /test', true],
-    ['/', false],
+    ['/', true],
     ['/a', true],
     ['/foo', true],
     ['/ bar', false],

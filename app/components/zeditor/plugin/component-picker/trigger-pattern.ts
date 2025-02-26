@@ -1,4 +1,6 @@
 export const slashPattern = (text: string) => {
+  if (text === '/') return { leadOffset: 0, matchingString: '', replaceableString: '/' };
+
   const match = /(^|\s|\()([/](?=\w)([\w\-]*(?: [\w\-]+)*)\s?)$/.exec(text);
   if (!match) return null;
 
@@ -16,6 +18,8 @@ export const slashPattern = (text: string) => {
 };
 
 export const dollarPattern = (text: string) => {
+  if (text === '/') return { leadOffset: 0, matchingString: '', replaceableString: '/' };
+
   const match = /(^|\s|\()([$](?=\w)([\w\-]*(?: [\w\-]+)*)\s?)$/.exec(text);
   if (!match) return null;
 

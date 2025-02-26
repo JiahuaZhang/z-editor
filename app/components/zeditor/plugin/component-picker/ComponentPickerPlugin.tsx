@@ -228,7 +228,7 @@ export const ComponentPickerMenuPlugin = () => {
     return baseOptions.filter(option =>
       regex.test(option.title) ||
       option.keywords.some((keyword) => regex.test(keyword)),
-    )
+    );
   }, [editor, queryString]);
 
   const onSelectOption = useCallback(

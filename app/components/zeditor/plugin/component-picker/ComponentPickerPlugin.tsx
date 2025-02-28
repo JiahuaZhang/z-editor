@@ -1,11 +1,9 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { LexicalTypeaheadMenuPlugin } from '@lexical/react/LexicalTypeaheadMenuPlugin';
-import { useSetAtom } from 'jotai';
-import { LexicalEditor, TextNode } from 'lexical';
+import { TextNode } from 'lexical';
 import { useCallback, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { isInsertingColumnLayoutAtom, isInsertingImageAtom, isInsertingTableAtom, isIsInsertEquationModeAtom } from '../toolbar/InsertDropDown';
-import { ComponentPickerOption, generateOption, simpleOptions } from './generate-option';
+import { ComponentPickerOption, generateOption } from './generate-option';
 import { slashPattern } from './trigger-pattern';
 
 const ComponentPickerMenuItem = ({ index, isSelected, onClick, onMouseEnter, option }: {
@@ -40,46 +38,7 @@ const ComponentPickerMenuItem = ({ index, isSelected, onClick, onMouseEnter, opt
 export const ComponentPickerMenuPlugin = () => {
   const [editor] = useLexicalComposerContext();
   const [queryString, setQueryString] = useState<string | null>(null);
-  const setIsInsertingImage = useSetAtom(isInsertingImageAtom);
-  const setIsInsertingTable = useSetAtom(isInsertingTableAtom);
-  const setIsInsertEquationMode = useSetAtom(isIsInsertEquationModeAtom);
-  const setIsInsertingColumnLayout = useSetAtom(isInsertingColumnLayoutAtom);
-  const baseOptions = useMemo(() => [
-    ...simpleOptions,
-    new ComponentPickerOption('Table', {
-      icon: <i className="i-material-symbols-light:table-outline" un-text='xl' />,
-      keywords: ['table', 'grid', 'spreadsheet', 'rows', 'columns'],
-      onSelect: (editor: LexicalEditor, queryString: string) => setIsInsertingTable(true),
-    }),
-    new ComponentPickerOption('Equation', {
-      icon: <i className="i-ph:plus-minus" un-text='xl' />,
-      keywords: ['equation', 'latex', 'math'],
-      onSelect: (editor: LexicalEditor, queryString: string) => setIsInsertEquationMode(true)
-    }),
-    new ComponentPickerOption('Image', {
-      icon: <i className="i-mdi:image-outline" un-text='xl' />,
-      keywords: ['image', 'photo', 'picture', 'file'],
-      onSelect: (editor: LexicalEditor, queryString: string) => setIsInsertingImage(true)
-    }),
-    new ComponentPickerOption('Columns Layout', {
-      icon: <i className="i-material-symbols-light:view-column-outline" un-text='xl' />,
-      keywords: ['columns', 'layout', 'grid'],
-      onSelect: (editor: LexicalEditor, queryString: string) => setIsInsertingColumnLayout(true)
-    }),
-  ], []);
-
-  const options = useMemo(() => {
-    if (!queryString) return baseOptions;
-
-    const dynamicOptions = generateOption(editor, queryString);
-    if (dynamicOptions.end) return dynamicOptions.result;
-
-    const regex = new RegExp(`^${queryString}`, 'i');
-    return baseOptions.filter(option =>
-      regex.test(option.title) ||
-      option.keywords.some((keyword) => regex.test(keyword)),
-    );
-  }, [editor, queryString]);
+  const options = useMemo(() => generateOption(editor, queryString), [editor, queryString]);
 
   const onSelectOption = useCallback(
     (

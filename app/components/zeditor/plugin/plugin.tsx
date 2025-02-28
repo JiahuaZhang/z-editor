@@ -18,6 +18,7 @@ import { InlineImagePlugin } from './inline-image/InlineImagePlugin';
 import { LayoutPlugin } from './layout/LayoutPlugin';
 import { FloatingLinkEditorPlugin } from './link/FloatingLinkEditorPlugin';
 import { PageBreakPlugin } from './page-break/PageBreakPlugin';
+import { PopupPlugin } from './popup/PopupPlugin';
 import { MarkdownPlugin } from './shortcut/Markdown';
 import { ShortcutsPlugin } from './shortcut/ShortcutsPlugin';
 import { SpecialTextPlugin } from './special/SpecialTextPlugin';
@@ -76,4 +77,5 @@ export namespace Plugin {
   export const Markdown = MarkdownPlugin;
   export const TabFocus = TabFocusPlugin;
   export const DraggableBlock = DraggableBlockPlugin;
+  export const Popup = PopupPlugin;
 }

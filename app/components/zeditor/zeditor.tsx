@@ -49,6 +49,7 @@ const Plugins = ({ ...rest }) => {
         // persist comments
       }} />
     </div >
+    <Plugin.Popup />
     <Plugin.Toolbar.Floating />
     <HistoryPlugin />
     <AutoFocusPlugin />

@@ -31,7 +31,7 @@
     "dayjs": "^1.11.13",
     "emoji-datasource-facebook": "^15.1.2",
     "isbot": "^3.6.8",
-    "jotai": "^2.12.0",
+    "jotai": "^2.12.1",
     "katex": "^0.16.21",
     "lexical": "^0.24.0",
     "lodash": "^4.17.21",

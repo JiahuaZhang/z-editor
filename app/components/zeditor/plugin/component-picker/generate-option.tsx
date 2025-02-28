@@ -6,11 +6,13 @@ import { MenuOption } from '@lexical/react/LexicalNodeMenuPlugin';
 import { $createHeadingNode, $createQuoteNode, HeadingTagType } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
-import { $createParagraphNode, $getSelection, $isRangeSelection, FORMAT_ELEMENT_COMMAND, LexicalEditor } from "lexical";
+import { $createParagraphNode, $getSelection, $isRangeSelection, CLEAR_EDITOR_COMMAND, FORMAT_ELEMENT_COMMAND, LexicalEditor } from "lexical";
 import { INSERT_COLLAPSIBLE_COMMAND } from '../collapsible/CollapsiblePlugin';
 import { EmbedConfigs } from '../embed/EmbedPlugin';
 import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
 import { INSERT_HORIZONTAL_RULE_COMMAND } from '../horizontal-rule/HorizontalRuleNode';
+import { INSERT_PAGE_BREAK } from '../page-break/PageBreakPlugin';
+import { OPEN_COLUMN_LAYOUT_POPUP_COMMAND, OPEN_EQUATION_POPUP_COMMAND, OPEN_IMAGE_POPUP_COMMAND, OPEN_TABLE_POPUP_COMMAND } from '../popup/PopupPlugin';
 import { TOGGLE_SPEECH_TO_TEXT_COMMAND } from '../speech/SpeechToTextPlugin';
 
 export class ComponentPickerOption extends MenuOption {
@@ -84,7 +86,7 @@ export const simpleOptions = [
   }),
   new ComponentPickerOption('Quote', {
     icon: <i className="i-mdi:format-quote-open" un-text='xl' />,
-    keywords: ['block quote'],
+    keywords: ['block quote', 'quote', 'blockquote'],
     onSelect: (editor: LexicalEditor, queryString: string) =>
       editor.update(() => {
         const selection = $getSelection();
@@ -175,24 +177,43 @@ export const simpleOptions = [
   }),
   new ComponentPickerOption('Read-Only Mode', {
     icon: <span className="i-mdi:lock" un-text='xl zinc-4' />,
-    keywords: ['lock', 'read-only', 'read'],
+    keywords: ['lock', 'read only', 'read'],
     onSelect: (editor: LexicalEditor, queryString: string) => editor.setEditable(false)
   }),
-]
+  new ComponentPickerOption('Image', {
+    icon: <i className="i-mdi:image-outline" un-text='xl' />,
+    keywords: ['image', 'photo', 'picture', 'file'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(OPEN_IMAGE_POPUP_COMMAND, undefined)
+  }),
+  new ComponentPickerOption('Table', {
+    icon: <i className="i-material-symbols-light:table-outline" un-text='xl' />,
+    keywords: ['table', 'grid', 'spreadsheet', 'rows', 'columns'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(OPEN_TABLE_POPUP_COMMAND, undefined),
+  }),
+  new ComponentPickerOption('Columns Layout', {
+    icon: <i className="i-material-symbols-light:view-column-outline" un-text='xl' />,
+    keywords: ['columns', 'layout', 'grid'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(OPEN_COLUMN_LAYOUT_POPUP_COMMAND, undefined)
+  }),
+  new ComponentPickerOption('Equation', {
+    icon: <i className="i-ph:plus-minus" un-text='xl' />,
+    keywords: ['equation', 'latex', 'math'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(OPEN_EQUATION_POPUP_COMMAND, undefined)
+  }),
+];
 
-export const generateOption = (editor: LexicalEditor, text: string) => {
-  if (!text) return { end: true, result: [] };
+export const generateOption = (editor: LexicalEditor, text: string | null) => {
+  if (!text) return simpleOptions;
 
   const headingOptions = generateHeadingOption(text);
-  if (headingOptions.end) return headingOptions;
+  if (headingOptions.end) return headingOptions.result;
 
   const tableOptions = generateTableOption(text);
-  if (tableOptions.end) return tableOptions;
+  if (tableOptions.end) return tableOptions.result;
 
-  return {
-    end: false,
-    result: []
-  }
+  const textRegex = new RegExp(`^${text}`, 'i');
+  return simpleOptions.filter(option => textRegex.test(option.title)
+    || option.keywords.some(keyword => textRegex.test(keyword)))
 }
 
 export const fullHeaderRegexp = /^(h|H)(ead|eading|eader)?\s?(?<level>[1-6])$/;

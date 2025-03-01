@@ -202,7 +202,7 @@ export const simpleOptions = [
   }),
 ];
 
-export const generateOption = (editor: LexicalEditor, text: string | null) => {
+export const generateOption = (text: string | null) => {
   if (!text) return simpleOptions;
 
   const headingOptions = generateHeadingOption(text);
@@ -213,8 +213,8 @@ export const generateOption = (editor: LexicalEditor, text: string | null) => {
 
   const textRegex = new RegExp(`^${text}`, 'i');
   return simpleOptions.filter(option => textRegex.test(option.title)
-    || option.keywords.some(keyword => textRegex.test(keyword)))
-}
+    || option.keywords.some(keyword => textRegex.test(keyword)));
+};
 
 export const fullHeaderRegexp = /^(h|H)(ead|eading|eader)?\s?(?<level>[1-6])$/;
 export const partialHeaderRegExp = /^(h|H)(?:e(?:a(?:d(?:e(?:r)?|i(?:n(?:g)?)?)?)?)?)?\s?$/i;
@@ -234,7 +234,7 @@ const generateHeadingOption = (text: string) => {
             }
           }),
       })]
-    }
+    };
   }
 
   match = partialHeaderRegExp.exec(text);
@@ -253,8 +253,8 @@ const generateHeadingOption = (text: string) => {
           }
         }),
     }))
-  }
-}
+  };
+};
 
 const generateTableOption = (text: string) => {
   const tableMatch = text.match(/^([1-9]\d?)(?:x([1-9]\d?)?)?$/);
@@ -269,5 +269,5 @@ const generateTableOption = (text: string) => {
       keywords: ['table'],
       onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
     }))
-  }
-}
+  };
+};

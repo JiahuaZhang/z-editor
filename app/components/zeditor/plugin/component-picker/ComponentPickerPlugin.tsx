@@ -38,7 +38,7 @@ const ComponentPickerMenuItem = ({ index, isSelected, onClick, onMouseEnter, opt
 export const ComponentPickerMenuPlugin = () => {
   const [editor] = useLexicalComposerContext();
   const [queryString, setQueryString] = useState<string | null>(null);
-  const options = useMemo(() => generateOption(editor, queryString), [editor, queryString]);
+  const options = useMemo(() => generateOption(queryString), [editor, queryString]);
 
   const onSelectOption = useCallback(
     (

@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { toolbarContextAtom } from '../../context/ToolbarContext';
 import { sanitizeUrl } from '../../util/url';
-import { clearFormatting, formatBulletList, formatCheckList, formatCode, formatHeading, formatNumberedList, formatParagraph, formatQuote, updateFontSize, UpdateFontSizeType } from '../../util/utils';
+import { clearSelectionFormatting, formatBulletList, formatCheckList, formatCode, formatHeading, formatNumberedList, formatParagraph, formatQuote, updateFontSize, UpdateFontSizeType } from '../../util/utils';
 import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
 import { isCapitalize, isCenterAlign, isClearFormatting, isDecreaseFontSize, isFormatBulletList, isFormatCheckList, isFormatCode, isFormatHeading, isFormatNumberedList, isFormatParagraph, isFormatQuote, isIncreaseFontSize, isIndent, isInsertCodeBlock, isInsertLink, isJustifyAlign, isLeftAlign, isLowercase, isOutdent, isRightAlign, isStrikeThrough, isSubscript, isSuperscript, isUppercase } from './shortcut';
 
@@ -91,7 +91,7 @@ export const ShortcutsPlugin = () => {
         updateFontSize(editor, UpdateFontSizeType.decrement, toolbarContext.fontSizeInputValue);
       } else if (isClearFormatting(event)) {
         event.preventDefault();
-        clearFormatting(editor);
+        clearSelectionFormatting(editor);
       } else if (isInsertLink(event)) {
         event.preventDefault();
         const url = toolbarContext.isLink ? null : sanitizeUrl('https://');

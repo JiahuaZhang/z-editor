@@ -7,7 +7,7 @@ import { $getSelection, FORMAT_TEXT_COMMAND, LexicalEditor } from 'lexical';
 import { lazy, Suspense, useCallback, useMemo } from 'react';
 import { activeEditorAtom } from '../../context/activeEditor';
 import { toolbarContextAtom } from '../../context/ToolbarContext';
-import { clearFormatting } from '../../util/utils';
+import { clearSelectionFormatting } from '../../util/utils';
 import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
 import { SHORTCUTS } from '../shortcut/shortcut';
 
@@ -63,11 +63,11 @@ const getFormatItems = (editor: LexicalEditor) => [
     label: 'Clear Formatting',
     icon: <span className="i-mdi:format-clear" un-text='xl!' />,
     extra: SHORTCUTS.CLEAR_FORMATTING,
-    onClick: () => clearFormatting(editor),
+    onClick: () => clearSelectionFormatting(editor),
   },
 ];
 
-export const FontFormat = ({ }: {}) => {
+export const FontFormat = ({}: {}) => {
   const editor = useAtomValue(activeEditorAtom);
   const toolbarContext = useAtomValue(toolbarContextAtom);
   const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);

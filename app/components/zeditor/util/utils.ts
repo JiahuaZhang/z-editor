@@ -303,7 +303,7 @@ export const formatCode = (editor: LexicalEditor, blockType: string) => {
   }
 };
 
-export const clearFormatting = (editor: LexicalEditor) => editor.update(() => {
+export const clearSelectionFormatting = (editor: LexicalEditor) => editor.update(() => {
   const selection = $getSelection();
   if ($isRangeSelection(selection) || $isTableSelection(selection)) {
     const anchor = selection.anchor;
@@ -356,3 +356,33 @@ export const clearFormatting = (editor: LexicalEditor) => editor.update(() => {
     });
   }
 });
+
+export const clearFormat = (editor: LexicalEditor) => {
+  editor.update(() => {
+    const selection = $getSelection();
+    if (!$isRangeSelection(selection)) return;
+
+    const anchorNode = selection.anchor.getNode();
+    const blockNode = anchorNode.getTopLevelElementOrThrow();
+    const children = blockNode.getChildren();
+    children.forEach((node) => {
+      if ($isTextNode(node)) {
+        if (node.__style !== '') {
+          node.setStyle('');
+        }
+        if (node.__format !== 0) {
+          node.setFormat(0);
+        }
+      } else if ($isHeadingNode(node) || $isQuoteNode(node)) {
+        node.replace($createParagraphNode(), true);
+      } else if ($isDecoratorBlockNode(node)) {
+        node.setFormat('');
+      }
+    });
+    if (blockNode.__format) {
+      blockNode.setFormat('');
+    }
+    selection.setStyle('');
+    selection.format = 0;
+  });
+};

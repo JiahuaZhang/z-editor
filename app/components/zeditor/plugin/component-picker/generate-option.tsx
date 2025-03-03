@@ -6,7 +6,8 @@ import { MenuOption } from '@lexical/react/LexicalNodeMenuPlugin';
 import { $createHeadingNode, $createQuoteNode, HeadingTagType } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
-import { $createParagraphNode, $getSelection, $isRangeSelection, CLEAR_EDITOR_COMMAND, FORMAT_ELEMENT_COMMAND, LexicalEditor } from "lexical";
+import { $createParagraphNode, $getSelection, $isRangeSelection, CLEAR_EDITOR_COMMAND, FORMAT_ELEMENT_COMMAND, FORMAT_TEXT_COMMAND, LexicalEditor } from "lexical";
+import { clearFormat } from '../../util/utils';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../collapsible/CollapsiblePlugin';
 import { EmbedConfigs } from '../embed/EmbedPlugin';
 import { INSERT_EXCALIDRAW_COMMAND } from '../excalidraw/ExcalidrawPlugin';
@@ -146,15 +147,6 @@ export const simpleOptions = [
     keywords: ['collapse', 'collapsible', 'toggle'],
     onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined),
   }),
-  ...(['left', 'center', 'right', 'justify'] as const).map(
-    (alignment) =>
-      new ComponentPickerOption(`Align ${alignment}`, {
-        icon: <i className={`i-mdi:format-align-${alignment}`} un-text='lg' />,
-        keywords: ['align', 'justify', alignment],
-        onSelect: (editor: LexicalEditor, queryString: string) =>
-          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, alignment),
-      }),
-  ),
   new ComponentPickerOption('Speech to Text', {
     icon: <span className="i-material-symbols-light:mic" un-text='xl' />,
     keywords: ['speech to text', 'stt'],
@@ -199,6 +191,87 @@ export const simpleOptions = [
     icon: <i className="i-ph:plus-minus" un-text='xl' />,
     keywords: ['equation', 'latex', 'math'],
     onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(OPEN_EQUATION_POPUP_COMMAND, undefined)
+  }),
+
+  new ComponentPickerOption('Bold', {
+    icon: <i className="i-tabler:bold" un-text='xl' />,
+    keywords: ['bold', 'strong'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold'),
+  }),
+  new ComponentPickerOption('Italic', {
+    icon: <i className="i-ci:italic" un-text='xl' />,
+    keywords: ['italic'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic'),
+  }),
+  new ComponentPickerOption('Underline', {
+    icon: <i className="i-ci:underline" un-text='xl' />,
+    keywords: ['underline'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline'),
+  }),
+  new ComponentPickerOption('Lowercase', {
+    icon: <span className="i-mdi:format-lowercase" un-text='xl!' />,
+    keywords: ['lowercase'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'lowercase'),
+  }),
+  new ComponentPickerOption('Uppercase', {
+    icon: <span className="i-mdi:format-uppercase" un-text='xl!' />,
+    keywords: ['uppercase'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'uppercase'),
+  }),
+  new ComponentPickerOption('Capitalize', {
+    icon: <span className="i-mdi:format-text" un-text='xl!' />,
+    keywords: ['capitalize'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'capitalize'),
+  }),
+  new ComponentPickerOption('Strikethrough', {
+    icon: <span className="i-mdi:format-strikethrough" un-text='xl!' />,
+    keywords: ['strikethrough', 'line-through'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough'),
+  }),
+  new ComponentPickerOption('Subscript', {
+    icon: <span className="i-mdi:format-subscript" un-text='xl!' />,
+    keywords: ['subscript'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'subscript'),
+  }),
+  new ComponentPickerOption('Superscript', {
+    icon: <span className="i-mdi:format-superscript" un-text='xl!' />,
+    keywords: ['superscript'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'superscript'),
+  }),
+  new ComponentPickerOption('Align Left', {
+    icon: <span className="i-mdi:format-align-left" un-text='xl!' />,
+    keywords: ['align left', 'left align'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left'),
+  }),
+  new ComponentPickerOption('Align Center', {
+    icon: <span className="i-mdi:format-align-center" un-text='xl!' />,
+    keywords: ['align center', 'center align'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center'),
+  }),
+  new ComponentPickerOption('Align Right', {
+    icon: <span className="i-mdi:format-align-right" un-text='xl!' />,
+    keywords: ['align right', 'right align'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right'),
+  }),
+  new ComponentPickerOption('Align Justify', {
+    icon: <span className="i-mdi:format-align-right" un-text='xl!' />,
+    keywords: ['align justify', 'justify align'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify'),
+  }),
+  new ComponentPickerOption('Align Start', {
+    icon: <span className="i-mdi:format-align-left" un-text='xl!' />,
+    keywords: ['align start', 'start align'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'start'),
+  }),
+  new ComponentPickerOption('Align End', {
+    icon: <span className="i-mdi:format-align-right" un-text='xl!' />,
+    keywords: ['align end', 'end align'],
+    onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'end'),
+  }),
+  new ComponentPickerOption('Clear Formatting', {
+    icon: <span className="i-mdi:format-clear" un-text='xl!' />,
+    keywords: ['clear', 'formatting', 'clear formatting', 'clear-formatting'],
+    onSelect: (editor: LexicalEditor, queryString: string) => clearFormat(editor),
   }),
 ];
 

@@ -1,8 +1,5 @@
 Zeditor
 
-type / slash to trigger dropdown, includes customized command
-
-slash dropdown
 /bold, /underline, /strike, /code, /heading, /link
 
 smart match

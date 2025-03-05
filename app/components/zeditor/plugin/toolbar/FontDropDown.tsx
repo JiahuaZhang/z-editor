@@ -6,8 +6,8 @@ import { lazy, Suspense } from 'react';
 
 const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));
 
-const FONTS = ['Arial', 'Courier New', 'Georgia', 'Times New Roman', 'Trebuchet MS', 'Verdana'];
-const options = FONTS.map(font => ({ label: font, value: font }));
+export const EDITOR_FONTS = ['Arial', 'Courier New', 'Georgia', 'Times New Roman', 'Trebuchet MS', 'Verdana'];
+const options = EDITOR_FONTS.map(font => ({ label: font, value: font }));
 
 export const FontDropDown = ({ font }: { font: string; }) => {
   const [editor] = useLexicalComposerContext();

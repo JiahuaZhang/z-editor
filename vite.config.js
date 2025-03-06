@@ -1,5 +1,4 @@
 import { reactRouter } from '@react-router/dev/vite';
-import { vitePlugin as remix } from "@remix-run/dev";
 import path from 'path';
 import UnoCSS from 'unocss/vite';
 import { defineConfig } from 'vite';
@@ -11,7 +10,6 @@ export default defineConfig({
     reactRouter({
       ignoredRouteFiles: ['**/.*']
     }),
-    remix(),
     tsconfigPaths()
   ],
   resolve: {

@@ -298,6 +298,9 @@ export const generateOption = (text: string | null) => {
   const tableOptions = generateTableOption(text);
   if (tableOptions.end) return tableOptions.result;
 
+  const codeOptions = generateCodeOption(text);
+  if (codeOptions.end) return codeOptions.result;
+
   const textRegex = new RegExp(`^${text}`, 'i');
   return simpleOptions.filter(option => textRegex.test(option.title)
     || option.keywords.some(keyword => textRegex.test(keyword)));
@@ -351,10 +354,69 @@ const generateTableOption = (text: string) => {
   const rows = tableMatch[1];
   const colOptions = tableMatch[2] ? [tableMatch[2]] : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(String);
   return {
-    end: true, result: colOptions.map(columns => new ComponentPickerOption(`${rows}x${columns} Table`, {
+    end: true,
+    result: colOptions.map(columns => new ComponentPickerOption(`${rows}x${columns} Table`, {
       icon: <i className="i-material-symbols-light:table-outline" un-text='xl' />,
       keywords: ['table'],
       onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
     }))
+  };
+};
+
+const codeLanguages = {
+  c: ['c'],
+  clike: ['C-like', 'clike'],
+  cpp: ['cpp', 'c++'],
+  css: ['css'],
+  html: ['html'],
+  java: ['java'],
+  js: ['js', 'javascript'],
+  markdown: ['md', 'markdown'],
+  objc: ['objc', 'objective-c', 'objective c'],
+  plain: ['plain text', 'text'],
+  powershell: ['powershell'],
+  py: ['py', 'python'],
+  rust: ['rust'],
+  sql: ['sql'],
+  swift: ['swift'],
+  typescript: ['ts', 'typescript'],
+  xml: ['xml'],
+};
+const generateCodeComponentPickerOption = (name: string, filter: string[]) =>
+  new ComponentPickerOption(name, {
+    icon: <i className="i-ph:code-bold" un-text='xl' />,
+    keywords: filter.map(f => `code ${f}`),
+    onSelect: (editor: LexicalEditor, queryString: string) =>
+      editor.update(() => {
+        const selection = $getSelection();
+
+        if ($isRangeSelection(selection)) {
+          if (selection.isCollapsed()) {
+            $setBlocksType(selection, () => $createCodeNode(name));
+          } else {
+            // Will this ever happen?
+            const textContent = selection.getTextContent();
+            const codeNode = $createCodeNode(name);
+            selection.insertNodes([codeNode]);
+            selection.insertRawText(textContent);
+          }
+        }
+      }),
+  });
+const allCodeOptions = Object.entries(codeLanguages)
+  .map(([key, value]) => generateCodeComponentPickerOption(key, value));
+
+const generateCodeOption = (text: string) => {
+  if (!/^code/i.test(text)) return {
+    end: false,
+    result: []
+  };
+
+  const textRegex = new RegExp(`^${text}`, 'i');
+  return {
+    end: true,
+    result: allCodeOptions.filter(
+      option => option.keywords.some(keyword => textRegex.test(keyword))
+    )
   };
 };

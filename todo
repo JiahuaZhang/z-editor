@@ -1,12 +1,6 @@
 Zeditor
 
-/bold, /underline, /strike, /code, /heading, /link
-
-smart match
-/code-jsx
-/code-js
-/code-c
-/code python
+/link
 
 key tab, enter interaction, ctrl + k smart retrigger
 let's say, I typed /code, then press Escape by accident

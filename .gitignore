@@ -9,3 +9,4 @@ node_modules
 app/styles/uno.css
 
 .react-router/
+.vercel

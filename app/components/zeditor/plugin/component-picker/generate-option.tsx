@@ -1,12 +1,13 @@
 import { $createCodeNode } from '@lexical/code';
 import { exportFile, importFile } from '@lexical/file';
+import { TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from '@lexical/list';
 import { INSERT_EMBED_COMMAND } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { MenuOption } from '@lexical/react/LexicalNodeMenuPlugin';
 import { $createHeadingNode, $createQuoteNode, HeadingTagType } from '@lexical/rich-text';
 import { $patchStyleText, $setBlocksType } from '@lexical/selection';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
-import { $createParagraphNode, $getSelection, $isRangeSelection, CLEAR_EDITOR_COMMAND, FORMAT_ELEMENT_COMMAND, FORMAT_TEXT_COMMAND, LexicalEditor } from "lexical";
+import { $createParagraphNode, $createTextNode, $getSelection, $isRangeSelection, CLEAR_EDITOR_COMMAND, FORMAT_ELEMENT_COMMAND, FORMAT_TEXT_COMMAND, LexicalEditor } from "lexical";
 import { clearFormat } from '../../util/utils';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../collapsible/CollapsiblePlugin';
 import { EmbedConfigs } from '../embed/EmbedPlugin';
@@ -280,6 +281,20 @@ export const simpleOptions = [
     icon: <i className="i-ph:plus-minus" un-text='xl' />,
     keywords: ['equation', 'latex', 'math'],
     onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(OPEN_EQUATION_POPUP_COMMAND, undefined)
+  }),
+  new ComponentPickerOption('Link', {
+    icon: <i className="i-ci:link" un-text='xl' />,
+    keywords: ['link', 'url', 'hyperlink'],
+    onSelect: (editor: LexicalEditor, queryString: string) => {
+      editor.update(() => {
+        const selection = $getSelection();
+        if (selection && $isRangeSelection(selection)) {
+          const textNode = $createTextNode('link');
+          selection.insertNodes([textNode]);
+          editor.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://');
+        }
+      });
+    }
   }),
   new ComponentPickerOption('Clear Formatting', {
     icon: <span className="i-mdi:format-clear" un-text='xl!' />,

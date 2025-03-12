@@ -1,45 +1,27 @@
 Zeditor
 
-/link
+/today?
+/yesterday
+/tomorrow
+/time
+/date and time
 
-key tab, enter interaction, ctrl + k smart retrigger
-let's say, I typed /code, then press Escape by accident
-if I press ctrl + k, with cursor after it, it would smartly retrigger dropdown
-
-select text, start with /, it could smartly retrigger dropdown 
-
-/split, (2, 3, 4, ...)
-configurable, could expand, collapsed
-
-bugfix:
-with text selection, using left, right cursor is not intuitive
-
-?
-/timeline
-
+#hasttag organization
+/notification
 smart collect #hash tags on meta data
 
-/notification
-database sync
-
-color font
-color background
-
-adding drag & drop to relocate element
-https://dev.to/devterminal/slatejs-dnd-kit-improving-rich-text-editor-ux-by-adding-drag-and-drop-23d3
+Database persistence, saving & loading
+editor state -- json
+comment plugin
+index -- hashtag, other special index
 
 future todo:
-link的那种ctrl + k toggle不够好
-应该是 {type: 'link', url: <link>, chilcren: [{text: <text>}]}
-再加上 {showPopup: boolean}
-然后数据库做persistence的时候, showPopup不应该保存——》没必要
-读取的时候再只能赋予 {showPopup: false}的初始值这样
-
-sticky note?
-可以隐藏？甚至是编辑器本身都可以是多个？不同的panel？
 
 生成式 ui
 https://github.com/vercel-labs/ai-sdk-preview-rsc-genui
+
+/timeline
+https://ant.design/components/timeline
 
 table of contents:
 https://github.com/facebook/lexical/blob/main/packages/lexical-playground/src/plugins/TableOfContentsPlugin/index.tsx
@@ -49,7 +31,3 @@ https://github.com/facebook/lexical/blob/main/packages/lexical-playground/src/pl
 
 markdown convert
 https://github.com/facebook/lexical/blob/main/packages/lexical-playground/src/plugins/ActionsPlugin/index.tsx#L170
-
-tab key smart navigation
-
-Database persistence, saving & loading

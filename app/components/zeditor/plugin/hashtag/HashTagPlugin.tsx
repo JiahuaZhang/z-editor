@@ -62,7 +62,6 @@ export const HashtagPlugin = () => {
   useEffect(() => editor.registerUpdateListener(({ editorState }) => {
     if (hasInitalizedRef.current) return;
 
-    console.log('initalized');
     const hashTagNodes = Array.from(editorState._nodeMap.values())
       .filter((node) => node instanceof HashtagNode) as HashtagNode[];
 

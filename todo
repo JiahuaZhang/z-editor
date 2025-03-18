@@ -1,4 +1,5 @@
-Zeditor
+time decorator component
+date, time , date & time
 
 /today?
 /yesterday
@@ -8,6 +9,12 @@ Zeditor
 
 #hasttag organization
 /notification
+/everyday
+/once per week
+/twice per week
+/once per month
+/ build in stuff
+
 smart collect #hash tags on meta data
 
 Database persistence, saving & loading

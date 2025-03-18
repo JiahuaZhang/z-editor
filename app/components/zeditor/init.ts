@@ -21,6 +21,7 @@ import { $createPageBreakNode } from './plugin/page-break/PageBreakNode';
 import { $createLayoutContainerNode } from './plugin/layout/LayoutContainerNode';
 import { $createLayoutItemNode } from './plugin/layout/LayoutItemNode';
 import { $createSpecialTextNode } from './plugin/special/SpecialTextNode';
+import { $createTimeNode } from './plugin/time/TimeNode';
 
 const $generateListContent = () => {
   const root = $getRoot();
@@ -199,15 +200,15 @@ const circle = new Circle(5);
 console.log(\`Area of circle: \${circle.getArea().toFixed(2)}\`);`));
   root.append(jsCode);
 
-//   const codeHighlight = $createCodeHighlightNode(`public class HelloWorld {
-//   public static void main(String[] args) {
-//       // Prints "Hello, World" to the console
-//       System.out.println("Hello, World");
-//   }
-// }`);
-//   const codeParagarph = $createCodeNode('java');
-//   codeParagarph.append(codeHighlight);
-//   root.append(codeParagarph);
+  //   const codeHighlight = $createCodeHighlightNode(`public class HelloWorld {
+  //   public static void main(String[] args) {
+  //       // Prints "Hello, World" to the console
+  //       System.out.println("Hello, World");
+  //   }
+  // }`);
+  //   const codeParagarph = $createCodeNode('java');
+  //   codeParagarph.append(codeHighlight);
+  //   root.append(codeParagarph);
 };
 
 const $generateTable = () => {
@@ -499,6 +500,14 @@ const $generateSpecialText = () => {
   root.append(paragraph);
 };
 
+const $generateTimeNode = () => {
+  const root = $getRoot();
+  const paragraph = $createParagraphNode();
+  const node = $createTimeNode('2025/3/4 00:00:00', '2025-03-18T17:01:00.000Z', 'date');
+  paragraph.append(node);
+  root.append(paragraph);
+};
+
 export const $generateContent = () => {
   const root = $getRoot();
 
@@ -521,6 +530,7 @@ export const $generateContent = () => {
   // $generateEquation();
   // $generateTweets();
   // $generateYoutubes();
+  $generateTimeNode();
 
   const quote = $createQuoteNode();
   quote.append($createTextNode('This is a quote node'));

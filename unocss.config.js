@@ -1,8 +1,10 @@
-import { defineConfig, presetAttributify, presetIcons, presetTagify, presetTypography, presetUno, transformerVariantGroup } from 'unocss'
+import { defineConfig, presetAttributify, presetIcons, presetTagify, presetTypography, presetUno, transformerVariantGroup } from 'unocss';
+import { presetAntd } from 'unocss-preset-antd';
 
 export default defineConfig({
   presets: [
     presetUno(),
+    presetAntd(),
     presetAttributify(),
     presetIcons({ extraProperties: { display: 'inline-block' } }),
     presetTypography(),

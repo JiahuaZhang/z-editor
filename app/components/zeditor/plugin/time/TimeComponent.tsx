@@ -1,5 +1,5 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { Radio, TimePicker } from 'antd';
+import { Popover, Radio, TimePicker } from 'antd';
 import dayjs from 'dayjs';
 import { $getNodeByKey, NodeKey } from 'lexical';
 import { Calendar } from 'react-calendar';
@@ -50,44 +50,50 @@ export const getReadableTime = (format: TimeNodeFormat, date: string, time: stri
 export const TimeComponent = ({ date, time, format, nodeKey }: { date: string, time: string, format: TimeNodeFormat; nodeKey?: NodeKey; }) => {
   const [editor] = useLexicalComposerContext();
   const node = editor.getEditorState().read(() => $getNodeByKey(nodeKey ?? '') as TimeNode);
-  console.log(date, time);
 
+  if (!time) {
+    time = dayjs().toLocaleString();
+  }
+  if (!date) {
+    date = dayjs().toLocaleString();
+  }
 
-  return <span>
-    <div un-border='rounded 2 solid gray-1' un-w='[354px]' un-grid='~' un-gap='2' un-bg='gray-50' un-py='2' un-pb='' >
-      <Radio.Group value={format} className='justify-self-center' >
-        <Radio.Button value='date' checked={format === 'date'}
-          onChange={() => editor.update(() => node.setFormat('date'))}
-        >Date</Radio.Button>
-        <Radio.Button value='time' checked={format === 'time'}
-          onChange={() => editor.update(() => node.setFormat('time'))}
-        >Time</Radio.Button>
-        <Radio.Button value='both' checked={format === 'both'}
-          onChange={() => editor.update(() => node.setFormat('both'))}
-        >Date & Time</Radio.Button>
-      </Radio.Group>
+  return <Popover content={<div un-border='rounded 2 solid gray-1' un-w='[354px]' un-grid='~' un-gap='2' un-bg='gray-50' un-py='2' >
+    <Radio.Group value={format} className='justify-self-center' >
+      <Radio.Button value='date' checked={format === 'date'}
+        onChange={() => editor.update(() => node.setFormat('date'))}
+      >Date</Radio.Button>
+      <Radio.Button value='time' checked={format === 'time'}
+        onChange={() => editor.update(() => node.setFormat('time'))}
+      >Time</Radio.Button>
+      <Radio.Button value='both' checked={format === 'both'}
+        onChange={() => editor.update(() => node.setFormat('both'))}
+      >Date & Time</Radio.Button>
+    </Radio.Group>
 
-      {
-        format !== 'time'
-        && <Calendar calendarType='gregory'
-          value={new Date(date)}
-          onChange={(value, event) => editor.update(() => node.setDate(value?.toLocaleString() ?? ''))}
-        />
-      }
+    {
+      format !== 'time'
+      && <Calendar calendarType='gregory'
+        value={new Date(date)}
+        onChange={(value, event) => editor.update(() => node.setDate(value?.toLocaleString() ?? ''))}
+      />
+    }
 
-      {
-        format !== 'date'
-        && <TimePicker use12Hours popupClassName='[&_a]:text-blue-6 [&_button]:bg-blue-6'
-          className='justify-self-center'
-          value={dayjs(time)}
-          onChange={value => {
-            if (value) {
-              editor.update(() => node.setTime(value.toLocaleString()));
-            }
-          }}
-        />
-      }
-    </div>
-    {getReadableTime(format, date, time)}
-  </span>;
+    {
+      format !== 'date'
+      && <TimePicker use12Hours popupClassName='[&_a]:text-blue-6 [&_button]:bg-blue-6'
+        className='justify-self-center'
+        value={time !== '' ? dayjs(time) : dayjs()}
+        onChange={value => {
+          if (value) {
+            editor.update(() => node.setTime(value.toLocaleString()));
+          }
+        }}
+      />
+    }
+  </div>} trigger='click' >
+    <span un-bg='zinc-1' un-p='2' un-py='1' un-border='rounded' un-cursor='pointer' >
+      {getReadableTime(format, date, time)}
+    </span>
+  </Popover>;
 };

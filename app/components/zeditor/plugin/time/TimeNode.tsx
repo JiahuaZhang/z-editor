@@ -55,6 +55,7 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
   exportDOM(editor: LexicalEditor): DOMExportOutput {
     const element = document.createElement('span');
     element.setAttribute('lexical-special', 'time');
+    element.setAttribute('lexical-data-date', this.__date);
     element.setAttribute('lexical-data-time', this.__time);
     element.setAttribute('lexical-data-format', this.__format);
     return { element };
@@ -102,6 +103,7 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
   exportJSON() {
     return {
       type: 'time',
+      date: this.__date,
       time: this.__time,
       format: this.__format,
       version: 1,

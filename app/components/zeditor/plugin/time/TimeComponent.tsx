@@ -1,7 +1,10 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
+import { mergeRegister } from '@lexical/utils';
 import { Popover, Radio, TimePicker } from 'antd';
 import dayjs from 'dayjs';
-import { $getNodeByKey, NodeKey } from 'lexical';
+import { $getNodeByKey, COMMAND_PRIORITY_LOW, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, KEY_SPACE_COMMAND, NodeKey } from 'lexical';
+import { useCallback, useEffect, useState } from 'react';
 import { Calendar } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { TimeNode, TimeNodeFormat } from './TimeNode';
@@ -50,6 +53,8 @@ export const getReadableTime = (format: TimeNodeFormat, date: string, time: stri
 export const TimeComponent = ({ date, time, format, nodeKey }: { date: string, time: string, format: TimeNodeFormat; nodeKey?: NodeKey; }) => {
   const [editor] = useLexicalComposerContext();
   const node = editor.getEditorState().read(() => $getNodeByKey(nodeKey ?? '') as TimeNode);
+  const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey ?? '');
+  const [isOpen, setIsOpen] = useState(false);
 
   if (!time) {
     time = dayjs().toLocaleString();
@@ -58,7 +63,41 @@ export const TimeComponent = ({ date, time, format, nodeKey }: { date: string, t
     date = dayjs().toLocaleString();
   }
 
-  return <Popover content={<div un-border='rounded 2 solid gray-1' un-w='[354px]' un-grid='~' un-gap='2' un-bg='gray-50' un-py='2' >
+  useEffect(() => {
+    if (!isSelected) {
+      setIsOpen(false);
+    }
+  }, [isSelected, setIsOpen]);
+
+  const $onEnter = useCallback(
+    (event: KeyboardEvent) => {
+      if (isSelected) {
+        setIsOpen(prev => !prev);
+        return true;
+      }
+      return false;
+    },
+    [isSelected, setIsOpen],
+  );
+
+  const $onEscape = useCallback(
+    (event: KeyboardEvent) => {
+      if (isSelected) {
+        setIsOpen(false);
+        return true;
+      }
+      return false;
+    },
+    [isSelected, setIsOpen],
+  );
+
+  useEffect(() => mergeRegister(
+    editor.registerCommand(KEY_ENTER_COMMAND, $onEnter, COMMAND_PRIORITY_LOW),
+    editor.registerCommand(KEY_SPACE_COMMAND, $onEnter, COMMAND_PRIORITY_LOW),
+    editor.registerCommand(KEY_ESCAPE_COMMAND, $onEscape, COMMAND_PRIORITY_LOW),
+  ), [$onEnter]);
+
+  return <Popover content={<div un-border='rounded 2 solid gray-1' un-w='[354px]' un-grid='~' un-gap='2' un-bg='gray-50' un-py='2'>
     <Radio.Group value={format} className='justify-self-center' >
       <Radio.Button value='date' checked={format === 'date'}
         onChange={() => editor.update(() => node.setFormat('date'))}
@@ -91,8 +130,14 @@ export const TimeComponent = ({ date, time, format, nodeKey }: { date: string, t
         }}
       />
     }
-  </div>} trigger='click' >
-    <span un-bg='zinc-1' un-p='2' un-py='1' un-border='rounded' un-cursor='pointer' >
+  </div>} trigger='click' open={isOpen} onOpenChange={status => {
+    setIsOpen(status);
+    if (status) {
+      setTimeout(() => setSelected(true), 0);
+    }
+  }} >
+    <span un-bg='zinc-1' un-p='2' un-py='1' un-border={`rounded solid blue-4 ${isSelected && '2'}`} un-cursor='pointer'
+    >
       {getReadableTime(format, date, time)}
     </span>
   </Popover>;

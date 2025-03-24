@@ -34,7 +34,7 @@ const Plugins = ({ ...rest }) => {
   return <main un-h='100vh' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
     <Plugin.Toolbar.Top />
     <div un-grid='~' un-grid-flow='col' un-auto-cols='[1fr_max-content]' un-w='full' un-position='relative' >
-    <RichTextPlugin
+      <RichTextPlugin
         contentEditable={
           <div>
             <ContentEditable un-p='2' un-pl='6' un-z='5' un-position='relative' id='lexical-content-deitable' un-min-h='100' un-border='rounded-b 1 solid zinc-4' />
@@ -89,6 +89,7 @@ const Plugins = ({ ...rest }) => {
     {/* <Plugin.TabFocus /> */}
     <TabIndentationPlugin />
     <Plugin.DraggableBlock />
+    <Plugin.Time />
 
     <ClearEditorPlugin />
 

@@ -1,19 +1,14 @@
-time decorator component
-date, time , date & time
-
-/today?
-/yesterday
-/tomorrow
-/time
-/date and time
-
 #hasttag organization
 /notification
 /everyday
 /once per week
 /twice per week
 /once per month
-/ build in stuff
+/build in stuff
+
+Time Component with remind function
+remind option, additional attribute
+per week, per month, per year
 
 smart collect #hash tags on meta data
 
@@ -38,3 +33,6 @@ https://github.com/facebook/lexical/blob/main/packages/lexical-playground/src/pl
 
 markdown convert
 https://github.com/facebook/lexical/blob/main/packages/lexical-playground/src/plugins/ActionsPlugin/index.tsx#L170
+
+time component
+after preseee enter / space to toggle, should smartly switch focus

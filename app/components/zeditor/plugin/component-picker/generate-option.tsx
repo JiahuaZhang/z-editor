@@ -16,6 +16,7 @@ import { INSERT_HORIZONTAL_RULE_COMMAND } from '../horizontal-rule/HorizontalRul
 import { INSERT_PAGE_BREAK } from '../page-break/PageBreakPlugin';
 import { OPEN_COLUMN_LAYOUT_POPUP_COMMAND, OPEN_EQUATION_POPUP_COMMAND, OPEN_IMAGE_POPUP_COMMAND, OPEN_TABLE_POPUP_COMMAND } from '../popup/PopupPlugin';
 import { TOGGLE_SPEECH_TO_TEXT_COMMAND } from '../speech/SpeechToTextPlugin';
+import { INSERT_TIME_NOW, INSERT_TIME_TODAY, INSERT_TIME_TODAY_NOW, INSERT_TIME_TOMORROW, INSERT_TIME_YESTERDAY } from '../time/TimePlugin';
 import { EDITOR_FONTS } from '../toolbar/FontDropDown';
 
 export class ComponentPickerOption extends MenuOption {
@@ -128,6 +129,39 @@ export const fontOptions = [
     icon: <span className="i-mdi:format-superscript" un-text='xl!' />,
     keywords: ['superscript', 'font style superscript', 'font-style superscript'],
     onSelect: (editor: LexicalEditor, queryString: string) => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'superscript'),
+  }),
+];
+
+const timeOptions = [
+  new ComponentPickerOption('Today', {
+    icon: <i className="i-mdi:calendar-today" un-text='xl' />,
+    keywords: ['today', 'date today', 'calendar today'],
+    onSelect: (editor: LexicalEditor, queryString: string) =>
+      editor.dispatchCommand(INSERT_TIME_TODAY, undefined),
+  }),
+  new ComponentPickerOption('Now with date', {
+    icon: <i className="i-mdi:calendar-today" un-text='xl' />,
+    keywords: ['time today', 'today now', 'date today now', 'calendar today now', 'now with date'],
+    onSelect: (editor: LexicalEditor, queryString: string) =>
+      editor.dispatchCommand(INSERT_TIME_TODAY_NOW, undefined),
+  }),
+  new ComponentPickerOption('Now', {
+    icon: <i className="i-carbon:time" un-text='xl' />,
+    keywords: ['now', 'time now'],
+    onSelect: (editor: LexicalEditor, queryString: string) =>
+      editor.dispatchCommand(INSERT_TIME_NOW, undefined),
+  }),
+  new ComponentPickerOption('Yesterday', {
+    icon: <i className="i-mdi:calendar-today" un-text='xl' />,
+    keywords: ['yesterday', 'date yesterday', 'calendar yesterday'],
+    onSelect: (editor: LexicalEditor, queryString: string) =>
+      editor.dispatchCommand(INSERT_TIME_YESTERDAY, undefined),
+  }),
+  new ComponentPickerOption('Tomorrow', {
+    icon: <i className="i-mdi:calendar-today" un-text='xl' />,
+    keywords: ['tomorrow', 'date tomorrow', 'calendar tomorrow'],
+    onSelect: (editor: LexicalEditor, queryString: string) =>
+      editor.dispatchCommand(INSERT_TIME_TOMORROW, undefined),
   }),
 ];
 
@@ -301,7 +335,8 @@ export const simpleOptions = [
     keywords: ['clear', 'formatting', 'clear formatting', 'clear-formatting'],
     onSelect: (editor: LexicalEditor, queryString: string) => clearFormat(editor),
   }),
-  ...fontOptions
+  ...fontOptions,
+  ...timeOptions,
 ];
 
 export const generateOption = (text: string | null) => {

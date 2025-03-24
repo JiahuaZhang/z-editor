@@ -27,6 +27,7 @@ import { TabFocusPlugin } from './tab-focus/TabFocusPlugin';
 import { TableActionMenuPlugin } from './table/TableActionMenuPlugin';
 import { TableCellResizerPlugin } from './table/TableCellResizer';
 import { TableHoverActionsPlugin } from './table/TableHoverActionsPlugin';
+import { TimePlugin } from './time/TimePlugin';
 import { FloatingTextFormatToolbarPlugin } from './toolbar/FloatingTextFormatToolbarPlugin';
 import { ToolbarPlugin } from './toolbar/ToolbarPlugin';
 import { TwitterPlugin } from './twitter/TwitterPlugin';
@@ -78,4 +79,5 @@ export namespace Plugin {
   export const TabFocus = TabFocusPlugin;
   export const DraggableBlock = DraggableBlockPlugin;
   export const Popup = PopupPlugin;
+  export const Time = TimePlugin;
 }

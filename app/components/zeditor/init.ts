@@ -506,6 +506,14 @@ const $generateTimeNode = () => {
   const node = $createTimeNode('2025/3/4 00:00:00', '2025-03-18T17:01:00.000Z', 'both');
   paragraph.append(node);
   root.append(paragraph);
+
+  const node2 = $createTimeNode('2025/2/1 00:00:00', '', 'date');
+  paragraph.append(node2);
+  root.append(paragraph);
+
+  const node3 = $createTimeNode('', '2025-01-18T09:01:00.000Z', 'time');
+  paragraph.append(node3);
+  root.append(paragraph);
 };
 
 export const $generateContent = () => {

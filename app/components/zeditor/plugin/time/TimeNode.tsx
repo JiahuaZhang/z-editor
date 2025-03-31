@@ -4,14 +4,23 @@ import { lazy } from 'react';
 const TimeComponent = lazy(() => import('./TimeComponent').then(module => ({ default: module.TimeComponent })));
 
 export type TimeNodeFormat = 'date' | 'time' | 'both';
-export type SerializedTimeNode = Spread<{ date: string, time: string, format: TimeNodeFormat; }, SerializedLexicalNode>;
+export const ALL_WEEK_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as const;
+export type WeekDay = typeof ALL_WEEK_DAYS[number];
+export type Reminder = { type: 'daily'; }
+  | { type: 'weekly'; weekly: WeekDay[]; }
+  | { type: 'monthly'; monthly: { position: 'this' | '1st' | '2nd' | '3rd' | '4th' | '5th' | 'last'; day: WeekDay; }; }
+  | { type: 'quarterly'; }
+  | { type: 'annually'; };
+
+export type SerializedTimeNode = Spread<{ date: string, time: string, format: TimeNodeFormat; reminder: Reminder[]; }, SerializedLexicalNode>;
 
 const $convertTimeNodeElement = (domNode: HTMLSpanElement) => {
   if (domNode.getAttribute('lexical-special') === 'time') {
     const date = domNode.getAttribute('lexical-data-date') || '';
     const time = domNode.getAttribute('lexical-data-time') || '';
     const format = domNode.getAttribute('lexical-data-format') || 'time';
-    const node = $createTimeNode(date, time, format as TimeNodeFormat);
+    const reminders = domNode.getAttribute('lexical-data-reminder') || '[]';
+    const node = $createTimeNode(date, time, format as TimeNodeFormat, JSON.parse(reminders));
     return { node };
   }
   return null;
@@ -21,12 +30,14 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
   __date: string;
   __time: string;
   __format: TimeNodeFormat;
+  __reminders: Reminder[];
 
-  constructor(date: string, time: string, __format: TimeNodeFormat = 'time', key?: NodeKey) {
+  constructor(date: string, time: string, __format: TimeNodeFormat = 'time', __reminders: Reminder[] = [], key?: NodeKey) {
     super(key);
     this.__date = date;
     this.__time = time;
     this.__format = __format;
+    this.__reminders = __reminders;
   }
 
   static getType() {
@@ -34,7 +45,7 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
   }
 
   static clone(node: TimeNode) {
-    return new TimeNode(node.__date, node.__time, node.__format, node.getKey());
+    return new TimeNode(node.__date, node.__time, node.__format, node.__reminders, node.getKey());
   }
 
   static importDOM(): DOMConversionMap {
@@ -58,6 +69,7 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
     element.setAttribute('lexical-data-date', this.__date);
     element.setAttribute('lexical-data-time', this.__time);
     element.setAttribute('lexical-data-format', this.__format);
+    element.setAttribute('lexical-data-reminder', JSON.stringify(this.__reminders));
     return { element };
   }
 
@@ -66,7 +78,11 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
   }
 
   decorate() {
-    return <TimeComponent date={this.__date} time={this.__time} format={this.__format} nodeKey={this.getKey()} />;
+    return <TimeComponent date={this.__date}
+      time={this.__time}
+      format={this.__format}
+      reminders={this.__reminders}
+      nodeKey={this.getKey()} />;
   }
 
   setDate(date: string) {
@@ -96,8 +112,42 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
     return this.__format;
   }
 
+  setReminders(reminders: Reminder[]) {
+    const self = this.getWritable();
+    self.__reminders = reminders;
+  }
+
+  getReminders() {
+    return this.__reminders;
+  }
+
+  addReminder(reminder: Reminder) {
+    const self = this.getWritable();
+
+    if (reminder.type === 'weekly') {
+      const existingReminder = self.__reminders.find(r => r.type === 'weekly');
+      if (existingReminder) {
+        existingReminder.weekly = [...new Set([...reminder.weekly, ...existingReminder.weekly])];
+        return;
+      }
+    } else if (reminder.type === 'monthly') {
+      const alreadyExists = self.__reminders.find(r => r.type === 'monthly'
+        && r.monthly.day === reminder.monthly.day
+        && r.monthly.position === reminder.monthly.position
+      );
+      if (alreadyExists) return;
+    }
+
+    self.__reminders.push(reminder);
+  }
+
+  removeReminder(index: number) {
+    const self = this.getWritable();
+    self.__reminders.splice(index, 1);
+  }
+
   static importJSON(serializedNode: SerializedTimeNode) {
-    return $createTimeNode(serializedNode.date, serializedNode.time, serializedNode.format);
+    return $createTimeNode(serializedNode.date, serializedNode.time, serializedNode.format, serializedNode.reminder);
   }
 
   exportJSON() {
@@ -106,11 +156,12 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
       date: this.__date,
       time: this.__time,
       format: this.__format,
+      reminders: this.__reminders,
       version: 1,
     };
   }
 }
 
-export const $createTimeNode = (date: string, time: string, format: TimeNodeFormat) => new TimeNode(date, time, format);
+export const $createTimeNode = (date: string, time: string, format: TimeNodeFormat, reminder: Reminder[] = []) => new TimeNode(date, time, format, reminder);
 
 export const $isTimeNode = (node: LexicalNode | null | undefined): node is TimeNode => node instanceof TimeNode;

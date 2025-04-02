@@ -64,9 +64,12 @@ const getDateOrdinalPostfix = (index: number) => {
   }
 };
 
-const getQuarterMonths = (month: number) => {
-  const startMonth = month % 3;
-  return [startMonth + 1, startMonth + 4, startMonth + 7];
+const getQuarterMonths = (date: dayjs.Dayjs) => {
+  const start = date.month() % 3;
+  return [start, start + 3, start + 6, start + 9]
+    .sort((a, b) => a - b)
+    .map(index => `${dayjs().month(index).format('M')}/${date.date()}`)
+    .join(', ');
 };
 
 const MontlyReminder = ({ date, create, reminders }: { date: string; reminders: Reminder[]; create: (reminder: Reminder) => void; }) => {
@@ -76,15 +79,15 @@ const MontlyReminder = ({ date, create, reminders }: { date: string; reminders: 
 
   return <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
     <Radio.Group className='grid grid-flow-col justify-center' value={position} onChange={event => setPosition(event.target.value)} >
-      <Radio.Button value='this' disabled={reminders.some(r => r.type === 'monthly' && r.monthly.position === 'this')} >
+      <Radio.Button value='this' disabled={reminders.some(r => r.type === 'monthly' && r.monthly === 'this')} >
         {d.format('MM/DD')}
       </Radio.Button>
-      <Radio.Button value={info.description} disabled={reminders.some(r => r.type === 'monthly' && r.monthly.position === info.description)} >
+      <Radio.Button value={info.description} disabled={reminders.some(r => r.type === 'monthly' && r.monthly === info.description)} >
         {info.description} {info.weekday}
       </Radio.Button>
       {
         info.isLast
-        && <Radio.Button value='last' disabled={reminders.some(r => r.type === 'monthly' && r.monthly.position === 'last')} >
+        && <Radio.Button value='last' disabled={reminders.some(r => r.type === 'monthly' && r.monthly === 'last')} >
           Last {info.weekday}
         </Radio.Button>
       }
@@ -93,23 +96,20 @@ const MontlyReminder = ({ date, create, reminders }: { date: string; reminders: 
       position !== '' && <>
         <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
           {
-            position === 'this' && `Every ${d.date()}${getDateOrdinalPostfix(d.date())} day of every month.`
+            position === 'this' && `Every ${d.date()}${getDateOrdinalPostfix(d.date())} day of each month.`
           }
           {
-            position === 'last' && `Last ${info.weekday} of every month.`
+            position === 'last' && `Last ${info.weekday} of each month.`
           }
           {
-            position !== 'this' && position !== 'last' && `Every ${position} ${info.weekday} of every month.`
+            position !== 'this' && position !== 'last' && `Every ${position} ${info.weekday} of each month.`
           }
         </blockquote>
         <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5'
           un-justify-self='end'
           onClick={() => create({
             type: 'monthly',
-            monthly: {
-              position: position as any,
-              day: info.weekday as WeekDay,
-            },
+            monthly: position as any,
           })}>
           Create
         </button>
@@ -130,13 +130,62 @@ const ReminderItem = ({ reminder, remove, date, time }: { reminder: Reminder, re
         </button>
       </div>;
     case 'weekly':
-      return <div>Weekly</div>;
+      return <div un-flex='~' un-bg='white' un-pl='4' >
+        Every {reminder.weekly.map(day => day).join(', ')} @{time.format('h:mm a')}
+        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+          onClick={remove}
+        >
+          <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
+        </button>
+      </div>;
     case 'monthly':
-      return <div>Monthly</div>;
+      switch (reminder.monthly) {
+        case 'this':
+          return <div un-flex='~' un-bg='white' un-pl='4' >
+            Every {date.date()}{getDateOrdinalPostfix(date.date())} of each month @{time.format('h:mm a')}
+            <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+              onClick={remove}
+            >
+              <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
+            </button>
+          </div>;
+        case 'last':
+          return <div un-flex='~' un-bg='white' un-pl='4' >
+            Last {date.format('dddd')} of each month @{time.format('h:mm a')}
+            <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+              onClick={remove}
+            >
+              <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
+            </button>
+          </div>;
+        default:
+          return <div un-flex='~' un-bg='white' un-pl='4' >
+            Every {reminder.monthly} {date.format('dddd')} of each month @{time.format('h:mm a')}
+            <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+              onClick={remove}
+            >
+              <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
+            </button>
+          </div>;
+      }
     case 'quarterly':
-      return <div>Quarterly</div>;
+      return <div un-flex='~' un-bg='white' un-pl='4' >
+        {`@${time.format('h:mm a')} on ${getQuarterMonths(date)}`}
+        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+          onClick={remove}
+        >
+          <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
+        </button>
+      </div>;
     case 'annually':
-      return <div>Annually</div>;
+      return <div un-flex='~' un-bg='white' un-pl='4' >
+        {`${date.format('MM/DD')} of each year @${time.format('h:mm a')}`}
+        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+          onClick={remove}
+        >
+          <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
+        </button>
+      </div>;
   }
 };
 
@@ -232,9 +281,7 @@ export const TimeReminderComponent = ({ reminders, format, editor, date, time, n
           reminderType === 'quarterly'
           && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
             <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
-              {
-                `${dateObj.date()}${getDateOrdinalPostfix(dateObj.date())} @${timeObj.format('h:mm a')} on ${getQuarterMonths(dateObj.month()).join(', ')} months`
-              }
+              {`@${timeObj.format('h:mm a')} on ${getQuarterMonths(dateObj)}`}
             </blockquote>
             <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
               onClick={() => {

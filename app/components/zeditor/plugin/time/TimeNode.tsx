@@ -8,7 +8,7 @@ export const ALL_WEEK_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Fri
 export type WeekDay = typeof ALL_WEEK_DAYS[number];
 export type Reminder = { type: 'daily'; }
   | { type: 'weekly'; weekly: WeekDay[]; }
-  | { type: 'monthly'; monthly: { position: 'this' | '1st' | '2nd' | '3rd' | '4th' | '5th' | 'last'; day: WeekDay; }; }
+  | { type: 'monthly'; monthly: 'this' | '1st' | '2nd' | '3rd' | '4th' | '5th' | 'last'; }
   | { type: 'quarterly'; }
   | { type: 'annually'; };
 
@@ -131,11 +131,7 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
         return;
       }
     } else if (reminder.type === 'monthly') {
-      const alreadyExists = self.__reminders.find(r => r.type === 'monthly'
-        && r.monthly.day === reminder.monthly.day
-        && r.monthly.position === reminder.monthly.position
-      );
-      if (alreadyExists) return;
+      if (self.__reminders.find(r => r.type === 'monthly' && r.monthly === reminder.monthly)) return;
     }
 
     self.__reminders.push(reminder);

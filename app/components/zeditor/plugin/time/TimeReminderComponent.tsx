@@ -121,18 +121,23 @@ const MontlyReminder = ({ date, create, reminders }: { date: string; reminders: 
 const ReminderItem = ({ reminder, remove, date, time }: { reminder: Reminder, remove?: () => void; date: dayjs.Dayjs, time: dayjs.Dayjs; }) => {
   switch (reminder.type) {
     case 'daily':
-      return <div un-flex='~' un-bg='white' un-pl='4' >
-        Daily @{time.format('h:mm a')}
-        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
+        {
+          reminder.once && `${date.format('MM/DD/YYYY')} @ ${time.format('h:mm a')} once.`
+        }
+        {
+          !reminder.once && `Daily @${time.format('h:mm a')}`
+        }
+        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
           onClick={remove}
         >
           <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
         </button>
       </div>;
     case 'weekly':
-      return <div un-flex='~' un-bg='white' un-pl='4' >
+      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
         Every {reminder.weekly.map(day => day).join(', ')} @{time.format('h:mm a')}
-        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
           onClick={remove}
         >
           <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
@@ -141,27 +146,27 @@ const ReminderItem = ({ reminder, remove, date, time }: { reminder: Reminder, re
     case 'monthly':
       switch (reminder.monthly) {
         case 'this':
-          return <div un-flex='~' un-bg='white' un-pl='4' >
+          return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
             Every {date.date()}{getDateOrdinalPostfix(date.date())} of each month @{time.format('h:mm a')}
-            <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+            <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
               onClick={remove}
             >
               <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
             </button>
           </div>;
         case 'last':
-          return <div un-flex='~' un-bg='white' un-pl='4' >
+          return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
             Last {date.format('dddd')} of each month @{time.format('h:mm a')}
-            <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+            <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
               onClick={remove}
             >
               <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
             </button>
           </div>;
         default:
-          return <div un-flex='~' un-bg='white' un-pl='4' >
+          return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
             Every {reminder.monthly} {date.format('dddd')} of each month @{time.format('h:mm a')}
-            <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+            <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
               onClick={remove}
             >
               <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
@@ -169,18 +174,18 @@ const ReminderItem = ({ reminder, remove, date, time }: { reminder: Reminder, re
           </div>;
       }
     case 'quarterly':
-      return <div un-flex='~' un-bg='white' un-pl='4' >
+      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
         {`@${time.format('h:mm a')} on ${getQuarterMonths(date)}`}
-        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
           onClick={remove}
         >
           <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
         </button>
       </div>;
     case 'annually':
-      return <div un-flex='~' un-bg='white' un-pl='4' >
+      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
         {`${date.format('MM/DD')} of each year @${time.format('h:mm a')}`}
-        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items=''
+        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
           onClick={remove}
         >
           <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
@@ -192,127 +197,156 @@ const ReminderItem = ({ reminder, remove, date, time }: { reminder: Reminder, re
 export const TimeReminderComponent = ({ reminders, format, editor, date, time, node }: { reminders: Reminder[]; format: TimeNodeFormat; editor: LexicalEditor; date: string, time: string; node: TimeNode; }) => {
   const [reminderType, setReminderType] = useState('');
   const [weeklyDays, setWeeklyDays] = useState<WeekDay[]>([]);
+  const [dailyOption, setDailyOption] = useState('');
   const dateObj = dayjs(date);
   const timeObj = dayjs(time);
 
+  if (format === 'date') return <></>;
+
   return <div>
+    {reminders.length > 0 && <h1 un-bg='' un-text='center orange-4' un-font='' >
+      <div className="i-mdi:clock" un-text='lg' ></div>
+      Current Reminders
+    </h1>}
+    <section un-border=' solid blue-2' un-px='4' un-bg='' >
+      {
+        reminders.map((reminder, index) => <ReminderItem key={index}
+          reminder={reminder}
+          remove={() => editor.update(() => node.removeReminder(index))}
+          date={dateObj}
+          time={timeObj} />)
+      }
+    </section>
 
-    {reminders.length > 0 && <h1 un-bg='white' >Current Reminders</h1>}
-    {
-      reminders.map((reminder, index) => <ReminderItem key={index} reminder={reminder} remove={() => editor.update(() => node.removeReminder(index))} date={dateObj} time={timeObj} />)
-    }
+    {/* make collapsable */}
+    <h1>Create Reminder:</h1>
+    <Radio.Group className='justify-self-center'
+      value={reminderType}
+      onChange={value => setReminderType(value.target.value)} >
+      <Radio.Button value='daily'>
+        Daily
+      </Radio.Button>
+      <Radio.Button value='weekly' disabled={reminders.some(r => r.type === 'weekly' && r.weekly.length === 7)}  >
+        Weekly
+      </Radio.Button>
+      <Radio.Button value='monthly' >
+        Monthly
+      </Radio.Button>
+      <Radio.Button value='quarterly' disabled={reminders.some(r => r.type === 'quarterly')} >
+        Quarterly
+      </Radio.Button>
+      <Radio.Button value='annually' disabled={reminders.some(r => r.type === 'annually')} >
+        Annually
+      </Radio.Button>
+    </Radio.Group>
 
     {
-      format !== 'date' && <>
-        {/* make collapsable */}
-        <h1>Create Reminder:</h1>
-        <Radio.Group className='justify-self-center'
-          value={reminderType}
-          onChange={value => setReminderType(value.target.value)} >
-          <Radio.Button value='daily' disabled={reminders.some(reminder => reminder.type === 'daily')} >
-            Daily
+      reminderType === 'daily'
+      && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
+        <Radio.Group className='grid grid-flow-col justify-center' value={dailyOption} >
+          <Radio.Button value='once' checked={dailyOption === 'once'}
+            disabled={reminders.some(r => r.type === 'daily' && r.once)}
+            onChange={() => setDailyOption('once')}>
+            Once
           </Radio.Button>
-          <Radio.Button value='weekly' disabled={reminders.some(r => r.type === 'weekly' && r.weekly.length === 7)}  >
-            Weekly
-          </Radio.Button>
-          <Radio.Button value='monthly' >
-            Monthly
-          </Radio.Button>
-          <Radio.Button value='quarterly' disabled={reminders.some(r => r.type === 'quarterly')} >
-            Quarterly
-          </Radio.Button>
-          <Radio.Button value='annually' disabled={reminders.some(r => r.type === 'annually')} >
-            Annually
+          <Radio.Button value='repeat' checked={dailyOption === 'repeat'}
+            disabled={reminders.some(r => r.type === 'daily' && !r.once)}
+            onChange={() => setDailyOption('repeat')}>
+            Repeat
           </Radio.Button>
         </Radio.Group>
-
         {
-          reminderType === 'daily'
-          && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
-            <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
-              Daily @{timeObj.format('h:mm a')}
-            </blockquote>
-            <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
-              onClick={() => {
-                editor.update(() => node.addReminder({ type: 'daily' }));
-                setReminderType('');
-              }}
-            >
-              Create
-            </button>
-          </div>
-        }
-
-        {
-          reminderType === 'weekly'
-          && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
-            <Checkbox.Group options={weekDayOptios} value={weeklyDays} onChange={setWeeklyDays} />
-            {
-              weeklyDays.length > 0
-              && <>
-                <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
-                  Every {weeklyDays.map(day => day).join(', ')} @{timeObj.format('h:mm a')}
-                </blockquote>
-                <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5'
-                  un-justify-self='end'
-                  onClick={() => {
-                    editor.update(() => node.addReminder({ type: 'weekly', weekly: weeklyDays }));
-                    setReminderType('');
-                  }}
-                >
-                  Create
-                </button>
-                <div>
-                </div>
-              </>
-            }
-          </div>
-        }
-
-        {
-          reminderType === 'monthly'
-          && <MontlyReminder reminders={reminders} date={date} create={reminders => {
-            editor.update(() => node.addReminder(reminders));
-            setReminderType('');
-          }} />
-        }
-
-        {
-          reminderType === 'quarterly'
-          && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
-            <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
-              {`@${timeObj.format('h:mm a')} on ${getQuarterMonths(dateObj)}`}
-            </blockquote>
-            <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
-              onClick={() => {
-                editor.update(() => node.addReminder({ type: 'quarterly' }));
-                setReminderType('');
-              }}
-            >
-              Create
-            </button>
-          </div>
-        }
-
-        {
-          reminderType === 'annually'
-          && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
+          dailyOption !== '' && <>
             <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
               {
-                `${dateObj.format('MM/DD')} @${timeObj.format('h:mm a')} every year.`
+                dailyOption === 'once' && `Remind ${dateObj.format('DD/MM/YYYY')} @${timeObj.format('h:mm a')} once.`
+              }
+              {
+                dailyOption === 'repeat' && `@${timeObj.format('h:mm a')} every day.`
               }
             </blockquote>
             <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
               onClick={() => {
-                editor.update(() => node.addReminder({ type: 'annually' }));
+                editor.update(() => node.addReminder({ type: 'daily', once: dailyOption === 'once' }));
+                setDailyOption('');
                 setReminderType('');
               }}
             >
               Create
             </button>
-          </div>
+          </>
         }
-      </>
+      </div>
+    }
+
+    {
+      reminderType === 'weekly'
+      && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
+        <Checkbox.Group options={weekDayOptios} value={weeklyDays} onChange={setWeeklyDays} />
+        {
+          weeklyDays.length > 0
+          && <>
+            <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
+              Every {weeklyDays.map(day => day).join(', ')} @{timeObj.format('h:mm a')}
+            </blockquote>
+            <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5'
+              un-justify-self='end'
+              onClick={() => {
+                editor.update(() => node.addReminder({ type: 'weekly', weekly: weeklyDays }));
+                setReminderType('');
+              }}
+            >
+              Create
+            </button>
+            <div>
+            </div>
+          </>
+        }
+      </div>
+    }
+
+    {
+      reminderType === 'monthly'
+      && <MontlyReminder reminders={reminders} date={date} create={reminders => {
+        editor.update(() => node.addReminder(reminders));
+        setReminderType('');
+      }} />
+    }
+
+    {
+      reminderType === 'quarterly'
+      && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
+        <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
+          {`@${timeObj.format('h:mm a')} on ${getQuarterMonths(dateObj)}`}
+        </blockquote>
+        <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
+          onClick={() => {
+            editor.update(() => node.addReminder({ type: 'quarterly' }));
+            setReminderType('');
+          }}
+        >
+          Create
+        </button>
+      </div>
+    }
+
+    {
+      reminderType === 'annually'
+      && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
+        <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
+          {
+            `${dateObj.format('MM/DD')} @${timeObj.format('h:mm a')} every year.`
+          }
+        </blockquote>
+        <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
+          onClick={() => {
+            editor.update(() => node.addReminder({ type: 'annually' }));
+            setReminderType('');
+          }}
+        >
+          Create
+        </button>
+      </div>
     }
   </div>;
 };

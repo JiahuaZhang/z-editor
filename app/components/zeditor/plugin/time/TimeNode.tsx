@@ -6,7 +6,7 @@ const TimeComponent = lazy(() => import('./TimeComponent').then(module => ({ def
 export type TimeNodeFormat = 'date' | 'time' | 'both';
 export const ALL_WEEK_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as const;
 export type WeekDay = typeof ALL_WEEK_DAYS[number];
-export type Reminder = { type: 'daily'; }
+export type Reminder = { type: 'daily'; once: boolean; }
   | { type: 'weekly'; weekly: WeekDay[]; }
   | { type: 'monthly'; monthly: 'this' | '1st' | '2nd' | '3rd' | '4th' | '5th' | 'last'; }
   | { type: 'quarterly'; }

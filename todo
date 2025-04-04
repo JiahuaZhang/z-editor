@@ -1,5 +1,14 @@
 #hasttag organization
 /notification
+time --
+* daily
+* every Monday / Tuesday / Wednesday / Thursday / Friday / Saturday / Sunday
+* first Monday of the month, first Tuesday of the month, first Wednesday of the month, first Thursday of the month, first Friday of the month, first Saturday of the month, first Sunday of the month
+* last Monday of the month, last Tuesday of the month, last Wednesday of the month, last Thursday of the month, last Friday of the month, last Saturday of the month, last Sunday of the month
+* 2nd / 3rd / 4th ... of the Month
+* first Quarter of the year, second Quarter of the year, third Quarter of the year, fourth Quarter of the year
+* every year
+
 /everyday
 /once per week
 /twice per week

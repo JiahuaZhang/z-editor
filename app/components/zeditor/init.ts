@@ -503,7 +503,38 @@ const $generateSpecialText = () => {
 const $generateTimeNode = () => {
   const root = $getRoot();
   const paragraph = $createParagraphNode();
-  const node = $createTimeNode('2025/3/4 00:00:00', '2025-03-18T17:01:00.000Z', 'both');
+  const node = $createTimeNode('2025/3/4 00:00:00', '2025-03-18T17:01:00.000Z', 'both', [
+    {
+      type: "daily",
+      once: false
+    },
+    {
+      "type": "weekly",
+      "weekly": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ]
+    },
+    {
+      "type": "monthly",
+      "monthly": "1st"
+    },
+    {
+      "type": "monthly",
+      "monthly": "this"
+    },
+    {
+      "type": "quarterly"
+    },
+    {
+      "type": "annually"
+    }
+  ]);
   paragraph.append(node);
   root.append(paragraph);
 

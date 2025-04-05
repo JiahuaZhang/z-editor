@@ -1,4 +1,4 @@
-import { Checkbox, Radio } from 'antd';
+import { Checkbox, Collapse, Radio } from 'antd';
 import dayjs from 'dayjs';
 import { LexicalEditor } from 'lexical';
 import { useState } from 'react';
@@ -203,150 +203,160 @@ export const TimeReminderComponent = ({ reminders, format, editor, date, time, n
 
   if (format === 'date') return <></>;
 
-  return <div>
-    {reminders.length > 0 && <h1 un-bg='' un-text='center orange-4' un-font='' >
-      <div className="i-mdi:clock" un-text='lg' ></div>
-      Current Reminders
-    </h1>}
-    <section un-border=' solid blue-2' un-px='4' un-bg='' >
-      {
-        reminders.map((reminder, index) => <ReminderItem key={index}
-          reminder={reminder}
-          remove={() => editor.update(() => node.removeReminder(index))}
-          date={dateObj}
-          time={timeObj} />)
-      }
-    </section>
-
-    {/* make collapsable */}
-    <h1>Create Reminder:</h1>
-    <Radio.Group className='justify-self-center'
-      value={reminderType}
-      onChange={value => setReminderType(value.target.value)} >
-      <Radio.Button value='daily'>
-        Daily
-      </Radio.Button>
-      <Radio.Button value='weekly' disabled={reminders.some(r => r.type === 'weekly' && r.weekly.length === 7)}  >
-        Weekly
-      </Radio.Button>
-      <Radio.Button value='monthly' >
-        Monthly
-      </Radio.Button>
-      <Radio.Button value='quarterly' disabled={reminders.some(r => r.type === 'quarterly')} >
-        Quarterly
-      </Radio.Button>
-      <Radio.Button value='annually' disabled={reminders.some(r => r.type === 'annually')} >
-        Annually
-      </Radio.Button>
-    </Radio.Group>
-
+  return <div un-grid='~' un-gap='2' >
     {
-      reminderType === 'daily'
-      && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
-        <Radio.Group className='grid grid-flow-col justify-center' value={dailyOption} >
-          <Radio.Button value='once' checked={dailyOption === 'once'}
-            disabled={reminders.some(r => r.type === 'daily' && r.once)}
-            onChange={() => setDailyOption('once')}>
-            Once
-          </Radio.Button>
-          <Radio.Button value='repeat' checked={dailyOption === 'repeat'}
-            disabled={reminders.some(r => r.type === 'daily' && !r.once)}
-            onChange={() => setDailyOption('repeat')}>
-            Repeat
-          </Radio.Button>
-        </Radio.Group>
-        {
-          dailyOption !== '' && <>
-            <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
-              {
-                dailyOption === 'once' && `Remind ${dateObj.format('DD/MM/YYYY')} @${timeObj.format('h:mm a')} once.`
-              }
-              {
-                dailyOption === 'repeat' && `@${timeObj.format('h:mm a')} every day.`
-              }
-            </blockquote>
-            <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
-              onClick={() => {
-                editor.update(() => node.addReminder({ type: 'daily', once: dailyOption === 'once' }));
-                setDailyOption('');
-                setReminderType('');
-              }}
-            >
-              Create
-            </button>
-          </>
-        }
-      </div>
-    }
-
-    {
-      reminderType === 'weekly'
-      && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
-        <Checkbox.Group options={weekDayOptios} value={weeklyDays} onChange={setWeeklyDays} />
-        {
-          weeklyDays.length > 0
-          && <>
-            <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
-              Every {weeklyDays.map(day => day).join(', ')} @{timeObj.format('h:mm a')}
-            </blockquote>
-            <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5'
-              un-justify-self='end'
-              onClick={() => {
-                editor.update(() => node.addReminder({ type: 'weekly', weekly: weeklyDays }));
-                setReminderType('');
-              }}
-            >
-              Create
-            </button>
-            <div>
-            </div>
-          </>
-        }
-      </div>
-    }
-
-    {
-      reminderType === 'monthly'
-      && <MontlyReminder reminders={reminders} date={date} create={reminders => {
-        editor.update(() => node.addReminder(reminders));
-        setReminderType('');
-      }} />
-    }
-
-    {
-      reminderType === 'quarterly'
-      && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
-        <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
-          {`@${timeObj.format('h:mm a')} on ${getQuarterMonths(dateObj)}`}
-        </blockquote>
-        <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
-          onClick={() => {
-            editor.update(() => node.addReminder({ type: 'quarterly' }));
-            setReminderType('');
-          }}
-        >
-          Create
-        </button>
-      </div>
-    }
-
-    {
-      reminderType === 'annually'
-      && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
-        <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
+      reminders.length > 0 && <Collapse items={[{
+        key: 'list',
+        label: <h1 un-grid='~' un-grid-flow='col' un-justify='center' un-items='center' un-gap='1' un-text='orange-7'>
+          <span className="i-mdi:clock" un-text='lg' /> Show Reminders
+        </h1>,
+        children: <section>
           {
-            `${dateObj.format('MM/DD')} @${timeObj.format('h:mm a')} every year.`
+            reminders.map((reminder, index) => <ReminderItem key={index}
+              reminder={reminder}
+              remove={() => editor.update(() => node.removeReminder(index))}
+              date={dateObj}
+              time={timeObj} />)
           }
-        </blockquote>
-        <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
-          onClick={() => {
-            editor.update(() => node.addReminder({ type: 'annually' }));
-            setReminderType('');
-          }}
-        >
-          Create
-        </button>
-      </div>
+        </section>
+      }]} />
     }
+
+    <Collapse className='[&>div>div]:last:[&>div]:(!p-0)'
+      items={[{
+        key: 'create',
+        label: <h1 un-grid='~' un-grid-flow='col' un-justify='center' un-items='center' un-gap='1' un-text='blue-6'> <span className="i-material-symbols-light:new-window" /> Create Reminder:</h1>,
+        children: <>
+          <Radio.Group className='justify-self-center grid grid-flow-col my-1'
+            value={reminderType}
+            onChange={value => setReminderType(value.target.value)} >
+            <Radio.Button value='daily'>
+              Daily
+            </Radio.Button>
+            <Radio.Button value='weekly' disabled={reminders.some(r => r.type === 'weekly' && r.weekly.length === 7)}  >
+              Weekly
+            </Radio.Button>
+            <Radio.Button value='monthly' >
+              Monthly
+            </Radio.Button>
+            <Radio.Button value='quarterly' disabled={reminders.some(r => r.type === 'quarterly')} >
+              Quarterly
+            </Radio.Button>
+            <Radio.Button value='annually' disabled={reminders.some(r => r.type === 'annually')} >
+              Annually
+            </Radio.Button>
+          </Radio.Group>
+
+          {
+            reminderType === 'daily'
+            && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
+              <Radio.Group className='grid grid-flow-col justify-center' value={dailyOption} >
+                <Radio.Button value='once' checked={dailyOption === 'once'}
+                  disabled={reminders.some(r => r.type === 'daily' && r.once)}
+                  onChange={() => setDailyOption('once')}>
+                  Once
+                </Radio.Button>
+                <Radio.Button value='repeat' checked={dailyOption === 'repeat'}
+                  disabled={reminders.some(r => r.type === 'daily' && !r.once)}
+                  onChange={() => setDailyOption('repeat')}>
+                  Repeat
+                </Radio.Button>
+              </Radio.Group>
+              {
+                dailyOption !== '' && <>
+                  <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
+                    {
+                      dailyOption === 'once' && `Remind ${dateObj.format('DD/MM/YYYY')} @${timeObj.format('h:mm a')} once.`
+                    }
+                    {
+                      dailyOption === 'repeat' && `@${timeObj.format('h:mm a')} every day.`
+                    }
+                  </blockquote>
+                  <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
+                    onClick={() => {
+                      editor.update(() => node.addReminder({ type: 'daily', once: dailyOption === 'once' }));
+                      setDailyOption('');
+                      setReminderType('');
+                    }}
+                  >
+                    Create
+                  </button>
+                </>
+              }
+            </div>
+          }
+
+          {
+            reminderType === 'weekly'
+            && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
+              <Checkbox.Group options={weekDayOptios} value={weeklyDays} onChange={setWeeklyDays} />
+              {
+                weeklyDays.length > 0
+                && <>
+                  <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
+                    Every {weeklyDays.map(day => day).join(', ')} @{timeObj.format('h:mm a')}
+                  </blockquote>
+                  <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5'
+                    un-justify-self='end'
+                    onClick={() => {
+                      editor.update(() => node.addReminder({ type: 'weekly', weekly: weeklyDays }));
+                      setReminderType('');
+                    }}
+                  >
+                    Create
+                  </button>
+                  <div>
+                  </div>
+                </>
+              }
+            </div>
+          }
+
+          {
+            reminderType === 'monthly'
+            && <MontlyReminder reminders={reminders} date={date} create={reminders => {
+              editor.update(() => node.addReminder(reminders));
+              setReminderType('');
+            }} />
+          }
+
+          {
+            reminderType === 'quarterly'
+            && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
+              <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
+                {`@${timeObj.format('h:mm a')} on ${getQuarterMonths(dateObj)}`}
+              </blockquote>
+              <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
+                onClick={() => {
+                  editor.update(() => node.addReminder({ type: 'quarterly' }));
+                  setReminderType('');
+                }}
+              >
+                Create
+              </button>
+            </div>
+          }
+
+          {
+            reminderType === 'annually'
+            && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
+              <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
+                {
+                  `${dateObj.format('MM/DD')} @${timeObj.format('h:mm a')} every year.`
+                }
+              </blockquote>
+              <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
+                onClick={() => {
+                  editor.update(() => node.addReminder({ type: 'annually' }));
+                  setReminderType('');
+                }}
+              >
+                Create
+              </button>
+            </div>
+          }
+        </>
+      }]}
+    />
   </div>;
 };

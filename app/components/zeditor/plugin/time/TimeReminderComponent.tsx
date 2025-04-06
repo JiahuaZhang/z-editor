@@ -119,82 +119,35 @@ const MontlyReminder = ({ date, create, reminders }: { date: string; reminders: 
 };
 
 const ReminderItem = ({ reminder, remove, date, time, node }: { reminder: Reminder, remove?: () => void; date: dayjs.Dayjs, time: dayjs.Dayjs; node: TimeNode; }) => {
-  // invalid time ?
-  // if format is date, always invalid
-  // if format is time, daily with once is invalid, and monthly, quarterly, and annually is invalid
-  switch (reminder.type) {
-    case 'daily':
-      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
-        {
-          reminder.once && `${date.format('MM/DD/YYYY')} @ ${time.format('h:mm a')} once.`
-        }
-        {
-          !reminder.once && `Daily @${time.format('h:mm a')}`
-        }
-        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
-          onClick={remove}
-        >
-          <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
-        </button>
-      </div>;
-    case 'weekly':
-      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
-        Every {reminder.weekly.map(day => day).join(', ')} @{time.format('h:mm a')}
-        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
-          onClick={remove}
-        >
-          <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
-        </button>
-      </div>;
-    case 'monthly':
-      switch (reminder.monthly) {
-        case 'this':
-          return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
-            Every {date.date()}{getDateOrdinalPostfix(date.date())} of each month @{time.format('h:mm a')}
-            <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
-              onClick={remove}
-            >
-              <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
-            </button>
-          </div>;
-        case 'last':
-          return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
-            Last {date.format('dddd')} of each month @{time.format('h:mm a')}
-            <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
-              onClick={remove}
-            >
-              <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
-            </button>
-          </div>;
-        default:
-          return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
-            Every {reminder.monthly} {date.format('dddd')} of each month @{time.format('h:mm a')}
-            <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
-              onClick={remove}
-            >
-              <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
-            </button>
-          </div>;
-      }
-    case 'quarterly':
-      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
-        {`@${time.format('h:mm a')} on ${getQuarterMonths(date)}`}
-        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
-          onClick={remove}
-        >
-          <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
-        </button>
-      </div>;
-    case 'annually':
-      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
-        {`${date.format('MM/DD')} of each year @${time.format('h:mm a')}`}
-        <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
-          onClick={remove}
-        >
-          <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
-        </button>
-      </div>;
+  let text = '';
+  if (reminder.type === 'daily') {
+    if (reminder.once) {
+      text = `${date.format('MM/DD/YYYY')} @ ${time.format('h:mm a')} once.`;
+    } else {
+      text = `Daily @${time.format('h:mm a')}`;
+    }
+  } else if (reminder.type === 'weekly') {
+    text = `Every ${reminder.weekly.map(day => day).join(', ')} @${time.format('h:mm a')}`;
+  } else if (reminder.type === 'monthly') {
+    if (reminder.monthly === 'this') {
+      text = `Every ${date.date()}${getDateOrdinalPostfix(date.date())} of each month @${time.format('h:mm a')}`;
+    } else if (reminder.monthly === 'last') {
+      text = `Last ${date.format('dddd')} of each month @${time.format('h:mm a')}`;
+    } else {
+      text = `Every ${reminder.monthly} ${date.format('dddd')} of each month @${time.format('h:mm a')}`;
+    }
+  } else if (reminder.type === 'quarterly') {
+    text = `@${time.format('h:mm a')} on ${getQuarterMonths(date)}`;
+  } else if (reminder.type === 'annually') {
+    text = `${date.format('MM/DD')} of each year @${time.format('h:mm a')}`;
   }
+
+  return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
+    {text}
+    <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center' onClick={remove} >
+      <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
+    </button>
+  </div>;
 };
 
 export const TimeReminderComponent = ({ reminders, format, editor, date, time, node }: { reminders: Reminder[]; format: TimeNodeFormat; editor: LexicalEditor; date: string, time: string; node: TimeNode; }) => {

@@ -1,5 +1,4 @@
 import { DecoratorNode, DOMConversionMap, DOMExportOutput, EditorConfig, LexicalEditor, LexicalNode, NodeKey, SerializedLexicalNode, Spread } from 'lexical';
-import { format } from 'prettier';
 import { lazy } from 'react';
 
 const TimeComponent = lazy(() => import('./TimeComponent').then(module => ({ default: module.TimeComponent })));

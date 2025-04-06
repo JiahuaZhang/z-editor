@@ -118,10 +118,13 @@ const MontlyReminder = ({ date, create, reminders }: { date: string; reminders: 
   </div>;
 };
 
-const ReminderItem = ({ reminder, remove, date, time }: { reminder: Reminder, remove?: () => void; date: dayjs.Dayjs, time: dayjs.Dayjs; }) => {
+const ReminderItem = ({ reminder, remove, date, time, node }: { reminder: Reminder, remove?: () => void; date: dayjs.Dayjs, time: dayjs.Dayjs; node: TimeNode; }) => {
+  // invalid time ?
+  // if format is date, always invalid
+  // if format is time, daily with once is invalid, and monthly, quarterly, and annually is invalid
   switch (reminder.type) {
     case 'daily':
-      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
+      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
         {
           reminder.once && `${date.format('MM/DD/YYYY')} @ ${time.format('h:mm a')} once.`
         }
@@ -135,7 +138,7 @@ const ReminderItem = ({ reminder, remove, date, time }: { reminder: Reminder, re
         </button>
       </div>;
     case 'weekly':
-      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
+      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
         Every {reminder.weekly.map(day => day).join(', ')} @{time.format('h:mm a')}
         <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
           onClick={remove}
@@ -146,7 +149,7 @@ const ReminderItem = ({ reminder, remove, date, time }: { reminder: Reminder, re
     case 'monthly':
       switch (reminder.monthly) {
         case 'this':
-          return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
+          return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
             Every {date.date()}{getDateOrdinalPostfix(date.date())} of each month @{time.format('h:mm a')}
             <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
               onClick={remove}
@@ -155,7 +158,7 @@ const ReminderItem = ({ reminder, remove, date, time }: { reminder: Reminder, re
             </button>
           </div>;
         case 'last':
-          return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
+          return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
             Last {date.format('dddd')} of each month @{time.format('h:mm a')}
             <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
               onClick={remove}
@@ -164,7 +167,7 @@ const ReminderItem = ({ reminder, remove, date, time }: { reminder: Reminder, re
             </button>
           </div>;
         default:
-          return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
+          return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
             Every {reminder.monthly} {date.format('dddd')} of each month @{time.format('h:mm a')}
             <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
               onClick={remove}
@@ -174,7 +177,7 @@ const ReminderItem = ({ reminder, remove, date, time }: { reminder: Reminder, re
           </div>;
       }
     case 'quarterly':
-      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
+      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
         {`@${time.format('h:mm a')} on ${getQuarterMonths(date)}`}
         <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
           onClick={remove}
@@ -183,7 +186,7 @@ const ReminderItem = ({ reminder, remove, date, time }: { reminder: Reminder, re
         </button>
       </div>;
     case 'annually':
-      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' >
+      return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
         {`${date.format('MM/DD')} of each year @${time.format('h:mm a')}`}
         <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center'
           onClick={remove}
@@ -216,7 +219,9 @@ export const TimeReminderComponent = ({ reminders, format, editor, date, time, n
               reminder={reminder}
               remove={() => editor.update(() => node.removeReminder(index))}
               date={dateObj}
-              time={timeObj} />)
+              time={timeObj}
+              node={node}
+            />)
           }
         </section>
       }]} />
@@ -236,26 +241,33 @@ export const TimeReminderComponent = ({ reminders, format, editor, date, time, n
             <Radio.Button value='weekly' disabled={reminders.some(r => r.type === 'weekly' && r.weekly.length === 7)}  >
               Weekly
             </Radio.Button>
-            <Radio.Button value='monthly' >
-              Monthly
-            </Radio.Button>
-            <Radio.Button value='quarterly' disabled={reminders.some(r => r.type === 'quarterly')} >
-              Quarterly
-            </Radio.Button>
-            <Radio.Button value='annually' disabled={reminders.some(r => r.type === 'annually')} >
-              Annually
-            </Radio.Button>
+            {
+              format === 'both' &&
+              <>
+                <Radio.Button value='monthly' >
+                  Monthly
+                </Radio.Button>
+                <Radio.Button value='quarterly' disabled={reminders.some(r => r.type === 'quarterly')} >
+                  Quarterly
+                </Radio.Button>
+                <Radio.Button value='annually' disabled={reminders.some(r => r.type === 'annually')} >
+                  Annually
+                </Radio.Button>
+              </>
+            }
           </Radio.Group>
 
           {
             reminderType === 'daily'
             && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
               <Radio.Group className='grid grid-flow-col justify-center' value={dailyOption} >
-                <Radio.Button value='once' checked={dailyOption === 'once'}
-                  disabled={reminders.some(r => r.type === 'daily' && r.once)}
-                  onChange={() => setDailyOption('once')}>
-                  Once
-                </Radio.Button>
+                {
+                  format === 'both' && <Radio.Button value='once' checked={dailyOption === 'once'}
+                    disabled={reminders.some(r => r.type === 'daily' && r.once)}
+                    onChange={() => setDailyOption('once')}>
+                    Once
+                  </Radio.Button>
+                }
                 <Radio.Button value='repeat' checked={dailyOption === 'repeat'}
                   disabled={reminders.some(r => r.type === 'daily' && !r.once)}
                   onChange={() => setDailyOption('repeat')}>

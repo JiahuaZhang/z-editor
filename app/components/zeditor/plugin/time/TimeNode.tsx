@@ -1,4 +1,5 @@
 import { DecoratorNode, DOMConversionMap, DOMExportOutput, EditorConfig, LexicalEditor, LexicalNode, NodeKey, SerializedLexicalNode, Spread } from 'lexical';
+import { format } from 'prettier';
 import { lazy } from 'react';
 
 const TimeComponent = lazy(() => import('./TimeComponent').then(module => ({ default: module.TimeComponent })));
@@ -140,6 +141,20 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
   removeReminder(index: number) {
     const self = this.getWritable();
     self.__reminders.splice(index, 1);
+  }
+
+  isReminderValid(reminder: Reminder) {
+    if (this.__format === 'date') return false;
+
+    if (this.__format === 'time') {
+      if (reminder.type === 'daily' && reminder.once) return false;
+
+      return !(reminder.type === 'monthly'
+        || reminder.type === 'quarterly'
+        || reminder.type === 'annually');
+    }
+
+    return true;
   }
 
   static importJSON(serializedNode: SerializedTimeNode) {

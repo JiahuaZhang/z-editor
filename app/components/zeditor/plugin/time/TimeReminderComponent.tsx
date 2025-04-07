@@ -72,7 +72,8 @@ const getQuarterMonths = (date: dayjs.Dayjs) => {
     .join(', ');
 };
 
-const MontlyReminder = ({ date, create, reminders }: { date: dayjs.Dayjs; reminders: Reminder[]; create: (reminder: Reminder) => void; }) => {
+const MontlyReminder = ({ date, create, reminders }:
+  { date: dayjs.Dayjs; reminders: Reminder[]; create: (reminder: Reminder) => void; }) => {
   const [position, setPosition] = useState('');
   const info = getWeekdayPosition(date)!;
 
@@ -104,8 +105,7 @@ const MontlyReminder = ({ date, create, reminders }: { date: dayjs.Dayjs; remind
             position !== 'this' && position !== 'last' && `Every ${position} ${info.weekday} of each month.`
           }
         </blockquote>
-        <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5'
-          un-justify-self='end'
+        <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
           onClick={() => create({
             type: 'monthly',
             monthly: position as any,
@@ -117,7 +117,8 @@ const MontlyReminder = ({ date, create, reminders }: { date: dayjs.Dayjs; remind
   </div>;
 };
 
-const ReminderItem = ({ reminder, remove, date, time, node }: { reminder: Reminder, remove?: () => void; date: dayjs.Dayjs, time: dayjs.Dayjs; node: TimeNode; }) => {
+const ReminderItem = ({ reminder, remove, date, time, node }:
+  { reminder: Reminder, remove?: () => void; date: dayjs.Dayjs, time: dayjs.Dayjs; node: TimeNode; }) => {
   let text = '';
   if (reminder.type === 'daily') {
     if (reminder.once) {
@@ -141,7 +142,9 @@ const ReminderItem = ({ reminder, remove, date, time, node }: { reminder: Remind
     text = `${date.format('MM/DD')} of each year @${time.format('h:mm a')}`;
   }
 
-  return <div un-flex='~' un-bg='white even:blue-2' un-justify='between' un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`} un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
+  return <div un-flex='~' un-bg='white even:blue-2' un-justify='between'
+    un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`}
+    un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
     {text}
     <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center' onClick={remove} >
       <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
@@ -149,7 +152,8 @@ const ReminderItem = ({ reminder, remove, date, time, node }: { reminder: Remind
   </div>;
 };
 
-export const TimeReminderComponent = ({ reminders, format, editor, date, time, node }: { reminders: Reminder[]; format: TimeNodeFormat; editor: LexicalEditor; date: dayjs.Dayjs, time: dayjs.Dayjs; node: TimeNode; }) => {
+export const TimeReminderComponent = ({ reminders, format, editor, date, time, node }
+  : { reminders: Reminder[]; format: TimeNodeFormat; editor: LexicalEditor; date: dayjs.Dayjs, time: dayjs.Dayjs; node: TimeNode; }) => {
   const [reminderType, setReminderType] = useState('');
   const [weeklyDays, setWeeklyDays] = useState<WeekDay[]>([]);
   const [dailyOption, setDailyOption] = useState('');
@@ -180,7 +184,9 @@ export const TimeReminderComponent = ({ reminders, format, editor, date, time, n
     <Collapse className='[&>div>div]:last:[&>div]:(!p-0)'
       items={[{
         key: 'create',
-        label: <h1 un-grid='~' un-grid-flow='col' un-justify='center' un-items='center' un-gap='1' un-text='blue-6'> <span className="i-material-symbols-light:new-window" /> Create Reminder:</h1>,
+        label: <h1 un-grid='~' un-grid-flow='col' un-justify='center' un-items='center' un-gap='1' un-text='blue-6'>
+          <span className="i-material-symbols-light:new-window" /> Create Reminder:
+        </h1>,
         children: <>
           <Radio.Group className='justify-self-center grid grid-flow-col my-1'
             value={reminderType}
@@ -303,9 +309,7 @@ export const TimeReminderComponent = ({ reminders, format, editor, date, time, n
             reminderType === 'annually'
             && <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
               <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
-                {
-                  `${date.format('MM/DD')} @${time.format('h:mm a')} every year.`
-                }
+                {`${date.format('MM/DD')} @${time.format('h:mm a')} every year.`}
               </blockquote>
               <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
                 onClick={() => {

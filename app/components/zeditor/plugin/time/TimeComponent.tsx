@@ -108,7 +108,7 @@ export const TimeComponent = ({ date, time, format, reminders = [], nodeKey }: {
       format !== 'time'
       && <div un-grid='~' un-grid-flow='col' un-justify='center' >
         <Calendar calendarType='gregory'
-          value={new Date(date)}
+          value={dateObj.toDate()}
           onChange={(value, event) => editor.update(() => node.setDate(value?.toLocaleString() ?? ''))}
         />
       </div>

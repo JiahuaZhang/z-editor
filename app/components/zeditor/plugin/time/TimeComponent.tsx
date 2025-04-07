@@ -10,43 +10,41 @@ import 'react-calendar/dist/Calendar.css';
 import { Reminder, TimeNode, TimeNodeFormat } from './TimeNode';
 import { TimeReminderComponent } from './TimeReminderComponent';
 
-export const getReadableTime = (format: TimeNodeFormat, date: string, time: string) => {
+export const getReadableTime = (format: TimeNodeFormat, date: dayjs.Dayjs, time: dayjs.Dayjs) => {
   if (format === 'time') {
-    const timeObj = dayjs(time);
-    return timeObj.format('h:mm a');
+    return time.format('h:mm a');
   }
 
-  const dateObj = dayjs(date);
   const today = dayjs();
   if (format === 'date') {
-    if (dateObj.isSame(today, 'day')) {
+    if (date.isSame(today, 'day')) {
       return 'Today';
-    } else if (dateObj.isSame(today.add(1, 'day'), 'day')) {
+    } else if (date.isSame(today.add(1, 'day'), 'day')) {
       return 'Tomorrow';
-    } else if (dateObj.isSame(today.subtract(1, 'day'), 'day')) {
+    } else if (date.isSame(today.subtract(1, 'day'), 'day')) {
       return 'Yesterday';
-    } else if (dateObj.isBefore(today.add(1, 'week'), 'day') && dateObj.isAfter(today, 'day')) {
-      return `Next ${dateObj.format('dddd')}`;
-    } else if (dateObj.isAfter(today.subtract(1, 'week'), 'day') && dateObj.isBefore(today, 'day')) {
-      return `Last ${dateObj.format('dddd')}`;
-    } else if (dateObj.isSame(today.add(1, 'month'), 'day')) {
+    } else if (date.isBefore(today.add(1, 'week'), 'day') && date.isAfter(today, 'day')) {
+      return `Next ${date.format('dddd')}`;
+    } else if (date.isAfter(today.subtract(1, 'week'), 'day') && date.isBefore(today, 'day')) {
+      return `Last ${date.format('dddd')}`;
+    } else if (date.isSame(today.add(1, 'month'), 'day')) {
       return 'Next month';
-    } else if (dateObj.isSame(today.subtract(1, 'month'), 'day')) {
+    } else if (date.isSame(today.subtract(1, 'month'), 'day')) {
       return 'Last month';
     }
-    return dateObj.format('YYYY/MM/DD');
+    return date.format('YYYY/MM/DD');
   }
 
   const timeObj = dayjs(time);
   if (format === 'both') {
-    if (dateObj.isSame(today, 'day')) {
+    if (date.isSame(today, 'day')) {
       return `Today @${timeObj.format('h:mm a')}`;
-    } else if (dateObj.isSame(today.add(1, 'day'), 'day')) {
+    } else if (date.isSame(today.add(1, 'day'), 'day')) {
       return `Tomorrow @${timeObj.format('h:mm a')}`;
-    } else if (dateObj.isSame(today.subtract(1, 'day'), 'day')) {
+    } else if (date.isSame(today.subtract(1, 'day'), 'day')) {
       return `Yesterday @${timeObj.format('h:mm a')}`;
     } else {
-      return `${dateObj.format('YYYY/MM/DD')} @${timeObj.format('h:mm a')}`;
+      return `${date.format('YYYY/MM/DD')} @${timeObj.format('h:mm a')}`;
     }
   }
 };
@@ -56,13 +54,8 @@ export const TimeComponent = ({ date, time, format, reminders = [], nodeKey }: {
   const node = editor.getEditorState().read(() => $getNodeByKey(nodeKey ?? '') as TimeNode);
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey ?? '');
   const [isOpen, setIsOpen] = useState(false);
-
-  if (!time) {
-    time = dayjs().toLocaleString();
-  }
-  if (!date) {
-    date = dayjs().toLocaleString();
-  }
+  const dateObj = date ? dayjs(date) : dayjs();
+  const timeObj = time ? dayjs(time) : dayjs();
 
   useEffect(() => {
     if (!isSelected) {
@@ -125,7 +118,7 @@ export const TimeComponent = ({ date, time, format, reminders = [], nodeKey }: {
       format !== 'date'
       && <TimePicker use12Hours popupClassName='[&_a]:text-blue-6 [&_button]:bg-blue-6'
         className='justify-self-center'
-        value={time !== '' ? dayjs(time) : dayjs()}
+        value={timeObj}
         onChange={value => {
           if (value) {
             editor.update(() => node.setTime(value.toLocaleString()));
@@ -134,7 +127,7 @@ export const TimeComponent = ({ date, time, format, reminders = [], nodeKey }: {
       />
     }
 
-    <TimeReminderComponent format={format} reminders={reminders} date={date} time={time} editor={editor} node={node} />
+    <TimeReminderComponent format={format} reminders={reminders} date={dateObj} time={timeObj} editor={editor} node={node} />
   </div>;
 
   return <Popover content={content} trigger='click' open={isOpen}
@@ -145,7 +138,7 @@ export const TimeComponent = ({ date, time, format, reminders = [], nodeKey }: {
       }
     }} >
     <span un-bg='zinc-1' un-px='2' un-py='1' un-border={`rounded solid blue-4 ${isSelected && '2'}`} un-cursor='pointer' un-mx='1'>
-      {getReadableTime(format, date, time)}
+      {getReadableTime(format, dateObj, timeObj)}
     </span>
   </Popover>;
 };

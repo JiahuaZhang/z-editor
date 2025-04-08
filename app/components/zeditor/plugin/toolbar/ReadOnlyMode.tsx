@@ -9,12 +9,12 @@ export const ReadOnlyMode = () => {
       <Tooltip title='Read Only Mode' >
         <span className="i-mdi:lock-open" un-text='xl' />
       </Tooltip>
-    </button>
+    </button>;
   }
 
   return <button onClick={() => editor.setEditable(true)} >
     <Tooltip title='Read Only Mode' >
       <span className="i-mdi:lock" un-text='xl zinc-6' />
     </Tooltip>
-  </button>
-}
+  </button>;
+};

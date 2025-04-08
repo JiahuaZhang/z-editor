@@ -44,7 +44,6 @@ export const TimePlugin = () => {
         () => {
           const selection = $getSelection();
           if (!$isRangeSelection(selection)) return false;
-          console.log(dayjs().format(TIME_FORMAT));
           const timeNode = $createTimeNode('', dayjs().format(TIME_FORMAT), 'time');
           $insertNodes([timeNode]);
           return true;
@@ -90,7 +89,6 @@ export const TimePlugin = () => {
   useEffect(() => editor.registerUpdateListener(({ editorState }) => {
     if (hasInitalizedRef.current) return;
 
-    console.log('initalized');
     const timeNodes = Array.from(editorState._nodeMap.values())
       .filter((node): node is TimeNode => node instanceof TimeNode);
 

@@ -156,6 +156,10 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
     return true;
   }
 
+  getValidReminders() {
+    return this.__reminders.filter(r => this.isReminderValid(r));
+  }
+
   static importJSON(serializedNode: SerializedTimeNode) {
     return $createTimeNode(serializedNode.date, serializedNode.time, serializedNode.format, serializedNode.reminder);
   }

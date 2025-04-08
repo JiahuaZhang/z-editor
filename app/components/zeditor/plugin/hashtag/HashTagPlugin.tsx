@@ -63,7 +63,7 @@ export const HashtagPlugin = () => {
     if (hasInitalizedRef.current) return;
 
     const hashTagNodes = Array.from(editorState._nodeMap.values())
-      .filter((node) => node instanceof HashtagNode) as HashtagNode[];
+      .filter((node) => node instanceof HashtagNode);
 
     const newMap: Record<string, string> = {};
     editor.read(() => hashTagNodes.forEach((node) => newMap[node.getKey()] = node.getTextContent()));

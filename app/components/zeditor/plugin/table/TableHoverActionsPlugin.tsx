@@ -115,7 +115,7 @@ const TableHoverActionsContainer = ({ anchorElem }: { anchorElem: HTMLElement; }
           setColumnPosition({
             height: tableElemHeight,
             left: tableElemRight,
-            top: tableElemY,
+            top: tableElemY - editorElemY,
             width: BUTTON_WIDTH_PX,
           });
         } else {
@@ -192,6 +192,8 @@ const TableHoverActionsContainer = ({ anchorElem }: { anchorElem: HTMLElement; }
     });
   };
 
+  console.log({ isShownRow, isShownColumn });
+
   return (
     <>
       {isShownRow && (
@@ -227,7 +229,7 @@ const TableHoverActionsContainer = ({ anchorElem }: { anchorElem: HTMLElement; }
 };
 
 export const TableHoverActionsPlugin = ({ anchorElem }: { anchorElem?: HTMLElement; }) => {
-  const isEditable = useLexicalEditable(); 
+  const isEditable = useLexicalEditable();
   anchorElem = anchorElem ?? document.body;
   return isEditable && createPortal(<TableHoverActionsContainer anchorElem={anchorElem} />, anchorElem);
 };

@@ -1,4 +1,16 @@
+bugfix:
+multiple editors:
+table
+add column / row, absolute position, need to fix for scrollable issue
+table cell dropdown button, click? no impact
+
+atom -- global single atom, issue arise with multiple editor states
+
 Database persistence, saving & loading
+new supabase project for database
+
+need to check on validation:
+multiple tabs -> what if I change one content, another tab? Need to sync? or just throw error?
 
 future todo:
 

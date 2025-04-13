@@ -23,4 +23,6 @@ export const CreateOrSaveDocument = () => {
   // return <Tooltip title='Document Already Sync' >
   //   <span className="i-material-symbols-light:sync" un-text='xl green-6' un-cursor='pointer' />
   // </Tooltip>;
+
+  // return <span className="i-ph:spinner" un-text='xl blue-3' un-cursor='pointer' un-animate='spin' />;
 };

@@ -3,10 +3,14 @@ import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
 import type { TableCellNode, TableDOMCell, TableMapValueType } from '@lexical/table';
 import { $computeTableMapSkipCellCheck, $getTableColumnIndexFromTableCellNode, $getTableNodeFromLexicalNodeOrThrow, $getTableRowIndexFromTableCellNode, $isTableCellNode, $isTableRowNode, getDOMCellFromTarget } from '@lexical/table';
 import { calculateZoomLevel } from '@lexical/utils';
-import { MousePosition } from 'antd/es/modal/interface';
-import { $getNearestNodeFromDOMNode, LexicalEditor, } from 'lexical';
+import { $getNearestNodeFromDOMNode, LexicalEditor } from 'lexical';
 import { MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+
+interface MousePosition {
+  x: number;
+  y: number;
+}
 
 namespace Mouse {
   export namespace Dragging {
@@ -57,7 +61,7 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
 
         targetRef.current = target as HTMLElement;
         const cell = getDOMCellFromTarget(target as HTMLElement);
-        if (cell && activeCell !== cell) {
+        if (cell && editor.getRootElement()?.contains(cell.elem) && activeCell !== cell) {
           editor.update(() => {
             const tableCellNode = $getNearestNodeFromDOMNode(cell.elem);
             if (!tableCellNode) {
@@ -94,8 +98,7 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
     };
   }, [activeCell, draggingDirection, editor, resetState]);
 
-  const getCellNodeHeight = (cell: TableCellNode, activeEditor: LexicalEditor,) =>
-    activeEditor.getElementByKey(cell.getKey())?.clientHeight;
+  const getCellNodeHeight = (cell: TableCellNode, activeEditor: LexicalEditor) => activeEditor.getElementByKey(cell.getKey())?.clientHeight;
 
   const updateRowHeight = useCallback(
     (heightChange: number) => {
@@ -144,10 +147,10 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
 
   const getCellNodeWidth = (cell: TableCellNode, activeEditor: LexicalEditor) => {
     const width = cell.getWidth();
-    if (width !== undefined) { return width; }
+    if (width !== undefined) return width;
 
     const domCellNode = activeEditor.getElementByKey(cell.getKey());
-    if (domCellNode == null) { return undefined; }
+    if (domCellNode == null) return undefined;
 
     const computedStyle = getComputedStyle(domCellNode);
     return domCellNode.clientWidth - parseFloat(computedStyle.paddingLeft) - parseFloat(computedStyle.paddingRight);
@@ -205,8 +208,6 @@ const TableCellResizer = ({ editor }: { editor: LexicalEditor; }) => {
         }
 
         if (mouseStartPosRef.current) {
-          if (activeCell === null) { return; }
-
           const { x, y } = mouseStartPosRef.current;
           const zoom = calculateZoomLevel(event.target as Element);
           if (isHeightChanging(direction)) {

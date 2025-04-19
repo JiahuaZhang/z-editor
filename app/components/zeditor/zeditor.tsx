@@ -3,7 +3,6 @@ import { AutoLinkPlugin } from '@lexical/react/LexicalAutoLinkPlugin';
 import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
 import { ClickableLinkPlugin } from '@lexical/react/LexicalClickableLinkPlugin';
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
@@ -15,12 +14,10 @@ import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
 import { ClientOnly } from 'remix-utils/client-only';
-import { initialConfig } from './config';
 import { useActiveEditor } from './context/activeEditor';
+import { EditorContext } from './context/EditorContext';
 import { useFloatingAnchor } from './context/floatingAnchor';
-import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { Plugin } from './plugin/plugin';
-import { TableContext } from './plugin/table/TablePlugin';
 import { MATCHERS, validateUrl } from './util/url';
 
 export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zinc-6' />;
@@ -98,14 +95,8 @@ const Plugins = ({ ...rest }) => {
   </main>;
 };
 
-export const ZEditor = ({ ...rest }: {}) => {
-  return <ClientOnly>{() =>
-    <SharedHistoryContext>
-      <TableContext>
-        <LexicalComposer initialConfig={initialConfig} >
-          <Plugins {...rest} />
-        </LexicalComposer>
-      </TableContext>
-    </SharedHistoryContext>
-  }</ClientOnly>;
-};
+export const ZEditor = ({ ...rest }: {}) => <ClientOnly>{() =>
+  <EditorContext>
+    <Plugins {...rest} />
+  </EditorContext>
+}</ClientOnly>;

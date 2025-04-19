@@ -192,8 +192,6 @@ const TableHoverActionsContainer = ({ anchorElem }: { anchorElem: HTMLElement; }
     });
   };
 
-  console.log({ isShownRow, isShownColumn });
-
   return (
     <>
       {isShownRow && (

@@ -4,10 +4,9 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { $createHeadingNode, $createQuoteNode, HeadingTagType } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { Select } from 'antd';
-import { useAtomValue } from 'jotai';
 import { $createParagraphNode, $getSelection, $isRangeSelection, LexicalEditor } from 'lexical';
 import { lazy, Suspense } from 'react';
-import { activeEditorAtom } from '../../context/activeEditor';
+import { useActiveEditorContext } from '../../context/activeEditor';
 import { blockTypeToBlockName } from '../../context/ToolbarContext';
 
 const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));
@@ -120,7 +119,7 @@ const BLOCK_CONVERTERS: Record<keyof typeof blockTypeToBlockName, (editor: Lexic
 
 export const BlockFormatDropDown = ({ blockType }: { blockType: keyof typeof blockTypeToBlockName; }) => {
   const [editor] = useLexicalComposerContext();
-  const activeEditor = useAtomValue(activeEditorAtom);
+  const activeEditor = useActiveEditorContext();
 
   if (editor !== activeEditor) return null;
 
@@ -130,7 +129,7 @@ export const BlockFormatDropDown = ({ blockType }: { blockType: keyof typeof blo
       value={blockType}
       popupClassName='w-auto!'
       options={COMMON_BLOCK_FORMATS.map(value => ({ label: BLOCK_LABELS[value], value }))}
-      onChange={value => BLOCK_CONVERTERS[value as keyof typeof blockTypeToBlockName](activeEditor!)}
+      onChange={value => BLOCK_CONVERTERS[value as keyof typeof blockTypeToBlockName](activeEditor)}
       optionRender={args => {
         return <div un-inline='grid' un-grid-flow='col' un-gap='2' un-items='center' >
           <span className={BLOCK_ICONS[args.data.value]} un-text='lg' />

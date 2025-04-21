@@ -46,7 +46,7 @@ const TableCellActionMenuContainer = ({ anchorElem, cellMerge, }: {
         menu.classList.add('pointer-events-none', 'opacity-0');
       }
       setTableMenuCellNode(null);
-    }
+    };
 
     if (selection == null || menu == null) {
       return disable();
@@ -174,11 +174,11 @@ const TableCellActionMenuContainer = ({ anchorElem, cellMerge, }: {
       )}
     </div>
   );
-}
+};
 
 export const TableActionMenuPlugin = ({ cellMerge = true }: { cellMerge?: boolean; }) => {
   const isEditable = useLexicalEditable();
   const anchor = useAtomValue(floatingAnchorAtom);
 
   return isEditable && anchor && createPortal(<TableCellActionMenuContainer anchorElem={anchor} cellMerge={cellMerge} />, anchor);
-}
+};

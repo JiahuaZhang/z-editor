@@ -1,8 +1,7 @@
 import { Select } from 'antd';
-import { useAtomValue } from 'jotai';
 import { ElementFormatType, FORMAT_ELEMENT_COMMAND, INDENT_CONTENT_COMMAND, OUTDENT_CONTENT_COMMAND } from 'lexical';
 import { lazy, Suspense } from 'react';
-import { activeEditorAtom } from '../../context/activeEditor';
+import { useActiveEditorContext } from '../../context/activeEditor';
 import { SHORTCUTS } from '../shortcut/shortcut';
 
 const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));
@@ -69,9 +68,7 @@ const FORMATS = {
 const options = Object.keys(FORMATS).map(value => ({ label: value, value }));
 
 export const ElementFormatDropDown = ({ elementFormat, isRTL }: { elementFormat: ElementFormatType, isRTL: boolean; }) => {
-  const activeEditor = useAtomValue(activeEditorAtom);
-
-  if (!activeEditor) return null;
+  const activeEditor = useActiveEditorContext();
 
   return <Suspense>
     <Select un-m='1' un-border='none hover:blue-6' className='[&>div]:(pr-0 pl-1)! [&>span]:(mr--2.25!)'
@@ -105,5 +102,5 @@ export const ElementFormatDropDown = ({ elementFormat, isRTL }: { elementFormat:
       </div>}
     />
     <Divider />
-  </Suspense>
+  </Suspense>;
 };

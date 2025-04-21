@@ -132,3 +132,8 @@ export const initialConfig: InitialConfigType = {
   editorState: $generateContent,
   // editable: false
 };
+
+export const generateInitConfig = (namespace: string) => ({
+  ...initialConfig,
+  namespace,
+});

@@ -1,7 +1,7 @@
 import { Tooltip } from 'antd';
 import { useAtomValue } from 'jotai';
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { activeEditorAtom } from '../../context/activeEditor';
+import { useActiveEditorContext } from '../../context/activeEditor';
 import { MAX_ALLOWED_FONT_SIZE, MIN_ALLOWED_FONT_SIZE } from '../../context/ToolbarContext';
 import { updateFontSize, updateFontSizeInSelection, UpdateFontSizeType } from '../../util/utils';
 import { SHORTCUTS } from '../shortcut/shortcut';
@@ -9,7 +9,7 @@ import { SHORTCUTS } from '../shortcut/shortcut';
 const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));
 
 export const FontSize = ({ fontSize }: { fontSize: string; }) => {
-  const editor = useAtomValue(activeEditorAtom);
+  const editor = useActiveEditorContext();
   const [value, setValue] = useState(fontSize);
   const [inputChangeFlag, setInputChangeFlag] = useState(false);
 
@@ -56,14 +56,14 @@ export const FontSize = ({ fontSize }: { fontSize: string; }) => {
     <div un-flex='~' un-items='center' un-gap='1' >
       <Tooltip title={`Decrease font size (${SHORTCUTS.DECREASE_FONT_SIZE})`}>
         <button un-text='disabled:gray-3 gray-5' un-translate-y='-0.25' aria-label="Decrease font size"
-          disabled={fontSize === '' || Number(value) <= MIN_ALLOWED_FONT_SIZE || !editor?.isEditable()}
-          onClick={() => updateFontSize(editor!, UpdateFontSizeType.decrement, value)}
+          disabled={fontSize === '' || Number(value) <= MIN_ALLOWED_FONT_SIZE || !editor.isEditable()}
+          onClick={() => updateFontSize(editor, UpdateFontSizeType.decrement, value)}
         >-</button>
       </Tooltip>
       <Tooltip title='Font Size' >
         <input un-border='2 solid zinc-3 rounded' un-w='8' un-text='sm center' un-cursor='disabled:not-allowed'
           className='[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none' type='number'
-          disabled={!editor?.isEditable()}
+          disabled={!editor.isEditable()}
           value={value} onChange={event => setValue(event.target.value)}
           min={MIN_ALLOWED_FONT_SIZE} max={MAX_ALLOWED_FONT_SIZE}
           onKeyDown={handleKeyPress}
@@ -72,8 +72,8 @@ export const FontSize = ({ fontSize }: { fontSize: string; }) => {
       </Tooltip>
       <Tooltip title={`Decrease font size (${SHORTCUTS.INCREASE_FONT_SIZE})`}>
         <button un-text='disabled:gray-3 gray-5' un-translate-y='-0.25' aria-label="Increase font size"
-          disabled={fontSize === '' || Number(value) >= MAX_ALLOWED_FONT_SIZE || !editor?.isEditable()}
-          onClick={() => updateFontSize(editor!, UpdateFontSizeType.increment, value)}
+          disabled={fontSize === '' || Number(value) >= MAX_ALLOWED_FONT_SIZE || !editor.isEditable()}
+          onClick={() => updateFontSize(editor, UpdateFontSizeType.increment, value)}
         >+</button>
       </Tooltip>
     </div>

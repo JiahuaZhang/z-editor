@@ -1,11 +1,11 @@
 import { $createLinkNode, $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister } from '@lexical/utils';
-import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { atom, useAtom, useSetAtom } from 'jotai';
 import { $getSelection, $isRangeSelection, BaseSelection, BLUR_COMMAND, CLICK_COMMAND, COMMAND_PRIORITY_CRITICAL, COMMAND_PRIORITY_HIGH, COMMAND_PRIORITY_LOW, KEY_ESCAPE_COMMAND, LexicalEditor, SELECTION_CHANGE_COMMAND } from 'lexical';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { activeEditorAtom } from '../../context/activeEditor';
+import { useActiveEditorContext } from '../../context/activeEditor';
 import { toolbarContextAtom } from '../../context/ToolbarContext';
 import { getSelectedNode } from '../../util/getSelectedNode';
 import { setFloatingElemPositionForLinkEditor } from '../../util/setFloatingElemPositionForLinkEditor';
@@ -259,7 +259,7 @@ const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anc
 };
 
 const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLElement) => {
-  const activeEditor = useAtomValue(activeEditorAtom);
+  const activeEditor = useActiveEditorContext();
   // const [isLink, setIsLink] = useState(false);
   const setToolbarContext = useSetAtom(toolbarContextAtom);
   const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
@@ -305,10 +305,7 @@ const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLEle
     );
   }, [editor]);
 
-  return activeEditor && createPortal(
-    <FloatingLinkEditor editor={activeEditor} anchorElem={anchorElem} />,
-    anchorElem,
-  );
+  return createPortal(<FloatingLinkEditor editor={activeEditor} anchorElem={anchorElem} />, anchorElem);
 };
 
 export const FloatingLinkEditorPlugin = ({ anchorElem = document.body }: { anchorElem?: HTMLElement; }) => {

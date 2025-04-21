@@ -6,11 +6,11 @@ import { $isHeadingNode } from '@lexical/rich-text';
 import { $getSelectionStyleValueForProperty, $isParentElementRTL } from '@lexical/selection';
 import { $isTableNode, $isTableSelection } from '@lexical/table';
 import { $findMatchingParent, $getNearestNodeOfType, $isEditorIsNestedEditor, mergeRegister } from '@lexical/utils';
-import { atom, useAtomValue, useSetAtom } from 'jotai';
+import { atom, useSetAtom } from 'jotai';
 import { $getNodeByKey, $getSelection, $isElementNode, $isRangeSelection, $isRootOrShadowRoot, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, ElementFormatType, LexicalNode, NodeKey } from 'lexical';
 import { useCallback, useEffect, useState } from 'react';
 import { getSelectedNode } from '../util/getSelectedNode';
-import { activeEditorAtom } from './activeEditor';
+import { useActiveEditorContext } from './activeEditor';
 
 export const MIN_ALLOWED_FONT_SIZE = 8;
 export const MAX_ALLOWED_FONT_SIZE = 72;
@@ -66,7 +66,7 @@ export const toolbarContextAtom = atom<typeof INITIAL_TOOLBAR_STATE>(INITIAL_TOO
 
 export const useToolbarContext = () => {
   const [editor] = useLexicalComposerContext();
-  const activeEditor = useAtomValue(activeEditorAtom);
+  const activeEditor = useActiveEditorContext();
   const setToolbarContext = useSetAtom(toolbarContextAtom);
   const [selectedElementKey, setSelectedElementKey] = useState<NodeKey>('');
 
@@ -83,8 +83,8 @@ export const useToolbarContext = () => {
       const tableNode = $findMatchingParent(node, $isTableNode);
       setToolbarContext(prev => ({ ...prev, rootType: $isTableNode(tableNode) ? 'table' : 'root' }));
 
-      if (activeEditor !== editor && $isEditorIsNestedEditor(activeEditor!)) {
-        const rootElement = activeEditor?.getRootElement();
+      if (activeEditor !== editor && $isEditorIsNestedEditor(activeEditor)) {
+        const rootElement = activeEditor.getRootElement();
         const isImageCaption = rootElement?.role === 'lexical-image-caption';
         setToolbarContext(prev => ({ ...prev, isImageCaption }));
       } else {
@@ -103,7 +103,7 @@ export const useToolbarContext = () => {
         element = anchorNode.getTopLevelElementOrThrow();
       }
       const elementKey = element.getKey();
-      const elementDOM = activeEditor!.getElementByKey(elementKey);
+      const elementDOM = activeEditor.getElementByKey(elementKey);
 
       if (elementDOM !== null) {
         setSelectedElementKey(elementKey);
@@ -153,26 +153,22 @@ export const useToolbarContext = () => {
 
   }, [editor, activeEditor, setToolbarContext]);
 
-  useEffect(() => activeEditor?.getEditorState().read($updateToolbar), [activeEditor, $updateToolbar]);
+  useEffect(() => activeEditor.getEditorState().read($updateToolbar), [activeEditor, $updateToolbar]);
 
-  useEffect(() => {
-    if (!activeEditor) return;
-
-    return mergeRegister(
-      activeEditor.registerUpdateListener(({ editorState }) => editorState.read($updateToolbar)),
-      activeEditor.registerCommand(CAN_UNDO_COMMAND, canUndo => {
-        setToolbarContext(prev => ({ ...prev, canUndo }));
-        return false;
-      }, COMMAND_PRIORITY_CRITICAL),
-      activeEditor.registerCommand(CAN_REDO_COMMAND, canRedo => {
-        setToolbarContext(prev => ({ ...prev, canRedo }));
-        return false;
-      }, COMMAND_PRIORITY_CRITICAL)
-    );
-  }, [editor, activeEditor, $updateToolbar]);
+  useEffect(() => mergeRegister(
+    activeEditor.registerUpdateListener(({ editorState }) => editorState.read($updateToolbar)),
+    activeEditor.registerCommand(CAN_UNDO_COMMAND, canUndo => {
+      setToolbarContext(prev => ({ ...prev, canUndo }));
+      return false;
+    }, COMMAND_PRIORITY_CRITICAL),
+    activeEditor.registerCommand(CAN_REDO_COMMAND, canRedo => {
+      setToolbarContext(prev => ({ ...prev, canRedo }));
+      return false;
+    }, COMMAND_PRIORITY_CRITICAL)
+  ), [editor, activeEditor, $updateToolbar]);
 
   const onCodeLanguageSelect = useCallback(
-    (value: string) => activeEditor?.update(() => {
+    (value: string) => activeEditor.update(() => {
       if (selectedElementKey === null) return;
 
       const node = $getNodeByKey(selectedElementKey);

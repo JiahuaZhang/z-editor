@@ -2,11 +2,11 @@ import { presetPrimaryColors } from '@ant-design/colors';
 import { TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { $patchStyleText } from '@lexical/selection';
 import { Button, ColorPicker, Dropdown, Tooltip } from 'antd';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { $getSelection, FORMAT_TEXT_COMMAND, LexicalEditor } from 'lexical';
 import { lazy, Suspense, useCallback, useMemo } from 'react';
 import { useActiveEditorContext } from '../../context/activeEditor';
-import { toolbarContextAtom } from '../../context/ToolbarContext';
+import { useToolbarContext } from '../../context/ToolbarContext';
 import { clearSelectionFormatting } from '../../util/utils';
 import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
 import { SHORTCUTS } from '../shortcut/shortcut';
@@ -69,7 +69,7 @@ const getFormatItems = (editor: LexicalEditor) => [
 
 export const FontFormat = ({}: {}) => {
   const editor = useActiveEditorContext();
-  const toolbarContext = useAtomValue(toolbarContextAtom);
+  const { toolbarContext } = useToolbarContext();
   const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
   const formatItems = useMemo(() => editor ? getFormatItems(editor) : [], [editor]);
 

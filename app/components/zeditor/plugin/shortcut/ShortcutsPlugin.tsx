@@ -1,10 +1,10 @@
 import { TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { HeadingTagType } from '@lexical/rich-text';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { COMMAND_PRIORITY_NORMAL, FORMAT_ELEMENT_COMMAND, FORMAT_TEXT_COMMAND, INDENT_CONTENT_COMMAND, KEY_MODIFIER_COMMAND, OUTDENT_CONTENT_COMMAND } from 'lexical';
 import { useEffect } from 'react';
 import { useActiveEditorContext } from '../../context/activeEditor';
-import { toolbarContextAtom } from '../../context/ToolbarContext';
+import { useToolbarContext } from '../../context/ToolbarContext';
 import { sanitizeUrl } from '../../util/url';
 import { clearSelectionFormatting, formatBulletList, formatCheckList, formatCode, formatHeading, formatNumberedList, formatParagraph, formatQuote, updateFontSize, UpdateFontSizeType } from '../../util/utils';
 import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
@@ -12,7 +12,7 @@ import { isCapitalize, isCenterAlign, isClearFormatting, isDecreaseFontSize, isF
 
 export const ShortcutsPlugin = () => {
   const editor = useActiveEditorContext();
-  const toolbarContext = useAtomValue(toolbarContextAtom);
+  const { toolbarContext } = useToolbarContext();
   const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
 
   useEffect(() => {

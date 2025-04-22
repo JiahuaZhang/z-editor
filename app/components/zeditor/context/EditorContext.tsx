@@ -1,13 +1,16 @@
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import _ from 'lodash';
 import { generateInitConfig } from '../config';
-import { SharedHistoryContext } from './SharedHistoryContext';
 import { ActiveEditorContext } from './activeEditor';
+import { SharedHistoryContext } from './SharedHistoryContext';
+import { ToolbarContextProvider } from './ToolbarContext';
 
 export const EditorContext = ({ children }: { children: JSX.Element; }) => <LexicalComposer initialConfig={generateInitConfig(_.uniqueId(''))} >
-  <SharedHistoryContext>
-    <ActiveEditorContext>
-      {children}
-    </ActiveEditorContext>
-  </SharedHistoryContext>
+  <ActiveEditorContext>
+    <SharedHistoryContext>
+      <ToolbarContextProvider>
+        {children}
+      </ToolbarContextProvider>
+    </SharedHistoryContext>
+  </ActiveEditorContext>
 </LexicalComposer>;

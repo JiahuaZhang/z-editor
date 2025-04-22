@@ -6,9 +6,8 @@ import { $isHeadingNode } from '@lexical/rich-text';
 import { $getSelectionStyleValueForProperty, $isParentElementRTL } from '@lexical/selection';
 import { $isTableNode, $isTableSelection } from '@lexical/table';
 import { $findMatchingParent, $getNearestNodeOfType, $isEditorIsNestedEditor, mergeRegister } from '@lexical/utils';
-import { atom, useSetAtom } from 'jotai';
 import { $getNodeByKey, $getSelection, $isElementNode, $isRangeSelection, $isRootOrShadowRoot, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, ElementFormatType, LexicalNode, NodeKey } from 'lexical';
-import { useCallback, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { getSelectedNode } from '../util/getSelectedNode';
 import { useActiveEditorContext } from './activeEditor';
 
@@ -62,12 +61,18 @@ const INITIAL_TOOLBAR_STATE = {
   rootType: 'root' as keyof typeof rootTypeToRootName,
 };
 
-export const toolbarContextAtom = atom<typeof INITIAL_TOOLBAR_STATE>(INITIAL_TOOLBAR_STATE);
+type EditorToolbarContext = typeof INITIAL_TOOLBAR_STATE;
 
-export const useToolbarContext = () => {
+const context = createContext<{ toolbarContext: EditorToolbarContext, setToolbarContext: Dispatch<SetStateAction<EditorToolbarContext>>, onCodeLanguageSelect: (arg: string) => void; }>({
+  toolbarContext: INITIAL_TOOLBAR_STATE,
+  setToolbarContext: () => {},
+  onCodeLanguageSelect: (arg: string) => {},
+});
+
+export const ToolbarContextProvider = ({ children }: { children: JSX.Element; }) => {
   const [editor] = useLexicalComposerContext();
   const activeEditor = useActiveEditorContext();
-  const setToolbarContext = useSetAtom(toolbarContextAtom);
+  const [toolbarContext, setToolbarContext] = useState<EditorToolbarContext>(INITIAL_TOOLBAR_STATE);
   const [selectedElementKey, setSelectedElementKey] = useState<NodeKey>('');
 
   const $updateToolbar = useCallback(() => {
@@ -179,5 +184,7 @@ export const useToolbarContext = () => {
     [activeEditor, selectedElementKey]
   );
 
-  return { onCodeLanguageSelect };
+  return <context.Provider value={{ toolbarContext, setToolbarContext, onCodeLanguageSelect }}>{children}</context.Provider>;
 };
+
+export const useToolbarContext = () => useContext(context);

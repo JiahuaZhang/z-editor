@@ -6,7 +6,7 @@ import { $getSelection, $isRangeSelection, BaseSelection, BLUR_COMMAND, CLICK_CO
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useActiveEditorContext } from '../../context/activeEditor';
-import { toolbarContextAtom } from '../../context/ToolbarContext';
+import { useToolbarContext } from '../../context/ToolbarContext';
 import { getSelectedNode } from '../../util/getSelectedNode';
 import { setFloatingElemPositionForLinkEditor } from '../../util/setFloatingElemPositionForLinkEditor';
 import { sanitizeUrl } from '../../util/url';
@@ -20,7 +20,7 @@ const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anc
   const [editedLinkUrl, setEditedLinkUrl] = useState('https://');
   const [lastSelection, setLastSelection] = useState<BaseSelection | null>(null);
   const [isLinkEditMode, setIsLinkEditMode] = useAtom(isLinkEditModeAtom);
-  const [toolbarContext, setToolbarContext] = useAtom(toolbarContextAtom);
+  const { toolbarContext, setToolbarContext } = useToolbarContext();
 
   const $updateLinkEditor = useCallback(() => {
     const selection = $getSelection();
@@ -261,7 +261,7 @@ const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anc
 const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLElement) => {
   const activeEditor = useActiveEditorContext();
   // const [isLink, setIsLink] = useState(false);
-  const setToolbarContext = useSetAtom(toolbarContextAtom);
+  const { setToolbarContext } = useToolbarContext();
   const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
 
   useEffect(() => {

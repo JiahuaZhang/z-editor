@@ -1,11 +1,10 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { IS_APPLE, mergeRegister } from '@lexical/utils';
 import { Tooltip } from 'antd';
-import { useAtomValue } from 'jotai';
 import { BLUR_COMMAND, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, FOCUS_COMMAND, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
 import { useEffect, useState } from 'react';
 import { useActiveEditorContext } from '../../context/activeEditor';
-import { toolbarContextAtom, useToolbarContext } from '../../context/ToolbarContext';
+import { useToolbarContext } from '../../context/ToolbarContext';
 import { BlockFormatDropDown } from './BlockFormatDropDown';
 import { CodeLanguageDropDown } from './CodeLanguageDropDown';
 import { CreateOrSaveDocument } from './CreateOrSaveDocument';
@@ -24,8 +23,7 @@ export const ToolbarPlugin = () => {
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
-  const { onCodeLanguageSelect } = useToolbarContext();
-  const toolbarContext = useAtomValue(toolbarContextAtom);
+  const { toolbarContext, onCodeLanguageSelect } = useToolbarContext();
 
   useEffect(() => mergeRegister(
     activeEditor.registerCommand(

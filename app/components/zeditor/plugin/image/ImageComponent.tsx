@@ -11,15 +11,14 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { $isRootTextContentEmptyCurry } from '@lexical/text';
 import { mergeRegister } from '@lexical/utils';
-import { $getNodeByKey, $getSelection, $isNodeSelection, $isRangeSelection, $setSelection, BLUR_COMMAND, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, KEY_DELETE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, LexicalCommand, LexicalEditor, LineBreakNode, NodeKey, ParagraphNode, RootNode, SELECTION_CHANGE_COMMAND, TextNode, createCommand } from 'lexical';
+import { $getNodeByKey, $getSelection, $isNodeSelection, $isRangeSelection, $setSelection, BLUR_COMMAND, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, KEY_DELETE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, LexicalCommand, LexicalEditor, LineBreakNode, NodeKey, ParagraphNode, RootNode, TextNode, createCommand } from 'lexical';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { useActiveEditorContext } from '../../context/activeEditor';
 import { useSharedHistoryContext } from '../../context/SharedHistoryContext';
 import { ImageResizer } from '../../ui/ImageResizer';
 import { MATCHERS, validateUrl } from '../../util/url';
 import { Plugin } from '../plugin';
 import { $isImageNode } from './ImageNode';
-import { useAtomValue } from 'jotai';
-import { activeEditorAtom } from '../../context/activeEditor';
 
 const imageCache = new Set();
 
@@ -98,7 +97,7 @@ export const ImageComponent = ({ src, altText, nodeKey, width, height, maxWidth,
   const [isResizing, setIsResizing] = useState(false);
   const [editor] = useLexicalComposerContext();
   const [selection, setSelection] = useState<BaseSelection | null>(null);
-  const activeEditor = useAtomValue(activeEditorAtom);
+  const activeEditor = useActiveEditorContext();
   const [isLoadError, setIsLoadError] = useState(false);
 
   const $onDelete = useCallback(

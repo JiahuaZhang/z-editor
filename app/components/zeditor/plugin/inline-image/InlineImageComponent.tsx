@@ -2,10 +2,9 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';
 import { Checkbox, Form, Input, Modal, Radio } from 'antd';
-import { useAtomValue } from 'jotai';
 import { $getNodeByKey, $getSelection, $isNodeSelection, $setSelection, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, KEY_BACKSPACE_COMMAND, KEY_DELETE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, NodeKey } from 'lexical';
 import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
-import { activeEditorAtom } from '../../context/activeEditor';
+import { useActiveEditorContext } from '../../context/activeEditor';
 import { $isInlineImageNode, InlineImageNode, Position } from './InlineImageNode';
 
 const imageCache = new Set();
@@ -52,14 +51,12 @@ const InlineModal = ({ nodeKey, isModalOpen, setIsModalOpen }: {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const activeEditor = useAtomValue(activeEditorAtom);
+  const activeEditor = useActiveEditorContext();
   const [altText, setAltText] = useState('');
   const [position, setPosition] = useState<Position>('left');
   const [showCaption, setShowCaption] = useState(false);
 
   useEffect(() => {
-    if (!activeEditor) return;
-
     const node = activeEditor.getEditorState().read(() => $getNodeByKey(nodeKey)) as InlineImageNode;
     setAltText(node.getAltText());
     setPosition(node.getPosition());
@@ -77,8 +74,6 @@ const InlineModal = ({ nodeKey, isModalOpen, setIsModalOpen }: {
         un-outline='none'
         key='confirm-footer'
         onClick={() => {
-          if (!activeEditor) return;
-
           const node = activeEditor.getEditorState().read(() => $getNodeByKey(nodeKey)) as InlineImageNode;
           if (!node) return;
 

@@ -69,7 +69,7 @@ const context = createContext<{ toolbarContext: EditorToolbarContext, setToolbar
   onCodeLanguageSelect: (arg: string) => {},
 });
 
-export const ToolbarContextProvider = ({ children }: { children: JSX.Element; }) => {
+export const ToolbarContext = ({ children }: { children: JSX.Element; }) => {
   const [editor] = useLexicalComposerContext();
   const activeEditor = useActiveEditorContext();
   const [toolbarContext, setToolbarContext] = useState<EditorToolbarContext>(INITIAL_TOOLBAR_STATE);
@@ -78,7 +78,8 @@ export const ToolbarContextProvider = ({ children }: { children: JSX.Element; })
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
-      setToolbarContext(prev => ({ ...prev, isRTL: $isParentElementRTL(selection) }));
+      const isRTL = $isParentElementRTL(selection);
+      setToolbarContext(prev => ({ ...prev, isRTL }));
 
       const node = getSelectedNode(selection);
       const parent = node.getParent();
@@ -129,31 +130,32 @@ export const ToolbarContextProvider = ({ children }: { children: JSX.Element; })
         }
       }
 
-      setToolbarContext(prev => ({ ...prev, fontColor: $getSelectionStyleValueForProperty(selection, 'color', '#000') }));
-      setToolbarContext(prev => ({ ...prev, bgColor: $getSelectionStyleValueForProperty(selection, 'background-color', '#fff') }));
-      setToolbarContext(prev => ({ ...prev, fontFamily: $getSelectionStyleValueForProperty(selection, 'font-family', 'Arial') }));
+      const fontColor = $getSelectionStyleValueForProperty(selection, 'color', '#000');
+      const bgColor = $getSelectionStyleValueForProperty(selection, 'background-color', '#fff');
+      const fontFamily = $getSelectionStyleValueForProperty(selection, 'font-family', 'Arial');
+      setToolbarContext(prev => ({ ...prev, fontColor, bgColor, fontFamily }));
 
-      let matchingParent: LexicalNode | null;
+      let matchingParent: LexicalNode | null = null;
       if ($isLinkNode(parent)) {
         matchingParent = $findMatchingParent(node, parentNode => $isElementNode(parentNode) && !parentNode.isInline());
       }
-      setToolbarContext(prev => ({
-        ...prev,
-        elementFormat: $isElementNode(matchingParent)
-          ? matchingParent.getFormatType() : $isElementNode(node)
-            ? node.getFormatType() : parent?.getFormatType() || 'left'
-      }));
+
+      const elementFormat = $isElementNode(matchingParent)
+        ? matchingParent.getFormatType()
+        : $isElementNode(node) ? node.getFormatType() : parent?.getFormatType() || 'left';
+      setToolbarContext(prev => ({ ...prev, elementFormat }));
     }
 
     if ($isRangeSelection(selection) || $isTableSelection(selection)) {
-      setToolbarContext(prev => ({ ...prev, isBold: selection.hasFormat('bold') }));
-      setToolbarContext(prev => ({ ...prev, isItalic: selection.hasFormat('italic') }));
-      setToolbarContext(prev => ({ ...prev, isUnderline: selection.hasFormat('underline') }));
-      setToolbarContext(prev => ({ ...prev, isStrikethrough: selection.hasFormat('strikethrough') }));
-      setToolbarContext(prev => ({ ...prev, isSubscript: selection.hasFormat('subscript') }));
-      setToolbarContext(prev => ({ ...prev, isSuperscript: selection.hasFormat('superscript') }));
-      setToolbarContext(prev => ({ ...prev, isCode: selection.hasFormat('code') }));
-      setToolbarContext(prev => ({ ...prev, fontSize: $getSelectionStyleValueForProperty(selection, 'font-size', '15px') }));
+      const isBold = selection.hasFormat('bold');
+      const isItalic = selection.hasFormat('italic');
+      const isUnderline = selection.hasFormat('underline');
+      const isStrikethrough = selection.hasFormat('strikethrough');
+      const isSubscript = selection.hasFormat('subscript');
+      const isSuperscript = selection.hasFormat('superscript');
+      const isCode = selection.hasFormat('code');
+      const fontSize = $getSelectionStyleValueForProperty(selection, 'font-size', '15px');
+      setToolbarContext(prev => ({ ...prev, isBold, isItalic, isUnderline, isStrikethrough, isSubscript, isSuperscript, isCode, fontSize }));
     }
 
   }, [editor, activeEditor, setToolbarContext]);
@@ -170,7 +172,7 @@ export const ToolbarContextProvider = ({ children }: { children: JSX.Element; })
       setToolbarContext(prev => ({ ...prev, canRedo }));
       return false;
     }, COMMAND_PRIORITY_CRITICAL)
-  ), [editor, activeEditor, $updateToolbar]);
+  ), [activeEditor, $updateToolbar]);
 
   const onCodeLanguageSelect = useCallback(
     (value: string) => activeEditor.update(() => {

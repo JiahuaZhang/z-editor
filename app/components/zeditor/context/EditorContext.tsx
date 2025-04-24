@@ -3,14 +3,14 @@ import _ from 'lodash';
 import { generateInitConfig } from '../config';
 import { ActiveEditorContext } from './activeEditor';
 import { SharedHistoryContext } from './SharedHistoryContext';
-import { ToolbarContextProvider } from './ToolbarContext';
+import { ToolbarContext } from './ToolbarContext';
 
 export const EditorContext = ({ children }: { children: JSX.Element; }) => <LexicalComposer initialConfig={generateInitConfig(_.uniqueId(''))} >
   <ActiveEditorContext>
     <SharedHistoryContext>
-      <ToolbarContextProvider>
+      <ToolbarContext>
         {children}
-      </ToolbarContextProvider>
+      </ToolbarContext>
     </SharedHistoryContext>
   </ActiveEditorContext>
 </LexicalComposer>;

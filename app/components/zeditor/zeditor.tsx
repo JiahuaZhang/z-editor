@@ -15,7 +15,6 @@ import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
 import { ClientOnly } from 'remix-utils/client-only';
 import { EditorContext } from './context/EditorContext';
-import { useFloatingAnchor } from './context/floatingAnchor';
 import { Plugin } from './plugin/plugin';
 import { MATCHERS, validateUrl } from './util/url';
 
@@ -24,7 +23,6 @@ export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zi
 const Plugins = ({ ...rest }) => {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
-  useFloatingAnchor();
 
   return <main un-h='100vh' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
     <Plugin.Toolbar.Top />

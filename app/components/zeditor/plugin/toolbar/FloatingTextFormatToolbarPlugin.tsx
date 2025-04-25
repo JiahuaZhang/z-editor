@@ -2,7 +2,7 @@ import { $isCodeHighlightNode } from '@lexical/code';
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import {
   $getSelection,
   $isParagraphNode,
@@ -16,7 +16,7 @@ import {
 } from 'lexical';
 import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { floatingAnchorAtom } from '../../context/floatingAnchor';
+import { useFloatingAnchor } from '../../context/floatingAnchor';
 import { getDOMRangeRect } from '../../util/getDOMRangeRect';
 import { getSelectedNode } from '../../util/getSelectedNode';
 import { setFloatingElemPosition } from '../../util/setFloatingElemPosition';
@@ -69,7 +69,7 @@ const TextFormatFloatingToolbar = ({ editor, anchorElem, isLink, isBold, isItali
         }
       }
     }
-  }
+  };
 
   const mouseUpListener = (e: MouseEvent) => {
     if (popupCharStylesEditorRef?.current) {
@@ -77,7 +77,7 @@ const TextFormatFloatingToolbar = ({ editor, anchorElem, isLink, isBold, isItali
         popupCharStylesEditorRef.current.style.pointerEvents = 'auto';
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (popupCharStylesEditorRef?.current) {
@@ -235,11 +235,11 @@ const TextFormatFloatingToolbar = ({ editor, anchorElem, isLink, isBold, isItali
       </button>
     </div>
   );
-}
+};
 
 export const FloatingTextFormatToolbarPlugin = () => {
   const [editor] = useLexicalComposerContext();
-  const anchor = useAtomValue(floatingAnchorAtom);
+  const anchor = useFloatingAnchor();
   const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
   const [isText, setIsText] = useState(false);
   const [isLink, setIsLink] = useState(false);
@@ -330,7 +330,7 @@ export const FloatingTextFormatToolbarPlugin = () => {
 
     window.addEventListener('contextmenu', handleClick);
     return () => window.removeEventListener('contextmenu', handleClick);
-  }, [editor, isText])
+  }, [editor, isText]);
 
   useEffect(() => {
     if (!isText) setIsShow(false);
@@ -367,5 +367,5 @@ export const FloatingTextFormatToolbarPlugin = () => {
       setIsLinkEditMode={setIsLinkEditMode}
     />,
     anchor,
-  ); 
-}
+  );
+};

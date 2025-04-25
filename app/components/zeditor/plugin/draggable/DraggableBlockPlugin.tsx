@@ -1,7 +1,6 @@
 import { DraggableBlockPlugin_EXPERIMENTAL } from '@lexical/react/LexicalDraggableBlockPlugin';
-import { useAtomValue } from 'jotai';
 import { useRef } from 'react';
-import { floatingAnchorAtom } from '../../context/floatingAnchor';
+import { useFloatingAnchor } from '../../context/floatingAnchor';
 
 const DRAGGABLE_BLOCK_MENU_CLASSNAME = 'draggable-block-menu';
 
@@ -10,7 +9,7 @@ const isOnMenu = (element: HTMLElement) => !!element.closest(`.${DRAGGABLE_BLOCK
 export const DraggableBlockPlugin = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const targetLineRef = useRef<HTMLDivElement>(null);
-  const anchor = useAtomValue(floatingAnchorAtom);
+  const anchor = useFloatingAnchor();
 
   return (anchor &&
     <DraggableBlockPlugin_EXPERIMENTAL

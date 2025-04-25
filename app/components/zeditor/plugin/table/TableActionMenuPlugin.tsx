@@ -11,7 +11,6 @@ import {
   TableObserver
 } from '@lexical/table';
 import { mergeRegister } from '@lexical/utils';
-import { useAtomValue } from 'jotai';
 import {
   $getSelection,
   $isRangeSelection,
@@ -21,7 +20,7 @@ import {
 } from 'lexical';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { floatingAnchorAtom } from '../../context/floatingAnchor';
+import { useFloatingAnchor } from '../../context/floatingAnchor';
 import { invariant } from '../../util/invariant';
 import { TableActionMenu } from './TableActionMenu';
 
@@ -178,7 +177,7 @@ const TableCellActionMenuContainer = ({ anchorElem, cellMerge, }: {
 
 export const TableActionMenuPlugin = ({ cellMerge = true }: { cellMerge?: boolean; }) => {
   const isEditable = useLexicalEditable();
-  const anchor = useAtomValue(floatingAnchorAtom);
+  const anchor = useFloatingAnchor();
 
   return isEditable && anchor && createPortal(<TableCellActionMenuContainer anchorElem={anchor} cellMerge={cellMerge} />, anchor);
 };

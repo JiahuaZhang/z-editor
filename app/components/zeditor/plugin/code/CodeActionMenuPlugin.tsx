@@ -1,17 +1,16 @@
 import { $isCodeNode, CodeNode, getLanguageFriendlyName } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useAtomValue } from 'jotai';
 import { $getNearestNodeFromDOMNode, isHTMLElement } from 'lexical';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { floatingAnchorAtom } from '../../context/floatingAnchor';
+import { useFloatingAnchor } from '../../context/floatingAnchor';
 import { useDebounce } from '../../util/utils';
 import { CopyButton } from './component/CopyButton';
 import { PrettierButton } from './component/PrettierButton';
 
 const CODE_PADDING = 8;
 
-type Position = { top: string; right: string; }
+type Position = { top: string; right: string; };
 
 const getMouseInfo = (event: MouseEvent): { codeDOMNode: HTMLElement | null; isOutside: boolean; } => {
   const target = event.target;
@@ -24,9 +23,9 @@ const getMouseInfo = (event: MouseEvent): { codeDOMNode: HTMLElement | null; isO
   } else {
     return { codeDOMNode: null, isOutside: true };
   }
-}
+};
 
-const CodeActionMenuContainer = ({ anchorElem }: { anchorElem: HTMLElement }) => {
+const CodeActionMenuContainer = ({ anchorElem }: { anchorElem: HTMLElement; }) => {
   const [editor] = useLexicalComposerContext();
   const [lang, setLang] = useState('');
   const [isShown, setShown] = useState(false);
@@ -116,9 +115,9 @@ const CodeActionMenuContainer = ({ anchorElem }: { anchorElem: HTMLElement }) =>
       ) : null}
     </>
   );
-}
+};
 
 export const CodeActionMenuPlugin = () => {
-  const anchor = useAtomValue(floatingAnchorAtom);
+  const anchor = useFloatingAnchor();
   return anchor && createPortal(<CodeActionMenuContainer anchorElem={anchor} />, anchor);
-}
+};

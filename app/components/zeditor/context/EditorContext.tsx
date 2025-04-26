@@ -1,6 +1,7 @@
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import _ from 'lodash';
 import { generateInitConfig } from '../config';
+import { HashTagContext } from '../plugin/hashtag/HashTagPlugin';
 import { ActiveEditorContext } from './activeEditor';
 import { FloatingAnchorContext } from './floatingAnchor';
 import { SharedHistoryContext } from './SharedHistoryContext';
@@ -11,7 +12,9 @@ export const EditorContext = ({ children }: { children: JSX.Element; }) => <Lexi
     <SharedHistoryContext>
       <FloatingAnchorContext>
         <ToolbarContext>
-          {children}
+          <HashTagContext>
+            {children}
+          </HashTagContext>
         </ToolbarContext>
       </FloatingAnchorContext>
     </SharedHistoryContext>

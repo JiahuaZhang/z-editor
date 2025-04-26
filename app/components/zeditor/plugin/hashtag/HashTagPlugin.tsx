@@ -1,39 +1,17 @@
 import { $createHashtagNode, HashtagNode } from '@lexical/hashtag';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useLexicalTextEntity } from '@lexical/react/useLexicalTextEntity';
-import { atom, useSetAtom } from 'jotai';
 import { $getNodeByKey, type TextNode } from 'lexical';
-import { useCallback, useEffect, useRef } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 const HASHTAG_REGEX = /(?<prefix>^|\s)(?<sign>#)(?<tag>[^#\s]+)/i;
 
-export const hashTagMapAtom = atom<Record<string, string>>({});
+const Context = createContext<Record<string, string>>({});
 
-export const HashtagPlugin = () => {
+export const HashTagContext = ({ children }: { children: JSX.Element; }) => {
   const [editor] = useLexicalComposerContext();
-  const setHashTagMap = useSetAtom(hashTagMapAtom);
+  const [hashTagMap, setHashTagMap] = useState<Record<string, string>>({});
   const hasInitalizedRef = useRef(false);
-
-  useEffect(() => {
-    if (!editor.hasNodes([HashtagNode])) {
-      throw new Error('HashtagPlugin: HashtagNode not registered on editor');
-    }
-  }, [editor]);
-
-  const $createHashtagNode_ = useCallback(
-    (textNode: TextNode): HashtagNode => $createHashtagNode(textNode.getTextContent()), []
-  );
-
-  const getHashtagMatch = useCallback((text: string) => {
-    const match = HASHTAG_REGEX.exec(text);
-    if (match === null) return null;
-
-    const start = match.index + match.groups!.prefix.length;
-    const end = start + 1 + match.groups!.tag.length;
-    return { start, end };
-  }, []);
-
-  useLexicalTextEntity<HashtagNode>(getHashtagMatch, HashtagNode, $createHashtagNode_,);
 
   useEffect(() => editor.registerMutationListener(HashtagNode, (mutations) => {
     editor.update(() => {
@@ -41,7 +19,8 @@ export const HashtagPlugin = () => {
         const hashTagNode = $getNodeByKey(key) as HashtagNode;
 
         if (mutation === 'created') {
-          setHashTagMap((prev) => ({ ...prev, [key]: hashTagNode.getTextContent() }));
+          const content = hashTagNode.getTextContent();
+          setHashTagMap((prev) => ({ ...prev, [key]: content }));
         } else if (mutation === 'destroyed') {
           setHashTagMap((prev) => {
             const newMap = { ...prev };
@@ -49,9 +28,10 @@ export const HashtagPlugin = () => {
             return newMap;
           });
         } else if (mutation === 'updated') {
+          const content = hashTagNode.getTextContent();
           setHashTagMap((prev) => {
             const newMap = { ...prev };
-            newMap[key] = hashTagNode.getTextContent();
+            newMap[key] = content;
             return newMap;
           });
         }
@@ -70,6 +50,33 @@ export const HashtagPlugin = () => {
     setHashTagMap(newMap);
     hasInitalizedRef.current = true;
   }), [editor]);
+
+  return <Context.Provider value={hashTagMap}>{children}</Context.Provider>;
+};
+
+export const useHashTagContext = () => useContext(Context);
+
+export const HashtagPlugin = () => {
+  const [editor] = useLexicalComposerContext();
+
+  useEffect(() => {
+    if (!editor.hasNodes([HashtagNode])) {
+      throw new Error('HashtagPlugin: HashtagNode not registered on editor');
+    }
+  }, [editor]);
+
+  const $createHashtagNode_ = useCallback((textNode: TextNode): HashtagNode => $createHashtagNode(textNode.getTextContent()), []);
+
+  const getHashtagMatch = useCallback((text: string) => {
+    const match = HASHTAG_REGEX.exec(text);
+    if (match === null) return null;
+
+    const start = match.index + match.groups!.prefix.length;
+    const end = start + 1 + match.groups!.tag.length;
+    return { start, end };
+  }, []);
+
+  useLexicalTextEntity<HashtagNode>(getHashtagMatch, HashtagNode, $createHashtagNode_,);
 
   return null;
 };

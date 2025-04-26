@@ -14,7 +14,6 @@ import { mergeRegister, registerNestedElementResolver } from '@lexical/utils';
 import { Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { atom, useAtom } from 'jotai';
 import { $getNodeByKey, $getRoot, $getSelection, $isRangeSelection, $isTextNode, CLEAR_EDITOR_COMMAND, COMMAND_PRIORITY_EDITOR, createCommand, EditorState, KEY_ESCAPE_COMMAND, LexicalCommand, LexicalEditor, NodeKey, RangeSelection } from 'lexical';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -514,8 +513,6 @@ const CommentsPanel = ({ activeIDs, deleteCommentOrThread, comments, submitAddCo
   );
 };
 
-const showCommentSidebarAtom = atom(false);
-
 export const CommentPlugin = ({ onChange = () => {}, ...rest }: { onChange?: (comments: Comments) => void; }) => {
   const [editor] = useLexicalComposerContext();
   const commentStore = useMemo(() => new CommentStore(editor), [editor]);
@@ -526,7 +523,7 @@ export const CommentPlugin = ({ onChange = () => {}, ...rest }: { onChange?: (co
   const [activeAnchorKey, setActiveAnchorKey] = useState<NodeKey | null>();
   const [activeIDs, setActiveIDs] = useState<Array<string>>([]);
   const [showCommentInput, setShowCommentInput] = useState(false);
-  const [showSidebar, setShowSidebar] = useAtom(showCommentSidebarAtom);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => onChange(comments), [comments, onChange]);
 

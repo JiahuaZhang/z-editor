@@ -1,5 +1,4 @@
 import { Tooltip } from 'antd';
-import { useAtomValue } from 'jotai';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { useActiveEditorContext } from '../../context/ActiveEditor';
 import { MAX_ALLOWED_FONT_SIZE, MIN_ALLOWED_FONT_SIZE } from '../../context/ToolbarContext';

@@ -2,7 +2,6 @@ import { $isCodeHighlightNode } from '@lexical/code';
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
-import { useSetAtom } from 'jotai';
 import {
   $getSelection,
   $isParagraphNode,
@@ -16,12 +15,12 @@ import {
 } from 'lexical';
 import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useFloatContext } from '../../context/FloatContext';
 import { useFloatingAnchor } from '../../context/FloatingAnchor';
 import { getDOMRangeRect } from '../../util/getDOMRangeRect';
 import { getSelectedNode } from '../../util/getSelectedNode';
 import { setFloatingElemPosition } from '../../util/setFloatingElemPosition';
 import { INSERT_INLINE_COMMAND } from '../comment/CommentPlugin';
-import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
 
 const TextFormatFloatingToolbar = ({ editor, anchorElem, isLink, isBold, isItalic, isUnderline, isUppercase, isLowercase, isCapitalize, isCode, isStrikethrough, isSubscript, isSuperscript, setIsLinkEditMode }: {
   editor: LexicalEditor;
@@ -240,7 +239,7 @@ const TextFormatFloatingToolbar = ({ editor, anchorElem, isLink, isBold, isItali
 export const FloatingTextFormatToolbarPlugin = () => {
   const [editor] = useLexicalComposerContext();
   const anchor = useFloatingAnchor();
-  const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
+  const { setIsLinkEditMode } = useFloatContext();
   const [isText, setIsText] = useState(false);
   const [isLink, setIsLink] = useState(false);
   const [isBold, setIsBold] = useState(false);

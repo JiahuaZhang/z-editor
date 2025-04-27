@@ -1,17 +1,15 @@
 import { $createLinkNode, $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister } from '@lexical/utils';
-import { atom, useAtom, useSetAtom } from 'jotai';
 import { $getSelection, $isRangeSelection, BaseSelection, BLUR_COMMAND, CLICK_COMMAND, COMMAND_PRIORITY_CRITICAL, COMMAND_PRIORITY_HIGH, COMMAND_PRIORITY_LOW, KEY_ESCAPE_COMMAND, LexicalEditor, SELECTION_CHANGE_COMMAND } from 'lexical';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useActiveEditorContext } from '../../context/ActiveEditor';
+import { useFloatContext } from '../../context/FloatContext';
 import { useToolbarContext } from '../../context/ToolbarContext';
 import { getSelectedNode } from '../../util/getSelectedNode';
 import { setFloatingElemPositionForLinkEditor } from '../../util/setFloatingElemPositionForLinkEditor';
 import { sanitizeUrl } from '../../util/url';
-
-export const isLinkEditModeAtom = atom(false);
 
 const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anchorElem: HTMLElement; }) => {
   const editorRef = useRef<HTMLDivElement | null>(null);
@@ -19,7 +17,7 @@ const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anc
   const [linkUrl, setLinkUrl] = useState('');
   const [editedLinkUrl, setEditedLinkUrl] = useState('https://');
   const [lastSelection, setLastSelection] = useState<BaseSelection | null>(null);
-  const [isLinkEditMode, setIsLinkEditMode] = useAtom(isLinkEditModeAtom);
+  const { isLinkEditMode, setIsLinkEditMode } = useFloatContext();
   const { toolbarContext, setToolbarContext } = useToolbarContext();
 
   const $updateLinkEditor = useCallback(() => {
@@ -260,9 +258,8 @@ const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anc
 
 const useFloatingLinkEditorToolbar = (editor: LexicalEditor, anchorElem: HTMLElement) => {
   const activeEditor = useActiveEditorContext();
-  // const [isLink, setIsLink] = useState(false);
   const { setToolbarContext } = useToolbarContext();
-  const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
+  const { setIsLinkEditMode } = useFloatContext();
 
   useEffect(() => {
     return mergeRegister(

@@ -2,13 +2,12 @@ import { presetPrimaryColors } from '@ant-design/colors';
 import { TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { $patchStyleText } from '@lexical/selection';
 import { Button, ColorPicker, Dropdown, Tooltip } from 'antd';
-import { useSetAtom } from 'jotai';
 import { $getSelection, FORMAT_TEXT_COMMAND, LexicalEditor } from 'lexical';
 import { lazy, Suspense, useCallback, useMemo } from 'react';
 import { useActiveEditorContext } from '../../context/ActiveEditor';
+import { useFloatContext } from '../../context/FloatContext';
 import { useToolbarContext } from '../../context/ToolbarContext';
 import { clearSelectionFormatting } from '../../util/utils';
-import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
 import { SHORTCUTS } from '../shortcut/shortcut';
 
 const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));
@@ -70,7 +69,7 @@ const getFormatItems = (editor: LexicalEditor) => [
 export const FontFormat = ({}: {}) => {
   const editor = useActiveEditorContext();
   const { toolbarContext } = useToolbarContext();
-  const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
+  const { setIsLinkEditMode } = useFloatContext();
   const formatItems = useMemo(() => editor ? getFormatItems(editor) : [], [editor]);
 
   const applyStyleText = useCallback((styles: Record<string, string>) => {

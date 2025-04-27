@@ -1,19 +1,18 @@
 import { TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { HeadingTagType } from '@lexical/rich-text';
-import { useSetAtom } from 'jotai';
 import { COMMAND_PRIORITY_NORMAL, FORMAT_ELEMENT_COMMAND, FORMAT_TEXT_COMMAND, INDENT_CONTENT_COMMAND, KEY_MODIFIER_COMMAND, OUTDENT_CONTENT_COMMAND } from 'lexical';
 import { useEffect } from 'react';
 import { useActiveEditorContext } from '../../context/ActiveEditor';
+import { useFloatContext } from '../../context/FloatContext';
 import { useToolbarContext } from '../../context/ToolbarContext';
 import { sanitizeUrl } from '../../util/url';
 import { clearSelectionFormatting, formatBulletList, formatCheckList, formatCode, formatHeading, formatNumberedList, formatParagraph, formatQuote, updateFontSize, UpdateFontSizeType } from '../../util/utils';
-import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';
 import { isCapitalize, isCenterAlign, isClearFormatting, isDecreaseFontSize, isFormatBulletList, isFormatCheckList, isFormatCode, isFormatHeading, isFormatNumberedList, isFormatParagraph, isFormatQuote, isIncreaseFontSize, isIndent, isInsertCodeBlock, isInsertLink, isJustifyAlign, isLeftAlign, isLowercase, isOutdent, isRightAlign, isStrikeThrough, isSubscript, isSuperscript, isUppercase } from './shortcut';
 
 export const ShortcutsPlugin = () => {
   const editor = useActiveEditorContext();
   const { toolbarContext } = useToolbarContext();
-  const setIsLinkEditMode = useSetAtom(isLinkEditModeAtom);
+  const { setIsLinkEditMode } = useFloatContext();
 
   useEffect(() => {
     const keyboardShortcutsHandler = (payload: KeyboardEvent) => {

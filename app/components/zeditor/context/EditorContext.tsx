@@ -4,7 +4,8 @@ import { generateInitConfig } from '../config';
 import { HashTagContext } from '../plugin/hashtag/HashTagPlugin';
 import { TimeNodeContext } from '../plugin/time/TimePlugin';
 import { ActiveEditorContext } from './ActiveEditor';
-import { FloatingAnchorContext } from './floatingAnchor';
+import { FloatContext } from './FloatContext';
+import { FloatingAnchorContext } from './FloatingAnchor';
 import { SharedHistoryContext } from './SharedHistoryContext';
 import { ToolbarContext } from './ToolbarContext';
 
@@ -13,11 +14,13 @@ export const EditorContext = ({ children }: { children: JSX.Element; }) => <Lexi
     <SharedHistoryContext>
       <FloatingAnchorContext>
         <ToolbarContext>
-          <HashTagContext>
-            <TimeNodeContext>
-              {children}
-            </TimeNodeContext>
-          </HashTagContext>
+          <FloatContext>
+            <HashTagContext>
+              <TimeNodeContext>
+                {children}
+              </TimeNodeContext>
+            </HashTagContext>
+          </FloatContext>
         </ToolbarContext>
       </FloatingAnchorContext>
     </SharedHistoryContext>

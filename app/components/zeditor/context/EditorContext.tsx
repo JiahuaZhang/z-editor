@@ -2,6 +2,7 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import _ from 'lodash';
 import { generateInitConfig } from '../config';
 import { HashTagContext } from '../plugin/hashtag/HashTagPlugin';
+import { TimeNodeContext } from '../plugin/time/TimePlugin';
 import { ActiveEditorContext } from './activeEditor';
 import { FloatingAnchorContext } from './floatingAnchor';
 import { SharedHistoryContext } from './SharedHistoryContext';
@@ -13,7 +14,9 @@ export const EditorContext = ({ children }: { children: JSX.Element; }) => <Lexi
       <FloatingAnchorContext>
         <ToolbarContext>
           <HashTagContext>
-            {children}
+            <TimeNodeContext>
+              {children}
+            </TimeNodeContext>
           </HashTagContext>
         </ToolbarContext>
       </FloatingAnchorContext>

@@ -1,9 +1,8 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
 import dayjs from 'dayjs';
-import { atom, useSetAtom } from 'jotai';
 import { $getNodeByKey, $getSelection, $insertNodes, $isRangeSelection, COMMAND_PRIORITY_LOW, createCommand } from 'lexical';
-import { useEffect, useRef } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { $createTimeNode, TimeNode } from './TimeNode';
 
 const DATE_FORMAT = 'YYYY/M/D HH:mm:ss';
@@ -15,12 +14,8 @@ export const INSERT_TIME_TODAY_NOW = createCommand<undefined>();
 export const INSERT_TIME_YESTERDAY = createCommand<undefined>();
 export const INSERT_TIME_TOMORROW = createCommand<undefined>();
 
-export const timeNodeMapAtom = atom<Record<string, TimeNode>>({});
-
 export const TimePlugin = () => {
   const [editor] = useLexicalComposerContext();
-  const setTimeNodeMap = useSetAtom(timeNodeMapAtom);
-  const hasInitalizedRef = useRef(false);
 
   useEffect(() => {
     if (!editor.hasNodes([TimeNode])) {
@@ -86,6 +81,16 @@ export const TimePlugin = () => {
     );
   });
 
+  return null;
+};
+
+const Context = createContext<Record<string, TimeNode>>({});
+
+export const TimeNodeContext = ({ children }: { children: JSX.Element; }) => {
+  const [editor] = useLexicalComposerContext();
+  const [timeNodeMap, setTimeNodeMap] = useState<Record<string, TimeNode>>({});
+  const hasInitalizedRef = useRef(false);
+
   useEffect(() => editor.registerUpdateListener(({ editorState }) => {
     if (hasInitalizedRef.current) return;
 
@@ -122,5 +127,7 @@ export const TimePlugin = () => {
     });
   }), [editor]);
 
-  return null;
+  return <Context.Provider value={timeNodeMap}>{children}</Context.Provider>;
 };
+
+export const useTimeNodeContext = () => useContext(Context);

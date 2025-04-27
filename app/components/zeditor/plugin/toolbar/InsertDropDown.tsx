@@ -3,7 +3,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { Button, Dropdown, MenuProps } from 'antd';
 import { $getRoot } from 'lexical';
 import { lazy, Suspense, useMemo } from 'react';
-import { useActiveEditorContext } from '../../context/activeEditor';
+import { useActiveEditorContext } from '../../context/ActiveEditor';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../collapsible/CollapsiblePlugin';
 import { INSERT_INLINE_COMMAND } from '../comment/CommentPlugin';
 import { TwitterEmbedConfig, YoutubeEmbedConfig } from '../embed/EmbedPlugin';

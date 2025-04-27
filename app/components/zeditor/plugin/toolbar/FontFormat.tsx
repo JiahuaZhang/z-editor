@@ -5,7 +5,7 @@ import { Button, ColorPicker, Dropdown, Tooltip } from 'antd';
 import { useSetAtom } from 'jotai';
 import { $getSelection, FORMAT_TEXT_COMMAND, LexicalEditor } from 'lexical';
 import { lazy, Suspense, useCallback, useMemo } from 'react';
-import { useActiveEditorContext } from '../../context/activeEditor';
+import { useActiveEditorContext } from '../../context/ActiveEditor';
 import { useToolbarContext } from '../../context/ToolbarContext';
 import { clearSelectionFormatting } from '../../util/utils';
 import { isLinkEditModeAtom } from '../link/FloatingLinkEditorPlugin';

@@ -9,7 +9,7 @@ import { $findMatchingParent, $getNearestNodeOfType, $isEditorIsNestedEditor, me
 import { $getNodeByKey, $getSelection, $isElementNode, $isRangeSelection, $isRootOrShadowRoot, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, ElementFormatType, LexicalNode, NodeKey } from 'lexical';
 import { createContext, useCallback, useContext, useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { getSelectedNode } from '../util/getSelectedNode';
-import { useActiveEditorContext } from './activeEditor';
+import { useActiveEditorContext } from './ActiveEditor';
 
 export const MIN_ALLOWED_FONT_SIZE = 8;
 export const MAX_ALLOWED_FONT_SIZE = 72;

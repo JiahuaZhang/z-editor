@@ -13,7 +13,7 @@ import { $isRootTextContentEmptyCurry } from '@lexical/text';
 import { mergeRegister } from '@lexical/utils';
 import { $getNodeByKey, $getSelection, $isNodeSelection, $isRangeSelection, $setSelection, BLUR_COMMAND, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, KEY_DELETE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, LexicalCommand, LexicalEditor, LineBreakNode, NodeKey, ParagraphNode, RootNode, TextNode, createCommand } from 'lexical';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
-import { useActiveEditorContext } from '../../context/activeEditor';
+import { useActiveEditorContext } from '../../context/ActiveEditor';
 import { useSharedHistoryContext } from '../../context/SharedHistoryContext';
 import { ImageResizer } from '../../ui/ImageResizer';
 import { MATCHERS, validateUrl } from '../../util/url';

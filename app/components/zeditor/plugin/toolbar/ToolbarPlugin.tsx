@@ -3,7 +3,7 @@ import { IS_APPLE, mergeRegister } from '@lexical/utils';
 import { Tooltip } from 'antd';
 import { BLUR_COMMAND, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, FOCUS_COMMAND, REDO_COMMAND, UNDO_COMMAND } from 'lexical';
 import { useEffect, useState } from 'react';
-import { useActiveEditorContext } from '../../context/activeEditor';
+import { useActiveEditorContext } from '../../context/ActiveEditor';
 import { useToolbarContext } from '../../context/ToolbarContext';
 import { BlockFormatDropDown } from './BlockFormatDropDown';
 import { CodeLanguageDropDown } from './CodeLanguageDropDown';

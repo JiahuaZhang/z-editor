@@ -4,7 +4,7 @@ import { mergeRegister } from '@lexical/utils';
 import { Checkbox, Form, Input, Modal, Radio } from 'antd';
 import { $getNodeByKey, $getSelection, $isNodeSelection, $setSelection, BaseSelection, CLICK_COMMAND, COMMAND_PRIORITY_LOW, DRAGSTART_COMMAND, KEY_BACKSPACE_COMMAND, KEY_DELETE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, NodeKey } from 'lexical';
 import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
-import { useActiveEditorContext } from '../../context/activeEditor';
+import { useActiveEditorContext } from '../../context/ActiveEditor';
 import { $isInlineImageNode, InlineImageNode, Position } from './InlineImageNode';
 
 const imageCache = new Set();

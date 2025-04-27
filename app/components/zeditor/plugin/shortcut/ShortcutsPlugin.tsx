@@ -3,7 +3,7 @@ import { HeadingTagType } from '@lexical/rich-text';
 import { useSetAtom } from 'jotai';
 import { COMMAND_PRIORITY_NORMAL, FORMAT_ELEMENT_COMMAND, FORMAT_TEXT_COMMAND, INDENT_CONTENT_COMMAND, KEY_MODIFIER_COMMAND, OUTDENT_CONTENT_COMMAND } from 'lexical';
 import { useEffect } from 'react';
-import { useActiveEditorContext } from '../../context/activeEditor';
+import { useActiveEditorContext } from '../../context/ActiveEditor';
 import { useToolbarContext } from '../../context/ToolbarContext';
 import { sanitizeUrl } from '../../util/url';
 import { clearSelectionFormatting, formatBulletList, formatCheckList, formatCode, formatHeading, formatNumberedList, formatParagraph, formatQuote, updateFontSize, UpdateFontSizeType } from '../../util/utils';

@@ -6,7 +6,7 @@ import { $setBlocksType } from '@lexical/selection';
 import { Select } from 'antd';
 import { $createParagraphNode, $getSelection, $isRangeSelection, LexicalEditor } from 'lexical';
 import { lazy, Suspense } from 'react';
-import { useActiveEditorContext } from '../../context/activeEditor';
+import { useActiveEditorContext } from '../../context/ActiveEditor';
 import { blockTypeToBlockName } from '../../context/ToolbarContext';
 
 const Divider = lazy(() => import('./ToolbarPlugin').then(module => ({ default: module.Divider })));

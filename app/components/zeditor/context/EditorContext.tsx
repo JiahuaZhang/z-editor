@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { generateInitConfig } from '../config';
 import { HashTagContext } from '../plugin/hashtag/HashTagPlugin';
 import { TimeNodeContext } from '../plugin/time/TimePlugin';
-import { ActiveEditorContext } from './activeEditor';
+import { ActiveEditorContext } from './ActiveEditor';
 import { FloatingAnchorContext } from './floatingAnchor';
 import { SharedHistoryContext } from './SharedHistoryContext';
 import { ToolbarContext } from './ToolbarContext';

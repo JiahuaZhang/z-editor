@@ -16,7 +16,7 @@ import {
 } from 'lexical';
 import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useFloatingAnchor } from '../../context/floatingAnchor';
+import { useFloatingAnchor } from '../../context/FloatingAnchor';
 import { getDOMRangeRect } from '../../util/getDOMRangeRect';
 import { getSelectedNode } from '../../util/getSelectedNode';
 import { setFloatingElemPosition } from '../../util/setFloatingElemPosition';

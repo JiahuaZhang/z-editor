@@ -20,7 +20,7 @@ import {
 } from 'lexical';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useFloatingAnchor } from '../../context/floatingAnchor';
+import { useFloatingAnchor } from '../../context/FloatingAnchor';
 import { invariant } from '../../util/invariant';
 import { TableActionMenu } from './TableActionMenu';
 

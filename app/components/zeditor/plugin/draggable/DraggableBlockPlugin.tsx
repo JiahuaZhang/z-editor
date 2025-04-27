@@ -1,6 +1,6 @@
 import { DraggableBlockPlugin_EXPERIMENTAL } from '@lexical/react/LexicalDraggableBlockPlugin';
 import { useRef } from 'react';
-import { useFloatingAnchor } from '../../context/floatingAnchor';
+import { useFloatingAnchor } from '../../context/FloatingAnchor';
 
 const DRAGGABLE_BLOCK_MENU_CLASSNAME = 'draggable-block-menu';
 

@@ -42,7 +42,7 @@ const computeSelectionCount = (selection: TableSelection) => {
     columns: selectionShape.toX - selectionShape.fromX + 1,
     rows: selectionShape.toY - selectionShape.fromY + 1,
   };
-}
+};
 
 const $canUnmerge = () => {
   const selection = $getSelection();
@@ -55,7 +55,7 @@ const $canUnmerge = () => {
   }
   const [cell] = $getNodeTriplet(selection.anchor);
   return cell.__colSpan > 1 || cell.__rowSpan > 1;
-}
+};
 
 const $cellContainsEmptyParagraph = (cell: TableCellNode) => {
   if (cell.getChildrenSize() !== 1) {
@@ -66,7 +66,7 @@ const $cellContainsEmptyParagraph = (cell: TableCellNode) => {
     return false;
   }
   return true;
-}
+};
 
 const $selectLastDescendant = (node: ElementNode) => {
   const lastDescendant = node.getLastDescendant();
@@ -77,7 +77,7 @@ const $selectLastDescendant = (node: ElementNode) => {
   } else if (lastDescendant !== null) {
     lastDescendant.selectNext();
   }
-}
+};
 
 const currentCellBackgroundColor = (editor: LexicalEditor) => {
   return editor.getEditorState().read(() => {
@@ -90,10 +90,10 @@ const currentCellBackgroundColor = (editor: LexicalEditor) => {
     }
     return null;
   });
-}
+};
 
 type TableCellActionMenuProps = Readonly<{
-  contextRef: { current: null | HTMLElement };
+  contextRef: { current: null | HTMLElement; };
   onClose: () => void;
   setIsMenuOpen: (isOpen: boolean) => void;
   tableCellNode: TableCellNode;
@@ -163,16 +163,16 @@ export const TableActionMenu = ({
       || leftPosition + dropDownElementRect.width > rootEleRect.right
     ) {
       const position = menuButtonRect.left - dropDownElementRect.width - margin;
-      leftPosition = (position < 0 ? margin : position) + window.scrollX;
+      leftPosition = position < 0 ? margin : position;
     }
-    dropDownElement.style.left = `${leftPosition + window.scrollX}px`;
+    dropDownElement.style.left = `${leftPosition}px`;
 
     let topPosition = menuButtonRect.top;
     if (topPosition + dropDownElementRect.height > window.innerHeight) {
       const position = menuButtonRect.bottom - dropDownElementRect.height;
-      topPosition = (position < 0 ? margin : position) + window.scrollY;
+      topPosition = position < 0 ? margin : position;
     }
-    dropDownElement.style.top = `${topPosition + +window.scrollY}px`;
+    dropDownElement.style.top = `${topPosition}px`;
   }, [contextRef, dropDownRef, editor]);
 
   useEffect(() => {
@@ -186,7 +186,7 @@ export const TableActionMenu = ({
       ) {
         setIsMenuOpen(false);
       }
-    }
+    };
 
     window.addEventListener('click', handleClickOutside);
 
@@ -409,7 +409,7 @@ export const TableActionMenu = ({
   );
 
   return createPortal(
-    <div un-border='rounded 1 solid blue-4' un-position='fixed' un-z='5' un-bg='white' un-grid='~' un-gap='1' un-p='1' un-shadow='2xl gray-4'
+    <div un-border='rounded 1 solid blue-4' un-position='fixed' un-z='10' un-bg='white' un-grid='~' un-gap='1' un-p='1' un-shadow='2xl gray-4'
       ref={dropDownRef}
       onClick={(e) => e.stopPropagation()}>
       {
@@ -520,5 +520,5 @@ export const TableActionMenu = ({
       </>}
     </div>,
     document.body,
-  )
-}
+  );
+};

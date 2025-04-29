@@ -20,11 +20,11 @@ import { MATCHERS, validateUrl } from './util/url';
 
 export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zinc-6' />;
 
-const Plugins = ({ ...rest }) => {
+const Plugins = ({ isFullScreen, ...rest }: { isFullScreen?: boolean; }) => {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
 
-  return <main un-h='100vh' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
+  return <main un-max-h={`${isFullScreen && '100vh'}`} un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
     <Plugin.Toolbar.Top />
     <div un-grid='~' un-grid-flow='col' un-auto-cols='[1fr_max-content]' un-w='full' un-position='relative' >
       <RichTextPlugin
@@ -91,8 +91,8 @@ const Plugins = ({ ...rest }) => {
   </main>;
 };
 
-export const ZEditor = ({ ...rest }: {}) => <ClientOnly>{() =>
+export const ZEditor = ({ isFullScreen, ...rest }: { isFullScreen?: boolean; }) => <ClientOnly>{() =>
   <EditorContext>
-    <Plugins {...rest} />
+    <Plugins isFullScreen={isFullScreen} {...rest} />
   </EditorContext>
 }</ClientOnly>;

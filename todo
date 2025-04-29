@@ -1,17 +1,13 @@
-bugfix:
-multiple editors:
-table
-table cell dropdown button, click? no impact
-
-draggable issue, with multiple editor need to pass different context?
-
-atom -- global single atom, issue arise with multiple editor states
-
 Database persistence, saving & loading
 new supabase project for database
 
 need to check on validation:
 multiple tabs -> what if I change one content, another tab? Need to sync? or just throw error?
+
+panel / home / list
+- new page
+- list recent pages
+- index, (todos, #hash-tag, index/search)
 
 future todo:
 

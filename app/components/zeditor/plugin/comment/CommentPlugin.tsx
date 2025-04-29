@@ -54,7 +54,7 @@ const AddCommentBox = ({ anchorKey, editor, onAddComment }: {
   useEffect(updatePosition, [anchorKey, editor, updatePosition]);
 
   return (
-    <div un-position='absolute' un-z='10' ref={boxRef}>
+    <div un-position='fixed' un-z='10' ref={boxRef}>
       <button un-bg='white hover:blue-5' un-py='2' un-px='1' un-border='rounded-full 2 solid zinc-4 hover:none' un-flex='~' un-text='hover:white'
         onClick={onAddComment}>
         <span className="i-material-symbols-light:comment-outline" un-text='3xl' />
@@ -73,14 +73,14 @@ const EscapeHandlerPlugin = ({ onEscape, }: { onEscape: (e: KeyboardEvent) => bo
 
 const UnoTrick = () => <div un-left='2' un-top='1' un-right='0.2' un-text='gray-4 red-4 blue-4' un-pointer-events='none' un-border-l='solid zinc-2 15' un-justify='around' />;
 
-function PlainTextEditor({ autoFocus, onEscape, onChange, editorRef, placeholder = 'Type a comment...', ...rest }: {
+const PlainTextEditor = ({ autoFocus, onEscape, onChange, editorRef, placeholder = 'Type a comment...', ...rest }: {
   autoFocus?: boolean;
   className?: string;
   editorRef?: { current: null | LexicalEditor; };
   onChange: (editorState: EditorState, editor: LexicalEditor) => void;
   onEscape: (e: KeyboardEvent) => boolean;
   placeholder?: string;
-}) {
+}) => {
   const initialConfig = {
     namespace: 'Commenting',
     nodes: [],
@@ -108,7 +108,7 @@ function PlainTextEditor({ autoFocus, onEscape, onChange, editorRef, placeholder
       </div>
     </LexicalComposer>
   );
-}
+};
 
 const useOnChange = (setContent: (text: string) => void, setCanSubmit: (canSubmit: boolean) => void) => {
   return useCallback(

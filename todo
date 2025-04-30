@@ -1,3 +1,5 @@
+need to take care of sync of Comment, hashTag, reminder etc.
+
 Database persistence, saving & loading
 new supabase project for database
 

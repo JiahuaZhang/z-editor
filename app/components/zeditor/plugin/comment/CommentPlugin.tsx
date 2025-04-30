@@ -19,7 +19,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { createPortal } from 'react-dom';
 import { useToggle } from '~/components/util/useToggle';
 import { createDOMRange, createRectsFromDOMRange, getDOMSelection } from '../../util/utils';
-import { CommentStore, createComment, createThread, Thread, useCommentStore, type Comment, type Comments } from './Comment';
+import { createComment, createThread, Thread, useCommentContext, type Comment, type Comments } from './CommentContext';
 
 dayjs.extend(relativeTime);
 
@@ -513,19 +513,14 @@ const CommentsPanel = ({ activeIDs, deleteCommentOrThread, comments, submitAddCo
   );
 };
 
-export const CommentPlugin = ({ onChange = () => {}, ...rest }: { onChange?: (comments: Comments) => void; }) => {
+export const CommentPlugin = ({ ...rest }: {}) => {
   const [editor] = useLexicalComposerContext();
-  const commentStore = useMemo(() => new CommentStore(editor), [editor]);
-  const comments = useCommentStore(commentStore);
-  const markNodeMap = useMemo<Map<string, Set<NodeKey>>>(() => {
-    return new Map();
-  }, []);
+  const commentContext = useCommentContext();
+  const markNodeMap = useMemo<Map<string, Set<NodeKey>>>(() => new Map(), []);
   const [activeAnchorKey, setActiveAnchorKey] = useState<NodeKey | null>();
   const [activeIDs, setActiveIDs] = useState<Array<string>>([]);
   const [showCommentInput, setShowCommentInput] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
-
-  useEffect(() => onChange(comments), [comments, onChange]);
 
   const cancelAddComment = useCallback(() => {
     editor.update(() => {
@@ -541,13 +536,13 @@ export const CommentPlugin = ({ onChange = () => {}, ...rest }: { onChange?: (co
   const deleteCommentOrThread = useCallback(
     (comment: Comment | Thread, thread?: Thread) => {
       if (comment.type === 'comment') {
-        const deletionInfo = commentStore.deleteCommentOrThread(comment, thread);
+        const deletionInfo = commentContext.deleteCommentOrThread(comment, thread);
         if (!deletionInfo) return;
 
         const { markedComment, index } = deletionInfo;
-        commentStore.addComment(markedComment, thread, index);
+        commentContext.addComment(markedComment, thread, index);
       } else {
-        commentStore.deleteCommentOrThread(comment);
+        commentContext.deleteCommentOrThread(comment);
         // Remove ids from associated marks
         const id = thread !== undefined ? thread.id : comment.id;
         const markNodeKeys = markNodeMap.get(id);
@@ -569,7 +564,7 @@ export const CommentPlugin = ({ onChange = () => {}, ...rest }: { onChange?: (co
         }
       }
     },
-    [commentStore, editor, markNodeMap],
+    [commentContext.addComment, commentContext.deleteCommentOrThread, editor, markNodeMap],
   );
 
   const submitAddComment = useCallback(
@@ -579,7 +574,7 @@ export const CommentPlugin = ({ onChange = () => {}, ...rest }: { onChange?: (co
       thread?: Thread,
       selection?: RangeSelection | null,
     ) => {
-      commentStore.addComment(commentOrThread, thread);
+      commentContext.addComment(commentOrThread, thread);
       if (isInlineComment) {
         editor.update(() => {
           if ($isRangeSelection(selection)) {
@@ -593,7 +588,7 @@ export const CommentPlugin = ({ onChange = () => {}, ...rest }: { onChange?: (co
         setShowCommentInput(false);
       }
     },
-    [commentStore, editor],
+    [commentContext.addComment, editor],
   );
 
   useEffect(() => {
@@ -758,7 +753,7 @@ export const CommentPlugin = ({ onChange = () => {}, ...rest }: { onChange?: (co
               </h1>
             </Tooltip>
             <CommentsPanel
-              comments={comments}
+              comments={commentContext.comments}
               submitAddComment={submitAddComment}
               deleteCommentOrThread={deleteCommentOrThread}
               activeIDs={activeIDs}

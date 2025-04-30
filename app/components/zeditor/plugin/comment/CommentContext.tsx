@@ -1,5 +1,4 @@
-import { LexicalEditor } from 'lexical';
-import { useEffect, useState } from 'react';
+import { createContext, Dispatch, SetStateAction, useCallback, useContext, useState } from 'react';
 
 export type Comment = {
   author: string;
@@ -59,30 +58,25 @@ const markDeleted = (comment: Comment): Comment => ({
   type: 'comment',
 });
 
-const triggerOnChange = (commentStore: CommentStore) => {
-  const listeners = commentStore._changeListeners;
-  for (const listener of listeners) {
-    listener();
-  }
+type CommentState = {
+  comments: Comments;
+  setComments: Dispatch<SetStateAction<Comments>>;
+  addComment: (commentOrThread: Comment | Thread, thread?: Thread, offset?: number) => void;
+  deleteCommentOrThread: (commentOrThread: Comment | Thread, thread?: Thread) => { markedComment: Comment; index: number; } | null;
 };
 
-export class CommentStore {
-  _editor: LexicalEditor;
-  _comments: Comments;
-  _changeListeners: Set<() => void>;
+const Context = createContext<CommentState>({
+  comments: [],
+  setComments: () => {},
+  addComment: () => {},
+  deleteCommentOrThread: () => null,
+});
 
-  constructor(editor: LexicalEditor) {
-    this._comments = [];
-    this._editor = editor;
-    this._changeListeners = new Set();
-  }
+export const CommentContext = ({ children }: { children: JSX.Element; }) => {
+  const [comments, setComments] = useState<Comments>([]);
 
-  getComments(): Comments {
-    return this._comments;
-  }
-
-  addComment(commentOrThread: Comment | Thread, thread?: Thread, offset?: number) {
-    const nextComments = Array.from(this._comments);
+  const addComment = useCallback((commentOrThread: Comment | Thread, thread?: Thread, offset?: number) => {
+    const nextComments = Array.from(comments);
 
     if (thread !== undefined && commentOrThread.type === 'comment') {
       for (let i = 0; i < nextComments.length; i++) {
@@ -99,12 +93,11 @@ export class CommentStore {
       const insertOffset = offset !== undefined ? offset : nextComments.length;
       nextComments.splice(insertOffset, 0, commentOrThread);
     }
-    this._comments = nextComments;
-    triggerOnChange(this);
-  }
+    setComments(nextComments);
+  }, [comments]);
 
-  deleteCommentOrThread(commentOrThread: Comment | Thread, thread?: Thread): { markedComment: Comment; index: number; } | null {
-    const nextComments = Array.from(this._comments);
+  const deleteCommentOrThread = useCallback((commentOrThread: Comment | Thread, thread?: Thread): { markedComment: Comment; index: number; } | null => {
+    const nextComments = Array.from(comments);
     let commentIndex: number | null = null;
 
     if (thread !== undefined) {
@@ -123,8 +116,7 @@ export class CommentStore {
       commentIndex = nextComments.indexOf(commentOrThread);
       nextComments.splice(commentIndex, 1);
     }
-    this._comments = nextComments;
-    triggerOnChange(this);
+    setComments(nextComments);
 
     if (commentOrThread.type === 'comment') {
       return {
@@ -132,23 +124,11 @@ export class CommentStore {
         markedComment: markDeleted(commentOrThread as Comment),
       };
     }
-
     return null;
-  }
+  }, [comments]);
 
-  registerOnChange(onChange: () => void): () => void {
-    const changeListeners = this._changeListeners;
-    changeListeners.add(onChange);
-    return () => {
-      changeListeners.delete(onChange);
-    };
-  }
-}
 
-export const useCommentStore = (commentStore: CommentStore): Comments => {
-  const [comments, setComments] = useState<Comments>(commentStore.getComments());
-
-  useEffect(() => commentStore.registerOnChange(() => setComments(commentStore.getComments())), [commentStore]);
-
-  return comments;
+  return <Context.Provider value={{ comments, setComments, addComment, deleteCommentOrThread }}>{children}</Context.Provider>;
 };
+
+export const useCommentContext = () => useContext(Context);

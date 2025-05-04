@@ -25,6 +25,7 @@
     "@react-router/fs-routes": "^7.1.5",
     "@react-router/node": "^7.0.0",
     "@react-router/serve": "^7.0.0",
+    "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.4",
     "@types/uuid": "^9.0.8",
     "@unocss/reset": "^65.5.0",

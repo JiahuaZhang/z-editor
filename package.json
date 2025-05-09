@@ -9,6 +9,7 @@
     "deubg": "NODE_OPTIONS=\"--inspect-brk\" npm run dev",
     "profile": "remix vite:build --profile",
     "start": "react-router-serve ./build/server/index.js",
+    "test": "vitest",
     "typecheck": "react-router typegen && tsc",
     "update-lexical": "npm install lexical@latest @lexical/dragon@latest @lexical/history@latest @lexical/react@latest @lexical/rich-text@latest @lexical/utils@latest @lexical/file@latest",
     "upgrade-remix": "npx upgrade-remix",

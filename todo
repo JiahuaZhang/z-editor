@@ -5,6 +5,17 @@ show date (created, updated)
 it could show hints, like #hash-tag, reminder, or #h1 on top
 and click would go to the document page.
 
+route?
+/login
+/logout
+/register
+/user/:id
+/user/:id/home
+/user/:id/panel? serach? filter?
+/user/:id/doc/:doc-id
+* error not found?
+/user/:id/doc/:doc-id?edit=true
+
 update <Editor />, with props, so it would load data from database and render it.
 and can update with its unique id.
 

@@ -1,4 +1,5 @@
 import { LoaderFunction, useLoaderData, useNavigate } from 'react-router';
+import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
 import { createSupabaseServerClient } from '~/util/supabase.server';
 import { Tables } from '../util/supabase.type';
 
@@ -45,10 +46,11 @@ const List = () => {
 
   return (
     <div>
-      <h1>Document List</h1>
-      <ul>
+      <ul un-mt='16' un-mx='8' un-grid='~' >
         {documents.map((doc) => (
-          <li key={doc.id}>{JSON.stringify(doc.content)}</li>
+          <li key={doc.id} >
+            <ZEditorCard document={doc} />
+          </li>
         ))}
       </ul>
     </div>

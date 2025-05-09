@@ -11,7 +11,8 @@
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
     "update-lexical": "npm install lexical@latest @lexical/dragon@latest @lexical/history@latest @lexical/react@latest @lexical/rich-text@latest @lexical/utils@latest @lexical/file@latest",
-    "upgrade-remix": "npx upgrade-remix"
+    "upgrade-remix": "npx upgrade-remix",
+    "generate-database-types": "supabase gen types typescript --project-id oclmlxhybvqbomhjeuhu --schema public --debug > app/util/supabase.type.ts"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.17.6",

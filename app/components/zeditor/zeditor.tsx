@@ -38,9 +38,7 @@ const Plugins = ({ isFullScreen, ...rest }: { isFullScreen?: boolean; }) => {
         }
         ErrorBoundary={LexicalErrorBoundary}
       />
-      <Plugin.Comment onChange={comments => {
-        // persist comments
-      }} />
+      <Plugin.Comment />
     </div >
     <Plugin.Popup />
     <Plugin.Toolbar.Floating />

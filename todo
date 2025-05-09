@@ -1,4 +1,12 @@
-need to take care of sync of Comment, hashTag, reminder etc.
+/list
+need to have <Card /> component for each document
+so it could preview the document
+show date (created, updated)
+it could show hints, like #hash-tag, reminder, or #h1 on top
+and click would go to the document page.
+
+update <Editor />, with props, so it would load data from database and render it.
+and can update with its unique id.
 
 Database persistence, saving & loading
 new supabase project for database

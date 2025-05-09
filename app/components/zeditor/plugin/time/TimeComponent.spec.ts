@@ -13,60 +13,60 @@ describe('getReadableTime', () => {
 
   // 'date' format tests
   test('returns "Today" when date is today', () => {
-    expect(getReadableTime('date', `${todayStr} 00:00:00`, '')).toBe('Today');
+    expect(getReadableTime('date', dayjs(`${todayStr} 00:00:00`), dayjs())).toBe('Today');
   });
 
   test('returns "Yesterday" when date is yesterday', () => {
-    expect(getReadableTime('date', `${yesterdayStr} 00:00:00`, '')).toBe('Yesterday');
+    expect(getReadableTime('date', dayjs(`${yesterdayStr} 00:00:00`), dayjs())).toBe('Yesterday');
   });
 
   test('returns "Tomorrow" when date is tomorrow', () => {
-    expect(getReadableTime('date', `${tomorrowStr} 00:00:00`, '')).toBe('Tomorrow');
+    expect(getReadableTime('date', dayjs(`${tomorrowStr} 00:00:00`), dayjs(''))).toBe('Tomorrow');
   });
 
   test('returns "Last [Day]" when date is within last week', () => {
     const lastDayStr = lastWeekDay.format('YYYY/MM/DD');
     const dayName = lastWeekDay.format('dddd');
-    expect(getReadableTime('date', `${lastDayStr} 00:00:00`, '')).toBe(`Last ${dayName}`);
+    expect(getReadableTime('date', dayjs(`${lastDayStr} 00:00:00`), dayjs())).toBe(`Last ${dayName}`);
   });
 
   test('returns "Next [Day]" when date is within next week', () => {
     const nextDayStr = nextWeekDay.format('YYYY/MM/DD');
     const dayName = nextWeekDay.format('dddd');
-    expect(getReadableTime('date', `${nextDayStr} 00:00:00`, '')).toBe(`Next ${dayName}`);
+    expect(getReadableTime('date', dayjs(`${nextDayStr} 00:00:00`), dayjs())).toBe(`Next ${dayName}`);
   });
 
   test('returns "YYYY/MM/DD" for a far future date', () => {
-    expect(getReadableTime('date', `${farFutureStr} 00:00:00`, '')).toBe(farFutureStr);
+    expect(getReadableTime('date', dayjs(`${farFutureStr} 00:00:00`), dayjs())).toBe(farFutureStr);
   });
 
   test('returns "YYYY/MM/DD" for a specific date like 2025/2/12', () => {
-    expect(getReadableTime('date', '2025/2/12 00:00:00', '')).toBe('2025/02/12');
+    expect(getReadableTime('date', dayjs('2025/2/12 00:00:00'), dayjs())).toBe('2025/02/12');
   });
 
   // 'time' format test
   test('returns time in "h:mm a" format', () => {
-    const timeInput = '2025-03-18T17:01:00.000Z';
-    const expectedTime = dayjs(timeInput).format('h:mm a');
-    expect(getReadableTime('time', '', timeInput)).toBe(expectedTime);
+    const timeInput = dayjs('2025-03-18T17:01:00.000Z');
+    const expectedTime = timeInput.format('h:mm a');
+    expect(getReadableTime('time', dayjs(), timeInput)).toBe(expectedTime);
   });
 
   // 'both' format tests
   test('returns "Today at [time]" when date is today', () => {
-    const timeInput = '2025-03-18T17:01:00.000Z';
-    const expectedTime = dayjs(timeInput).format('h:mm a'); // Convert to local time for Toda
-    expect(getReadableTime('both', `${todayStr} 00:00:00`, timeInput)).toBe(`Today @${expectedTime}`);
+    const timeInput = dayjs('2025-03-18T17:01:00.000Z');
+    const expectedTime = timeInput.format('h:mm a'); // Convert to local time for Toda
+    expect(getReadableTime('both', dayjs(`${todayStr} 00:00:00`), timeInput)).toBe(`Today @${expectedTime}`);
   });
 
   test('returns "Yesterday at [time]" when date is yesterday', () => {
-    const timeInput = '2025-03-18T17:01:00.000Z';
-    const expectedTime = dayjs(timeInput).format('h:mm a');
-    expect(getReadableTime('both', `${yesterdayStr} 00:00:00`, timeInput)).toBe(`Yesterday @${expectedTime}`);
+    const timeInput = dayjs('2025-03-18T17:01:00.000Z');
+    const expectedTime = timeInput.format('h:mm a');
+    expect(getReadableTime('both', dayjs(`${yesterdayStr} 00:00:00`), timeInput)).toBe(`Yesterday @${expectedTime}`);
   });
 
   test('returns "YYYY/MM/DD at [time]" for a far future date', () => {
-    const timeInput = '2025-03-18T17:01:00.000Z';
-    const expectedTime = dayjs(timeInput).format('h:mm a');
-    expect(getReadableTime('both', '2025/2/12 00:00:00', timeInput)).toBe(`2025/02/12 @${expectedTime}`);
+    const timeInput = dayjs('2025-03-18T17:01:00.000Z');
+    const expectedTime = timeInput.format('h:mm a');
+    expect(getReadableTime('both', dayjs('2025/2/12 00:00:00'), timeInput)).toBe(`2025/02/12 @${expectedTime}`);
   });
 });

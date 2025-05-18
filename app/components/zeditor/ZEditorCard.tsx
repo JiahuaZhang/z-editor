@@ -66,7 +66,7 @@ const formatDate = (dateStr: string | null): string => {
 export const ZEditorCard = ({ document }: { document: Document; }) => {
   const preview = editorStatePreview(document);
 
-  return <div un-border='2 solid blue-1 hover:blue-3' un-shadow="md" un-rounded="lg" un-p="2" un-transition="all .3s" un-hover-shadow="xl" un-max-w="lg" un-grid='~' un-gap='2' >
+  return <div un-max-w="xl" un-border='2 solid blue-1 hover:blue-3 rounded' un-shadow="md" un-p="2" un-transition="all .3s" un-hover-shadow="xl" un-grid='~' un-gap='2' >
     {/* click, should navigate to document view / edit page */}
     <pre un-overflow-y="auto" un-whitespace="pre-wrap" un-line-height="tight" un-h='60' un-font='sans' un-cursor='pointer' >
       {preview}

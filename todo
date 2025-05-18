@@ -1,8 +1,4 @@
 /list
-need to have <Card /> component for each document
-so it could preview the document
-show date (created, updated)
-it could show hints, like #hash-tag, reminder, or #h1 on top
 and click would go to the document page.
 
 route?

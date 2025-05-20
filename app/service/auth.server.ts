@@ -1,7 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
 import { createCookieSessionStorage, redirect } from 'react-router';
 import { Authenticator } from 'remix-auth';
-import { GoogleStrategy, SocialsProvider } from 'remix-auth-socials';
+import { FacebookStrategy, GoogleStrategy, SocialsProvider } from 'remix-auth-socials';
 
 export type GoogleUser = {
   type: 'google';
@@ -14,7 +14,13 @@ export type GoogleUser = {
   exp: number;
 };
 
-export type User = GoogleUser;
+export type FacebookUser = {
+  type: 'facebook';
+  email: string;
+  name: string;
+};
+
+export type User = GoogleUser | FacebookUser;
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -44,19 +50,20 @@ const googleStrategy = new GoogleStrategy<GoogleUser>(
   }
 );
 
-// const facebookStrategy = new FacebookStrategy(
-//   {
-//     clientId: process.env.VITE_FACEBOOK_CLIENT_ID!,
-//     clientSecret: process.env.VITE_FACEBOOK_CLIENT_SECRET!,
-//     redirectURI: '',
-//   },
-//   async ({ request, tokens }) => {
-//     console.log(request, tokens);
-//     return {} as FacebookUser;
-//   }
-// );
+const facebookStrategy = new FacebookStrategy(
+  {
+    clientId: process.env.VITE_FACEBOOK_CLIENT_ID!,
+    clientSecret: process.env.VITE_FACEBOOK_SECRET!,
+    redirectURI: getCallback(SocialsProvider.FACEBOOK),
+  },
+  async ({ request, tokens }) => {
+    console.log(request, tokens);
+    return {} as FacebookUser;
+  }
+);
 
 authenticator.use(googleStrategy);
+authenticator.use(facebookStrategy);
 
 export const authenticate = async (request: Request) => {
   const session = await sessionStorage.getSession(request.headers.get("cookie"));

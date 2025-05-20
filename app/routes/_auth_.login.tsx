@@ -16,7 +16,7 @@ const Login = () => {
   return (
     <div un-flex='~ col' un-items="center" un-mt='60' un-mx='auto' un-max-w='sm' >
       <GoogleLoginButton onClick={() => submit({}, { method: 'post', action: `/auth/${SocialsProvider.GOOGLE}` })} />
-      <FacebookLoginButton onClick={() => submit({}, { method: 'post', action: `/auth/${SocialsProvider.FACEBOOK}` })} />
+      <FacebookLoginButton disabled className='text-gray-4! bg-blue-2! cursor-not-allowed!' onClick={() => submit({}, { method: 'post', action: `/auth/${SocialsProvider.FACEBOOK}` })} />
     </div>
   );
 };

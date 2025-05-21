@@ -57,7 +57,7 @@ const facebookStrategy = new FacebookStrategy(
     redirectURI: getCallback(SocialsProvider.FACEBOOK),
   },
   async ({ request, tokens }) => {
-    console.log(request, tokens);
+    // todo, support facebook once got business account
     return {} as FacebookUser;
   }
 );
@@ -67,8 +67,11 @@ authenticator.use(facebookStrategy);
 
 export const authenticate = async (request: Request) => {
   const session = await sessionStorage.getSession(request.headers.get("cookie"));
-  const user = session.get("user");
-  if (user) return user;
+  const user: User | undefined = session.get("user");
 
-  throw redirect('/login', { headers: { "Set-Cookie": await sessionStorage.commitSession(session) } });
+  if (user && 'exp' in user && user.exp * 1000 > Date.now()) {
+    return user;
+  }
+
+  throw redirect('/login', { headers: { "Set-Cookie": await sessionStorage.destroySession(session) } });
 };

@@ -2,9 +2,6 @@
 and click would go to the document page.
 
 route?
-/login
-/logout
-/register
 /user/:id
 /user/:id/home
 /user/:id/panel? serach? filter?

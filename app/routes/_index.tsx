@@ -1,41 +1,22 @@
-import type { MetaFunction } from "react-router";
+import { useLoaderData, type MetaFunction } from "react-router";
+import { authenticate } from '~/service/auth.server';
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
-  ];
+export const loader = async ({ request }: { request: Request; }) => {
+  const user = await authenticate(request);
+  return { user };
 };
 
-export default function Index() {
+export const meta: MetaFunction = () => [{ title: "Home" }, { name: "description", content: "Hello World!" }];
+
+const Index = () => {
+  const { user } = useLoaderData();
+  console.log(user);
+
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-          >
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
-          >
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul>
+    <div>
+      <h1>Hello World</h1>
     </div>
   );
-}
+};
+
+export default Index;

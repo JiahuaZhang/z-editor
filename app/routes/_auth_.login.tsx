@@ -1,7 +1,6 @@
 import { redirect, useSubmit } from 'react-router';
 import { FacebookLoginButton, GoogleLoginButton } from 'react-social-login-buttons';
-import { SocialsProvider } from 'remix-auth-socials';
-import { sessionStorage } from '~/service/auth.server';
+import { sessionStorage } from '~/service/session.server';
 
 export const loader = async ({ request }: { request: Request; }) => {
   const session = await sessionStorage.getSession(request.headers.get('Cookie'));
@@ -15,8 +14,8 @@ const Login = () => {
 
   return (
     <div un-flex='~ col' un-items="center" un-mt='60' un-mx='auto' un-max-w='sm' >
-      <GoogleLoginButton onClick={() => submit({}, { method: 'post', action: `/auth/${SocialsProvider.GOOGLE}` })} />
-      <FacebookLoginButton disabled className='text-gray-4! bg-blue-2! cursor-not-allowed!' onClick={() => submit({}, { method: 'post', action: `/auth/${SocialsProvider.FACEBOOK}` })} />
+      <GoogleLoginButton onClick={() => submit({}, { method: 'post', action: `/auth/google` })} />
+      <FacebookLoginButton disabled className='text-gray-4! bg-blue-2! cursor-not-allowed!' onClick={() => submit({}, { method: 'post', action: `/auth/facebook` })} />
     </div>
   );
 };

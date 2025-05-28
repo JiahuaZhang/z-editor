@@ -36,7 +36,6 @@
     "dayjs": "^1.11.13",
     "emoji-datasource-facebook": "^15.1.2",
     "isbot": "^5.1.23",
-    "jwt-decode": "^4.0.0",
     "katex": "^0.16.21",
     "lexical": "^0.24.0",
     "lodash": "^4.17.21",
@@ -46,10 +45,7 @@
     "react-calendar": "^5.1.0",
     "react-dom": "^18.3.1",
     "react-router": "^7.0.0",
-    "react-router-dom": "^7.0.0",
     "react-social-login-buttons": "^4.1.1",
-    "remix-auth": "^4.2.0",
-    "remix-auth-socials": "^3.0.0",
     "remix-utils": "^8.1.0"
   },
   "devDependencies": {

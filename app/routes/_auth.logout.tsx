@@ -1,5 +1,5 @@
 import { redirect } from 'react-router';
-import { sessionStorage } from '~/service/auth.server';
+import { sessionStorage } from '~/service/session.server';
 
 export const loader = async ({ request }: { request: Request; }) => {
   const session = await sessionStorage.getSession(request.headers.get('Cookie'));

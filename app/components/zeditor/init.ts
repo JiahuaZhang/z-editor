@@ -200,15 +200,15 @@ const circle = new Circle(5);
 console.log(\`Area of circle: \${circle.getArea().toFixed(2)}\`);`));
   root.append(jsCode);
 
-  //   const codeHighlight = $createCodeHighlightNode(`public class HelloWorld {
-  //   public static void main(String[] args) {
-  //       // Prints "Hello, World" to the console
-  //       System.out.println("Hello, World");
-  //   }
-  // }`);
-  //   const codeParagarph = $createCodeNode('java');
-  //   codeParagarph.append(codeHighlight);
-  //   root.append(codeParagarph);
+  const codeHighlight = $createCodeHighlightNode(`public class HelloWorld {
+    public static void main(String[] args) {
+        // Prints "Hello, World" to the console
+        System.out.println("Hello, World");
+    }
+  }`);
+  const codeParagarph = $createCodeNode('java');
+  codeParagarph.append(codeHighlight);
+  root.append(codeParagarph);
 };
 
 const $generateTable = () => {
@@ -555,20 +555,20 @@ export const $generateContent = () => {
   root.append(hr);
 
   $generateCollapsible();
-  // $generatePageBreak();
+  $generatePageBreak();
   $generateParagraph();
-  // $generateLayout();
-  // $generateSpecialText();
-  // $generateListContent();
-  // $generateCode();
+  $generateLayout();
+  $generateSpecialText();
+  $generateListContent();
+  $generateCode();
   $generateTable();
-  // $generateHashTag();
-  // $generateLink();
-  // $generateImages();
-  // $generateExcalidarw();
-  // $generateEquation();
-  // $generateTweets();
-  // $generateYoutubes();
+  $generateHashTag();
+  $generateLink();
+  $generateImages();
+  $generateExcalidarw();
+  $generateEquation();
+  $generateTweets();
+  $generateYoutubes();
   $generateTimeNode();
 
   const quote = $createQuoteNode();
@@ -579,6 +579,6 @@ export const $generateContent = () => {
   paragraph.append($createTextNode(''));
   root.append(paragraph);
 
-  // const stickyNode = $createStickyNode(0, 0);
-  // root.append(stickyNode);
+  const stickyNode = $createStickyNode(0, 0);
+  root.append(stickyNode);
 };

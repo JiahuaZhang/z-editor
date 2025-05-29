@@ -1,11 +1,12 @@
 import { redirect, useSubmit } from 'react-router';
 import { FacebookLoginButton, GoogleLoginButton } from 'react-social-login-buttons';
-import { sessionStorage } from '~/service/session.server';
+import { createSupabaseServerClient } from '~/util/supabase.server';
 
 export const loader = async ({ request }: { request: Request; }) => {
-  const session = await sessionStorage.getSession(request.headers.get('Cookie'));
-  const user = session.get('user');
-  if (user) return redirect('/');
+  const { supabase, headers } = createSupabaseServerClient(request);
+  const userResponse = await supabase.auth.getUser();
+  const { data: { user } } = userResponse;
+  if (user) return redirect('/', { headers });
   return {};
 };
 

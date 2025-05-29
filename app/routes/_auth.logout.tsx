@@ -1,9 +1,13 @@
 import { redirect } from 'react-router';
-import { sessionStorage } from '~/service/session.server';
+import { createSupabaseServerClient } from '~/util/supabase.server';
 
 export const loader = async ({ request }: { request: Request; }) => {
-  const session = await sessionStorage.getSession(request.headers.get('Cookie'));
-  return redirect('/login', {
-    headers: { 'Set-Cookie': await sessionStorage.destroySession(session) },
-  });
+  const { supabase, headers } = createSupabaseServerClient(request);
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    throw error;
+  }
+
+  return redirect('/login', { headers });
 };

@@ -11,7 +11,7 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { supabase, getHeaders } = createSupabaseServerClient(request);
+  const { supabase, headers } = createSupabaseServerClient(request);
 
   const { data, error } = await supabase
     .from('editor_documents')

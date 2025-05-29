@@ -10,7 +10,7 @@ export const meta: MetaFunction = () => [{ title: "Home" }, { name: "description
 
 const Index = () => {
   const { user } = useLoaderData();
-  // console.log(user);
+  console.log(user);
 
   return (
     <div>

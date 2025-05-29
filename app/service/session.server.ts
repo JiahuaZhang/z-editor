@@ -1,4 +1,5 @@
 import { createCookieSessionStorage, redirect } from 'react-router';
+import { createSupabaseServerClient } from '~/util/supabase.server';
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -11,57 +12,13 @@ export const sessionStorage = createCookieSessionStorage({
   },
 });
 
-type GoogleUserMetadata = {
-  avatar_url: string;
-  email: string;
-  email_verified: boolean;
-  full_name: string;
-  iss: string;
-  name: string;
-  phone_verified: boolean;
-  picture: string;
-  provider_id: string;
-  sub: string;
-};
+export const authenticate = async (request: Request) => {
+  const { supabase, headers } = createSupabaseServerClient(request);
+  const userResponse = await supabase.auth.getUser();
+  const { data: { user } } = userResponse;
 
-type GoogleUserIdentity = {
-  identity_id: string;
-  id: string;
-  user_id: string;
-  identity_data: GoogleUserMetadata;
-  provider: 'google';
-  last_sign_in_at: string;
-  created_at: string;
-  updated_at: string;
-  email: string;
-};
-
-export type GoogleUser = {
-  id: string;
-  aud: string;
-  role: string;
-  email: string;
-  email_confirmed_at: string;
-  phone: string;
-  confirmed_at: string;
-  last_sign_in_at: string;
-  app_metadata: {
-    provider: 'google';
-    providers: ['google'];
-  };
-  user_metadata: GoogleUserMetadata;
-  identities: GoogleUserIdentity[];
-  created_at: string;
-  updated_at: string;
-  is_anonymous: boolean;
-};
-
-export const authenticate = async (request: Request): Promise<GoogleUser> => {
-  const session = await sessionStorage.getSession(request.headers.get("Cookie"));
-  const user = session.get("user") as GoogleUser | undefined;
-
-  if (!user || !user.id) {
-    throw redirect('/login', { headers: { "Set-Cookie": await sessionStorage.destroySession(session), } });
+  if (!user) {
+    throw redirect('/login', { headers });
   }
 
   return user;

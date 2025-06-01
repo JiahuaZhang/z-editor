@@ -89,7 +89,7 @@ const Plugins = ({ isFullScreen, ...rest }: { isFullScreen?: boolean; }) => {
   </main>;
 };
 
-export const ZEditor = ({ isFullScreen, ...rest }: { isFullScreen?: boolean; }) => <ClientOnly>{() =>
+export const ZEditor = ({ isFullScreen = true, ...rest }: { isFullScreen?: boolean; }) => <ClientOnly>{() =>
   <EditorContext>
     <Plugins isFullScreen={isFullScreen} {...rest} />
   </EditorContext>

@@ -15,4 +15,5 @@ const Page = () => {
     <Outlet />
   </div>;
 };
+
 export default Page;

@@ -15,15 +15,15 @@ const getInitials = (name?: string, email?: string) => {
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const getItems = (user: User) => [
+const items: MenuItem[] = [
   {
-    label: <Link to={`/${user.id}/search`}>
+    label: <Link to="z-editor/search" >
       Search
     </Link>,
     key: 'search',
     icon: <div className="i-material-symbols-light:search" un-text='2xl' />
   },
-] as MenuItem[];
+];
 
 export const UserPanel = ({ user }: { user: User; }) => {
   const [current, setCurrent] = useState('search');
@@ -44,7 +44,7 @@ export const UserPanel = ({ user }: { user: User; }) => {
   return (
     <div un-flex='~' un-gap='2' >
       <div un-w='full' >
-        <Menu selectedKeys={[current]} mode="horizontal" items={getItems(user)} />
+        <Menu selectedKeys={[current]} mode="horizontal" items={items} />
       </div>
       <Popover content={logoutContent} trigger="click">
         <div un-cursor="pointer" >

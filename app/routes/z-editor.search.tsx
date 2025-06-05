@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 const Search = () => {
   const { documents, error } = useLoaderData<LoaderData>();
-  const { user } = useRouteLoaderData('routes/$userid');
+  const { user } = useRouteLoaderData('routes/z-editor');
   const navigate = useNavigate();
 
   if (error) {

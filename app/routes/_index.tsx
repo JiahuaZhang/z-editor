@@ -1,22 +1,10 @@
-import { useLoaderData, type MetaFunction } from "react-router";
-import { UserPanel } from '~/components/UserPanel';
+import { redirect, type MetaFunction } from "react-router";
 import { authenticate } from '~/service/session.server';
 
 export const loader = async ({ request }: { request: Request; }) => {
   const user = await authenticate(request);
-  return { user };
+
+  return redirect('/z-editor/search');
 };
 
 export const meta: MetaFunction = () => [{ title: "Home" }, { name: "description", content: "Hello World!" }];
-
-const Index = () => {
-  const { user } = useLoaderData();
-
-  return (
-    <div>
-      <UserPanel user={user} />
-    </div>
-  );
-};
-
-export default Index;

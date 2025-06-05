@@ -1,7 +1,7 @@
-import { LoaderFunction, useLoaderData, useNavigate } from 'react-router';
+import { LoaderFunction, useLoaderData, useNavigate, useRouteLoaderData, type MetaFunction } from "react-router";
 import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
 import { createSupabaseServerClient } from '~/util/supabase.server';
-import { Tables } from '../util/supabase.type';
+import { Tables } from '~/util/supabase.type';
 
 type Document = Tables<'editor_documents'>;
 
@@ -9,6 +9,8 @@ type LoaderData = {
   documents: Document[];
   error?: string;
 };
+
+export const meta: MetaFunction = () => [{ title: "Search" }, { name: "description", content: "Search documents" }];
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { supabase, headers } = createSupabaseServerClient(request);
@@ -22,13 +24,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     return { error: 'Failed to fetch documents', status: 500 };
   }
 
-  console.log({ data, error });
   return { documents: data as Document[] };
 };
 
-const List = () => {
-  const navigate = useNavigate();
+const Search = () => {
   const { documents, error } = useLoaderData<LoaderData>();
+  const { user } = useRouteLoaderData('routes/$userid');
+  const navigate = useNavigate();
 
   if (error) {
     return <div un-text="center" un-p="14">
@@ -45,8 +47,9 @@ const List = () => {
   }
 
   return (
-    <div>
-      <ul un-mt='16' un-mx='8' un-grid='~' >
+    <div un-p="4">
+      <h1 un-text="2xl center" un-mb="4">Search Documents</h1>
+      <ul un-mx='8' un-grid='~' >
         {documents.map((doc) => (
           <li key={doc.id} >
             <ZEditorCard document={doc} />
@@ -57,4 +60,4 @@ const List = () => {
   );
 };
 
-export default List;
+export default Search;

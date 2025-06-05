@@ -1,5 +1,6 @@
 import type { User } from '@supabase/supabase-js';
-import { Avatar, Popover } from 'antd';
+import { Avatar, Menu, MenuProps, Popover } from 'antd';
+import { useState } from 'react';
 import { Link } from 'react-router';
 
 const getInitials = (name?: string, email?: string) => {
@@ -12,7 +13,20 @@ const getInitials = (name?: string, email?: string) => {
   return 'U';
 };
 
+type MenuItem = Required<MenuProps>['items'][number];
+
+const getItems = (user: User) => [
+  {
+    label: <Link to={`/${user.id}/search`}>
+      Search
+    </Link>,
+    key: 'search',
+    icon: <div className="i-material-symbols-light:search" un-text='2xl' />
+  },
+] as MenuItem[];
+
 export const UserPanel = ({ user }: { user: User; }) => {
+  const [current, setCurrent] = useState('search');
   if (!user) {
     return null;
   }
@@ -27,17 +41,22 @@ export const UserPanel = ({ user }: { user: User; }) => {
     </Link>
   </button>;
 
-  return <div un-grid='~' un-justify='end' >
-    <Popover content={logoutContent} trigger="click">
-      <div un-cursor="pointer">
-        {avatarUrl ? (
-          <Avatar src={avatarUrl} alt={user.user_metadata.full_name} size='large' />
-        ) : (
-          <Avatar un-bg='blue-4' size='large' >
-            {getInitials(userName, userEmail)}
-          </Avatar>
-        )}
+  return (
+    <div un-flex='~' un-gap='2' >
+      <div un-w='full' >
+        <Menu selectedKeys={[current]} mode="horizontal" items={getItems(user)} />
       </div>
-    </Popover>
-  </div>;
+      <Popover content={logoutContent} trigger="click">
+        <div un-cursor="pointer" >
+          {avatarUrl ? (
+            <Avatar src={avatarUrl} alt={user.user_metadata.full_name} size='large' />
+          ) : (
+            <Avatar un-bg='blue-4' size='large' >
+              {getInitials(userName, userEmail)}
+            </Avatar>
+          )}
+        </div>
+      </Popover>
+    </div>
+  );
 };

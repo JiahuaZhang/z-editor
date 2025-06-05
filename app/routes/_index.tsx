@@ -11,12 +11,10 @@ export const meta: MetaFunction = () => [{ title: "Home" }, { name: "description
 
 const Index = () => {
   const { user } = useLoaderData();
-  console.log(user);
 
   return (
     <div>
       <UserPanel user={user} />
-      <h1>Hello world!</h1>
     </div>
   );
 };

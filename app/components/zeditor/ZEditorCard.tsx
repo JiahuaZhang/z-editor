@@ -8,6 +8,7 @@ import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { $getRoot, createEditor } from 'lexical';
+import { Link } from 'react-router';
 import { Tables } from '~/util/supabase.type';
 import { CollapsibleContainerNode } from './plugin/collapsible/CollapsibleContainerNode';
 import { CollapsibleContentNode } from './plugin/collapsible/CollapsibleContentNode';
@@ -67,10 +68,11 @@ export const ZEditorCard = ({ document }: { document: Document; }) => {
   const preview = editorStatePreview(document);
 
   return <div un-max-w="xl" un-border='2 solid blue-1 hover:blue-3 rounded' un-shadow="md" un-p="2" un-transition="all .3s" un-hover-shadow="xl" un-grid='~' un-gap='2' >
-    {/* click, should navigate to document view / edit page */}
-    <pre un-overflow-y="auto" un-whitespace="pre-wrap" un-line-height="tight" un-h='60' un-font='sans' un-cursor='pointer' >
-      {preview}
-    </pre>
+    <Link to={`/z-editor/${document.id}`} >
+      <pre un-overflow-y="auto" un-whitespace="pre-wrap" un-line-height="tight" un-h='60' un-font='sans'>
+        {preview}
+      </pre>
+    </Link>
     {
       document.tag && document.tag.length > 0
       && <div un-flex="~" un-overflow-x="auto" un-whitespace="nowrap" un-gap="2" un-pb='0.5' >

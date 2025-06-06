@@ -51,6 +51,8 @@ export const UserPanel = ({ user }: { user: User; }) => {
       setCurrent('search');
     } else if (location.pathname.includes('/z-editor/new')) {
       setCurrent('new');
+    } else {
+      setCurrent('');
     }
   }, [location.pathname, user.id]);
 

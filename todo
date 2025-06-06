@@ -1,6 +1,3 @@
-/list
-and click would go to the document page.
-
 route?
 /user/:id
 /user/:id/home

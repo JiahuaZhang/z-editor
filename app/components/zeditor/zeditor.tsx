@@ -13,6 +13,7 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
+import { useEffect } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 import { EditorContext } from './context/EditorContext';
 import { Plugin } from './plugin/plugin';
@@ -20,9 +21,17 @@ import { MATCHERS, validateUrl } from './util/url';
 
 export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zinc-6' />;
 
-const Plugins = ({ isFullScreen, ...rest }: { isFullScreen?: boolean; }) => {
+const Plugins = ({ isFullScreen, document, ...rest }: { isFullScreen?: boolean; document?: any; }) => {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
+
+  useEffect(() => {
+    if (!document) return;
+
+    setTimeout(() => editor.update(() => editor.setEditorState(editor.parseEditorState(document))), 0);
+    // todo, syncup other state? comment etc.
+  }, [editor, document]);
+
 
   return <main un-max-h={`${isFullScreen && '100vh'}`} un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
     <Plugin.Toolbar.Top />
@@ -89,8 +98,8 @@ const Plugins = ({ isFullScreen, ...rest }: { isFullScreen?: boolean; }) => {
   </main>;
 };
 
-export const ZEditor = ({ isFullScreen = true, ...rest }: { isFullScreen?: boolean; }) => <ClientOnly>{() =>
+export const ZEditor = ({ isFullScreen = true, document, ...rest }: { isFullScreen?: boolean; document?: any; }) => <ClientOnly>{() =>
   <EditorContext>
-    <Plugins isFullScreen={isFullScreen} {...rest} />
+    <Plugins isFullScreen={isFullScreen} document={document} {...rest} />
   </EditorContext>
 }</ClientOnly>;

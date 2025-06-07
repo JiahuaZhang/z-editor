@@ -1,4 +1,5 @@
 import { LoaderFunctionArgs, useLoaderData } from 'react-router';
+import { ZEditor } from '~/components/zeditor/zeditor';
 import { createSupabaseServerClient } from '~/util/supabase.server';
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
@@ -25,6 +26,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 export default function DocumentPage() {
   const { document, error } = useLoaderData<typeof loader>();
+  // console.log(document);
 
   if (error) {
     return (
@@ -36,9 +38,8 @@ export default function DocumentPage() {
   }
 
   return (
-    <div>
-      <h1 className="text-xl font-bold text-green-600">Document Found!</h1>
-      <p>ID: {document.id}</p>
+    <div className="p-4">
+      <ZEditor document={document.content} />
     </div>
   );
 }

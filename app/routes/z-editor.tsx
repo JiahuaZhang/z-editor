@@ -10,7 +10,7 @@ export const loader = async ({ request }: { request: Request; }) => {
 const Page = () => {
   const { user } = useLoaderData();
 
-  return <div>
+  return <div un-h='100vh' >
     <UserPanel user={user} />
     <Outlet />
   </div>;

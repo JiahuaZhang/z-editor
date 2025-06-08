@@ -38,7 +38,7 @@ export default function DocumentPage() {
   }
 
   return (
-    <div className="p-4">
+    <div un-h='[calc(100vh-46px)]' >
       <ZEditor document={document.content} />
     </div>
   );

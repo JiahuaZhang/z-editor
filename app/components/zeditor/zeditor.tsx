@@ -21,7 +21,7 @@ import { MATCHERS, validateUrl } from './util/url';
 
 export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zinc-6' />;
 
-const Plugins = ({ isFullScreen, document, ...rest }: { isFullScreen?: boolean; document?: any; }) => {
+const Plugins = ({ document, ...rest }: { document?: any; }) => {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
 
@@ -33,7 +33,7 @@ const Plugins = ({ isFullScreen, document, ...rest }: { isFullScreen?: boolean; 
   }, [editor, document]);
 
 
-  return <main un-max-h={`${isFullScreen && '100vh'}`} un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
+  return <main un-h='full' un-border=' solid blue-4' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
     <Plugin.Toolbar.Top />
     <div un-grid='~' un-grid-flow='col' un-auto-cols='[1fr_max-content]' un-w='full' un-position='relative' >
       <RichTextPlugin
@@ -98,8 +98,8 @@ const Plugins = ({ isFullScreen, document, ...rest }: { isFullScreen?: boolean; 
   </main>;
 };
 
-export const ZEditor = ({ isFullScreen = true, document, ...rest }: { isFullScreen?: boolean; document?: any; }) => <ClientOnly>{() =>
+export const ZEditor = ({ document, ...rest }: { document?: any; }) => <ClientOnly>{() =>
   <EditorContext>
-    <Plugins isFullScreen={isFullScreen} document={document} {...rest} />
+    <Plugins document={document} {...rest} />
   </EditorContext>
 }</ClientOnly>;

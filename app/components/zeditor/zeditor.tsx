@@ -16,21 +16,24 @@ import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
 import { useEffect } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 import { EditorContext } from './context/EditorContext';
+import { useCommentContext } from './plugin/comment/CommentContext';
 import { Plugin } from './plugin/plugin';
 import { MATCHERS, validateUrl } from './util/url';
 
 export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zinc-6' />;
 
-const Plugins = ({ document, ...rest }: { document?: any; }) => {
+const Plugins = ({ document, comments, ...rest }: { document?: any; comments?: any[]; }) => {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
+  const { addComment } = useCommentContext();
 
   useEffect(() => {
     if (!document) return;
 
     setTimeout(() => editor.update(() => editor.setEditorState(editor.parseEditorState(document))), 0);
-    // todo, syncup other state? comment etc.
-  }, [editor, document]);
+
+    comments?.forEach(c => addComment(c));
+  }, [editor, document, comments]);
 
 
   return <main un-h='full' un-border=' solid blue-4' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
@@ -98,8 +101,8 @@ const Plugins = ({ document, ...rest }: { document?: any; }) => {
   </main>;
 };
 
-export const ZEditor = ({ document, ...rest }: { document?: any; }) => <ClientOnly>{() =>
+export const ZEditor = ({ document, comments, ...rest }: { document?: any; comments?: any[]; }) => <ClientOnly>{() =>
   <EditorContext>
-    <Plugins document={document} {...rest} />
+    <Plugins document={document} comments={comments} {...rest} />
   </EditorContext>
 }</ClientOnly>;

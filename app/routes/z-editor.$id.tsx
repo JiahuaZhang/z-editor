@@ -26,7 +26,6 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 export default function DocumentPage() {
   const { document, error } = useLoaderData<typeof loader>();
-  // console.log(document);
 
   if (error) {
     return (
@@ -39,7 +38,7 @@ export default function DocumentPage() {
 
   return (
     <div un-h='[calc(100vh-46px)]' >
-      <ZEditor document={document.content} />
+      <ZEditor document={document.content} comments={document.comment} />
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { useActiveEditorContext } from '../../context/ActiveEditor';
 import { useToolbarContext } from '../../context/ToolbarContext';
 import { BlockFormatDropDown } from './BlockFormatDropDown';
 import { CodeLanguageDropDown } from './CodeLanguageDropDown';
-import { CreateOrSaveDocument } from './CreateOrSaveDocument';
+import { DocumentPersistence } from './DocumentPersistence';
 import { ElementFormatDropDown } from './ElementFormatDropDown';
 import { FontDropDown } from './FontDropDown';
 import { FontFormat } from './FontFormat';
@@ -96,6 +96,6 @@ export const ToolbarPlugin = () => {
     <ElementFormatDropDown elementFormat={toolbarContext.elementFormat} isRTL={toolbarContext.isRTL} />
 
     <ReadOnlyMode />
-    <CreateOrSaveDocument />
+    <DocumentPersistence />
   </div>;
 };

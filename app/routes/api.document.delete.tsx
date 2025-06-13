@@ -11,9 +11,11 @@ export const action: ActionFunction = async ({ request, params, context }) => {
     throw new Error('Unauthorized');
   }
 
-  const json = await request.json();
+  const formData = await request.formData();
+  const id = formData.get('id');
 
   const result = await supabase.from('editor_documents')
-    .upsert({ ...json, user_id: userResponse.data.user?.id });
+    .delete()
+    .eq('id', id);
   return result;
 };

@@ -14,6 +14,7 @@ export const action: ActionFunction = async ({ request, params, context }) => {
   const json = await request.json();
 
   const result = await supabase.from('editor_documents')
-    .upsert({ ...json, user_id: userResponse.data.user?.id });
+    .upsert({ ...json, user_id: userResponse.data.user?.id })
+    .select('id');
   return result;
 };

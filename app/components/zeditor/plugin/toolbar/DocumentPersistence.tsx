@@ -1,6 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { Dropdown, Tooltip } from 'antd';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useFetcher, useNavigate, useParams } from 'react-router';
 import { useCommentContext } from '../comment/CommentContext';
 import { useHashTagContext } from '../hashtag/HashTagPlugin';
@@ -19,13 +19,6 @@ export const DocumentPersistence = () => {
     documentIdRef.current = params.id;
   }
 
-  if (fetcher.data?.status === 204 && fetcher.data?.statusText === 'No Content') {
-    navigate('/z-editor/search');
-  }
-
-  if (fetcher.data?.status === 201 && fetcher.data?.statusText === 'Created') {
-  }
-
   const upsertDocument = useCallback(async () => {
     const content = editor.getEditorState().toJSON();
     const tag = [...new Set(Object.values(hashTagMap))];
@@ -38,33 +31,31 @@ export const DocumentPersistence = () => {
       id: documentIdRef.current,
     };
 
-    // todo: if created new document, then redirect to the new document
-    const response = await fetcher.submit(document as any, {
+    await fetcher.submit(document as any, {
       method: 'post',
       action: '/api/document/upsert',
       encType: 'application/json'
     });
-
-    if (!documentIdRef.current) {
-      console.log('created new document case');
-      console.log(response);
-      // redirect(`/z-editor/${response.data.id}`);
-    }
-
-    if (documentIdRef.current) {
-      console.log('created new document case');
-      console.log(response);
-    }
-  }, [editor, documentIdRef.current]);
+  }, [editor, documentIdRef.current, comments, hashTagMap, timeNodeMap]);
 
   const deleteDocument = useCallback(async () => {
     await fetcher.submit({ id: documentIdRef.current! }, {
       method: 'post',
       action: '/api/document/delete'
     });
-  }, []);
+  }, [documentIdRef.current]);
 
-  console.log(fetcher.data);
+  useEffect(() => {
+    if (fetcher.data?.status === 204 && fetcher.data?.statusText === 'No Content') {
+      navigate('/z-editor/search');
+    }
+  }, [fetcher.data]);
+
+  useEffect(() => {
+    if (fetcher.data?.status === 201 && fetcher.data?.statusText === 'Created') {
+      navigate(`/z-editor/${fetcher.data.data[0].id}`);
+    }
+  }, [fetcher.data]);
 
   if (fetcher.state === 'submitting') {
     return <span className="i-ph:spinner" un-text='xl blue-3' un-cursor='pointer' un-animate='spin' />;

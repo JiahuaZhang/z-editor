@@ -6,12 +6,6 @@ route?
 * error not found?
 /user/:id/doc/:doc-id?edit=true
 
-update <Editor />, with props, so it would load data from database and render it.
-and can update with its unique id.
-
-Database persistence, saving & loading
-new supabase project for database
-
 need to check on validation:
 multiple tabs -> what if I change one content, another tab? Need to sync? or just throw error?
 

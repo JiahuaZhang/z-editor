@@ -25,14 +25,14 @@ export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zi
 const Plugins = ({ document, comments, ...rest }: { document?: any; comments?: any[]; }) => {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
-  const { addComment } = useCommentContext();
+  const { setComments } = useCommentContext();
 
   useEffect(() => {
     if (!document) return;
 
     setTimeout(() => editor.update(() => editor.setEditorState(editor.parseEditorState(document))), 0);
 
-    comments?.forEach(c => addComment(c));
+    setComments(comments ?? []);
   }, [editor, document, comments]);
 
 

@@ -47,9 +47,9 @@ const Search = () => {
   }
 
   return (
-    <div un-p="4">
-      <h1 un-text="2xl center" un-mb="4">Search Documents</h1>
-      <ul un-mx='8' un-grid='~' >
+    <div>
+      <h1 un-mt='2' un-text="2xl center" un-mb="4">Search Documents</h1>
+      <ul un-ml='4' un-grid='~' un-grid-flow='col' un-justify='start' un-gap='4'>
         {documents.map((doc) => (
           <li key={doc.id} >
             <ZEditorCard document={doc} />

@@ -1,12 +1,116 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { Dropdown, Tooltip } from 'antd';
-import { useCallback, useEffect, useState } from 'react';
-import { useFetcher, useNavigate, useParams } from 'react-router';
-import { useCommentContext } from '../comment/CommentContext';
+import { LexicalEditor } from 'lexical';
+import _ from 'lodash';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { FetcherWithComponents, useFetcher, useNavigate, useParams } from 'react-router';
+import { Comments, useCommentContext } from '../comment/CommentContext';
 import { useHashTagContext } from '../hashtag/HashTagPlugin';
+import { TimeNode } from '../time/TimeNode';
 import { useTimeNodeContext } from '../time/TimePlugin';
 
-type DocumentSyncStatus = 'loading' | 'new' | 'sync' | 'saved';
+type DocumentSyncStatus = 'loading' | 'new' | 'saved';
+
+const NewDocumentPersistence = ({ upsertDocument, fetcher }: { upsertDocument: () => void, fetcher: FetcherWithComponents<any>; }) => {
+  return <button onClick={upsertDocument}>
+    <Tooltip title='Create New Document'>
+      <span className="i-mdi:create" un-text='xl green-6' />
+    </Tooltip>
+    {fetcher.data?.error && (
+      <Tooltip title={`${fetcher.data?.error?.message}`}>
+        <span className="i-material-symbols-light:error" un-text='xl red-6' />
+      </Tooltip>
+    )}
+  </button>;
+};
+
+const SavedDocumentPersistence = ({ upsertDocument, deleteDocument, fetcher, editor, comments, hashTagMap, timeNodeMap }: { upsertDocument: () => Promise<void>, deleteDocument: () => void, fetcher: FetcherWithComponents<any>, editor: LexicalEditor, comments: Comments, hashTagMap: Record<string, string>, timeNodeMap: Record<string, TimeNode>; }) => {
+  const [isChanged, setIsChanged] = useState(false);
+  const prevComments = useRef(comments);
+  const prevHashTagMap = useRef(hashTagMap);
+  const prevTimeNodeMap = useRef(timeNodeMap);
+  const prevEditorState = useRef(editor.getEditorState());
+
+  useEffect(() => {
+    if (prevComments.current && !_.isEqual(prevComments.current, comments)) {
+      setIsChanged(true);
+      prevComments.current = comments;
+    }
+  }, [comments]);
+
+  useEffect(() => {
+    if (prevHashTagMap.current && !_.isEqual(Object.values(prevHashTagMap.current).sort(), Object.values(hashTagMap).sort())) {
+      setIsChanged(true);
+      prevHashTagMap.current = hashTagMap;
+    }
+  }, [hashTagMap]);
+
+  useEffect(() => {
+    if (prevTimeNodeMap.current && !_.isEqual(prevTimeNodeMap.current, timeNodeMap)) {
+      setIsChanged(true);
+      prevTimeNodeMap.current = timeNodeMap;
+    }
+  }, [timeNodeMap]);
+
+  useEffect(() => {
+    return editor.registerUpdateListener(listener => {
+      if (!_.isEqual(prevEditorState.current.toJSON(), listener.editorState.toJSON())) {
+        setIsChanged(true);
+      }
+    });
+  }, [editor]);
+
+  useEffect(() => {
+    if (fetcher.data?.status === 200 && fetcher.data?.statusText === 'OK') {
+      setIsChanged(false);
+    }
+  }, [fetcher.data]);
+
+  return <div un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='0.5'>
+    <Dropdown.Button className='[&>button:last-child]:w-5 [&>button:first-child]:(px-3)'
+      onClick={async () => {
+        await upsertDocument();
+        prevComments.current = comments;
+        prevHashTagMap.current = hashTagMap;
+        prevTimeNodeMap.current = timeNodeMap;
+        prevEditorState.current = editor.getEditorState();
+      }}
+      trigger={['click']}
+      icon={<div un-grid='~'><span className="i-ph:caret-down" un-text='xl gray-4' un-w='4' /></div>}
+      menu={{
+        items: [
+          {
+            key: 'delete',
+            label: <button un-bg='white hover:red-4' un-text='hover:white' un-border='rounded' un-cursor='pointer'
+              un-flex='~' un-items='center' un-gap='1' un-px='2' un-py='1'
+              className='group'
+            >
+              <span className="i-bi:trash3" un-text='xl red-4 group-hover:white' />
+              Delete
+            </button>,
+            onClick: deleteDocument,
+          },
+        ],
+      }}
+    >
+      {isChanged && (
+        <Tooltip title='Sync Document'>
+          <span className="i-material-symbols-light:sync" un-text='xl blue-4' />
+        </Tooltip>
+      )}
+      {!isChanged && (
+        <Tooltip title='Document Already Saved' >
+          <span className="i-material-symbols-light:save" un-text='xl blue-4' un-cursor='pointer' />
+        </Tooltip>
+      )}
+      {fetcher.data?.error && (
+        <Tooltip title={`${fetcher.data?.error?.message}`}>
+          <span className="i-material-symbols-light:error" un-text='xl red-6' />
+        </Tooltip>
+      )}
+    </Dropdown.Button>
+  </div>;
+};
 
 export const DocumentPersistence = () => {
   const fetcher = useFetcher();
@@ -27,23 +131,12 @@ export const DocumentPersistence = () => {
   }, [params.id]);
 
   useEffect(() => {
-    if (status === 'saved') {
-      editor.registerTextContentListener(_ => {
-        setStatus('sync');
-      });
-    }
-    return undefined;
-  }, [editor, status]);
-
-  useEffect(() => {
     if (fetcher.state === 'submitting' || fetcher.state === 'loading') {
       if (fetcher.data?.status === 204 && fetcher.data?.statusText === 'No Content') {
         navigate('/z-editor/search');
       }
-      setStatus('loading');
     } else if (fetcher.state === 'idle') {
       if (fetcher.data?.status === 201 && fetcher.data?.statusText === 'Created') {
-        setStatus('saved');
         navigate(`/z-editor/${fetcher.data.data[0].id}`);
       } else if (fetcher.data?.status === 200 && fetcher.data?.statusText === 'OK') {
         setStatus('saved');
@@ -82,54 +175,8 @@ export const DocumentPersistence = () => {
   }
 
   if (status === 'new') {
-    return <button onClick={upsertDocument}>
-      {fetcher.data === undefined && <Tooltip title='Create New Document'>
-        <span className="i-mdi:create" un-text='xl green-6' />
-      </Tooltip>}
-      {fetcher.data?.error && (
-        <Tooltip title={`${fetcher.data?.error?.message}`}>
-          <span className="i-material-symbols-light:error" un-text='xl red-6' />
-        </Tooltip>
-      )}
-    </button>;
+    return <NewDocumentPersistence upsertDocument={upsertDocument} fetcher={fetcher} />;
   }
 
-  return <div un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='0.5'>
-    <Dropdown.Button className='[&>button:last-child]:w-5 [&>button:first-child]:(px-3)'
-      onClick={upsertDocument}
-      trigger={['click']}
-      icon={<div un-grid='~'><span className="i-ph:caret-down" un-text='xl gray-4' un-w='4' /></div>}
-      menu={{
-        items: [
-          {
-            key: 'delete',
-            label: <button un-bg='white hover:red-4' un-text='hover:white' un-border='rounded' un-cursor='pointer'
-              un-flex='~' un-items='center' un-gap='1' un-px='2' un-py='1'
-              className='group'
-            >
-              <span className="i-bi:trash3" un-text='xl red-4 group-hover:white' />
-              Delete
-            </button>,
-            onClick: deleteDocument,
-          },
-        ],
-      }}
-    >
-      {status === 'sync' && (
-        <Tooltip title='Sync Document'>
-          <span className="i-material-symbols-light:sync" un-text='xl blue-4' />
-        </Tooltip>
-      )}
-      {status === 'saved' && (
-        <Tooltip title='Document Already Saved' >
-          <span className="i-material-symbols-light:save" un-text='xl blue-4' un-cursor='pointer' />
-        </Tooltip>
-      )}
-      {fetcher.data?.error && (
-        <Tooltip title={`${fetcher.data?.error?.message}`}>
-          <span className="i-material-symbols-light:error" un-text='xl red-6' />
-        </Tooltip>
-      )}
-    </Dropdown.Button>
-  </div>;
+  return <SavedDocumentPersistence upsertDocument={upsertDocument} deleteDocument={deleteDocument} fetcher={fetcher} editor={editor} comments={comments} hashTagMap={hashTagMap} timeNodeMap={timeNodeMap} />;
 };

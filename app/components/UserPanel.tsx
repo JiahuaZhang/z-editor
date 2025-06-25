@@ -24,6 +24,13 @@ const items: MenuItem[] = [
     icon: <div className="i-material-symbols-light:search" un-text='2xl' />
   },
   {
+    label: <Link to="/z-editor/alert" >
+      Alert
+    </Link>,
+    key: 'alert',
+    icon: <div className="i-material-symbols-light:notifications" un-text='2xl' />
+  },
+  {
     label: <Link to="/z-editor/new" >
       New
     </Link>,
@@ -51,6 +58,8 @@ export const UserPanel = ({ user }: { user: User; }) => {
       setCurrent('search');
     } else if (location.pathname.includes('/z-editor/new')) {
       setCurrent('new');
+    } else if (location.pathname.includes('/z-editor/alert')) {
+      setCurrent('alert');
     } else {
       setCurrent('');
     }

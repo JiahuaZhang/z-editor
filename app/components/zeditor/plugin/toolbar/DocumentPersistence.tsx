@@ -11,6 +11,8 @@ import { useTimeNodeContext } from '../time/TimePlugin';
 
 type DocumentSyncStatus = 'loading' | 'new' | 'saved';
 
+const autoSaveInterval = (Number(import.meta.env.VITE_AUTO_SAVE_INTERVAL) || 30) * 1000;
+
 const NewDocumentPersistence = ({ upsertDocument, fetcher }: { upsertDocument: () => void, fetcher: FetcherWithComponents<any>; }) => {
   return <button onClick={upsertDocument}>
     <Tooltip title='Create New Document'>
@@ -30,6 +32,20 @@ const SavedDocumentPersistence = ({ upsertDocument, deleteDocument, fetcher, edi
   const prevHashTagMap = useRef(hashTagMap);
   const prevTimeNodeMap = useRef(timeNodeMap);
   const prevEditorState = useRef(editor.getEditorState());
+  const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const update = useCallback(async () => {
+    if (autoSaveTimer.current) {
+      clearTimeout(autoSaveTimer.current);
+      autoSaveTimer.current = null;
+    }
+
+    await upsertDocument();
+    prevComments.current = comments;
+    prevHashTagMap.current = hashTagMap;
+    prevTimeNodeMap.current = timeNodeMap;
+    prevEditorState.current = editor.getEditorState();
+  }, [comments, hashTagMap, timeNodeMap, editor]);
 
   useEffect(() => {
     if (prevComments.current && !_.isEqual(prevComments.current, comments)) {
@@ -53,28 +69,28 @@ const SavedDocumentPersistence = ({ upsertDocument, deleteDocument, fetcher, edi
   }, [timeNodeMap]);
 
   useEffect(() => {
-    return editor.registerUpdateListener(listener => {
+    return editor.registerUpdateListener(async listener => {
       if (!_.isEqual(prevEditorState.current.toJSON(), listener.editorState.toJSON())) {
-        setIsChanged(true);
+        if (!isChanged) { setIsChanged(true); }
+        if (autoSaveTimer.current) { clearTimeout(autoSaveTimer.current); }
+        autoSaveTimer.current = setTimeout(update, autoSaveInterval);
       }
     });
-  }, [editor]);
+  }, [editor, isChanged]);
 
   useEffect(() => {
     if (fetcher.data?.status === 200 && fetcher.data?.statusText === 'OK') {
       setIsChanged(false);
+      if (autoSaveTimer.current) {
+        clearTimeout(autoSaveTimer.current);
+        autoSaveTimer.current = null;
+      }
     }
-  }, [fetcher.data]);
+  }, [fetcher.data, editor]);
 
   return <div un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='0.5'>
     <Dropdown.Button className='[&>button:last-child]:w-5 [&>button:first-child]:(px-3)'
-      onClick={async () => {
-        await upsertDocument();
-        prevComments.current = comments;
-        prevHashTagMap.current = hashTagMap;
-        prevTimeNodeMap.current = timeNodeMap;
-        prevEditorState.current = editor.getEditorState();
-      }}
+      onClick={update}
       trigger={['click']}
       icon={<div un-grid='~'><span className="i-ph:caret-down" un-text='xl gray-4' un-w='4' /></div>}
       menu={{

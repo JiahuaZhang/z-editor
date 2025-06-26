@@ -15,10 +15,6 @@ panel / home / list
 - index, (todos, #hash-tag, index/search)
 
 future todo:
-add user support
-databse -- Row level Security
-need to handle user id
-should hvae new database for User to support authentication (Google, Github, Twitter, Facebook)
 
 生成式 ui
 https://github.com/vercel-labs/ai-sdk-preview-rsc-genui
@@ -37,3 +33,5 @@ https://github.com/facebook/lexical/blob/main/packages/lexical-playground/src/pl
 
 time component
 after preseee enter / space to toggle, should smartly switch focus
+
+multiple social account?

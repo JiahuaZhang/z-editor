@@ -5,6 +5,7 @@ import { $getNodeByKey, type TextNode } from 'lexical';
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 const HASHTAG_REGEX = /(?<prefix>^|\s)(?<sign>#)(?<tag>[^#\s]+)/i;
+export const HASHTAG_QUERY_REGEX = /(?<prefix>^|\s)(?<sign>#)(?<tag>[^#\s]+)/gi;
 
 const Context = createContext<Record<string, string>>({});
 

@@ -1,4 +1,5 @@
-import { ActionFunction, LoaderFunction, useFetcher, useLoaderData, useNavigate, useRouteLoaderData, type MetaFunction } from "react-router";
+import { useEffect, useState } from 'react';
+import { LoaderFunction, ShouldRevalidateFunction, useFetcher, useLoaderData, useNavigate, type MetaFunction } from "react-router";
 import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
 import { createSupabaseServerClient } from '~/util/supabase.server';
 import { Tables } from '~/util/supabase.type';
@@ -27,15 +28,26 @@ export const loader: LoaderFunction = async ({ request }) => {
   return { documents: data as Document[] };
 };
 
-export const action: ActionFunction = async ({ request, params }) => {
-  return 'good';
+export const shouldRevalidate: ShouldRevalidateFunction = ({ formMethod, defaultShouldRevalidate }) => {
+  if (formMethod === 'POST') {
+    return false;
+  }
+  return defaultShouldRevalidate;
 };
 
 const Search = () => {
   const { documents, error } = useLoaderData<LoaderData>();
-  const { user } = useRouteLoaderData('routes/z-editor');
   const navigate = useNavigate();
   const fetcher = useFetcher();
+  const [displayDocuments, setDisplayDocuments] = useState<Document[]>([]);
+
+  useEffect(() => setDisplayDocuments(documents), [documents]);
+
+  useEffect(() => {
+    if (fetcher.data) {
+      setDisplayDocuments(fetcher.data.data as Document[]);
+    }
+  }, [fetcher.data]);
 
   if (error) {
     return <div un-text="center" un-p="14">
@@ -56,7 +68,16 @@ const Search = () => {
       {/* todo: search by # hashtag */}
       {/* possibly elastic search alike */}
       {/* filter by time range */}
-      <fetcher.Form method="post" un-shadow="g" un-m='2' un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'>
+      <fetcher.Form un-shadow="g" un-m='2' un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'
+        method="post"
+        action="/api/document/search"
+        onSubmit={event => {
+          if (event.currentTarget.search.value === '') {
+            event.preventDefault();
+            setDisplayDocuments(documents);
+          }
+        }}
+      >
         <input un-p='2' un-px='4' un-border='gray-2 1 solid rounded focus:blue-4' un-outline='none'
           autoFocus
           type="text"
@@ -70,13 +91,20 @@ const Search = () => {
           OK
         </button>
       </fetcher.Form>
-      <ul un-ml='4' un-grid='~' un-grid-flow='col' un-justify='start' un-gap='4'>
-        {documents.map((doc) => (
+      <ul un-ml='4' un-flex='~ wrap' un-gap='4'>
+        {displayDocuments.map((doc) => (
           <li key={doc.id} >
             <ZEditorCard document={doc} />
           </li>
         ))}
       </ul>
+      {
+        displayDocuments.length === 0 && (
+          <div un-text="center" un-p="14">
+            <h1 un-text="gray-500 lg">No documents found</h1>
+          </div>
+        )
+      }
     </div>
   );
 };

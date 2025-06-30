@@ -91,6 +91,13 @@ const Search = () => {
           OK
         </button>
       </fetcher.Form>
+      {
+        fetcher.state === 'submitting' && (
+          <div un-text="center" un-m='4'>
+            <span className="i-mdi:loading" un-animate-spin='~' un-text="5xl blue-5" aria-label="Loading" />
+          </div>
+        )
+      }
       <ul un-ml='4' un-flex='~ wrap' un-gap='4'>
         {displayDocuments.map((doc) => (
           <li key={doc.id} >

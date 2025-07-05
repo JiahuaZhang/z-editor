@@ -67,7 +67,7 @@ const formatDate = (dateStr: string | null): string => {
 export const ZEditorCard = ({ document }: { document: Document; }) => {
   const preview = editorStatePreview(document);
 
-  return <div un-max-w="xl" un-border='2 solid blue-1 hover:blue-3 rounded' un-shadow="md" un-p="2" un-transition="all .3s" un-hover-shadow="xl" un-grid='~' un-gap='2' >
+  return <div un-max-w="xl" un-p="2" un-grid='~' un-gap='2' un-border='blue-2 hover:blue-4 rounded solid 2' un-shadow="hover:xl">
     <Link to={`/z-editor/${document.id}`} >
       <pre un-overflow-y="auto" un-whitespace="pre-wrap" un-line-height="tight" un-h='60' un-font='sans'>
         {preview}

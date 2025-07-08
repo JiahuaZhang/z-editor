@@ -34,15 +34,40 @@ export const extractHashtags = (query: string): string[] => {
 
 export const searchDocuments = async (request: Request, query: string) => {
   const { supabase } = createSupabaseServerClient(request);
-  const hashtags = extractHashtags(query);
 
-  if (hashtags.length === 0 || (hashtags.length === 1 && hashtags[0] === '')) {
-    return { data: [], error: null };
+  const tags: string[] = [];
+  const words: string[] = [];
+  const phrases: string[] = [];
+
+  const tagRegex = /(#\S+)/g;
+  const phraseRegex = /"([^"]+)"/g;
+
+  let remainingQuery = query;
+
+  let match;
+  while ((match = phraseRegex.exec(remainingQuery)) !== null) {
+    phrases.push(match[1]);
   }
+  remainingQuery = remainingQuery.replace(phraseRegex, '');
 
-  const { data, error } = await supabase
-    .from('editor_documents')
-    .select('*')
-    .overlaps('tag', hashtags);
+  while ((match = tagRegex.exec(remainingQuery)) !== null) {
+    tags.push(match[1]);
+  }
+  remainingQuery = remainingQuery.replace(tagRegex, '');
+
+  words.push(...remainingQuery.trim().split(/\s+/).filter(Boolean));
+
+  const rpcParams = {
+    tags,
+    words,
+    phrases
+  };
+
+  console.log('Frontend parsed query:', rpcParams);
+
+  const { data, error } = await supabase.rpc('search_documents_combined', rpcParams);
+
+  console.log('Search data:', data, error);
+
   return { data, error };
 };

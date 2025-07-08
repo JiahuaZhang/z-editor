@@ -35,3 +35,6 @@ time component
 after preseee enter / space to toggle, should smartly switch focus
 
 multiple social account?
+
+database:
+如果对文字，进行了不同风格处理，那么 "" 这种搜索就有限了

@@ -1,6 +1,3 @@
--- DROP TRIGGER IF EXISTS set_updated_timestamp ON editor_documents;
-DROP FUNCTION IF EXISTS update_updated_column;
-
 CREATE TABLE editor_documents (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     content JSONB NOT NULL,
@@ -156,16 +153,55 @@ CREATE EXTENSION IF NOT EXISTS pgroonga;
 
 CREATE INDEX pgroonga_editor_documents_content_index
 ON editor_documents USING PGroonga (content pgroonga_jsonb_full_text_search_ops_v2);
+CREATE INDEX idx_editor_documents_tag_gin ON editor_documents USING GIN (tag);
 
-CREATE OR REPLACE FUNCTION search_documents_jsonb(query_text TEXT)
+CREATE OR REPLACE FUNCTION search_documents_combined(
+    tags TEXT[] DEFAULT NULL,
+    words TEXT[] DEFAULT NULL,
+    phrases TEXT[] DEFAULT NULL
+)
 RETURNS SETOF editor_documents
 LANGUAGE plpgsql
 AS $$
+DECLARE
+    pgroonga_query_string TEXT := '';
+    where_clauses TEXT[] := ARRAY[]::TEXT[];
+    final_query TEXT;
+    keyword TEXT;
+    phrase TEXT;
 BEGIN
-  RETURN QUERY
-    SELECT *
-    FROM editor_documents
-    WHERE content &@~ query_text
-    ORDER BY created DESC;
+    IF tags IS NOT NULL AND array_length(tags, 1) > 0 THEN
+        where_clauses := array_append(where_clauses, FORMAT('tag @> %L', tags));
+        -- && 其中重叠
+        -- @> 全部包含
+    END IF;
+
+    IF words IS NOT NULL AND array_length(words, 1) > 0 THEN
+        FOREACH keyword IN ARRAY words
+        LOOP
+            pgroonga_query_string := pgroonga_query_string || ' ' || keyword || '*';
+        END LOOP;
+    END IF;
+
+    IF phrases IS NOT NULL AND array_length(phrases, 1) > 0 THEN
+        FOREACH phrase IN ARRAY phrases
+        LOOP
+            pgroonga_query_string := pgroonga_query_string || ' "' || phrase || '"';
+        END LOOP;
+    END IF;
+
+    IF TRIM(pgroonga_query_string) != '' THEN
+        where_clauses := array_append(where_clauses, FORMAT('content &@~ %L', TRIM(pgroonga_query_string)));
+    END IF;
+
+    IF array_length(where_clauses, 1) > 0 THEN
+        final_query := 'SELECT * FROM editor_documents WHERE ' || array_to_string(where_clauses, ' AND ') || ' ORDER BY created DESC;';
+    ELSE
+        final_query := 'SELECT * FROM editor_documents WHERE FALSE;';
+    END IF;
+
+    RAISE NOTICE 'Executing query: %', final_query;
+
+    RETURN QUERY EXECUTE final_query;
 END;
 $$;

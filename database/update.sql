@@ -8,3 +8,7 @@ ALTER TABLE editor_documents DROP COLUMN IF EXISTS search_content;
 
 -- 删除之前用于更新 search_content 的触发器函数（如果它存在）
 DROP FUNCTION IF EXISTS update_search_content_from_jsonb;
+
+SELECT *
+FROM editor_documents
+WHERE content &@~ '"hybrid indent 2 item 1" dolor node' AND tag && array['#new']

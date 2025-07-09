@@ -22,7 +22,7 @@ import { MATCHERS, validateUrl } from './util/url';
 
 export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zinc-6' />;
 
-const Plugins = ({ document, comments, ...rest }: { document?: any; comments?: any[]; }) => {
+const Plugins = ({ document, comments, children, ...rest }: { document?: any; comments?: any[]; children?: React.ReactNode; }) => {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
   const { setComments } = useCommentContext();
@@ -98,11 +98,14 @@ const Plugins = ({ document, comments, ...rest }: { document?: any; comments?: a
 
     {/* <SelectionAlwaysOnDisplay /> */}
     {/* <TreeView editor={editor} /> */}
+    {children}
   </main>;
 };
 
-export const ZEditor = ({ document, comments, ...rest }: { document?: any; comments?: any[]; }) => <ClientOnly>{() =>
+export const ZEditor = ({ document, comments, children, ...rest }: { document?: any; comments?: any[]; children?: React.ReactNode; }) => <ClientOnly>{() =>
   <EditorContext>
-    <Plugins document={document} comments={comments} {...rest} />
+    <Plugins document={document} comments={comments} {...rest} >
+      {children}
+    </Plugins>
   </EditorContext>
 }</ClientOnly>;

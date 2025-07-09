@@ -1,7 +1,21 @@
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useEffect } from 'react';
 import { ZEditor } from '~/components/zeditor/zeditor';
 
-const Baz = () => {
-  return <ZEditor />;
+const NewPlugin = () => {
+  const [editor] = useLexicalComposerContext();
+
+  useEffect(() => {
+    editor.setEditable(true);
+  }, []);
+
+  return null;
 };
 
-export default Baz;
+const Page = () => {
+  return <ZEditor>
+    <NewPlugin />
+  </ZEditor>;
+};
+
+export default Page;

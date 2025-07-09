@@ -1,18 +1,20 @@
+reminder:
+- notification part
+- sync up alert part
+
 route?
-/user/:id
-/user/:id/home
 /user/:id/panel? serach? filter?
-/user/:id/doc/:doc-id
-* error not found?
+sync search input with url
+
 /user/:id/doc/:doc-id?edit=true
+sync edit with url
 
 need to check on validation:
 multiple tabs -> what if I change one content, another tab? Need to sync? or just throw error?
 
 panel / home / list
 - new page
-- list recent pages
-- index, (todos, #hash-tag, index/search)
+- list recent pages (limit)
 
 future todo:
 

@@ -32,9 +32,7 @@ export const extractHashtags = (query: string): string[] => {
     .map(tag => `#${tag}`);
 };
 
-export const searchDocuments = async (request: Request, query: string) => {
-  const { supabase } = createSupabaseServerClient(request);
-
+export const extractQueryPattern = (query: string) => {
   const tags: string[] = [];
   const words: string[] = [];
   const phrases: string[] = [];
@@ -57,17 +55,20 @@ export const searchDocuments = async (request: Request, query: string) => {
 
   words.push(...remainingQuery.trim().split(/\s+/).filter(Boolean));
 
-  const rpcParams = {
-    tags,
-    words,
-    phrases
-  };
+  return { tags, words, phrases };
+};
 
-  console.log('Frontend parsed query:', rpcParams);
+export const searchDocuments = async (request: Request, query: string) => {
+  const { supabase } = createSupabaseServerClient(request);
 
-  const { data, error } = await supabase.rpc('search_documents_combined', rpcParams);
+  const { tags, words, phrases } = extractQueryPattern(query);
 
-  console.log('Search data:', data, error);
+  const { data, error } = await supabase.rpc('search_documents_combined', { tags, words, phrases });
+
+  if (error) {
+    console.error('Error searching documents:', error);
+    return { error: 'Failed to search documents', status: 500 };
+  }
 
   return { data, error };
 };

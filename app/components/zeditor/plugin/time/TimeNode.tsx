@@ -12,7 +12,7 @@ export type Reminder = { type: 'daily'; once: boolean; }
   | { type: 'quarterly'; }
   | { type: 'annually'; };
 
-export type SerializedTimeNode = Spread<{ date: string, time: string, format: TimeNodeFormat; reminder: Reminder[]; }, SerializedLexicalNode>;
+export type SerializedTimeNode = Spread<{ date: string, time: string, format: TimeNodeFormat; reminders: Reminder[]; }, SerializedLexicalNode>;
 
 const $convertTimeNodeElement = (domNode: HTMLSpanElement) => {
   if (domNode.getAttribute('lexical-special') === 'time') {
@@ -161,7 +161,7 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
   }
 
   static importJSON(serializedNode: SerializedTimeNode) {
-    return $createTimeNode(serializedNode.date, serializedNode.time, serializedNode.format, serializedNode.reminder);
+    return $createTimeNode(serializedNode.date, serializedNode.time, serializedNode.format, serializedNode.reminders);
   }
 
   exportJSON() {

@@ -1,7 +1,16 @@
-import { ActionFunction, LoaderFunction, useLoaderData } from "react-router";
+import { PostgrestError } from '@supabase/supabase-js';
+import { LoaderFunction, useLoaderData } from "react-router";
 import { createSupabaseServerClient } from '~/util/supabase.server';
 
-export const loader: LoaderFunction = async ({ request }) => {
+type LoaderData = {
+  data: {
+    id: any;
+    reminder: any;
+  }[] | null;
+  error: PostgrestError | null;
+};
+
+export const loader: LoaderFunction = async ({ request }): Promise<LoaderData> => {
   const { supabase } = createSupabaseServerClient(request);
   const { data, error } = await supabase.from('editor_documents')
     .select('id, reminder')
@@ -10,19 +19,15 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 const Alert = () => {
-  const { data, error } = useLoaderData<typeof loader>();
+  const { data, error } = useLoaderData<LoaderData>();
 
   if (error) {
-    console.error('Error fetching documents:', error);
-    return <div>Error: {error.message}</div>;
+    return <div>Postgrest Error: {error.message} - {error.code}</div>;
   }
 
   if (!data) {
-    return <div>No data</div>;
+    return <div>No alert</div>;
   }
-
-  console.log(data);
-
 
   return <div>Alert</div>;
 };

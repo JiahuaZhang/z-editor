@@ -1,11 +1,12 @@
 import { PostgrestError } from '@supabase/supabase-js';
 import { LoaderFunction, useLoaderData } from "react-router";
+import { Reminder, SerializedTimeNode } from '~/components/zeditor/plugin/time/TimeNode';
 import { createSupabaseServerClient } from '~/util/supabase.server';
 
 type LoaderData = {
   data: {
     id: any;
-    reminder: any;
+    reminder: SerializedTimeNode[];
   }[] | null;
   error: PostgrestError | null;
 };
@@ -29,7 +30,16 @@ const Alert = () => {
     return <div>No alert</div>;
   }
 
-  return <div>Alert</div>;
+  console.log(data);
+  return <div>
+    {
+      data.map(d => <div key={d.id}>
+        {d.reminder.map((r: SerializedTimeNode, i: number) => <div key={i}>
+          {r.date} {r.time} {r.format} {r.reminders.map((r: Reminder) => <div key={r.type}>{r.type}</div>)}
+        </div>)}
+      </div>)
+    }
+  </div>;
 };
 
 export default Alert;

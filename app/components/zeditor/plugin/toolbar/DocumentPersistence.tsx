@@ -179,7 +179,7 @@ export const DocumentPersistence = () => {
   const upsertDocument = useCallback(async () => {
     const content = editor.getEditorState().toJSON();
     const tag = [...new Set(Object.values(hashTagMap))];
-    const reminder = Object.values(timeNodeMap).filter(node => node.getReminders().length > 0);
+    const reminder = Object.values(timeNodeMap).filter(node => node.getReminders().length > 0).map(node => node.exportJSON());
     const document = {
       content,
       comment: comments,

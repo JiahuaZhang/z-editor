@@ -1,5 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { Dropdown, Tooltip } from 'antd';
+import dayjs from 'dayjs';
 import { LexicalEditor } from 'lexical';
 import _ from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -24,6 +25,21 @@ const NewDocumentPersistence = ({ upsertDocument, fetcher }: { upsertDocument: (
       </Tooltip>
     )}
   </button>;
+};
+
+const isTimeNodeMapChanged = (prev: Record<string, TimeNode>, current: Record<string, TimeNode>) => {
+  if (Object.keys(prev).length !== Object.keys(current).length) {
+    return true;
+  }
+
+  const p = Object.values(prev)
+    .sort((a, b) => dayjs(a.getDate()).diff(dayjs(b.getDate()), 'day') || dayjs(a.getTime()).diff(dayjs(b.getTime()), 'second'))
+    .map(n => ({ __date: n.getDate(), __time: n.getTime(), __format: n.getFormat(), __reminders: n.getReminders() }));
+  const c = Object.values(current)
+    .sort((a, b) => dayjs(a.getDate()).diff(dayjs(b.getDate()), 'day') || dayjs(a.getTime()).diff(dayjs(b.getTime()), 'second'))
+    .map(n => ({ __date: n.getDate(), __time: n.getTime(), __format: n.getFormat(), __reminders: n.getReminders() }));
+
+  return !_.isEqual(p, c);
 };
 
 const SavedDocumentPersistence = ({ upsertDocument, deleteDocument, fetcher, editor, comments, hashTagMap, timeNodeMap }: { upsertDocument: () => Promise<void>, deleteDocument: () => void, fetcher: FetcherWithComponents<any>, editor: LexicalEditor, comments: Comments, hashTagMap: Record<string, string>, timeNodeMap: Record<string, TimeNode>; }) => {
@@ -62,7 +78,7 @@ const SavedDocumentPersistence = ({ upsertDocument, deleteDocument, fetcher, edi
   }, [hashTagMap]);
 
   useEffect(() => {
-    if (prevTimeNodeMap.current && !_.isEqual(prevTimeNodeMap.current, timeNodeMap)) {
+    if (prevTimeNodeMap.current && isTimeNodeMapChanged(prevTimeNodeMap.current, timeNodeMap)) {
       setIsChanged(true);
       prevTimeNodeMap.current = timeNodeMap;
     }

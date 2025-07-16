@@ -94,13 +94,31 @@ export const TimeComponent = ({ date, time, format, reminders = [], nodeKey }: {
   const content = <div un-border='rounded' un-w='100' un-grid='~' un-gap='2' un-bg='gray-50' >
     <Radio.Group value={format} className='justify-self-center' >
       <Radio.Button value='date' checked={format === 'date'}
-        onChange={() => editor.update(() => node.setFormat('date'))}
+        onChange={() => editor.update(() => {
+          if (!node.getDate()) {
+            node.setDate(timeObj.toLocaleString());
+          }
+          node.setFormat('date');
+        })}
       >Date</Radio.Button>
       <Radio.Button value='time' checked={format === 'time'}
-        onChange={() => editor.update(() => node.setFormat('time'))}
+        onChange={() => editor.update(() => {
+          if (!node.getTime()) {
+            node.setTime(timeObj.toLocaleString());
+          }
+          node.setFormat('time');
+        })}
       >Time</Radio.Button>
       <Radio.Button value='both' checked={format === 'both'}
-        onChange={() => editor.update(() => node.setFormat('both'))}
+        onChange={() => editor.update(() => {
+          if (!node.getDate()) {
+            node.setDate(timeObj.toLocaleString());
+          }
+          if (!node.getTime()) {
+            node.setTime(timeObj.toLocaleString());
+          }
+          node.setFormat('both');
+        })}
       >Date & Time</Radio.Button>
     </Radio.Group>
 

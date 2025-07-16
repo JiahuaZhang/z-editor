@@ -128,6 +128,7 @@ Refer to Remix’s official documentation for best practices in Routes, Loaders,
 **UnoCss**
 - Use UnoCss for styling.
 - Use UnoCss's Attribute Mode for styling.
+- Try to avoid tailwind class name style first, for example className="grid" is not good enough, a better one should be un-grid='~'.
 
 **Icon**
 - Try to utilize icon from https://icon-sets.iconify.design/.

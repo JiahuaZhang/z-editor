@@ -30,7 +30,6 @@ const Alert = () => {
     return <div>No alert</div>;
   }
 
-  console.log(data);
   return <div>
     {
       data.map(d => <div key={d.id}>

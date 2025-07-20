@@ -1,9 +1,9 @@
 import { PostgrestError } from '@supabase/supabase-js';
 import { Badge } from 'antd';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { useState } from 'react';
 import { LoaderFunction, useLoaderData } from "react-router";
-import { Reminder, SerializedTimeNode } from '~/components/zeditor/plugin/time/TimeNode';
+import { Reminder, SerializedTimeNode, TimeNodeFormat } from '~/components/zeditor/plugin/time/TimeNode';
 import { createSupabaseServerClient } from '~/util/supabase.server';
 
 type LoaderData = {
@@ -22,21 +22,49 @@ export const loader: LoaderFunction = async ({ request }): Promise<LoaderData> =
   return { data, error };
 };
 
-const ReminderAlert = ({ reminder }: { reminder: Reminder; }) => {
+const ReminderAlert = ({ reminder, date, time, format }: { reminder: Reminder; date: Dayjs; time: Dayjs; format: TimeNodeFormat; }) => {
+  const now = dayjs();
+
   const getReminderDisplay = () => {
     switch (reminder.type) {
       case 'daily':
-        return (
-          <div un-flex="~ items-center" un-gap="2">
-            <span className="i-mdi:calendar-today" un-text="sm green-6" />
-            <span un-text="sm green-7" un-font="medium">Daily</span>
-            {reminder.once && (
-              <span un-px="2" un-py="1" un-bg="green-1" un-text="xs green-8" un-border="rounded" un-font="medium">
-                Once
+        if (reminder.once) {
+          const reminderDateTime = date.hour(time.hour()).minute(time.minute()).second(time.second());
+          const isExpired = reminderDateTime.isBefore(now);
+          const isToday = reminderDateTime.isSame(now, 'day');
+
+          return (
+            <div un-flex="~ items-center" un-gap="2" >
+              {
+                isToday && <>
+                  {
+                    isExpired
+                      ? <span className="i-mdi:bell-alert" un-text="sm orange-2" />
+                      : <span className="i-mdi:bell-alert" un-text="sm orange-6" />
+                  }
+                </>
+              }
+              <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'green-6'}`} />
+              <span un-text={`sm ${isExpired ? 'gray-4' : 'green-6'}`} un-font="medium">
+                {reminderDateTime.format('MMM DD, YYYY hh:mm:ss A')}
               </span>
-            )}
-          </div>
-        );
+            </div>
+          );
+        } else {
+          const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
+          const isExpired = todayReminderTime.isBefore(now);
+
+          return (
+            <div un-flex="~ items-center" un-gap="2">
+              {isExpired
+                ? <span className="i-mdi:bell-ring" un-text="sm orange-2" />
+                : <span className="i-mdi:bell-ring" un-text="sm orange-6" />
+              }
+              <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'green-6'}`} />
+              <span un-text={`sm ${isExpired ? 'gray-4' : 'green-6'}`} un-font="medium">Daily</span>
+            </div>
+          );
+        }
 
       case 'weekly':
         return (
@@ -55,7 +83,7 @@ const ReminderAlert = ({ reminder }: { reminder: Reminder; }) => {
                   un-border="rounded"
                   un-font="medium"
                 >
-                  {day.slice(0, 3)}
+                  {day === 'Thursday' ? 'Thurs' : day.slice(0, 3)}
                 </span>
               ))}
             </div>
@@ -94,11 +122,12 @@ const ReminderAlert = ({ reminder }: { reminder: Reminder; }) => {
     }
   };
 
-  return (
-    <div un-p="2" un-border="1 solid slate-2 rounded" un-bg="slate-1">
-      {getReminderDisplay()}
-    </div>
-  );
+  // return (
+  //   <div un-p="2" un-border="1 solid slate-2 rounded" un-bg="slate-1">
+  //     {getReminderDisplay()}
+  //   </div>
+  // );
+  return getReminderDisplay();
 };
 
 const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
@@ -136,7 +165,7 @@ const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
                 aria-label="Date"
                 role="img"
               />
-              <span un-text="white" un-font="semibold">{dateObj.format('DD/MM/YYYY')}</span>
+              <span un-text="white" un-font="semibold">{dateObj.format('MMM DD,YYYY')}</span>
             </div>
           )}
 
@@ -170,11 +199,9 @@ const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
 
       {isOpen && (
         <div un-mt="4" un-pt="3" un-border="t-1 solid slate-2">
+          {/* grid? dense layout? */}
           <div un-flex="~ col" un-gap="2">
-            <h4 un-text="sm slate-6" un-font="medium" un-mb="2">Reminders:</h4>
-            {reminders.map((reminder, index) => (
-              <ReminderAlert key={index} reminder={reminder} />
-            ))}
+            {reminders.map((reminder, index) => <ReminderAlert key={index} reminder={reminder} date={dateObj} time={timeObj} format={format} />)}
           </div>
         </div>
       )}

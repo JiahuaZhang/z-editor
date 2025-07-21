@@ -12,3 +12,5 @@ app/styles/uno.css
 .vercel
 
 config/
+*storybook.log
+storybook-static

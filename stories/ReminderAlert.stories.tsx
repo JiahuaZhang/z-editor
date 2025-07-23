@@ -47,27 +47,25 @@ export const OnceExpiredToday: Story = {
   },
 };
 
-// Test case 2: 'once' type, that's not expired in today
 export const OnceNotExpiredToday: Story = {
   args: {
     reminder: {
       type: 'daily',
       once: true,
     },
-    date: dayjs(),
-    time: dayjs().add(2, 'hours'), // 2 hours from now today
+    date: dayjs().add(30, 'minute'),
+    time: dayjs().add(30, 'minute'),
     format: 'both',
   },
   parameters: {
     docs: {
       description: {
-        story: 'A daily reminder that is set for today but has not expired yet (2 hours from now). Shows active orange bell and green text.',
+        story: 'A daily reminder that is set for today but has not expired yet (30 mins from now). Shows active orange bell and green text.',
       },
     },
   },
 };
 
-// Test case 3: 'once' type, that's expired weeks ago
 export const OnceExpiredWeeksAgo: Story = {
   args: {
     reminder: {
@@ -75,7 +73,7 @@ export const OnceExpiredWeeksAgo: Story = {
       once: true,
     },
     date: dayjs().subtract(2, 'weeks'),
-    time: dayjs().subtract(2, 'weeks').hour(10).minute(30), // 2 weeks ago at 10:30 AM
+    time: dayjs().subtract(2, 'weeks').hour(10).minute(30),
     format: 'both',
   },
   parameters: {
@@ -87,15 +85,14 @@ export const OnceExpiredWeeksAgo: Story = {
   },
 };
 
-// Test case 4: regular 'daily' type, and current time is 30 minutes before alert
 export const DailyBefore30Minutes: Story = {
   args: {
     reminder: {
       type: 'daily',
       once: false,
     },
-    date: dayjs(),
-    time: dayjs().add(30, 'minutes'), // 30 minutes from now
+    date: dayjs().add(30, 'minute'),
+    time: dayjs().add(30, 'minute'),
     format: 'time',
   },
   parameters: {
@@ -107,21 +104,20 @@ export const DailyBefore30Minutes: Story = {
   },
 };
 
-// Test case 5: regular 'daily' type, and current time just 1 hour after alert
-export const DailyAfter1Hour: Story = {
+export const DailyAfter30Minutes: Story = {
   args: {
     reminder: {
       type: 'daily',
       once: false,
     },
-    date: dayjs(),
-    time: dayjs().subtract(1, 'hour'), // 1 hour ago
+    date: dayjs().subtract(30, 'minute'),
+    time: dayjs().subtract(30, 'minute'),
     format: 'time',
   },
   parameters: {
     docs: {
       description: {
-        story: 'A recurring daily reminder that was supposed to trigger 1 hour ago. Shows dimmed bell ring icon and gray text.',
+        story: 'A recurring daily reminder that was supposed to trigger 30 minutes ago. Shows dimmed bell ring icon and gray text.',
       },
     },
   },

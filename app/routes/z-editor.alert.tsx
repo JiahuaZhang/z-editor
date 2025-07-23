@@ -44,8 +44,8 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
                   }
                 </>
               }
-              <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'green-6'}`} />
-              <span un-text={`sm ${isExpired ? 'gray-4' : 'green-6'}`} un-font="medium">
+              <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} />
+              <span un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} un-font="medium">
                 {reminderDateTime.format('MMM DD, YYYY hh:mm:ss A')}
               </span>
             </div>
@@ -60,8 +60,8 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
                 ? <span className="i-mdi:bell-ring" un-text="sm orange-2" />
                 : <span className="i-mdi:bell-ring" un-text="sm orange-6" />
               }
-              <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'green-6'}`} />
-              <span un-text={`sm ${isExpired ? 'gray-4' : 'green-6'}`} un-font="medium">Daily</span>
+              <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} />
+              <span un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} un-font="medium">Daily</span>
             </div>
           );
         }

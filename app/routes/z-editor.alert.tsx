@@ -22,7 +22,7 @@ export const loader: LoaderFunction = async ({ request }): Promise<LoaderData> =
   return { data, error };
 };
 
-const ReminderAlert = ({ reminder, date, time, format }: { reminder: Reminder; date: Dayjs; time: Dayjs; format: TimeNodeFormat; }) => {
+export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Reminder; date: Dayjs; time: Dayjs; format: TimeNodeFormat; }) => {
   const now = dayjs();
 
   const getReminderDisplay = () => {

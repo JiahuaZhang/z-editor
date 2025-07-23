@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import dayjs from 'dayjs';
-import { ReminderAlert } from './ReminderAlert.standalone';
+import { ReminderAlert } from '~/routes/z-editor.alert';
 
 const meta: Meta<typeof ReminderAlert> = {
   title: 'Components/ReminderAlert',
@@ -37,6 +37,7 @@ export const OnceExpiredToday: Story = {
     },
     date: dayjs(),
     time: dayjs().subtract(2, 'hours'), // 2 hours ago today
+    format: 'both',
   },
   parameters: {
     docs: {
@@ -56,6 +57,7 @@ export const OnceNotExpiredToday: Story = {
     },
     date: dayjs(),
     time: dayjs().add(2, 'hours'), // 2 hours from now today
+    format: 'both',
   },
   parameters: {
     docs: {
@@ -75,6 +77,7 @@ export const OnceExpiredWeeksAgo: Story = {
     },
     date: dayjs().subtract(2, 'weeks'),
     time: dayjs().subtract(2, 'weeks').hour(10).minute(30), // 2 weeks ago at 10:30 AM
+    format: 'both',
   },
   parameters: {
     docs: {
@@ -94,6 +97,7 @@ export const DailyBefore30Minutes: Story = {
     },
     date: dayjs(),
     time: dayjs().add(30, 'minutes'), // 30 minutes from now
+    format: 'time',
   },
   parameters: {
     docs: {
@@ -113,6 +117,7 @@ export const DailyAfter1Hour: Story = {
     },
     date: dayjs(),
     time: dayjs().subtract(1, 'hour'), // 1 hour ago
+    format: 'time',
   },
   parameters: {
     docs: {
@@ -132,6 +137,7 @@ export const WeeklyReminder: Story = {
     },
     date: dayjs(),
     time: dayjs().hour(9).minute(0),
+    format: 'both',
   },
   parameters: {
     docs: {

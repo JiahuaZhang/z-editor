@@ -31,12 +31,12 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
         if (reminder.once) {
           const reminderDateTime = date.hour(time.hour()).minute(time.minute()).second(time.second());
           const isExpired = reminderDateTime.isBefore(now);
-          const isToday = reminderDateTime.isSame(now, 'day');
+          const isRecent = Math.abs(reminderDateTime.diff(now, 'hour')) <= 8;
 
           return (
             <div un-flex="~ items-center" un-gap="2" >
               {
-                isToday && <>
+                isRecent && <>
                   {
                     isExpired
                       ? <span className="i-mdi:bell-alert" un-text="sm orange-2" />

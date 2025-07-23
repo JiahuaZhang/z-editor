@@ -28,21 +28,20 @@ const meta: Meta<typeof ReminderAlert> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Test case 1: 'once' type, that's expired in today
 export const OnceExpiredToday: Story = {
   args: {
     reminder: {
       type: 'daily',
       once: true,
     },
-    date: dayjs(),
-    time: dayjs().subtract(2, 'hours'), // 2 hours ago today
+    date: dayjs().subtract(30, 'minute'),
+    time: dayjs().subtract(30, 'minute'),
     format: 'both',
   },
   parameters: {
     docs: {
       description: {
-        story: 'A daily reminder that was set for today but has already expired (2 hours ago). Shows orange bell alert and gray text.',
+        story: 'A daily reminder that was set for today but has already expired (30 mins ago). Shows orange bell alert and gray text.',
       },
     },
   },

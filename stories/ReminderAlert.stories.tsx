@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import dayjs from 'dayjs';
+import { WeekDay } from '~/components/zeditor/plugin/time/TimeNode';
 import { ReminderAlert } from '~/routes/z-editor.alert';
 
 const meta: Meta<typeof ReminderAlert> = {
@@ -175,6 +176,44 @@ export const WeeklyReminder3: Story = {
     docs: {
       description: {
         story: 'A weekly reminder that repeats on Monday, Wednesday, and Friday. Shows different UI with day badges.',
+      },
+    },
+  },
+};
+
+export const TodayExpiredAlert: Story = {
+  args: {
+    reminder: {
+      type: 'weekly',
+      weekly: [dayjs().format('dddd') as WeekDay],
+    },
+    date: dayjs(),
+    time: dayjs().subtract(30, 'minute'),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A weekly reminder for today that has already expired (30 min ago). Shows dimmed bell icon and gray text indicating it has passed.',
+      },
+    },
+  },
+};
+
+export const Today30MinsBefore: Story = {
+  args: {
+    reminder: {
+      type: 'weekly',
+      weekly: [dayjs().format('dddd') as WeekDay],
+    },
+    date: dayjs(),
+    time: dayjs().add(30, 'minute'),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A weekly reminder for today that will trigger in 30 minutes. Shows active bell ring icon and green text indicating upcoming alert.',
       },
     },
   },

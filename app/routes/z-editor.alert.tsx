@@ -69,36 +69,38 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
       case 'weekly':
         const currentDayName = now.format('dddd');
         const isToday = reminder.weekly.includes(currentDayName as WeekDay);
+        const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
+        const isExpired = isToday && todayReminderTime.isBefore(now);
 
         return (
           <div un-flex="~ col" un-gap="2">
             <div un-flex="~ items-center" un-gap="2">
-              {isToday && <span className="i-mdi:bell-alert" un-text="sm orange-6" />}
-              <span className="i-mdi:calendar-week" un-text="sm blue-6" />
+              {isToday && <span className="i-mdi:bell-alert" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
+              <span className="i-mdi:calendar-week" un-text={`sm ${isExpired ? "gray-4" : "blue-6"}`} />
               {reminder.weekly.map(day => {
                 const isCurrentDay = day === currentDayName;
                 return (
                   <span key={day}
                     un-px="2"
                     un-py="1"
-                    un-bg={isCurrentDay ? "blue-5" : "blue-1"}
-                    un-text={isCurrentDay ? "xs white" : "xs blue-8"}
+                    un-bg={isExpired ? "gray-2" : (isCurrentDay ? "blue-5" : "blue-1")}
+                    un-text={`xs ${isExpired ? "gray-5" : (isCurrentDay ? "white" : "blue-8")}`}
                     un-border="rounded"
-                    un-font={isCurrentDay ? "bold" : "medium"}
-                    un-shadow={isCurrentDay ? "md" : "none"}
+                    un-font={isExpired ? "medium" : (isCurrentDay ? "bold" : "medium")}
+                    un-shadow={isExpired ? "none" : (isCurrentDay ? "md" : "none")}
                   >
                     {day === 'Thursday' ? 'Thurs' : day.slice(0, 3)}
                   </span>
                 );
               })}
               <span
-                un-text={isToday ? "sm white" : "sm blue-7"}
-                un-font={isToday ? "bold" : "medium"}
-                un-bg={isToday ? "blue-5" : "transparent"}
-                un-px={isToday ? "2" : "0"}
-                un-py={isToday ? "1" : "0"}
-                un-border={isToday ? "rounded" : "none"}
-                un-shadow={isToday ? "sm" : "none"}
+                un-text={`sm ${isExpired ? "gray-4" : (isToday ? "white" : "blue-7")}`}
+                un-font={isExpired ? "medium" : (isToday ? "bold" : "medium")}
+                un-bg={isExpired ? "gray-2" : (isToday ? "blue-5" : "transparent")}
+                un-px={isExpired || isToday ? "2" : "0"}
+                un-py={isExpired || isToday ? "1" : "0"}
+                un-border={isExpired || isToday ? "rounded" : "none"}
+                un-shadow={isExpired ? "none" : (isToday ? "sm" : "none")}
               >
                 {time.format('hh:mm:ss A')}
               </span>

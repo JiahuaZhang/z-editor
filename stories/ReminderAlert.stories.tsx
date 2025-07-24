@@ -123,12 +123,49 @@ export const DailyAfter30Minutes: Story = {
   },
 };
 
-// Additional story for comparison - Weekly reminder
-export const WeeklyReminder: Story = {
+export const WeeklyReminder1: Story = {
   args: {
     reminder: {
       type: 'weekly',
       weekly: ['Monday', 'Wednesday', 'Friday'],
+    },
+    date: dayjs(),
+    time: dayjs().hour(9).minute(0),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A weekly reminder that repeats on Monday, Wednesday, and Friday. Shows different UI with day badges.',
+      },
+    },
+  },
+};
+
+export const WeeklyReminder2: Story = {
+  args: {
+    reminder: {
+      type: 'weekly',
+      weekly: ['Tuesday', 'Thursday',],
+    },
+    date: dayjs(),
+    time: dayjs().hour(9).minute(0),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A weekly reminder that repeats on Monday, Wednesday, and Friday. Shows different UI with day badges.',
+      },
+    },
+  },
+};
+
+export const WeeklyReminder3: Story = {
+  args: {
+    reminder: {
+      type: 'weekly',
+      weekly: ['Saturday', 'Sunday',],
     },
     date: dayjs(),
     time: dayjs().hour(9).minute(0),

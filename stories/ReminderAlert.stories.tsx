@@ -218,3 +218,136 @@ export const Today30MinsBefore: Story = {
     },
   },
 };
+
+export const MonthlyThisDay: Story = {
+  args: {
+    reminder: {
+      type: 'monthly',
+      monthly: 'this',
+    },
+    date: dayjs('2024-03-15'),
+    time: dayjs('2024-03-15').hour(14).minute(30),
+    format: 'date',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A monthly reminder set for "this day" (15th of each month). Shows monthly calendar icon with "This day" badge.',
+      },
+    },
+  },
+};
+
+export const Monthly1stWeek: Story = {
+  args: {
+    reminder: {
+      type: 'monthly',
+      monthly: '1st',
+    },
+    date: dayjs('2024-07-08'),
+    time: dayjs('2024-07-08').hour(9).minute(0),
+    format: 'date',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A monthly reminder set for the 1st week of each month. Shows monthly calendar icon with "1st week" badge.',
+      },
+    },
+  },
+};
+
+export const Monthly2ndWeek: Story = {
+  args: {
+    reminder: {
+      type: 'monthly',
+      monthly: '2nd',
+    },
+    date: dayjs('2024-11-12'),
+    time: dayjs('2024-11-12').hour(16).minute(45),
+    format: 'date',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A monthly reminder set for the 2nd week of each month. Shows monthly calendar icon with "2nd week" badge.',
+      },
+    },
+  },
+};
+
+export const Monthly3rdWeek: Story = {
+  args: {
+    reminder: {
+      type: 'monthly',
+      monthly: '3rd',
+    },
+    date: dayjs('2024-05-20'),
+    time: dayjs('2024-05-20').hour(11).minute(15),
+    format: 'date',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A monthly reminder set for the 3rd week of each month. Shows monthly calendar icon with "3rd week" badge.',
+      },
+    },
+  },
+};
+
+export const Monthly4thWeek: Story = {
+  args: {
+    reminder: {
+      type: 'monthly',
+      monthly: '4th',
+    },
+    date: dayjs('2024-09-25'),
+    time: dayjs('2024-09-25').hour(13).minute(20),
+    format: 'date',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A monthly reminder set for the 4th week of each month. Shows monthly calendar icon with "4th week" badge.',
+      },
+    },
+  },
+};
+
+export const Monthly5thWeek: Story = {
+  args: {
+    reminder: {
+      type: 'monthly',
+      monthly: '5th',
+    },
+    date: dayjs('2024-01-31'),
+    time: dayjs('2024-01-31').hour(18).minute(0),
+    format: 'date',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A monthly reminder set for the 5th week of each month. Shows monthly calendar icon with "5th week" badge.',
+      },
+    },
+  },
+};
+
+export const MonthlyLastWeek: Story = {
+  args: {
+    reminder: {
+      type: 'monthly',
+      monthly: 'last',
+    },
+    date: dayjs('2024-12-28'),
+    time: dayjs('2024-12-28').hour(10).minute(30),
+    format: 'date',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A monthly reminder set for the last week of each month. Shows monthly calendar icon with "last week" badge.',
+      },
+    },
+  },
+};

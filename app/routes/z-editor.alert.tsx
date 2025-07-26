@@ -109,13 +109,36 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
         );
 
       case 'monthly':
+        let alertDate = date;
+        if (reminder.monthly === 'last') {
+          const lastDayOfMonth = now.endOf('month');
+          const daysFromEnd = (lastDayOfMonth.day() - now.day() + 7) % 7;
+          alertDate = lastDayOfMonth.subtract(daysFromEnd, 'day');
+        } else if (reminder.monthly !== 'this') {
+          const weekNumber = parseInt(reminder.monthly.replace(/\D/g, ''));
+          const firstDayOfMonth = now.startOf('month');
+          const firstOccurrence = firstDayOfMonth.day(alertDate.day());
+
+          if (firstOccurrence.isBefore(firstDayOfMonth)) {
+            alertDate = firstOccurrence.add(weekNumber, 'week');
+          } else {
+            alertDate = firstOccurrence.add(weekNumber - 1, 'week');
+          }
+        }
+
         return (
           <div un-flex="~ items-center" un-gap="2">
             <span className="i-mdi:calendar-month" un-text="sm purple-6" />
-            <span un-text="sm purple-7" un-font="medium">Monthly</span>
-            <span un-px="2" un-py="1" un-bg="purple-1" un-text="xs purple-8" un-border="rounded" un-font="medium">
-              {reminder.monthly === 'this' ? 'This day' : `${reminder.monthly} week`}
-            </span>
+            <div un-flex="~ items-center" >
+              <span un-px="2" un-py="1" un-bg="purple-5" un-text="xs white" un-border="rounded" un-font="medium">
+                {alertDate.format('MMM DD')}
+              </span>
+              {reminder.monthly !== 'this' && (
+                <span un-px="2" un-py="1" un-bg="white" un-text="xs purple-7" un-border="rounded" un-font="medium">
+                  {reminder.monthly === 'last' ? 'last' : reminder.monthly} {date.format('ddd')}
+                </span>
+              )}
+            </div>
           </div>
         );
 

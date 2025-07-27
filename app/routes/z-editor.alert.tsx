@@ -110,6 +110,8 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
 
       case 'monthly':
         let alertDate = date;
+        let isDateAvailable = true;
+
         if (reminder.monthly === 'last') {
           const lastDayOfMonth = now.endOf('month');
           const daysFromEnd = (lastDayOfMonth.day() - now.day() + 7) % 7;
@@ -124,17 +126,27 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
           } else {
             alertDate = firstOccurrence.add(weekNumber - 1, 'week');
           }
+          isDateAvailable = alertDate.month() === now.month();
         }
 
         return (
           <div un-flex="~ items-center" un-gap="2">
             <span className="i-mdi:calendar-month" un-text="sm purple-6" />
             <div un-flex="~ items-center" >
-              <span un-px="2" un-py="1" un-bg="purple-5" un-text="xs white" un-border="rounded" un-font="medium">
-                {alertDate.format('MMM DD')}
-              </span>
+              {isDateAvailable && (
+                <span un-px="2" un-py="1" un-bg="purple-5" un-text="xs white" un-border="rounded" un-font="medium">
+                  {alertDate.format('MMM DD')}
+                </span>
+              )}
               {reminder.monthly !== 'this' && (
-                <span un-px="2" un-py="1" un-bg="white" un-text="xs purple-7" un-border="rounded" un-font="medium">
+                <span
+                  un-px="2"
+                  un-py="1"
+                  un-bg={isDateAvailable ? "white" : "gray-1"}
+                  un-text={`xs ${isDateAvailable ? "purple-7" : "gray-4"}`}
+                  un-border="rounded"
+                  un-font="medium"
+                >
                   {reminder.monthly === 'last' ? 'last' : reminder.monthly} {date.format('ddd')}
                 </span>
               )}

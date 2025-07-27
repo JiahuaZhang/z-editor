@@ -351,3 +351,22 @@ export const MonthlyLastWeek: Story = {
     },
   },
 };
+
+export const Monthly5thSaturdayUnavailable: Story = {
+  args: {
+    reminder: {
+      type: 'monthly',
+      monthly: '5th',
+    },
+    date: dayjs('2025-07-05'),
+    time: dayjs('2025-07-05').hour(10).minute(0),
+    format: 'date',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A monthly reminder set for the 5th Saturday, but July 2025 only has 4 Saturdays. Shows grayed-out "5th Sat" text without the date badge to indicate the reminder is not available this month.',
+      },
+    },
+  },
+};

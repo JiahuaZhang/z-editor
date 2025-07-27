@@ -25,162 +25,153 @@ export const loader: LoaderFunction = async ({ request }): Promise<LoaderData> =
 export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Reminder; date: Dayjs; time: Dayjs; format: TimeNodeFormat; }) => {
   const now = dayjs();
 
-  const getReminderDisplay = () => {
-    switch (reminder.type) {
-      case 'daily':
-        if (reminder.once) {
-          const reminderDateTime = date.hour(time.hour()).minute(time.minute()).second(time.second());
-          const isExpired = reminderDateTime.isBefore(now);
-          const isRecent = Math.abs(reminderDateTime.diff(now, 'hour')) <= 8;
-
-          return (
-            <div un-flex="~ items-center" un-gap="2" >
-              {
-                isRecent && <>
-                  {
-                    isExpired
-                      ? <span className="i-mdi:bell-alert" un-text="sm orange-2" />
-                      : <span className="i-mdi:bell-alert" un-text="sm orange-6" />
-                  }
-                </>
-              }
-              <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} />
-              <span un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} un-font="medium">
-                {reminderDateTime.format('MMM DD, YYYY hh:mm:ss A')}
-              </span>
-            </div>
-          );
-        } else {
-          const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
-          const isExpired = todayReminderTime.isBefore(now);
-
-          return (
-            <div un-flex="~ items-center" un-gap="2">
-              {isExpired
-                ? <span className="i-mdi:bell-ring" un-text="sm orange-2" />
-                : <span className="i-mdi:bell-ring" un-text="sm orange-6" />
-              }
-              <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} />
-              <span un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} un-font="medium">Daily</span>
-            </div>
-          );
-        }
-
-      case 'weekly':
-        const currentDayName = now.format('dddd');
-        const isToday = reminder.weekly.includes(currentDayName as WeekDay);
-        const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
-        const isExpired = isToday && todayReminderTime.isBefore(now);
+  switch (reminder.type) {
+    case 'daily':
+      if (reminder.once) {
+        const reminderDateTime = date.hour(time.hour()).minute(time.minute()).second(time.second());
+        const isExpired = reminderDateTime.isBefore(now);
+        const isRecent = Math.abs(reminderDateTime.diff(now, 'hour')) <= 8;
 
         return (
-          <div un-flex="~ col" un-gap="2">
-            <div un-flex="~ items-center" un-gap="2">
-              {isToday && <span className="i-mdi:bell-alert" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
-              <span className="i-mdi:calendar-week" un-text={`sm ${isExpired ? "gray-4" : "blue-6"}`} />
-              {reminder.weekly.map(day => {
-                const isCurrentDay = day === currentDayName;
-                return (
-                  <span key={day}
-                    un-px="2"
-                    un-py="1"
-                    un-bg={isExpired ? "gray-2" : (isCurrentDay ? "blue-5" : "blue-1")}
-                    un-text={`xs ${isExpired ? "gray-5" : (isCurrentDay ? "white" : "blue-8")}`}
-                    un-border="rounded"
-                    un-font={isExpired ? "medium" : (isCurrentDay ? "bold" : "medium")}
-                    un-shadow={isExpired ? "none" : (isCurrentDay ? "md" : "none")}
-                  >
-                    {day === 'Thursday' ? 'Thurs' : day.slice(0, 3)}
-                  </span>
-                );
-              })}
-              <span
-                un-text={`sm ${isExpired ? "gray-4" : (isToday ? "white" : "blue-7")}`}
-                un-font={isExpired ? "medium" : (isToday ? "bold" : "medium")}
-                un-bg={isExpired ? "gray-2" : (isToday ? "blue-5" : "transparent")}
-                un-px={isExpired || isToday ? "2" : "0"}
-                un-py={isExpired || isToday ? "1" : "0"}
-                un-border={isExpired || isToday ? "rounded" : "none"}
-                un-shadow={isExpired ? "none" : (isToday ? "sm" : "none")}
-              >
-                {time.format('hh:mm:ss A')}
-              </span>
-            </div>
+          <div un-flex="~ items-center" un-gap="2" >
+            {
+              isRecent && <>
+                {
+                  isExpired
+                    ? <span className="i-mdi:bell-alert" un-text="sm orange-2" />
+                    : <span className="i-mdi:bell-alert" un-text="sm orange-6" />
+                }
+              </>
+            }
+            <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} />
+            <span un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} un-font="medium">
+              {reminderDateTime.format('MMM DD, YYYY hh:mm:ss A')}
+            </span>
           </div>
         );
-
-      case 'monthly':
-        let alertDate = date;
-        let isDateAvailable = true;
-
-        if (reminder.monthly === 'last') {
-          const lastDayOfMonth = now.endOf('month');
-          const daysFromEnd = (lastDayOfMonth.day() - now.day() + 7) % 7;
-          alertDate = lastDayOfMonth.subtract(daysFromEnd, 'day');
-        } else if (reminder.monthly !== 'this') {
-          const weekNumber = parseInt(reminder.monthly.replace(/\D/g, ''));
-          const firstDayOfMonth = now.startOf('month');
-          const firstOccurrence = firstDayOfMonth.day(alertDate.day());
-
-          if (firstOccurrence.isBefore(firstDayOfMonth)) {
-            alertDate = firstOccurrence.add(weekNumber, 'week');
-          } else {
-            alertDate = firstOccurrence.add(weekNumber - 1, 'week');
-          }
-          isDateAvailable = alertDate.month() === now.month();
-        }
+      } else {
+        const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
+        const isExpired = todayReminderTime.isBefore(now);
 
         return (
           <div un-flex="~ items-center" un-gap="2">
-            <span className="i-mdi:calendar-month" un-text="sm purple-6" />
-            <div un-flex="~ items-center" >
-              {isDateAvailable && (
-                <span un-px="2" un-py="1" un-bg="purple-5" un-text="xs white" un-border="rounded" un-font="medium">
-                  {alertDate.format('MMM DD')}
-                </span>
-              )}
-              {reminder.monthly !== 'this' && (
-                <span
+            {isExpired
+              ? <span className="i-mdi:bell-ring" un-text="sm orange-2" />
+              : <span className="i-mdi:bell-ring" un-text="sm orange-6" />
+            }
+            <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} />
+            <span un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} un-font="medium">Daily</span>
+          </div>
+        );
+      }
+
+    case 'weekly':
+      const currentDayName = now.format('dddd');
+      const isToday = reminder.weekly.includes(currentDayName as WeekDay);
+      const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
+      const isExpired = isToday && todayReminderTime.isBefore(now);
+
+      return (
+        <div un-flex="~ col" un-gap="2">
+          <div un-flex="~ items-center" un-gap="2">
+            {isToday && <span className="i-mdi:bell-alert" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
+            <span className="i-mdi:calendar-week" un-text={`sm ${isExpired ? "gray-4" : "blue-6"}`} />
+            {reminder.weekly.map(day => {
+              const isCurrentDay = day === currentDayName;
+              return (
+                <span key={day}
                   un-px="2"
                   un-py="1"
-                  un-bg={isDateAvailable ? "white" : "gray-1"}
-                  un-text={`xs ${isDateAvailable ? "purple-7" : "gray-4"}`}
+                  un-bg={isExpired ? "gray-2" : (isCurrentDay ? "blue-5" : "blue-1")}
+                  un-text={`xs ${isExpired ? "gray-5" : (isCurrentDay ? "white" : "blue-8")}`}
                   un-border="rounded"
-                  un-font="medium"
+                  un-font={isExpired ? "medium" : (isCurrentDay ? "bold" : "medium")}
+                  un-shadow={isExpired ? "none" : (isCurrentDay ? "md" : "none")}
                 >
-                  {reminder.monthly === 'last' ? 'last' : reminder.monthly} {date.format('ddd')}
+                  {day === 'Thursday' ? 'Thurs' : day.slice(0, 3)}
                 </span>
-              )}
-            </div>
+              );
+            })}
+            <span
+              un-text={`sm ${isExpired ? "gray-4" : (isToday ? "white" : "blue-7")}`}
+              un-font={isExpired ? "medium" : (isToday ? "bold" : "medium")}
+              un-bg={isExpired ? "gray-2" : (isToday ? "blue-5" : "transparent")}
+              un-px={isExpired || isToday ? "2" : "0"}
+              un-py={isExpired || isToday ? "1" : "0"}
+              un-border={isExpired || isToday ? "rounded" : "none"}
+              un-shadow={isExpired ? "none" : (isToday ? "sm" : "none")}
+            >
+              {time.format('hh:mm:ss A')}
+            </span>
           </div>
-        );
+        </div>
+      );
 
-      case 'quarterly':
-        return (
-          <div un-flex="~ items-center" un-gap="2">
-            <span className="i-mdi:calendar-range" un-text="sm orange-6" />
-            <span un-text="sm orange-7" un-font="medium">Quarterly</span>
+    case 'monthly':
+      let alertDate = date;
+      let isDateAvailable = true;
+
+      if (reminder.monthly === 'last') {
+        const lastDayOfMonth = now.endOf('month');
+        const daysFromEnd = (lastDayOfMonth.day() - now.day() + 7) % 7;
+        alertDate = lastDayOfMonth.subtract(daysFromEnd, 'day');
+      } else if (reminder.monthly !== 'this') {
+        const weekNumber = parseInt(reminder.monthly.replace(/\D/g, ''));
+        const firstDayOfMonth = now.startOf('month');
+        const firstOccurrence = firstDayOfMonth.day(alertDate.day());
+
+        if (firstOccurrence.isBefore(firstDayOfMonth)) {
+          alertDate = firstOccurrence.add(weekNumber, 'week');
+        } else {
+          alertDate = firstOccurrence.add(weekNumber - 1, 'week');
+        }
+        isDateAvailable = alertDate.month() === now.month();
+      }
+
+      return (
+        <div un-flex="~ items-center" un-gap="2">
+          <span className="i-mdi:calendar-month" un-text="sm purple-6" />
+          <div un-flex="~ items-center" >
+            {isDateAvailable && (
+              <span un-px="2" un-py="1" un-bg="purple-5" un-text="xs white" un-border="rounded" un-font="medium">
+                {alertDate.format('MMM DD')}
+              </span>
+            )}
+            {reminder.monthly !== 'this' && (
+              <span
+                un-px="2"
+                un-py="1"
+                un-bg={isDateAvailable ? "white" : "gray-1"}
+                un-text={`xs ${isDateAvailable ? "purple-7" : "gray-4"}`}
+                un-border="rounded"
+                un-font="medium"
+              >
+                {reminder.monthly === 'last' ? 'last' : reminder.monthly} {date.format('ddd')}
+              </span>
+            )}
           </div>
-        );
+        </div>
+      );
 
-      case 'annually':
-        return (
-          <div un-flex="~ items-center" un-gap="2">
-            <span className="i-mdi:calendar-star" un-text="sm red-6" />
-            <span un-text="sm red-7" un-font="medium">Annually</span>
-          </div>
-        );
+    case 'quarterly':
+      return (
+        <div un-flex="~ items-center" un-gap="2">
+          <span className="i-mdi:calendar-range" un-text="sm orange-6" />
+          <span un-text="sm orange-7" un-font="medium">Quarterly</span>
+        </div>
+      );
 
-      default:
-        return null;
-    }
-  };
+    case 'annually':
+      return (
+        <div un-flex="~ items-center" un-gap="2">
+          <span className="i-mdi:calendar-star" un-text="sm red-6" />
+          <span un-text="sm red-7" un-font="medium">Annually</span>
+        </div>
+      );
 
-  // return (
-  //   <div un-p="2" un-border="1 solid slate-2 rounded" un-bg="slate-1">
-  //     {getReminderDisplay()}
-  //   </div>
-  // );
-  return getReminderDisplay();
+    default:
+      return null;
+  }
 };
 
 const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {

@@ -370,3 +370,41 @@ export const Monthly5thSaturdayUnavailable: Story = {
     },
   },
 };
+
+export const MonthlyTodayExpired: Story = {
+  args: {
+    reminder: {
+      type: 'monthly',
+      monthly: 'this',
+    },
+    date: dayjs().subtract(5, 'minute'),
+    time: dayjs().subtract(5, 'minute'),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A monthly reminder for today that expired 5 minutes ago. Shows dimmed bell alert icon and gray text indicating the alert has passed.',
+      },
+    },
+  },
+};
+
+export const MonthlyTodayUpcoming: Story = {
+  args: {
+    reminder: {
+      type: 'monthly',
+      monthly: 'this',
+    },
+    date: dayjs().add(3, 'minute'),
+    time: dayjs().add(3, 'minute'),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A monthly reminder for today that will trigger in 3 minutes. Shows active bell alert icon and purple text indicating upcoming alert.',
+      },
+    },
+  },
+};

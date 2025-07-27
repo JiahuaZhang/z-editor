@@ -65,7 +65,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
         );
       }
 
-    case 'weekly':
+    case 'weekly': {
       const currentDayName = now.format('dddd');
       const isToday = reminder.weekly.includes(currentDayName as WeekDay);
       const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
@@ -92,7 +92,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
                 </span>
               );
             })}
-            <span
+            {/* <span
               un-text={`sm ${isExpired ? "gray-4" : (isToday ? "white" : "blue-7")}`}
               un-font={isExpired ? "medium" : (isToday ? "bold" : "medium")}
               un-bg={isExpired ? "gray-2" : (isToday ? "blue-5" : "transparent")}
@@ -102,12 +102,13 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
               un-shadow={isExpired ? "none" : (isToday ? "sm" : "none")}
             >
               {time.format('hh:mm:ss A')}
-            </span>
+            </span> */}
           </div>
         </div>
       );
+    }
 
-    case 'monthly':
+    case 'monthly': {
       let alertDate = date;
       let isDateAvailable = true;
 
@@ -128,12 +129,24 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
         isDateAvailable = alertDate.month() === now.month();
       }
 
+      const isToday = isDateAvailable && alertDate.isSame(now, 'day');
+      const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
+      const isExpired = isToday && todayReminderTime.isBefore(now);
+
       return (
         <div un-flex="~ items-center" un-gap="2">
-          <span className="i-mdi:calendar-month" un-text="sm purple-6" />
+          {isToday && <span className="i-mdi:bell-alert" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
+          <span className="i-mdi:calendar-month" un-text={`sm ${isExpired ? "gray-4" : "purple-6"}`} />
           <div un-flex="~ items-center" >
             {isDateAvailable && (
-              <span un-px="2" un-py="1" un-bg="purple-5" un-text="xs white" un-border="rounded" un-font="medium">
+              <span
+                un-px="2"
+                un-py="1"
+                un-bg={isExpired ? "gray-2" : "purple-5"}
+                un-text={`xs ${isExpired ? "gray-5" : "white"}`}
+                un-border="rounded"
+                un-font="medium"
+              >
                 {alertDate.format('MMM DD')}
               </span>
             )}
@@ -141,8 +154,8 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
               <span
                 un-px="2"
                 un-py="1"
-                un-bg={isDateAvailable ? "white" : "gray-1"}
-                un-text={`xs ${isDateAvailable ? "purple-7" : "gray-4"}`}
+                un-bg={isExpired ? "gray-1" : (isDateAvailable ? "white" : "gray-1")}
+                un-text={`xs ${isExpired ? "gray-4" : (isDateAvailable ? "purple-7" : "gray-4")}`}
                 un-border="rounded"
                 un-font="medium"
               >
@@ -152,6 +165,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
           </div>
         </div>
       );
+    };
 
     case 'quarterly':
       return (

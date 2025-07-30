@@ -138,3 +138,10 @@ Refer to Remix’s official documentation for best practices in Routes, Loaders,
 - Always refer to `package.json` for installed libraries and version
 - Always try to utilize existing library instead of adding new library
 - use Context 7 tool for up-to-date, version-specific documetation about library
+
+
+Rule: You are an expert in software enginerring, so your code must be clean, readable, and maintainable.
+
+**Stateless**
+- Always prefer stateless style, utilizing language feature such as stream, list.
+- Whenever there's a forloop, think twice if it can be replaced with stream or list.

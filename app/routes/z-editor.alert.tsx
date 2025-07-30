@@ -1,5 +1,5 @@
 import { PostgrestError } from '@supabase/supabase-js';
-import { Badge } from 'antd';
+import { Badge, Tooltip } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import { useState } from 'react';
 import { LoaderFunction, useLoaderData } from "react-router";
@@ -167,13 +167,66 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
       );
     };
 
-    case 'quarterly':
+    case 'quarterly': {
+      const quarterlyDates = [0, 1, 2, 3].map(index => {
+        let quarterDate = dayjs().year(now.year()).month((date.month() + (index * 3)) % 12);
+        let isAdjusted = false;
+        const originalDay = date.date();
+        const daysInMonth = quarterDate.daysInMonth();
+
+        if (originalDay > daysInMonth) {
+          quarterDate = quarterDate.endOf('month');
+          isAdjusted = true;
+        } else {
+          quarterDate = quarterDate.date(originalDay);
+        }
+
+        return {
+          date: quarterDate,
+          isAdjusted,
+          isToday: quarterDate.isSame(now, 'day')
+        };
+      });
+
+      quarterlyDates.sort((a, b) => a.date.month() - b.date.month());
+
+      const hasToday = quarterlyDates.some(q => q.isToday);
+      const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
+      const isExpired = hasToday && todayReminderTime.isBefore(now);
+
       return (
         <div un-flex="~ items-center" un-gap="2">
-          <span className="i-mdi:calendar-range" un-text="sm orange-6" />
-          <span un-text="sm orange-7" un-font="medium">Quarterly</span>
+          {hasToday && <span className="i-mdi:bell-alert" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
+          <span className="i-mdi:calendar-range" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />
+          {quarterlyDates.map((quarter, index) => (
+            <span
+              key={index}
+              un-px="2"
+              un-py="1"
+              un-bg={quarter.isToday ? (isExpired ? "gray-2" : "orange-5") : "orange-1"}
+              un-text={`xs ${quarter.isToday ? (isExpired ? "gray-4" : "white") : "orange-7"}`}
+              un-border="rounded"
+              un-font='medium'
+              un-position="relative"
+            >
+              {quarter.date.format('MMM DD')}
+              {quarter.isAdjusted && (<Tooltip title={`${quarter.date.subtract(1, 'month').format('MMM')} ${date.format('DD')} is an invalid date`} >
+                <span un-cursor='pointer'
+                  un-position="absolute"
+                  un-top="-1"
+                  un-right="-1"
+                  un-w="2"
+                  un-h="2"
+                  un-bg="red-4"
+                  un-border="rounded-full"
+                />
+              </Tooltip>
+              )}
+            </span>
+          ))}
         </div>
       );
+    }
 
     case 'annually':
       return (

@@ -408,3 +408,201 @@ export const MonthlyTodayUpcoming: Story = {
     },
   },
 };
+
+export const QuarterlyQ1: Story = {
+  args: {
+    reminder: {
+      type: 'quarterly',
+    },
+    date: dayjs('2024-08-03'),
+    time: dayjs('2024-08-03').hour(10).minute(0),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A quarterly reminder set for Q1 (January 15th). Shows quarterly calendar icon with date in MMM DD format and Q1 badge.',
+      },
+    },
+  },
+};
+
+export const QuarterlyQ2: Story = {
+  args: {
+    reminder: {
+      type: 'quarterly',
+    },
+    date: dayjs('2024-04-20'),
+    time: dayjs('2024-04-20').hour(14).minute(30),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A quarterly reminder set for Q2 (April 20th). Shows quarterly calendar icon with date in MMM DD format and Q2 badge.',
+      },
+    },
+  },
+};
+
+export const QuarterlyQ3: Story = {
+  args: {
+    reminder: {
+      type: 'quarterly',
+    },
+    date: dayjs('2024-07-10'),
+    time: dayjs('2024-07-10').hour(9).minute(15),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A quarterly reminder set for Q3 (July 10th). Shows quarterly calendar icon with date in MMM DD format and Q3 badge.',
+      },
+    },
+  },
+};
+
+export const QuarterlyQ4: Story = {
+  args: {
+    reminder: {
+      type: 'quarterly',
+    },
+    date: dayjs('2024-10-25'),
+    time: dayjs('2024-10-25').hour(16).minute(45),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A quarterly reminder set for Q4 (October 25th). Shows quarterly calendar icon with date in MMM DD format and Q4 badge.',
+      },
+    },
+  },
+};
+
+export const QuarterlyTodayExpired: Story = {
+  args: {
+    reminder: {
+      type: 'quarterly',
+    },
+    date: dayjs().subtract(2, 'minute'),
+    time: dayjs().subtract(2, 'minute'),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A quarterly reminder for today that expired 2 minutes ago. Shows dimmed bell alert icon and gray text indicating the alert has passed.',
+      },
+    },
+  },
+};
+
+export const QuarterlyTodayUpcoming: Story = {
+  args: {
+    reminder: {
+      type: 'quarterly',
+    },
+    date: dayjs().add(1, 'hour'),
+    time: dayjs().add(1, 'hour'),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A quarterly reminder for today that will trigger in 1 hour. Shows active bell alert icon and orange text indicating upcoming alert.',
+      },
+    },
+  },
+};
+
+export const QuarterlyFeb29LeapYear: Story = {
+  args: {
+    reminder: {
+      type: 'quarterly',
+    },
+    date: dayjs('2024-02-29'), // Leap year Feb 29
+    time: dayjs('2024-02-29').hour(10).minute(0),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A quarterly reminder set for Feb 29th (leap year). Shows all 4 quarterly dates: Feb 28 or 29th, May 29th, Aug 29th, Nov 29th. Feb 29th will be adjusted in non-leap years with red indicator.',
+      },
+    },
+  },
+};
+
+export const QuarterlyFeb30Invalid: Story = {
+  args: {
+    reminder: {
+      type: 'quarterly',
+    },
+    date: dayjs('2024-05-30'),
+    time: dayjs('2024-05-30').hour(14).minute(30),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A quarterly reminder set for Feb 30th (invalid date). Shows adjusted dates: Feb 28/29 (with red indicator), May 30th, Aug 30th, Nov 30th.',
+      },
+    },
+  },
+};
+
+export const QuarterlyFeb31Invalid: Story = {
+  args: {
+    reminder: {
+      type: 'quarterly',
+    },
+    date: dayjs('2024-05-31'), // Force Feb 31 (invalid)
+    time: dayjs('2024-05-31').hour(9).minute(15),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A quarterly reminder set for Feb 31st (invalid date). Shows adjusted dates: Feb 28/29 (with red indicator), May 31st, Aug 31st, Nov 30th (adjusted as well).',
+      },
+    },
+  },
+};
+
+export const QuarterlyApr31Invalid: Story = {
+  args: {
+    reminder: {
+      type: 'quarterly',
+    },
+    date: dayjs('2024-01-31'),
+    time: dayjs('2024-01-31').hour(16).minute(0),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A quarterly reminder set for Apr 30 (invalid - April has 30 days). Shows adjusted dates: Jan 31st, Apr 30 (with red indicator), Jul 31st, Oct 31st.',
+      },
+    },
+  },
+};
+
+export const QuarterlySep31Invalid: Story = {
+  args: {
+    reminder: {
+      type: 'quarterly',
+    },
+    date: dayjs('2024-03-31'),
+    time: dayjs('2024-03-31').hour(11).minute(45),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A quarterly reminder set for Sep 31st (invalid - September has 30 days). Shows adjusted dates: Mar 31st, Jun 30, Sep 30 (with red indicator), Dec 31st',
+      },
+    },
+  },
+};

@@ -1,4 +1,7 @@
 reminder:
+- should be dynamic?
+- auto expand today's alert only?
+- should have animations that's about to trigger?
 - notification part
 - sync up alert part
 

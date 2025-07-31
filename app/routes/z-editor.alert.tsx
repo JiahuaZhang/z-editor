@@ -228,13 +228,45 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
       );
     }
 
-    case 'annually':
+    case 'annually': {
+      const annualDate = date.year(now.year());
+      const isAdjusted = annualDate.date() !== date.date();
+      const isToday = annualDate.isSame(now, 'day');
+      const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
+      const isExpired = isToday && todayReminderTime.isBefore(now);
+
       return (
         <div un-flex="~ items-center" un-gap="2">
-          <span className="i-mdi:calendar-star" un-text="sm red-6" />
-          <span un-text="sm red-7" un-font="medium">Annually</span>
+          {isToday && <span className="i-mdi:bell-alert" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
+          <span className="i-mdi:calendar-star" un-text={`sm ${isExpired ? "gray-4" : "red-6"}`} />
+          <span
+            un-px="2"
+            un-py="1"
+            un-bg={isToday ? (isExpired ? "gray-2" : "red-5") : "red-1"}
+            un-text={`xs ${isToday ? (isExpired ? "gray-5" : "white") : "red-7"}`}
+            un-border="rounded"
+            un-font="medium"
+            un-position="relative"
+          >
+            {annualDate.format('MMM DD')}
+            {isAdjusted && (
+              <Tooltip title={`Feb 29 is not valid in ${now.year()}`}>
+                <span
+                  un-cursor="pointer"
+                  un-position="absolute"
+                  un-top="-1"
+                  un-right="-1"
+                  un-w="2"
+                  un-h="2"
+                  un-bg="orange-4"
+                  un-border="rounded-full"
+                />
+              </Tooltip>
+            )}
+          </span>
         </div>
       );
+    }
 
     default:
       return null;

@@ -606,3 +606,129 @@ export const QuarterlySep31Invalid: Story = {
     },
   },
 };
+
+export const AnnuallyRegularDate: Story = {
+  args: {
+    reminder: {
+      type: 'annually',
+    },
+    date: dayjs('2024-06-15'),
+    time: dayjs('2024-06-15').hour(10).minute(0),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A regular annual reminder set for June 15th. Shows calendar star icon with "Jun 15" badge in red theme.',
+      },
+    },
+  },
+};
+
+export const AnnuallyTodayUpcoming: Story = {
+  args: {
+    reminder: {
+      type: 'annually',
+    },
+    date: dayjs().add(2, 'hour'),
+    time: dayjs().add(2, 'hour'),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'An annual reminder for today that will trigger in 2 hours. Shows active bell alert icon and red background indicating upcoming alert.',
+      },
+    },
+  },
+};
+
+export const AnnuallyTodayExpired: Story = {
+  args: {
+    reminder: {
+      type: 'annually',
+    },
+    date: dayjs(),
+    time: dayjs().subtract(1, 'minute'),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'An annual reminder for today that expired 1 minute ago. Shows dimmed bell alert icon and gray text indicating the alert has passed.',
+      },
+    },
+  },
+};
+
+export const AnnuallyFeb29LeapYear: Story = {
+  args: {
+    reminder: {
+      type: 'annually',
+    },
+    date: dayjs('2024-02-29'),
+    time: dayjs('2024-02-29').hour(14).minute(30),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'An annual reminder set for Feb 29th (leap year). In non-leap years, it will be adjusted to Feb 28th with an orange indicator dot.',
+      },
+    },
+  },
+};
+
+export const AnnuallyNewYearsDay: Story = {
+  args: {
+    reminder: {
+      type: 'annually',
+    },
+    date: dayjs('2024-01-01'),
+    time: dayjs('2024-01-01').hour(0).minute(0),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'An annual reminder for New Year\'s Day (Jan 01). Shows calendar star icon with "Jan 01" badge.',
+      },
+    },
+  },
+};
+
+export const AnnuallyChristmas: Story = {
+  args: {
+    reminder: {
+      type: 'annually',
+    },
+    date: dayjs('2024-12-25'),
+    time: dayjs('2024-12-25').hour(8).minute(0),
+    format: 'both',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'An annual reminder for Christmas Day (Dec 25). Shows calendar star icon with "Dec 25" badge.',
+      },
+    },
+  },
+};
+
+export const AnnuallyBirthday: Story = {
+  args: {
+    reminder: {
+      type: 'annually',
+    },
+    date: dayjs('2024-03-22'),
+    time: dayjs('2024-03-22').hour(12).minute(0),
+    format: 'date',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'An annual reminder for a birthday (Mar 22). Shows calendar star icon with "Mar 22" badge in date-only format.',
+      },
+    },
+  },
+};

@@ -1,7 +1,7 @@
 import { PostgrestError } from '@supabase/supabase-js';
 import { Badge, Tooltip } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LoaderFunction, useLoaderData } from "react-router";
 import { Reminder, SerializedTimeNode, TimeNodeFormat, WeekDay } from '~/components/zeditor/plugin/time/TimeNode';
 import { createSupabaseServerClient } from '~/util/supabase.server';
@@ -23,7 +23,13 @@ export const loader: LoaderFunction = async ({ request }): Promise<LoaderData> =
 };
 
 export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Reminder; date: Dayjs; time: Dayjs; format: TimeNodeFormat; }) => {
-  const now = dayjs();
+  const [now, setNow] = useState(dayjs());
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(dayjs()), 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   switch (reminder.type) {
     case 'daily':

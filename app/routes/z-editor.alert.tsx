@@ -279,7 +279,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
   }
 };
 
-const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
+export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
   const { date, time, format, reminders } = timeNode;
   const dateObj = dayjs(date);
   const timeObj = dayjs(time);

@@ -1,3 +1,7 @@
+web performance issue:, from /search to /new takes so long.
+Also UI experience, with save
+shoula have cmd/ ctrl + s => auto save trigger.
+
 reminder:
 - should be dynamic?
 - auto expand today's alert only?

@@ -57,7 +57,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
           <div un-flex="~ items-center" un-gap="2">
             {isExpired
               ? <span className="i-mdi:bell-ring" un-text="sm orange-2" />
-              : <span className="i-mdi:bell-ring" un-text="sm orange-6" />
+              : <span className="i-mdi:bell-ring animate-ping" un-text="sm orange-6" />
             }
             <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} />
             <span un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} un-font="medium">Daily</span>
@@ -74,7 +74,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
       return (
         <div un-flex="~ col" un-gap="2">
           <div un-flex="~ items-center" un-gap="2">
-            {isToday && <span className="i-mdi:bell-alert" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
+            {isToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
             <span className="i-mdi:calendar-week" un-text={`sm ${isExpired ? "gray-4" : "blue-6"}`} />
             {reminder.weekly.map(day => {
               const isCurrentDay = day === currentDayName;
@@ -135,7 +135,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
 
       return (
         <div un-flex="~ items-center" un-gap="2">
-          {isToday && <span className="i-mdi:bell-alert" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
+          {isToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
           <span className="i-mdi:calendar-month" un-text={`sm ${isExpired ? "gray-4" : "purple-6"}`} />
           <div un-flex="~ items-center" >
             {isDateAvailable && (
@@ -196,7 +196,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
 
       return (
         <div un-flex="~ items-center" un-gap="2">
-          {hasToday && <span className="i-mdi:bell-alert" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
+          {hasToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
           <span className="i-mdi:calendar-range" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />
           {quarterlyDates.map((quarter, index) => (
             <span
@@ -237,7 +237,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
 
       return (
         <div un-flex="~ items-center" un-gap="2">
-          {isToday && <span className="i-mdi:bell-alert" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
+          {isToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
           <span className="i-mdi:calendar-star" un-text={`sm ${isExpired ? "gray-4" : "red-6"}`} />
           <span
             un-px="2"

@@ -19,6 +19,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   const { data, error } = await supabase
     .from('editor_documents')
     .select('*');
+  // .range(0, 10)
+  // .order('updated', { ascending: false });
 
   if (error) {
     console.error('Error fetching documents:', error);

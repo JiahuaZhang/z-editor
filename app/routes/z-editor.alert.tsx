@@ -23,6 +23,8 @@ export const loader: LoaderFunction = async ({ request }): Promise<LoaderData> =
 };
 
 export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Reminder; date: Dayjs; time: Dayjs; format: TimeNodeFormat; }) => {
+  // todo, performance trick?
+  // make now under this context, and it would shared among all alerts
   const [now, setNow] = useState(dayjs());
 
   useEffect(() => {
@@ -291,6 +293,8 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
       un-shadow="sm hover:2xl"
       un-transition="all duration-200"
       un-bg="white"
+      un-flex='~ col'
+      un-gap='2'
     >
       <div
         un-flex="~ items-center justify-between"
@@ -335,7 +339,7 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
             <span un-text="white">{timeObj.format('hh:mm:ss A')}</span>
           </div>
 
-          <Badge count={reminders.length} size='small' >
+          <Badge count={reminders.length} size='small' color='#00a6f4' >
             <div className="i-mdi:bell" un-text="lg amber-5" />
           </Badge>
         </div>
@@ -347,8 +351,7 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
       </div>
 
       {isOpen && (
-        <div un-mt="4" un-pt="3" un-border="t-1 solid slate-2">
-          {/* grid? dense layout? */}
+        <div un-border="2 solid blue-4 rounded" un-px='2' un-py='1' >
           <div un-flex="~ col" un-gap="2">
             {reminders.map((reminder, index) => <ReminderAlert key={index} reminder={reminder} date={dateObj} time={timeObj} format={format} />)}
           </div>

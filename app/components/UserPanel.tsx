@@ -17,21 +17,21 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 const items: MenuItem[] = [
   {
-    label: <Link to="/z-editor/search" >
+    label: <Link to="/z-editor/search" prefetch='render' >
       Search
     </Link>,
     key: 'search',
     icon: <div className="i-material-symbols-light:search" un-text='2xl' />
   },
   {
-    label: <Link to="/z-editor/alert" >
+    label: <Link to="/z-editor/alert" prefetch='render' >
       Alert
     </Link>,
     key: 'alert',
     icon: <div className="i-material-symbols-light:notifications" un-text='2xl' />
   },
   {
-    label: <Link to="/z-editor/new" >
+    label: <Link to="/z-editor/new" prefetch='render' >
       New
     </Link>,
     key: 'new',
@@ -40,7 +40,7 @@ const items: MenuItem[] = [
 ];
 
 const logoutContent = <button un-bg='blue-4 hover:white' un-text='white hover:blue-4' un-p='3' un-py='1' un-border='rounded' >
-  <Link to="/logout">
+  <Link to="/logout" prefetch='render'>
     Logout
   </Link>
 </button>;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LoaderFunction, ShouldRevalidateFunction, useFetcher, useLoaderData, useNavigate, type MetaFunction } from "react-router";
+import { LoaderFunction, ShouldRevalidateFunction, useFetcher, useLoaderData, useNavigate, useNavigation, type MetaFunction } from "react-router";
 import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
 import { createSupabaseServerClient } from '~/util/supabase.server';
 import { Tables } from '~/util/supabase.type';
@@ -14,13 +14,13 @@ type LoaderData = {
 export const meta: MetaFunction = () => [{ title: "Search" }, { name: "description", content: "Search documents" }];
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { supabase, headers } = createSupabaseServerClient(request);
+  const { supabase } = createSupabaseServerClient(request);
 
   const { data, error } = await supabase
     .from('editor_documents')
     .select('*');
   // .range(0, 10)
-  // .order('updated', { ascending: false });
+  // .order('updated_at', { ascending: false });
 
   if (error) {
     console.error('Error fetching documents:', error);
@@ -40,6 +40,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({ formMethod, default
 const Search = () => {
   const { documents, error } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
+  const { state } = useNavigation();
   const fetcher = useFetcher();
   const [displayDocuments, setDisplayDocuments] = useState<Document[]>([]);
 
@@ -50,6 +51,14 @@ const Search = () => {
       setDisplayDocuments(fetcher.data.data as Document[]);
     }
   }, [fetcher.data]);
+
+  if (state === 'loading') {
+    return (
+      <div un-text="center" un-p="14">
+        <span className="i-mdi:loading" un-animate='spin' un-text="5xl blue-5" aria-label="Loading documents" />
+      </div>
+    );
+  }
 
   if (error) {
     return <div un-text="center" un-p="14">

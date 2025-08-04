@@ -3,18 +3,47 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Reminder, SerializedTimeNode, TimeNodeFormat } from '../zeditor/plugin/time/TimeNode';
 
+let globalNow = dayjs();
+let globalListeners: Set<(now: Dayjs) => void> = new Set();
+let globalInterval: NodeJS.Timeout | null = null;
+
+const startGlobalTimer = () => {
+  if (!globalInterval) {
+    globalInterval = setInterval(() => {
+      globalNow = dayjs();
+      globalListeners.forEach(listener => listener(globalNow));
+    }, 1000);
+  }
+};
+
+const stopGlobalTimer = () => {
+  if (globalInterval && globalListeners.size === 0) {
+    clearInterval(globalInterval);
+    globalInterval = null;
+  }
+};
+
+const useSharedNow = () => {
+  const [now, setNow] = useState(globalNow);
+
+  useEffect(() => {
+    const listener = (newNow: Dayjs) => setNow(newNow);
+    globalListeners.add(listener);
+    startGlobalTimer();
+
+    return () => {
+      globalListeners.delete(listener);
+      stopGlobalTimer();
+    };
+  }, []);
+
+  return now;
+};
+
 export const _StupidUno = <div un-bg="red-4" />;
 
 export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Reminder; date: Dayjs; time: Dayjs; format: TimeNodeFormat; }) => {
-  // todo, performance trick?
-  // make now under this context, and it would shared among all alerts
-  const [now, setNow] = useState(dayjs());
-
-  useEffect(() => {
-    const interval = setInterval(() => setNow(dayjs()), 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const now = useSharedNow();
 
   switch (reminder.type) {
     case 'daily':

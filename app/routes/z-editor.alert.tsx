@@ -22,6 +22,8 @@ export const loader: LoaderFunction = async ({ request }): Promise<LoaderData> =
   return { data, error };
 };
 
+export const _StupidUno = <div un-bg="red-4" />;
+
 export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Reminder; date: Dayjs; time: Dayjs; format: TimeNodeFormat; }) => {
   // todo, performance trick?
   // make now under this context, and it would shared among all alerts
@@ -38,21 +40,16 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
       if (reminder.once) {
         const reminderDateTime = date.hour(time.hour()).minute(time.minute()).second(time.second());
         const isExpired = reminderDateTime.isBefore(now);
-        const isRecent = Math.abs(reminderDateTime.diff(now, 'hour')) <= 8;
 
         return (
-          <div un-flex="~ items-center" un-gap="2" >
+          <div un-flex="~" un-items='center' un-gap="2" >
             {
-              isRecent && <>
-                {
-                  isExpired
-                    ? <span className="i-mdi:bell-alert" un-text="sm orange-2" />
-                    : <span className="i-mdi:bell-alert" un-text="sm orange-6" />
-                }
-              </>
+              isExpired
+                ? <span className="i-mdi:bell-alert" un-text="sm orange-2" />
+                : <span className="i-mdi:bell-alert" un-text="sm orange-6" un-animate='ping' />
             }
             <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} />
-            <span un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} un-font="medium">
+            <span un-text={`sm ${isExpired ? 'gray-4' : 'white'}`} un-font="medium" un-bg={`${!isExpired && 'emerald-5'}`} un-py='1' un-px={`${!isExpired && '2'}`} un-border='rounded' >
               {reminderDateTime.format('MMM DD, YYYY hh:mm:ss A')}
             </span>
           </div>
@@ -62,13 +59,13 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
         const isExpired = todayReminderTime.isBefore(now);
 
         return (
-          <div un-flex="~ items-center" un-gap="2">
+          <div un-flex="~" un-items='center' un-gap="2">
             {isExpired
               ? <span className="i-mdi:bell-ring" un-text="sm orange-2" />
-              : <span className="i-mdi:bell-ring animate-ping" un-text="sm orange-6" />
+              : <span className="i-mdi:bell-ring" un-text="sm orange-6" un-animate='ping' />
             }
             <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} />
-            <span un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} un-font="medium">Daily</span>
+            <span un-text={`sm ${isExpired ? 'gray-4' : 'white'}`} un-font="medium" un-bg={`${!isExpired && 'emerald-5'}`} un-py='1' un-px={`${!isExpired && '2'}`} un-border='rounded' >Daily</span>
           </div>
         );
       }
@@ -185,6 +182,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
         if (originalDay > daysInMonth) {
           quarterDate = quarterDate.endOf('month');
           isAdjusted = true;
+          console.log('adjust for this one', quarterDate.toString());
         } else {
           quarterDate = quarterDate.date(originalDay);
         }

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import dayjs from 'dayjs';
+import { TimeAlert } from '~/components/alert/alert';
 import { SerializedTimeNode, WeekDay } from '~/components/zeditor/plugin/time/TimeNode';
-import { TimeAlert } from '~/routes/z-editor.alert';
 
 const meta: Meta<typeof TimeAlert> = {
   title: 'Components/TimeAlert',

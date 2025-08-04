@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import dayjs from 'dayjs';
+import { ReminderAlert } from '~/components/alert/alert';
 import { WeekDay } from '~/components/zeditor/plugin/time/TimeNode';
-import { ReminderAlert } from '~/routes/z-editor.alert';
 
 const meta: Meta<typeof ReminderAlert> = {
   title: 'Components/ReminderAlert',

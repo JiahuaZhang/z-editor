@@ -300,14 +300,14 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
         un-cursor="pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div un-flex="~ items-center" un-gap="3">
+        <div un-flex="~" un-items='center' un-gap="3">
           {format === 'both' && (
-            <div un-flex="~ items-center"
+            <div un-flex="~"
               un-gap="1"
               un-px="2"
               un-py="1"
               un-border='rounded'
-              un-bg="gradient-to-br"
+              un-bg="gradient-to-r"
               un-from='purple-4'
               un-to='purple-6'
             >
@@ -316,16 +316,16 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
                 aria-label="Date"
                 role="img"
               />
-              <span un-text="white" un-font="semibold">{dateObj.format('MMM DD,YYYY')}</span>
+              <span un-text="white" >{dateObj.format('MMM DD,YYYY')}</span>
             </div>
           )}
 
-          <div un-flex="~ items-center"
+          <div un-flex="~"
             un-gap="1"
             un-border='rounded'
             un-px="2"
             un-py="1"
-            un-bg="gradient-to-br"
+            un-bg="gradient-to-r"
             un-from='blue-4'
             un-to='blue-6'
           >
@@ -349,7 +349,7 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
       </div>
 
       {isOpen && (
-        <div un-border="2 solid blue-4 rounded" un-px='2' un-py='1' >
+        <div un-border="2 solid blue-2 rounded" un-px='2' un-py='1' >
           <div un-flex="~ col" un-gap="2">
             {reminders.map((reminder, index) => <ReminderAlert key={index} reminder={reminder} date={dateObj} time={timeObj} format={format} />)}
           </div>

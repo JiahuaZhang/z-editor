@@ -288,15 +288,17 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
   }
 };
 
+const _StupidUno1 = <div un-border='purple-2 green-3' />;
 export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
   const { date, time, format, reminders } = timeNode;
   const dateObj = dayjs(date);
   const timeObj = dayjs(time);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div un-border="2 solid slate-3 rounded-lg hover:slate-5"
-      un-p='3'
+    <div un-border={`2 solid rounded-lg hover:slate-5 ${isOpen ? 'purple-2' : 'green-3'}`}
+      un-p='2'
+      un-px='3'
       un-shadow="sm hover:2xl"
       un-transition="all duration-200"
       un-bg="white"

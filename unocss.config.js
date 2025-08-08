@@ -1,10 +1,10 @@
-import { defineConfig, presetAttributify, presetIcons, presetTagify, presetTypography, presetUno, transformerVariantGroup } from 'unocss';
+import { defineConfig, presetAttributify, presetIcons, presetTagify, presetTypography, presetWind4, transformerVariantGroup } from 'unocss';
 import { presetAnimations } from 'unocss-preset-animations';
 import { presetAntd } from 'unocss-preset-antd';
 
 export default defineConfig({
   presets: [
-    presetUno(),
+    presetWind4({ preflights: { reset: true } }),
     presetAntd(),
     presetAnimations(),
     presetAttributify(),

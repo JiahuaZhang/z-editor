@@ -288,7 +288,6 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
   }
 };
 
-const _StupidUno1 = <div un-border='purple-2 green-3' />;
 export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
   const { date, time, format, reminders } = timeNode;
   const dateObj = dayjs(date);
@@ -296,7 +295,8 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div un-border={`2 solid rounded-lg hover:slate-5 ${isOpen ? 'purple-2' : 'green-3'}`}
+    <div className={''}
+      un-border={`2 solid rounded-lg ${isOpen ? 'purple-300 hover:purple-500' : 'slate-300 hover:slate-500'}`}
       un-p='2'
       un-px='3'
       un-shadow="sm hover:2xl"
@@ -318,9 +318,9 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
               un-px="2"
               un-py="1"
               un-border='rounded'
-              un-bg="gradient-to-r"
-              un-from='purple-4'
-              un-to='purple-6'
+              un-bg="linear-to-r"
+              un-from='purple-500'
+              un-to='purple-600'
             >
               <span className="i-mdi:calendar-month"
                 un-text="2xl white"
@@ -336,9 +336,9 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
             un-border='rounded'
             un-px="2"
             un-py="1"
-            un-bg="gradient-to-r"
-            un-from='blue-4'
-            un-to='blue-6'
+            un-bg="linear-to-r"
+            un-from='blue-400'
+            un-to='blue-500'
           >
             <span className="i-material-symbols-light:schedule"
               un-text="2xl white"

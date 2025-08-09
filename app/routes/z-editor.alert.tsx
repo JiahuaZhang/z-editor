@@ -1,12 +1,12 @@
 import { PostgrestError } from '@supabase/supabase-js';
-import { LoaderFunction, useLoaderData } from "react-router";
+import { Link, LoaderFunction, useLoaderData } from "react-router";
 import { TimeAlert } from '~/components/alert/alert';
 import { SerializedTimeNode } from '~/components/zeditor/plugin/time/TimeNode';
 import { createSupabaseServerClient } from '~/util/supabase.server';
 
 type LoaderData = {
   data: {
-    id: any;
+    id: string;
     reminder: SerializedTimeNode[];
   }[] | null;
   error: PostgrestError | null;
@@ -32,14 +32,29 @@ const Alert = () => {
   }
 
   return (
-    <div un-m="6">
+    <div un-m="4" un-flex='~' un-gap='4'>
       {data.map(d => <div key={d.id}
-        un-flex="~"
+        un-border='2 solid stone-100 rounded'
+        un-bg='stone-50'
+        un-p='2'
+        un-flex="~ col"
         un-gap="4"
-        un-items="start"
       >
-        {d.reminder.map((r: SerializedTimeNode, i: number) => (
+        {d.reminder.map((r: SerializedTimeNode, i: number) => (<div un-flex='~'
+          un-justify='between'
+          un-items='center'
+          un-gap='2'
+        >
           <TimeAlert key={i} timeNode={r} />
+          {
+            i === 0 && <Link className="group" un-flex='' un-justify='' un-px='2' un-py='1' un-bg='hover:blue-500'
+              un-border='rounded'
+              prefetch='render'
+              to={`/z-editor/${d.id}`}>
+              <span className="i-tabler-external-link" un-text='2xl blue-500 group-hover:white' />
+            </Link>
+          }
+        </div>
         ))}
       </div>)}
     </div>

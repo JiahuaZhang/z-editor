@@ -71,7 +71,7 @@ export const ElementFormatDropDown = ({ elementFormat, isRTL }: { elementFormat:
   const activeEditor = useActiveEditorContext();
 
   return <Suspense>
-    <Select un-m='1' un-border='none hover:blue-6' className='[&>div]:(pr-0 pl-1)! [&>span]:(mr--2.25!)'
+    <Select un-m='1' un-border='none hover:blue-600' className='[&>div]:(pr-0 pl-1)! [&>span]:(mr--2.25!)'
       disabled={!activeEditor.isEditable()}
       value={elementFormat || 'left'}
       popupClassName='w-auto!'

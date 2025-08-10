@@ -30,7 +30,7 @@ export default function DocumentPage() {
   if (error) {
     return (
       <div un-m='8' >
-        <h1 un-text='red-6 xl' un-font='bold' >Error: {error.code}</h1>
+        <h1 un-text='red-600 xl' un-font='bold' >Error: {error.code}</h1>
         <p>{error.message}</p>
       </div>
     );

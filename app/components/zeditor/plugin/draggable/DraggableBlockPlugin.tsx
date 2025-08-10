@@ -26,7 +26,7 @@ export const DraggableBlockPlugin = () => {
           </div>
         </div>
       }
-      targetLineComponent={<div ref={targetLineRef} className="pointer-events-none bg-sky-5 h-1 absolute top-0" />}
+      targetLineComponent={<div ref={targetLineRef} className="pointer-events-none bg-sky-500 h-1 absolute top-0" />}
       isOnMenu={isOnMenu}
     />
   );

@@ -191,8 +191,8 @@ const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anc
           onKeyDown={monitorInputInteraction}
         />
         <button
-          un-hover='text-red-6'
-          un-focus='text-red-6'
+          un-hover='text-red-600'
+          un-focus='text-red-600'
           un-scale='125'
           className="i-material-symbols-light:cancel"
           tabIndex={0}
@@ -202,8 +202,8 @@ const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anc
           }}
         />
         <button
-          un-hover='text-blue-5'
-          un-focus='text-blue-5'
+          un-hover='text-blue-500'
+          un-focus='text-blue-500'
           un-scale='125'
           className="i-material-symbols-light:check"
           tabIndex={0}
@@ -223,7 +223,7 @@ const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anc
         un-px='3'
         un-text='3.75 gray-7'
         className="link-view">
-        <a un-break='~ words' un-text='blue-6' un-max-w='150' un-overflow-y='auto'
+        <a un-break='~ words' un-text='blue-600' un-max-w='150' un-overflow-y='auto'
           href={sanitizeUrl(linkUrl)}
           target="_blank"
           rel="noopener noreferrer"
@@ -232,8 +232,8 @@ const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anc
           {linkUrl}
         </a>
         <button
-          un-hover='text-blue-5'
-          un-focus='text-blue-5'
+          un-hover='text-blue-500'
+          un-focus='text-blue-500'
           className="i-material-symbols-light:edit"
           un-w='4'
           un-h='4'
@@ -245,8 +245,8 @@ const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anc
         />
         <button un-w='4'
           un-h='4'
-          un-hover='text-red-6'
-          un-focus='text-red-6'
+          un-hover='text-red-600'
+          un-focus='text-red-600'
           className="i-mdi:trash link-trash"
           tabIndex={0}
           onClick={() => { editor.dispatchCommand(TOGGLE_LINK_COMMAND, null); }}

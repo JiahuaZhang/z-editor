@@ -124,7 +124,7 @@ export const BlockFormatDropDown = ({ blockType }: { blockType: keyof typeof blo
   if (editor !== activeEditor) return null;
 
   return <Suspense>
-    <Select un-m='1' un-border='none hover:blue-6' className='[&>div]:(pr-0 pl-1)! [&>span]:(mr--1.5!)'
+    <Select un-m='1' un-border='none hover:blue-600' className='[&>div]:(pr-0 pl-1)! [&>span]:(mr--1.5!)'
       disabled={!editor.isEditable()}
       value={blockType}
       popupClassName='w-auto!'

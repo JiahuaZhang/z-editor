@@ -156,7 +156,7 @@ export const ExcalidrawComponent = ({ nodeKey, data, width, height }: {
             height={height}
           />
           {isSelected && isEditable && (
-            <button un-position='absolute' un-top='2' un-right='2' un-text='2xl fuchsia-6' un-border='rounded 1 solid zinc-6' un-inline='grid' un-hover='bg-fuchsia-6 text-white border-white'
+            <button un-position='absolute' un-top='2' un-right='2' un-text='2xl fuchsia-600' un-border='rounded 1 solid zinc-600' un-inline='grid' un-hover='bg-fuchsia-600 text-white border-white'
               tabIndex={0}
               onClick={openModal}
             >

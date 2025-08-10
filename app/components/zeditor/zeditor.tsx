@@ -20,7 +20,7 @@ import { useCommentContext } from './plugin/comment/CommentContext';
 import { Plugin } from './plugin/plugin';
 import { MATCHERS, validateUrl } from './util/url';
 
-export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zinc-6' />;
+export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zinc-600' />;
 
 const Plugins = ({ document, comments, children, ...rest }: { document?: any; comments?: any[]; children?: React.ReactNode; }) => {
   const [editor] = useLexicalComposerContext();
@@ -36,17 +36,17 @@ const Plugins = ({ document, comments, children, ...rest }: { document?: any; co
   }, [editor, document, comments]);
 
 
-  return <main un-h='full' un-border=' solid blue-4' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
+  return <main un-h='full' un-border=' solid blue-400' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
     <Plugin.Toolbar.Top />
     <div un-grid='~' un-grid-flow='col' un-auto-cols='[1fr_max-content]' un-w='full' un-position='relative' >
       <RichTextPlugin
         contentEditable={
           <div>
-            <ContentEditable un-p='2' un-pl='6' un-z='5' un-position='relative' id='lexical-content-deitable' un-min-h='100' un-border='rounded-b 1 solid zinc-4' />
+            <ContentEditable un-p='2' un-pl='6' un-z='5' un-position='relative' id='lexical-content-deitable' un-min-h='100' un-border='rounded-b 1 solid zinc-400' />
           </div>
         }
         placeholder={
-          <div un-position='absolute' un-top='2.25' un-left='6.5' un-z='1' un-pointer-events='none' un-text='zinc-6' >Enter some rich text...</div>
+          <div un-position='absolute' un-top='2.25' un-left='6.5' un-z='1' un-pointer-events='none' un-text='zinc-600' >Enter some rich text...</div>
         }
         ErrorBoundary={LexicalErrorBoundary}
       />

@@ -23,7 +23,7 @@ export default function App() {
             un-left="0"
             un-right="0"
             un-h="1"
-            un-bg="blue-5"
+            un-bg="blue-500"
             un-z="50"
             un-animate="pulse"
           />

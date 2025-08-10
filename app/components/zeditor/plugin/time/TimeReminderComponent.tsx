@@ -78,7 +78,7 @@ const MontlyReminder = ({ date, create, reminders }:
   const [position, setPosition] = useState('');
   const info = getWeekdayPosition(date)!;
 
-  return <div un-border='rounded solid 1 blue-5' un-p='1' un-bg='white' un-grid='~' >
+  return <div un-border='rounded solid 1 blue-500' un-p='1' un-bg='white' un-grid='~' >
     <Radio.Group className='grid grid-flow-col justify-center' value={position} onChange={event => setPosition(event.target.value)} >
       <Radio.Button value='this' disabled={reminders.some(r => r.type === 'monthly' && r.monthly === 'this')} >
         {date.format('MM/DD')}
@@ -95,7 +95,7 @@ const MontlyReminder = ({ date, create, reminders }:
     </Radio.Group>
     {
       position !== '' && <>
-        <blockquote un-m='2' un-text='gray-6' un-border='l-4 l-gray-4' un-pl='2'>
+        <blockquote un-m='2' un-text='gray-600' un-border='l-4 l-gray-400' un-pl='2'>
           {
             position === 'this' && `Every ${date.date()}${getDateOrdinalPostfix(date.date())} day of each month.`
           }
@@ -106,7 +106,7 @@ const MontlyReminder = ({ date, create, reminders }:
             position !== 'this' && position !== 'last' && `Every ${position} ${info.weekday} of each month.`
           }
         </blockquote>
-        <button un-border='rounded 2 solid blue-5' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-5' un-justify-self='end'
+        <button un-border='rounded 2 solid blue-500' un-p='1' un-px='2' un-text='hover:white' un-bg='hover:blue-500' un-justify-self='end'
           onClick={() => create({
             type: 'monthly',
             monthly: position as any,
@@ -143,12 +143,12 @@ const ReminderItem = ({ reminder, remove, date, time, node }:
     text = `${date.format('MM/DD')} of each year @${time.format('h:mm a')}`;
   }
 
-  return <div un-flex='~' un-bg='white even:blue-2' un-justify='between'
-    un-text={`${!node.isReminderValid(reminder) && 'gray-5'}`}
+  return <div un-flex='~' un-bg='white even:blue-200' un-justify='between'
+    un-text={`${!node.isReminderValid(reminder) && 'gray-500'}`}
     un-line={`${!node.isReminderValid(reminder) && 'through'}`} >
     {text}
-    <button un-bg='hover:red-6' un-border='rounded' un-flex='~' un-items='center' onClick={remove} >
-      <span className="i-material-symbols-light:delete" un-text='2xl red-6 hover:white' un-bg='hover:white' />
+    <button un-bg='hover:red-600' un-border='rounded' un-flex='~' un-items='center' onClick={remove} >
+      <span className="i-material-symbols-light:delete" un-text='2xl red-600 hover:white' un-bg='hover:white' />
     </button>
   </div>;
 };
@@ -166,7 +166,7 @@ export const TimeReminderComponent = ({ reminders, format, editor, date, time, n
     {
       reminders.length > 0 && <Collapse items={[{
         key: 'list',
-        label: <h1 un-grid='~' un-grid-flow='col' un-justify='center' un-items='center' un-gap='1' un-text='orange-7'>
+        label: <h1 un-grid='~' un-grid-flow='col' un-justify='center' un-items='center' un-gap='1' un-text='orange-700'>
           <span className="i-mdi:clock" un-text='lg' /> Show Reminders
         </h1>,
         children: <section>
@@ -187,7 +187,7 @@ export const TimeReminderComponent = ({ reminders, format, editor, date, time, n
       isEditable && <Collapse className='[&>div>div]:last:[&>div]:(!p-0)'
         items={[{
           key: 'create',
-          label: <h1 un-grid='~' un-grid-flow='col' un-justify='center' un-items='center' un-gap='1' un-text='blue-6'>
+          label: <h1 un-grid='~' un-grid-flow='col' un-justify='center' un-items='center' un-gap='1' un-text='blue-600'>
             <span className="i-material-symbols-light:new-window" /> Create Reminder:
           </h1>,
           children: <>

@@ -21,7 +21,7 @@ const YouTubeComponent = ({ format, nodeKey, videoID }: YouTubeComponentProps) =
       format={format}
       nodeKey={nodeKey}>
       <div un-w='full' un-max-w='1280px' un-p-b='39.54%' un-position='relative' un-mx='auto'
-        un-border={`${isSelected ? '2 rounded blue-5' : '2 transparent'}`}
+        un-border={`${isSelected ? '2 rounded blue-500' : '2 transparent'}`}
       >
         <iframe un-position='absolute' un-top='0' un-left='0' un-w='full' un-h='full'
           src={`https://www.youtube-nocookie.com/embed/${videoID}`}

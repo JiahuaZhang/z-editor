@@ -87,7 +87,7 @@ const TweetComponent = ({
       nodeKey={nodeKey}>
       {isTweetLoading ? loadingComponent : null}
       <div un-w='[550px]'
-        un-border={`${isSelected ? '2 rounded blue-5' : '2 transparent'}`}
+        un-border={`${isSelected ? '2 rounded blue-500' : '2 transparent'}`}
         ref={containerRef}
       />
     </BlockWithAlignableContents>

@@ -17,11 +17,11 @@ const autoSaveInterval = (Number(import.meta.env.VITE_AUTO_SAVE_INTERVAL) || 30)
 const NewDocumentPersistence = ({ upsertDocument, fetcher }: { upsertDocument: () => void, fetcher: FetcherWithComponents<any>; }) => {
   return <button onClick={upsertDocument}>
     <Tooltip title='Create New Document'>
-      <span className="i-mdi:create" un-text='xl green-6' />
+      <span className="i-mdi:create" un-text='xl green-600' />
     </Tooltip>
     {fetcher.data?.error && (
       <Tooltip title={`${fetcher.data?.error?.message}`}>
-        <span className="i-material-symbols-light:error" un-text='xl red-6' />
+        <span className="i-material-symbols-light:error" un-text='xl red-600' />
       </Tooltip>
     )}
   </button>;
@@ -108,16 +108,16 @@ const SavedDocumentPersistence = ({ upsertDocument, deleteDocument, fetcher, edi
     <Dropdown.Button className='[&>button:last-child]:w-5 [&>button:first-child]:(px-3)'
       onClick={update}
       trigger={['click']}
-      icon={<div un-grid='~'><span className="i-ph:caret-down" un-text='xl gray-4' un-w='4' /></div>}
+      icon={<div un-grid='~'><span className="i-ph:caret-down" un-text='xl gray-400' un-w='4' /></div>}
       menu={{
         items: [
           {
             key: 'delete',
-            label: <button un-bg='white hover:red-4' un-text='hover:white' un-border='rounded' un-cursor='pointer'
+            label: <button un-bg='white hover:red-400' un-text='hover:white' un-border='rounded' un-cursor='pointer'
               un-flex='~' un-items='center' un-gap='1' un-px='2' un-py='1'
               className='group'
             >
-              <span className="i-bi:trash3" un-text='xl red-4 group-hover:white' />
+              <span className="i-bi:trash3" un-text='xl red-400 group-hover:white' />
               Delete
             </button>,
             onClick: deleteDocument,
@@ -127,17 +127,17 @@ const SavedDocumentPersistence = ({ upsertDocument, deleteDocument, fetcher, edi
     >
       {isChanged && (
         <Tooltip title='Sync Document'>
-          <span className="i-material-symbols-light:sync" un-text='xl blue-4' />
+          <span className="i-material-symbols-light:sync" un-text='xl blue-400' />
         </Tooltip>
       )}
       {!isChanged && (
         <Tooltip title='Document Already Saved' >
-          <span className="i-material-symbols-light:save" un-text='xl blue-4' un-cursor='pointer' />
+          <span className="i-material-symbols-light:save" un-text='xl blue-400' un-cursor='pointer' />
         </Tooltip>
       )}
       {fetcher.data?.error && (
         <Tooltip title={`${fetcher.data?.error?.message}`}>
-          <span className="i-material-symbols-light:error" un-text='xl red-6' />
+          <span className="i-material-symbols-light:error" un-text='xl red-600' />
         </Tooltip>
       )}
     </Dropdown.Button>
@@ -203,7 +203,7 @@ export const DocumentPersistence = () => {
   }, [params.id]);
 
   if (status === 'loading') {
-    return <span className="i-ph:spinner" un-text='xl blue-3' un-cursor='pointer' un-animate='spin' />;
+    return <span className="i-ph:spinner" un-text='xl blue-300' un-cursor='pointer' un-animate='spin' />;
   }
 
   if (status === 'new') {

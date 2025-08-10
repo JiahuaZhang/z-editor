@@ -79,12 +79,12 @@ export const ExcalidrawModal = ({ onSave, initialElements, initialAppState, init
 
   return <Modal open={true} width={960} closable={false} onCancel={onClose}
     footer={<div un-grid='~' un-justify='end' un-grid-flow='col' >
-      <button un-inline='grid' un-grid-flow='col' un-items='center' un-gap='1' un-text='orange-6' un-hover='text-white bg-orange-6' un-border='rounded' un-p='1' un-pr='2'
+      <button un-inline='grid' un-grid-flow='col' un-items='center' un-gap='1' un-text='orange-600' un-hover='text-white bg-orange-600' un-border='rounded' un-p='1' un-pr='2'
         onClick={onClose}
       >
         <span className="i-mdi:close" un-text='lg' /> Discard
       </button>
-      <button un-inline='grid' un-grid-flow='col' un-items='center' un-gap='1' un-text='blue-6' un-hover='bg-blue-6 text-white' un-border='rounded' un-p='1' un-pr='2'
+      <button un-inline='grid' un-grid-flow='col' un-items='center' un-gap='1' un-text='blue-600' un-hover='bg-blue-600 text-white' un-border='rounded' un-p='1' un-pr='2'
         onClick={save}
       >
         <span className="i-material-symbols-light:check" un-text='lg' /> Save

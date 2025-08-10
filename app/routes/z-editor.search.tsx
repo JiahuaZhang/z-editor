@@ -55,7 +55,7 @@ const Search = () => {
   if (state === 'loading') {
     return (
       <div un-text="center" un-p="14">
-        <span className="i-mdi:loading" un-animate='spin' un-text="5xl blue-5" aria-label="Loading documents" />
+        <span className="i-mdi:loading" un-animate='spin' un-text="5xl blue-500" aria-label="Loading documents" />
       </div>
     );
   }
@@ -66,7 +66,7 @@ const Search = () => {
       <button
         onClick={() => navigate(0)}
         un-grid='~' un-mx='auto' un-grid-flow='col' un-justify='center' un-items='center' un-gap='2' un-mt='4'
-        un-p="1" un-px="4" un-bg="blue-5 hover:white" un-text="white hover:blue-5" un-rounded="md" un-cursor="pointer"
+        un-p="1" un-px="4" un-bg="blue-500 hover:white" un-text="white hover:blue-500" un-rounded="md" un-cursor="pointer"
       >
         <span className="i-material-symbols-light:refresh" un-text='lg' />
         Retry
@@ -89,14 +89,14 @@ const Search = () => {
           }
         }}
       >
-        <input un-p='2' un-px='4' un-border='gray-2 1 solid rounded focus:blue-4' un-outline='none'
+        <input un-p='2' un-px='4' un-border='gray-200 1 solid rounded focus:blue-400' un-outline='none'
           autoFocus
           type="text"
           name="search"
           placeholder="Search..."
         />
         {/* todo: dropdown in future */}
-        <button un-bg='blue-4 hover:white' un-text='white hover:blue-4' un-p='2' un-px='4' un-border='rounded solid blue-4 2' un-cursor='pointer' un-shadow='sm'
+        <button un-bg='blue-400 hover:white' un-text='white hover:blue-400' un-p='2' un-px='4' un-border='rounded solid blue-400 2' un-cursor='pointer' un-shadow='sm'
           type="submit"
         >
           OK
@@ -105,7 +105,7 @@ const Search = () => {
       {
         fetcher.state === 'submitting' && (
           <div un-text="center" un-m='4'>
-            <span className="i-mdi:loading" un-animate-spin='~' un-text="5xl blue-5" aria-label="Loading" />
+            <span className="i-mdi:loading" un-animate-spin='~' un-text="5xl blue-500" aria-label="Loading" />
           </div>
         )
       }

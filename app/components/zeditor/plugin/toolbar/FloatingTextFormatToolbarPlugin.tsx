@@ -151,82 +151,82 @@ const TextFormatFloatingToolbar = ({ editor, anchorElem, isLink, isBold, isItali
   return (
     <div ref={popupCharStylesEditorRef}
       un-position='absolute' un-top='0' un-flex='~' un-z='5' un-bg='white'
-      un-border='rounded-xl' un-shadow='lg gray-4'
+      un-border='rounded-xl' un-shadow='lg gray-400'
     >
       {editor.isEditable() && (
         <>
-          <button un-flex='~' un-bg={`${isBold && 'zinc-4'} hover:blue-2`} un-p='1' un-border='rounded'
+          <button un-flex='~' un-bg={`${isBold && 'zinc-400'} hover:blue-200`} un-p='1' un-border='rounded'
             onClick={() => editor!.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')}
             title="Bold"
             aria-label="Format text as bold"
           >
-            <span className="i-tabler:bold" un-text={`2xl ${isBold ? 'white' : 'gray-6'}`} />
+            <span className="i-tabler:bold" un-text={`2xl ${isBold ? 'white' : 'gray-600'}`} />
           </button>
-          <button un-flex='~' un-bg={`${isItalic && 'zinc-4'} hover:blue-2`} un-p='1' un-border='rounded'
+          <button un-flex='~' un-bg={`${isItalic && 'zinc-400'} hover:blue-200`} un-p='1' un-border='rounded'
             onClick={() => editor!.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic')}
             title="Italic"
             aria-label="Format text as italics"
           >
-            <span className="i-ci:italic" un-text={`2xl ${isItalic ? 'white' : 'gray-6'}`} />
+            <span className="i-ci:italic" un-text={`2xl ${isItalic ? 'white' : 'gray-600'}`} />
           </button>
-          <button un-flex='~' un-bg={`${isUnderline && 'zinc-4'} hover:blue-2`} un-p='1' un-border='rounded'
+          <button un-flex='~' un-bg={`${isUnderline && 'zinc-400'} hover:blue-200`} un-p='1' un-border='rounded'
             onClick={() => editor!.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline')}
             title="Underline"
             aria-label="Format text to underlined"
           >
-            <span className="i-ci:underline" un-text={`2xl ${isUnderline ? 'white' : 'gray-6'}`} />
+            <span className="i-ci:underline" un-text={`2xl ${isUnderline ? 'white' : 'gray-600'}`} />
           </button>
-          <button un-flex='~' un-bg={`${isStrikethrough && 'zinc-4'} hover:blue-2`} un-p='1' un-border='rounded'
+          <button un-flex='~' un-bg={`${isStrikethrough && 'zinc-400'} hover:blue-200`} un-p='1' un-border='rounded'
             onClick={() => editor!.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough')}
             title="Strikethrough"
             aria-label="Format text with a strikethrough">
-            <span className="i-mdi:format-strikethrough" un-text={`2xl ${isStrikethrough ? 'white' : 'gray-6'}`} />
+            <span className="i-mdi:format-strikethrough" un-text={`2xl ${isStrikethrough ? 'white' : 'gray-600'}`} />
           </button>
-          <button un-flex='~' un-bg={`${isSubscript && 'zinc-4'} hover:blue-2`} un-p='1' un-border='rounded'
+          <button un-flex='~' un-bg={`${isSubscript && 'zinc-400'} hover:blue-200`} un-p='1' un-border='rounded'
             onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'subscript')}
             title="Subscript"
             aria-label="Format Subscript">
-            <span className="i-mdi:format-subscript" un-text={`2xl ${isSubscript ? 'white' : 'gray-6'}`} />
+            <span className="i-mdi:format-subscript" un-text={`2xl ${isSubscript ? 'white' : 'gray-600'}`} />
           </button>
-          <button un-flex='~' un-bg={`${isSuperscript && 'zinc-4'} hover:blue-2`} un-p='1' un-border='rounded'
+          <button un-flex='~' un-bg={`${isSuperscript && 'zinc-400'} hover:blue-200`} un-p='1' un-border='rounded'
             onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'superscript')}
             title="Superscript"
             aria-label="Format Superscript">
-            <span className="i-mdi:format-superscript" un-text={`2xl ${isSuperscript ? 'white' : 'gray-6'}`} />
+            <span className="i-mdi:format-superscript" un-text={`2xl ${isSuperscript ? 'white' : 'gray-600'}`} />
           </button>
-          <button un-flex='~' un-bg={`${isUppercase && 'zinc-4'} hover:blue-2`} un-p='1' un-border='rounded'
+          <button un-flex='~' un-bg={`${isUppercase && 'zinc-400'} hover:blue-200`} un-p='1' un-border='rounded'
             onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'uppercase')}
             title="Uppercase"
             aria-label="Format text to uppercase">
-            <span className="i-mdi:format-uppercase" un-text={`2xl ${isUppercase ? 'white' : 'gray-6'}`} />
+            <span className="i-mdi:format-uppercase" un-text={`2xl ${isUppercase ? 'white' : 'gray-600'}`} />
           </button>
-          <button un-flex='~' un-bg={`${isLowercase && 'zinc-4'} hover:blue-2`} un-p='1' un-border='rounded'
+          <button un-flex='~' un-bg={`${isLowercase && 'zinc-400'} hover:blue-200`} un-p='1' un-border='rounded'
             onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'lowercase')}
             title="Lowercase"
             aria-label="Format text to lowercase">
-            <span className="i-mdi:format-lowercase" un-text={`2xl ${isLowercase ? 'white' : 'gray-6'}`} />
+            <span className="i-mdi:format-lowercase" un-text={`2xl ${isLowercase ? 'white' : 'gray-600'}`} />
           </button>
-          <button un-flex='~' un-bg={`${isCapitalize && 'zinc-4'} hover:blue-2`} un-p='1' un-border='rounded'
+          <button un-flex='~' un-bg={`${isCapitalize && 'zinc-400'} hover:blue-200`} un-p='1' un-border='rounded'
             onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'capitalize')}
             title="Capitalize"
             aria-label="Format text to capitalize">
-            <span className="i-mdi:format-text" un-text={`2xl ${isCapitalize ? 'white' : 'gray-6'}`} />
+            <span className="i-mdi:format-text" un-text={`2xl ${isCapitalize ? 'white' : 'gray-600'}`} />
           </button>
-          <button un-flex='~' un-bg={`${isCode && 'zinc-4'} hover:blue-2`} un-p='1' un-border='rounded'
+          <button un-flex='~' un-bg={`${isCode && 'zinc-400'} hover:blue-200`} un-p='1' un-border='rounded'
             onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code')}
             title="Code"
             aria-label="Insert code block">
-            <span className="i-mdi:code" un-text={`2xl ${isCode ? 'white' : 'gray-6'}`} />
+            <span className="i-mdi:code" un-text={`2xl ${isCode ? 'white' : 'gray-600'}`} />
           </button>
-          <button un-flex='~' un-bg={`${isLink && 'zinc-4'} hover:blue-2`} un-p='1' un-border='rounded'
+          <button un-flex='~' un-bg={`${isLink && 'zinc-400'} hover:blue-200`} un-p='1' un-border='rounded'
             onClick={insertLink}
             title="Insert link"
             aria-label="Insert link">
-            <span className="i-mdi:link" un-text={`2xl ${isLink ? 'white' : 'gray-6'}`} />
+            <span className="i-mdi:link" un-text={`2xl ${isLink ? 'white' : 'gray-600'}`} />
           </button>
         </>
       )}
-      <button un-flex='~' un-bg={`hover:blue-2`} un-p='1' un-border='rounded'
+      <button un-flex='~' un-bg={`hover:blue-200`} un-p='1' un-border='rounded'
         onClick={insertComment}
         title="Insert comment"
         aria-label="Insert comment">

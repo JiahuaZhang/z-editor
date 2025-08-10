@@ -105,7 +105,7 @@ export const InsertDropDown = () => {
 
   return <Suspense>
     <Dropdown disabled={!editor.isEditable()} menu={{ items: insertItems }} trigger={['click']} >
-      <Button un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='0.25' un-px='1' un-text='sm gray-6'>
+      <Button un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='0.25' un-px='1' un-text='sm gray-600'>
         <span className="i-mdi:plus" un-text='lg' /> Insert <span className="i-ph:caret-down" un-text='lg' />
       </Button>
     </Dropdown>

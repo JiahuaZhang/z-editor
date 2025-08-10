@@ -134,7 +134,7 @@ export const TimeComponent = ({ date, time, format, reminders = [], nodeKey }: {
 
     {
       format !== 'date'
-      && <TimePicker use12Hours popupClassName='[&_a]:text-blue-6 [&_button]:bg-blue-6'
+      && <TimePicker use12Hours popupClassName='[&_a]:text-blue-600 [&_button]:bg-blue-600'
         className='justify-self-center'
         value={timeObj}
         onChange={value => {

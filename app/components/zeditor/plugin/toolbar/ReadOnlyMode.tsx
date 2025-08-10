@@ -14,7 +14,7 @@ export const ReadOnlyMode = () => {
 
   return <button onClick={() => editor.setEditable(true)} >
     <Tooltip title='Read Only Mode' >
-      <span className="i-mdi:lock" un-text='xl zinc-6' />
+      <span className="i-mdi:lock" un-text='xl zinc-600' />
     </Tooltip>
   </button>;
 };

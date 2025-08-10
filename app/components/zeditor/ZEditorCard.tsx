@@ -67,7 +67,7 @@ const formatDate = (dateStr: string | null): string => {
 export const ZEditorCard = ({ document }: { document: Document; }) => {
   const preview = editorStatePreview(document);
 
-  return <div un-max-w="xl" un-p="2" un-grid='~' un-gap='2' un-border='blue-2 hover:blue-4 rounded solid 2' un-shadow="hover:xl">
+  return <div un-max-w="xl" un-p="2" un-grid='~' un-gap='2' un-border='blue-200 hover:blue-400 rounded solid 2' un-shadow="hover:xl">
     <Link to={`/z-editor/${document.id}`} >
       <pre un-overflow-y="auto" un-whitespace="pre-wrap" un-line-height="tight" un-h='60' un-font='sans'>
         {preview}
@@ -77,7 +77,7 @@ export const ZEditorCard = ({ document }: { document: Document; }) => {
       document.tag && document.tag.length > 0
       && <div un-flex="~" un-overflow-x="auto" un-whitespace="nowrap" un-gap="2" un-pb='0.5' >
         {document.tag.map((tag, index) => (
-          <span key={index} un-bg="blue-1" un-text="blue-8 sm" un-px="1.5" un-py="1" un-rounded="xl" un-cursor='pointer' >
+          <span key={index} un-bg="blue-100" un-text="blue-800 sm" un-px="1.5" un-py="1" un-rounded="xl" un-cursor='pointer' >
             {tag}
           </span>
         ))}

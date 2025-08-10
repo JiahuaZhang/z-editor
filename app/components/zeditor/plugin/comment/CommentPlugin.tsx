@@ -598,11 +598,11 @@ export const CommentPlugin = ({ ...rest }: {}) => {
       .map(key => editor.getElementByKey(key))
       .filter(elem => elem !== null)
       .map(elem => {
-        elem.classList.add('bg-yellow-3');
+        elem.classList.add('bg-yellow-300');
         setShowSidebar(true);
         return elem;
       });
-    return () => changedElems.forEach(elem => elem.classList.remove('bg-yellow-3'));
+    return () => changedElems.forEach(elem => elem.classList.remove('bg-yellow-300'));
   }, [activeIDs, editor, markNodeMap]);
 
   useEffect(() => {

@@ -155,7 +155,8 @@ export const TimeComponent = ({ date, time, format, reminders = [], nodeKey }: {
         setTimeout(() => setSelected(true), 0);
       }
     }} >
-    <span un-bg='zinc-100' un-px='2' un-py='1' un-border={`rounded solid blue-400 ${isSelected && '2'}`} un-cursor='pointer' un-mx='1'>
+    <span un-bg='zinc-100' un-px='2' un-py='0.5' un-border={`rounded solid blue-400 ${isSelected && '2'}`} un-cursor='pointer'
+      un-mx='1' un-my='1' un-inline-block='~' un-align='center'>
       {getReadableTime(format, dateObj, timeObj)}
     </span>
   </Popover>;

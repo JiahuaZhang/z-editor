@@ -14,7 +14,7 @@ const ComponentPickerMenuItem = ({ index, isSelected, onClick, onMouseEnter, opt
   option: ComponentPickerOption;
 }) => {
   return (
-    <li un-bg={`${isSelected && 'blue-1'}`}
+    <li un-bg={`${isSelected && 'blue-100'}`}
       un-grid='~'
       un-grid-flow='col'
       un-justify='start'
@@ -68,7 +68,7 @@ export const ComponentPickerMenuPlugin = () => {
         ) =>
           anchorElementRef.current && options.length
             ? createPortal(
-              <ul un-w='50' un-max-h='50' un-overflow-y='auto' un-border='rounded 2 solid blue-1' un-bg='white' un-position='relative' un-z='5'>
+              <ul un-w='50' un-max-h='50' un-overflow-y='auto' un-border='rounded 2 solid blue-100' un-bg='white' un-position='relative' un-z='5'>
                 {options.map((option, index) => (
                   <ComponentPickerMenuItem
                     index={index}

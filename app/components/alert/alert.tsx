@@ -1,7 +1,7 @@
 import { Badge, Tooltip } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
-import { Reminder, SerializedTimeNode, TimeNodeFormat } from '../zeditor/plugin/time/TimeNode';
+import { Reminder, SerializedTimeNode, TimeNodeFormat, WeekDay } from '../zeditor/plugin/time/TimeNode';
 
 let globalNow = dayjs();
 let globalListeners: Set<(now: Dayjs) => void> = new Set();
@@ -40,7 +40,7 @@ const useSharedNow = () => {
   return now;
 };
 
-export const _StupidUno = <div un-bg="red-4" />;
+export const _StupidUno = <div un-bg="red-400" />;
 
 export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Reminder; date: Dayjs; time: Dayjs; format: TimeNodeFormat; }) => {
   const now = useSharedNow();
@@ -55,11 +55,11 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
           <div un-flex="~" un-items='center' un-gap="2" >
             {
               isExpired
-                ? <span className="i-mdi:bell-alert" un-text="sm orange-2" />
-                : <span className="i-mdi:bell-alert" un-text="sm orange-6" un-animate='ping' />
+                ? <span className="i-mdi:bell-alert" un-text="sm orange-200" />
+                : <span className="i-mdi:bell-alert" un-text="sm orange-600" un-animate='ping' />
             }
-            <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} />
-            <span un-text={`sm ${isExpired ? 'gray-4' : 'white'}`} un-font="medium" un-bg={`${!isExpired && 'emerald-5'}`} un-py='1' un-px={`${!isExpired && '2'}`} un-border='rounded' >
+            <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-400' : 'emerald-500'}`} />
+            <span un-text={`sm ${isExpired ? 'gray-400' : 'white'}`} un-font="medium" un-bg={`${!isExpired && 'emerald-500'}`} un-py='1' un-px={`${!isExpired && '2'}`} un-border='rounded' >
               {reminderDateTime.format('MMM DD, YYYY hh:mm:ss A')}
             </span>
           </div>
@@ -71,11 +71,11 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
         return (
           <div un-flex="~" un-items='center' un-gap="2">
             {isExpired
-              ? <span className="i-mdi:bell-ring" un-text="sm orange-2" />
-              : <span className="i-mdi:bell-ring" un-text="sm orange-6" un-animate='ping' />
+              ? <span className="i-mdi:bell-ring" un-text="sm orange-200" />
+              : <span className="i-mdi:bell-ring" un-text="sm orange-600" un-animate='ping' />
             }
-            <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-4' : 'emerald-5'}`} />
-            <span un-text={`sm ${isExpired ? 'gray-4' : 'white'}`} un-font="medium" un-bg={`${!isExpired && 'emerald-5'}`} un-py='1' un-px={`${!isExpired && '2'}`} un-border='rounded' >Daily</span>
+            <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-400' : 'emerald-500'}`} />
+            <span un-text={`sm ${isExpired ? 'gray-400' : 'white'}`} un-font="medium" un-bg={`${!isExpired && 'emerald-500'}`} un-py='1' un-px={`${!isExpired && '2'}`} un-border='rounded' >Daily</span>
           </div>
         );
       }
@@ -89,16 +89,16 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
       return (
         <div un-flex="~ col" un-gap="2">
           <div un-flex="~ items-center" un-gap="2">
-            {isToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
-            <span className="i-mdi:calendar-week" un-text={`sm ${isExpired ? "gray-4" : "blue-6"}`} />
+            {isToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-400" : "orange-600"}`} />}
+            <span className="i-mdi:calendar-week" un-text={`sm ${isExpired ? "gray-400" : "blue-600"}`} />
             {reminder.weekly.map(day => {
               const isCurrentDay = day === currentDayName;
               return (
                 <span key={day}
                   un-px="2"
                   un-py="1"
-                  un-bg={isExpired ? "gray-2" : (isCurrentDay ? "blue-5" : "blue-1")}
-                  un-text={`xs ${isExpired ? "gray-5" : (isCurrentDay ? "white" : "blue-8")}`}
+                  un-bg={isExpired ? "gray-200" : (isCurrentDay ? "blue-500" : "blue-100")}
+                  un-text={`xs ${isExpired ? "gray-500" : (isCurrentDay ? "white" : "blue-800")}`}
                   un-border="rounded"
                   un-font={isExpired ? "medium" : (isCurrentDay ? "bold" : "medium")}
                   un-shadow={isExpired ? "none" : (isCurrentDay ? "md" : "none")}
@@ -108,9 +108,9 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
               );
             })}
             {/* <span
-              un-text={`sm ${isExpired ? "gray-4" : (isToday ? "white" : "blue-7")}`}
+              un-text={`sm ${isExpired ? "gray-400" : (isToday ? "white" : "blue-7")}`}
               un-font={isExpired ? "medium" : (isToday ? "bold" : "medium")}
-              un-bg={isExpired ? "gray-2" : (isToday ? "blue-5" : "transparent")}
+              un-bg={isExpired ? "gray-200" : (isToday ? "blue-500" : "transparent")}
               un-px={isExpired || isToday ? "2" : "0"}
               un-py={isExpired || isToday ? "1" : "0"}
               un-border={isExpired || isToday ? "rounded" : "none"}
@@ -150,15 +150,15 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
 
       return (
         <div un-flex="~ items-center" un-gap="2">
-          {isToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
-          <span className="i-mdi:calendar-month" un-text={`sm ${isExpired ? "gray-4" : "purple-6"}`} />
+          {isToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-400" : "orange-600"}`} />}
+          <span className="i-mdi:calendar-month" un-text={`sm ${isExpired ? "gray-400" : "purple-600"}`} />
           <div un-flex="~ items-center" >
             {isDateAvailable && (
               <span
                 un-px="2"
                 un-py="1"
-                un-bg={isExpired ? "gray-2" : "purple-5"}
-                un-text={`xs ${isExpired ? "gray-5" : "white"}`}
+                un-bg={isExpired ? "gray-200" : "purple-500"}
+                un-text={`xs ${isExpired ? "gray-500" : "white"}`}
                 un-border="rounded"
                 un-font="medium"
               >
@@ -170,7 +170,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
                 un-px="2"
                 un-py="1"
                 un-bg={isExpired ? "gray-1" : (isDateAvailable ? "white" : "gray-1")}
-                un-text={`xs ${isExpired ? "gray-4" : (isDateAvailable ? "purple-7" : "gray-4")}`}
+                un-text={`xs ${isExpired ? "gray-400" : (isDateAvailable ? "purple-7" : "gray-400")}`}
                 un-border="rounded"
                 un-font="medium"
               >
@@ -211,15 +211,15 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
 
       return (
         <div un-flex="~ items-center" un-gap="2">
-          {hasToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
-          <span className="i-mdi:calendar-range" un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />
+          {hasToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-400" : "orange-600"}`} />}
+          <span className="i-mdi:calendar-range" un-text={`sm ${isExpired ? "gray-400" : "orange-600"}`} />
           {quarterlyDates.map((quarter, index) => (
             <span
               key={index}
               un-px="2"
               un-py="1"
-              un-bg={quarter.isToday ? (isExpired ? "gray-2" : "orange-5") : "orange-1"}
-              un-text={`xs ${quarter.isToday ? (isExpired ? "gray-4" : "white") : "orange-7"}`}
+              un-bg={quarter.isToday ? (isExpired ? "gray-200" : "orange-500") : "orange-100"}
+              un-text={`xs ${quarter.isToday ? (isExpired ? "gray-400" : "white") : "orange-7"}`}
               un-border="rounded"
               un-font='medium'
               un-position="relative"
@@ -232,7 +232,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
                   un-right="-1"
                   un-w="2"
                   un-h="2"
-                  un-bg="red-4"
+                  un-bg="red-400"
                   un-border="rounded-full"
                 />
               </Tooltip>
@@ -252,13 +252,13 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
 
       return (
         <div un-flex="~ items-center" un-gap="2">
-          {isToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-4" : "orange-6"}`} />}
-          <span className="i-mdi:calendar-star" un-text={`sm ${isExpired ? "gray-4" : "red-6"}`} />
+          {isToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-400" : "orange-600"}`} />}
+          <span className="i-mdi:calendar-star" un-text={`sm ${isExpired ? "gray-400" : "red-600"}`} />
           <span
             un-px="2"
             un-py="1"
-            un-bg={isToday ? (isExpired ? "gray-2" : "red-5") : "red-1"}
-            un-text={`xs ${isToday ? (isExpired ? "gray-5" : "white") : "red-7"}`}
+            un-bg={isToday ? (isExpired ? "gray-200" : "red-500") : "red-100"}
+            un-text={`xs ${isToday ? (isExpired ? "gray-500" : "white") : "red-700"}`}
             un-border="rounded"
             un-font="medium"
             un-position="relative"
@@ -273,7 +273,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
                   un-right="-1"
                   un-w="2"
                   un-h="2"
-                  un-bg="orange-4"
+                  un-bg="orange-400"
                   un-border="rounded-full"
                 />
               </Tooltip>
@@ -292,7 +292,7 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
   const { date, time, format, reminders } = timeNode;
   const dateObj = dayjs(date);
   const timeObj = dayjs(time);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // todo, should be smartly auto open when there's an active reminder
 
   return (
     <div className={''}
@@ -301,7 +301,6 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
       un-px='3'
       un-shadow="sm hover:2xl"
       un-transition="all duration-200"
-      un-bg="white"
       un-flex='~ col'
       un-gap='2'
     >
@@ -349,21 +348,21 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
           </div>
 
           <Badge count={reminders.length} size='small' color='#00a6f4' >
-            <div className="i-mdi:bell" un-text="lg amber-5" />
+            <div className="i-mdi:bell" un-text="lg amber-500" />
           </Badge>
         </div>
 
         <span
           className={isOpen ? "i-mdi:chevron-up" : "i-mdi:chevron-down"}
-          un-text="xl slate-5 hover:slate-9"
+          un-text="xl slate-500 hover:slate-900"
         />
       </div>
 
       {isOpen && (
-        <div un-border="2 solid blue-2 rounded" un-px='2' un-py='1' >
-          <div un-flex="~ col" un-gap="2">
-            {reminders.map((reminder, index) => <ReminderAlert key={index} reminder={reminder} date={dateObj} time={timeObj} format={format} />)}
-          </div>
+        <div un-border="2 solid blue-200 rounded" un-px='2' un-py='1' un-flex="~ col" un-gap="2" >
+          {reminders.map((reminder, index) => <ReminderAlert key={index} reminder={reminder} date={dateObj} time={timeObj} format={format} />)}
+          {/* <div >
+          </div> */}
         </div>
       )}
     </div>

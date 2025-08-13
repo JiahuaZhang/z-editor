@@ -1,6 +1,6 @@
-web performance issue:, from /search to /new takes so long.
-Also UI experience, with save
 shoula have cmd/ ctrl + s => auto save trigger.
+
+dashboard, for reminders, textcont would be empty for them, should keep the time atleast.
 
 reminder:
 - should be dynamic?

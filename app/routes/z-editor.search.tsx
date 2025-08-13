@@ -1,56 +1,67 @@
 import { useEffect, useState } from 'react';
-import { LoaderFunction, ShouldRevalidateFunction, useFetcher, useLoaderData, useNavigate, useNavigation, type MetaFunction } from "react-router";
+import { Form, LoaderFunction, useLoaderData, useNavigate, useNavigation, useSearchParams, type MetaFunction } from "react-router";
 import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
-import { createSupabaseServerClient } from '~/util/supabase.server';
+import { createSupabaseServerClient, searchDocuments } from '~/util/supabase.server';
 import { Tables } from '~/util/supabase.type';
 
 type Document = Tables<'editor_documents'>;
 
 type LoaderData = {
   documents: Document[];
+  query?: string;
   error?: string;
 };
 
 export const meta: MetaFunction = () => [{ title: "Search" }, { name: "description", content: "Search documents" }];
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { supabase } = createSupabaseServerClient(request);
+  const url = new URL(request.url);
+  const query = url.searchParams.get('query');
 
+  if (query) {
+    const result = await searchDocuments(request, query);
+    if (result.error) {
+      return { error: result.error, status: result.status };
+    }
+    return { documents: result.data as Document[], query };
+  }
+
+  const { supabase } = createSupabaseServerClient(request);
   const { data, error } = await supabase
     .from('editor_documents')
     .select('*');
-  // .range(0, 10)
-  // .order('updated_at', { ascending: false });
 
   if (error) {
     console.error('Error fetching documents:', error);
     return { error: 'Failed to fetch documents', status: 500 };
   }
 
-  return { documents: data as Document[] };
-};
-
-export const shouldRevalidate: ShouldRevalidateFunction = ({ formMethod, defaultShouldRevalidate }) => {
-  if (formMethod === 'POST') {
-    return false;
-  }
-  return defaultShouldRevalidate;
+  return { documents: data as Document[], query: '' };
 };
 
 const Search = () => {
-  const { documents, error } = useLoaderData<LoaderData>();
+  const { documents, query, error } = useLoaderData<LoaderData>();
   const navigate = useNavigate();
   const { state } = useNavigation();
-  const fetcher = useFetcher();
-  const [displayDocuments, setDisplayDocuments] = useState<Document[]>([]);
+  const [searchParams] = useSearchParams();
+  const [searchValue, setSearchValue] = useState(query);
 
-  useEffect(() => setDisplayDocuments(documents), [documents]);
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const searchQuery = formData.get('search') as string;
+
+    if (searchQuery.trim() === '') {
+      navigate('/z-editor/search');
+    } else {
+      navigate(`/z-editor/search?query=${encodeURIComponent(searchQuery)}`);
+    }
+  };
 
   useEffect(() => {
-    if (fetcher.data) {
-      setDisplayDocuments(fetcher.data.data as Document[]);
-    }
-  }, [fetcher.data]);
+    const urlQuery = searchParams.get('query');
+    setSearchValue(urlQuery ?? '');
+  }, [searchParams]);
 
   if (state === 'loading') {
     return (
@@ -79,20 +90,15 @@ const Search = () => {
       {/* todo: search by # hashtag */}
       {/* possibly elastic search alike */}
       {/* filter by time range */}
-      <fetcher.Form un-shadow="g" un-m='2' un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'
-        method="post"
-        action="/api/document/search"
-        onSubmit={event => {
-          if (event.currentTarget.search.value === '') {
-            event.preventDefault();
-            setDisplayDocuments(documents);
-          }
-        }}
+      <Form un-shadow="g" un-m='2' un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'
+        onSubmit={handleSearch}
       >
         <input un-p='2' un-px='4' un-border='gray-200 1 solid rounded focus:blue-400' un-outline='none'
           autoFocus
           type="text"
           name="search"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
           placeholder="Search..."
         />
         {/* todo: dropdown in future */}
@@ -101,25 +107,27 @@ const Search = () => {
         >
           OK
         </button>
-      </fetcher.Form>
+      </Form>
       {
-        fetcher.state === 'submitting' && (
+        state === 'submitting' && (
           <div un-text="center" un-m='4'>
             <span className="i-mdi:loading" un-animate-spin='~' un-text="5xl blue-500" aria-label="Loading" />
           </div>
         )
       }
       <ul un-ml='4' un-flex='~ wrap' un-gap='4'>
-        {displayDocuments.map((doc) => (
+        {documents.map((doc) => (
           <li key={doc.id} >
             <ZEditorCard document={doc} />
           </li>
         ))}
       </ul>
       {
-        displayDocuments.length === 0 && (
+        documents.length === 0 && (
           <div un-text="center" un-p="14">
-            <h1 un-text="gray-500 lg">No documents found</h1>
+            <h1 un-text="gray-500 lg">
+              {query ? 'No documents found for your search' : 'No documents found'}
+            </h1>
           </div>
         )
       }

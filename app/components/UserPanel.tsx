@@ -1,7 +1,5 @@
 import type { User } from '@supabase/supabase-js';
-import { Avatar, Popover } from 'antd';
 import { Link, NavLink } from 'react-router';
-import { ClientOnly } from 'remix-utils/client-only';
 
 const getInitials = (name?: string, email?: string) => {
   if (name && name.trim() !== '') {
@@ -59,21 +57,17 @@ export const UserPanel = ({ user }: { user: User; }) => {
           </div>}
         </NavLink>
       </div>
-      <ClientOnly>
-        {
-          () => <Popover content={logoutContent} trigger="click">
-            <div un-cursor="pointer" >
-              {avatarUrl ? (
-                <Avatar src={avatarUrl} alt={user.user_metadata.full_name} size='large' />
-              ) : (
-                <Avatar un-bg='blue-400' size='large' >
-                  {getInitials(userName, userEmail)}
-                </Avatar>
-              )}
-            </div>
-          </Popover>
-        }
-      </ClientOnly>
+      {/* <Popover content={logoutContent} trigger="click">
+        <div un-cursor="pointer" >
+          {avatarUrl ? (
+            <Avatar src={avatarUrl} alt={user.user_metadata.full_name} size='large' />
+          ) : (
+            <Avatar un-bg='blue-400' size='large' >
+              {getInitials(userName, userEmail)}
+            </Avatar>
+          )}
+        </div>
+      </Popover> */}
     </div>
   );
 };

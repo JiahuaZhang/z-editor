@@ -1,20 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Form, LoaderFunction, useLoaderData, useNavigate, useNavigation, useSearchParams, type MetaFunction } from "react-router";
+import { Form, useNavigate, useNavigation, useSearchParams } from "react-router";
 import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
 import { createSupabaseServerClient, searchDocuments } from '~/util/supabase.server';
 import { Tables } from '~/util/supabase.type';
+import type { Route } from './+types/z-editor.search';
 
 type Document = Tables<'editor_documents'>;
 
-type LoaderData = {
-  documents: Document[];
-  query?: string;
-  error?: string;
-};
-
-export const meta: MetaFunction = () => [{ title: "Search" }, { name: "description", content: "Search documents" }];
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const url = new URL(request.url);
   const query = url.searchParams.get('query');
 
@@ -39,8 +32,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   return { documents: data as Document[], query: '' };
 };
 
-const Search = () => {
-  const { documents, query, error } = useLoaderData<LoaderData>();
+const Search = ({ loaderData }: Route.ComponentProps) => {
+  const { documents, query, error } = loaderData;
   const navigate = useNavigate();
   const { state } = useNavigation();
   const [searchParams] = useSearchParams();
@@ -87,6 +80,7 @@ const Search = () => {
 
   return (
     <div>
+      <title>Search</title>
       {/* todo: search by # hashtag */}
       {/* possibly elastic search alike */}
       {/* filter by time range */}
@@ -116,14 +110,14 @@ const Search = () => {
         )
       }
       <ul un-ml='4' un-flex='~ wrap' un-gap='4'>
-        {documents.map((doc) => (
+        {documents?.map((doc) => (
           <li key={doc.id} >
             <ZEditorCard document={doc} />
           </li>
         ))}
       </ul>
       {
-        documents.length === 0 && (
+        documents?.length === 0 && (
           <div un-text="center" un-p="14">
             <h1 un-text="gray-500 lg">
               {query ? 'No documents found for your search' : 'No documents found'}

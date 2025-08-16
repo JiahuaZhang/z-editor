@@ -30,6 +30,13 @@ export default defineConfig({
     }),
     tsconfigPaths()
   ],
+  ssr: {
+    noExternal: [
+      /^antd/,
+      /^rc-/,
+      /^@ant-design/
+    ]
+  },
   resolve: {
     alias: {
       '@emoji-datasource-facebook': path.resolve(__dirname, 'node_modules/emoji-datasource-facebook/img/facebook/64/'),

@@ -1,4 +1,5 @@
 import type { User } from '@supabase/supabase-js';
+import { Avatar, Popover } from 'antd';
 import { Link, NavLink } from 'react-router';
 
 const getInitials = (name?: string, email?: string) => {
@@ -57,7 +58,7 @@ export const UserPanel = ({ user }: { user: User; }) => {
           </div>}
         </NavLink>
       </div>
-      {/* <Popover content={logoutContent} trigger="click">
+      <Popover content={logoutContent} trigger="click">
         <div un-cursor="pointer" >
           {avatarUrl ? (
             <Avatar src={avatarUrl} alt={user.user_metadata.full_name} size='large' />
@@ -67,7 +68,7 @@ export const UserPanel = ({ user }: { user: User; }) => {
             </Avatar>
           )}
         </div>
-      </Popover> */}
+      </Popover>
     </div>
   );
 };

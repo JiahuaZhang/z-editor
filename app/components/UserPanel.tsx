@@ -1,7 +1,7 @@
 import type { User } from '@supabase/supabase-js';
-import { Avatar, Popover } from 'antd';
 import { Link, NavLink } from 'react-router';
-import { ClientOnly } from 'remix-utils/client-only';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 
 const getInitials = (name?: string, email?: string) => {
   if (name && name.trim() !== '') {
@@ -12,12 +12,6 @@ const getInitials = (name?: string, email?: string) => {
   }
   return 'U';
 };
-
-const logoutContent = <button un-bg='blue-400 hover:white' un-text='white hover:blue-400' un-p='3' un-py='1' un-border='rounded' >
-  <Link to="/logout" >
-    Logout
-  </Link>
-</button>;
 
 export const UserPanel = ({ user }: { user: User; }) => {
   if (!user) {
@@ -59,31 +53,24 @@ export const UserPanel = ({ user }: { user: User; }) => {
           </div>}
         </NavLink>
       </div>
-      <ClientOnly fallback={
-        <div un-cursor="pointer" >
-          {avatarUrl ? (
-            <Avatar src={avatarUrl} alt={user.user_metadata.full_name} size='large' />
-          ) : (
-            <Avatar un-bg='blue-400' size='large' >
+
+      <Popover>
+        <PopoverContent un-w='auto'>
+          <button un-bg='blue-400 hover:white' un-text='white hover:blue-400' un-p='3' un-py='1' un-border='rounded 1 solid hover:blue-400' >
+            <Link to="/logout" >
+              Logout
+            </Link>
+          </button>
+        </PopoverContent>
+        <PopoverTrigger>
+          <Avatar>
+            <AvatarImage src={avatarUrl} alt={user.user_metadata.full_name} />
+            <AvatarFallback un-bg='blue-400' un-text='white' >
               {getInitials(userName, userEmail)}
-            </Avatar>
-          )}
-        </div>
-      }>
-        {() => (
-          <Popover content={logoutContent} trigger="click">
-            <div un-cursor="pointer" >
-              {avatarUrl ? (
-                <Avatar src={avatarUrl} alt={user.user_metadata.full_name} size='large' />
-              ) : (
-                <Avatar un-bg='blue-400' size='large' >
-                  {getInitials(userName, userEmail)}
-                </Avatar>
-              )}
-            </div>
-          </Popover>
-        )}
-      </ClientOnly>
+            </AvatarFallback>
+          </Avatar>
+        </PopoverTrigger>
+      </Popover>
     </div>
   );
 };

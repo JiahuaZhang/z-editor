@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Form, useNavigate, useNavigation, useSearchParams } from "react-router";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "~/components/ui/pagination";
 import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
 import { createSupabaseServerClient, searchDocuments } from '~/util/supabase.server';
 import { Tables } from '~/util/supabase.type';
@@ -64,7 +72,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 const Search = ({ loaderData }: Route.ComponentProps) => {
-  const { documents, query, error, currentPage, totalPages, totalCount } = loaderData;
+  const { documents, query, error, currentPage = 1, totalPages = 1, totalCount = 0 } = loaderData;
   const navigate = useNavigate();
   const { state } = useNavigation();
   const [searchParams] = useSearchParams();
@@ -170,45 +178,38 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
       }
 
       {totalPages > 1 && (
-        <div un-flex="~ justify-center items-center" un-gap="2" un-mt="8" un-mb="4">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            un-p="2" un-px="3" un-border="rounded solid gray-300 1"
-            un-bg="white hover:gray-50 disabled:gray-100"
-            un-text="gray-700 disabled:gray-400"
-            un-cursor="pointer disabled:not-allowed"
-            un-disabled="opacity-50"
-          >
-            ←
-          </button>
+        <div un-mt="8" un-mb="4">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                />
+              </PaginationItem>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => handlePageChange(page)}
-              un-p="2" un-px="3" un-border="rounded solid gray-300 1"
-              un-bg={currentPage === page ? "blue-500" : "white hover:gray-50"}
-              un-text={currentPage === page ? "white" : "gray-700"}
-              un-cursor="pointer"
-            >
-              {page}
-            </button>
-          ))}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    onClick={() => handlePageChange(page)}
+                    isActive={currentPage === page}
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
 
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            un-p="2" un-px="3" un-border="rounded solid gray-300 1"
-            un-bg="white hover:gray-50 disabled:gray-100"
-            un-text="gray-700 disabled:gray-400"
-            un-cursor="pointer disabled:not-allowed"
-            un-disabled="opacity-50"
-          >
-            →
-          </button>
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       )}
+
     </div>
   );
 };

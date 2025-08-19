@@ -7,33 +7,64 @@ import type { Route } from './+types/z-editor.search';
 
 type Document = Tables<'editor_documents'>;
 
+const DOCUMENTS_PER_PAGE = 5;
+
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const url = new URL(request.url);
   const query = url.searchParams.get('query');
+  const page = parseInt(url.searchParams.get('page') || '1', 10);
+  const offset = (page - 1) * DOCUMENTS_PER_PAGE;
 
   if (query) {
     const result = await searchDocuments(request, query);
     if (result.error) {
       return { error: result.error, status: result.status };
     }
-    return { documents: result.data as Document[], query };
+
+    const allDocuments = result.data as Document[];
+    const totalCount = allDocuments.length;
+    const documents = allDocuments.slice(offset, offset + DOCUMENTS_PER_PAGE);
+    const totalPages = Math.ceil(totalCount / DOCUMENTS_PER_PAGE);
+
+    return {
+      documents,
+      query,
+      currentPage: page,
+      totalPages,
+      totalCount
+    };
   }
 
   const { supabase } = createSupabaseServerClient(request);
+
+  const { count } = await supabase
+    .from('editor_documents')
+    .select('*', { count: 'exact', head: true });
+
   const { data, error } = await supabase
     .from('editor_documents')
-    .select('*');
+    .select('*')
+    .range(offset, offset + DOCUMENTS_PER_PAGE - 1)
+    .order('created', { ascending: false });
 
   if (error) {
     console.error('Error fetching documents:', error);
     return { error: 'Failed to fetch documents', status: 500 };
   }
 
-  return { documents: data as Document[], query: '' };
+  const totalPages = Math.ceil((count || 0) / DOCUMENTS_PER_PAGE);
+
+  return {
+    documents: data as Document[],
+    query: '',
+    currentPage: page,
+    totalPages,
+    totalCount: count || 0
+  };
 };
 
 const Search = ({ loaderData }: Route.ComponentProps) => {
-  const { documents, query, error } = loaderData;
+  const { documents, query, error, currentPage, totalPages, totalCount } = loaderData;
   const navigate = useNavigate();
   const { state } = useNavigation();
   const [searchParams] = useSearchParams();
@@ -49,6 +80,18 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
     } else {
       navigate(`/z-editor/search?query=${encodeURIComponent(searchQuery)}`);
     }
+  };
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams);
+    if (page === 1) {
+      params.delete('page');
+    } else {
+      params.set('page', page.toString());
+    }
+
+    const queryString = params.toString();
+    navigate(`/z-editor/search${queryString ? `?${queryString}` : ''}`);
   };
 
   useEffect(() => {
@@ -125,6 +168,47 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
           </div>
         )
       }
+
+      {totalPages > 1 && (
+        <div un-flex="~ justify-center items-center" un-gap="2" un-mt="8" un-mb="4">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            un-p="2" un-px="3" un-border="rounded solid gray-300 1"
+            un-bg="white hover:gray-50 disabled:gray-100"
+            un-text="gray-700 disabled:gray-400"
+            un-cursor="pointer disabled:not-allowed"
+            un-disabled="opacity-50"
+          >
+            ←
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              un-p="2" un-px="3" un-border="rounded solid gray-300 1"
+              un-bg={currentPage === page ? "blue-500" : "white hover:gray-50"}
+              un-text={currentPage === page ? "white" : "gray-700"}
+              un-cursor="pointer"
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            un-p="2" un-px="3" un-border="rounded solid gray-300 1"
+            un-bg="white hover:gray-50 disabled:gray-100"
+            un-text="gray-700 disabled:gray-400"
+            un-cursor="pointer disabled:not-allowed"
+            un-disabled="opacity-50"
+          >
+            →
+          </button>
+        </div>
+      )}
     </div>
   );
 };

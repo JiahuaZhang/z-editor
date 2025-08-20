@@ -15,13 +15,16 @@ import type { Route } from './+types/z-editor.search';
 
 type Document = Tables<'editor_documents'>;
 
-const DOCUMENTS_PER_PAGE = 5;
+const DEFAULT_DOCUMENTS_PER_PAGE = 10;
+const DOCUMENTS_PER_PAGE_OPTIONS = [10, 20];
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const url = new URL(request.url);
   const query = url.searchParams.get('query');
   const page = parseInt(url.searchParams.get('page') || '1', 10);
-  const offset = (page - 1) * DOCUMENTS_PER_PAGE;
+  const perPage = parseInt(url.searchParams.get('perPage') || DEFAULT_DOCUMENTS_PER_PAGE.toString(), 10);
+  const documentsPerPage = DOCUMENTS_PER_PAGE_OPTIONS.includes(perPage) ? perPage : DEFAULT_DOCUMENTS_PER_PAGE;
+  const offset = (page - 1) * documentsPerPage;
 
   if (query) {
     const result = await searchDocuments(request, query);
@@ -31,15 +34,16 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
     const allDocuments = result.data as Document[];
     const totalCount = allDocuments.length;
-    const documents = allDocuments.slice(offset, offset + DOCUMENTS_PER_PAGE);
-    const totalPages = Math.ceil(totalCount / DOCUMENTS_PER_PAGE);
+    const documents = allDocuments.slice(offset, offset + documentsPerPage);
+    const totalPages = Math.ceil(totalCount / documentsPerPage);
 
     return {
       documents,
       query,
       currentPage: page,
       totalPages,
-      totalCount
+      totalCount,
+      documentsPerPage
     };
   }
 
@@ -52,7 +56,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const { data, error } = await supabase
     .from('editor_documents')
     .select('*')
-    .range(offset, offset + DOCUMENTS_PER_PAGE - 1)
+    .range(offset, offset + documentsPerPage - 1)
     .order('created', { ascending: false });
 
   if (error) {
@@ -60,19 +64,26 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
     return { error: 'Failed to fetch documents', status: 500 };
   }
 
-  const totalPages = Math.ceil((count || 0) / DOCUMENTS_PER_PAGE);
+  const totalPages = Math.ceil((count || 0) / documentsPerPage);
 
   return {
     documents: data as Document[],
     query: '',
     currentPage: page,
     totalPages,
-    totalCount: count || 0
+    totalCount: count || 0,
+    documentsPerPage
   };
 };
 
+export function headers() {
+  return {
+    "Cache-Control": "max-age=3000, s-maxage=36000",
+  };
+}
+
 const Search = ({ loaderData }: Route.ComponentProps) => {
-  const { documents, query, error, currentPage = 1, totalPages = 1, totalCount = 0 } = loaderData;
+  const { documents, query, error, currentPage = 1, totalPages = 1, totalCount = 0, documentsPerPage = DEFAULT_DOCUMENTS_PER_PAGE } = loaderData;
   const navigate = useNavigate();
   const { state } = useNavigation();
   const [searchParams] = useSearchParams();
@@ -97,6 +108,19 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
     } else {
       params.set('page', page.toString());
     }
+
+    const queryString = params.toString();
+    navigate(`/z-editor/search${queryString ? `?${queryString}` : ''}`);
+  };
+
+  const handlePerPageChange = (newPerPage: number) => {
+    const params = new URLSearchParams(searchParams);
+    if (newPerPage === DEFAULT_DOCUMENTS_PER_PAGE) {
+      params.delete('perPage');
+    } else {
+      params.set('perPage', newPerPage.toString());
+    }
+    params.delete('page');
 
     const queryString = params.toString();
     navigate(`/z-editor/search${queryString ? `?${queryString}` : ''}`);
@@ -132,27 +156,42 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
   return (
     <div>
       <title>Search</title>
-      {/* todo: search by # hashtag */}
-      {/* possibly elastic search alike */}
       {/* filter by time range */}
-      <Form un-shadow="g" un-m='2' un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'
-        onSubmit={handleSearch}
-      >
-        <input un-p='2' un-px='4' un-border='gray-200 1 solid rounded focus:blue-400' un-outline='none'
-          autoFocus
-          type="text"
-          name="search"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          placeholder="Search..."
-        />
-        {/* todo: dropdown in future */}
-        <button un-bg='blue-400 hover:white' un-text='white hover:blue-400' un-p='2' un-px='4' un-border='rounded solid blue-400 2' un-cursor='pointer' un-shadow='sm'
-          type="submit"
+      <header un-flex='~' un-px='2' >
+        <Form un-shadow="g" un-m='2' un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'
+          onSubmit={handleSearch}
         >
-          OK
-        </button>
-      </Form>
+          <input un-p='2' un-px='4' un-border='gray-200 1 solid rounded focus:blue-400' un-outline='none'
+            autoFocus
+            type="text"
+            name="search"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            placeholder="Search..."
+          />
+          <button un-bg='blue-400 hover:white' un-text='white hover:blue-400' un-p='2' un-px='4' un-border='rounded solid blue-400 2' un-cursor='pointer' un-shadow='sm'
+            type="submit"
+          >
+            OK
+          </button>
+        </Form>
+
+        <div un-flex="~" un-items='center' un-gap="2" >
+          <select
+            un-p="1" un-border="blue-400 1 solid rounded" un-bg="white" un-text="sm" un-cursor="pointer"
+            value={documentsPerPage}
+            onChange={(e) => handlePerPageChange(parseInt(e.target.value, 10))}
+          >
+            {DOCUMENTS_PER_PAGE_OPTIONS.map((option) => (
+              <option
+                key={option}
+                value={option}>
+                {option} / page
+              </option>
+            ))}
+          </select>
+        </div>
+      </header>
       {
         state === 'submitting' && (
           <div un-text="center" un-m='4'>

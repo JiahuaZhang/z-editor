@@ -205,3 +205,49 @@ BEGIN
     RETURN QUERY EXECUTE final_query;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION get_tag_statistics()
+RETURNS TABLE(tag_name text, document_count bigint) AS $$
+BEGIN
+  RETURN QUERY
+  WITH tag_expanded AS (
+    SELECT 
+      trim(unnest(ed.tag)) as tag_name
+    FROM editor_documents ed
+    WHERE ed.tag IS NOT NULL 
+      AND array_length(ed.tag, 1) > 0
+  )
+  SELECT 
+    te.tag_name,
+    COUNT(*) as document_count
+  FROM tag_expanded te
+  WHERE te.tag_name != ''
+  GROUP BY te.tag_name
+  ORDER BY document_count DESC, te.tag_name ASC;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_filtered_tag_statistics(selected_tags text[])
+RETURNS TABLE(tag_name text, document_count bigint) AS $$
+BEGIN
+  RETURN QUERY
+  WITH filtered_documents AS (
+    SELECT ed.*
+    FROM editor_documents ed
+    WHERE ed.tag IS NOT NULL 
+      AND array_length(ed.tag, 1) > 0
+      AND selected_tags <@ ed.tag
+  ),
+  tag_expanded AS (
+    SELECT unnest(fd.tag) as tag_name
+    FROM filtered_documents fd
+  )
+  SELECT 
+    te.tag_name,
+    COUNT(*) as document_count
+  FROM tag_expanded te
+  WHERE NOT (te.tag_name = ANY(selected_tags))  -- Exclude already selected tags
+  GROUP BY te.tag_name
+  ORDER BY document_count DESC, te.tag_name ASC;
+END;
+$$ LANGUAGE plpgsql;

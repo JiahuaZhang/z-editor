@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Form, useNavigate, useNavigation, useSearchParams } from "react-router";
+import { Badge } from '~/components/ui/badge';
 import {
   Pagination,
   PaginationContent,
@@ -11,6 +12,7 @@ import {
 import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
 import { createSupabaseServerClient, searchDocuments } from '~/util/supabase.server';
 import { Tables } from '~/util/supabase.type';
+import { getTagStatistics } from '~/util/tag-stats.server';
 import type { Route } from './+types/z-editor.search';
 
 type Document = Tables<'editor_documents'>;
@@ -25,6 +27,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const perPage = parseInt(url.searchParams.get('perPage') || DEFAULT_DOCUMENTS_PER_PAGE.toString(), 10);
   const documentsPerPage = DOCUMENTS_PER_PAGE_OPTIONS.includes(perPage) ? perPage : DEFAULT_DOCUMENTS_PER_PAGE;
   const offset = (page - 1) * documentsPerPage;
+  const selectedTags = query ? query.match(/#\w+/g) || [] : [];
+
+  let tagStatsResult = await getTagStatistics(request, selectedTags.length > 0 ? selectedTags : undefined);
+  const tagStats = tagStatsResult.data || [];
 
   if (query) {
     const result = await searchDocuments(request, query);
@@ -43,7 +49,9 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
       currentPage: page,
       totalPages,
       totalCount,
-      documentsPerPage
+      documentsPerPage,
+      selectedTags,
+      tagStats
     };
   }
 
@@ -72,7 +80,9 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
     currentPage: page,
     totalPages,
     totalCount: count || 0,
-    documentsPerPage
+    documentsPerPage,
+    selectedTags,
+    tagStats
   };
 };
 
@@ -83,7 +93,7 @@ export function headers() {
 }
 
 const Search = ({ loaderData }: Route.ComponentProps) => {
-  const { documents, query, error, currentPage = 1, totalPages = 1, totalCount = 0, documentsPerPage = DEFAULT_DOCUMENTS_PER_PAGE } = loaderData;
+  const { documents, query, error, currentPage = 1, totalPages = 1, totalCount = 0, documentsPerPage = DEFAULT_DOCUMENTS_PER_PAGE, selectedTags = [], tagStats = [] } = loaderData;
   const navigate = useNavigate();
   const { state } = useNavigation();
   const [searchParams] = useSearchParams();
@@ -157,7 +167,29 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
     <div>
       <title>Search</title>
       {/* filter by time range */}
-      <header un-flex='~' un-px='2' >
+
+      <header un-flex='~' un-px='2' un-items='center' >
+        {selectedTags.length > 0 && (
+          <div un-flex="~ wrap" un-gap="2" un-mb="2" un-mx="2">
+            {selectedTags.map(tag => (
+              <Badge un-cursor='pointer'
+                key={tag}
+                variant="default"
+                deletable={true}
+                onDelete={() => {
+                  const newQuery = searchValue?.replace(tag, '').replace(/\s+/, ' ').trim();
+                  if (!newQuery || newQuery.trim() === '') {
+                    navigate('/z-editor/search');
+                  } else {
+                    navigate(`/z-editor/search?query=${encodeURIComponent(newQuery)}`);
+                  }
+                }}
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )}
         <Form un-shadow="g" un-m='2' un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'
           onSubmit={handleSearch}
         >

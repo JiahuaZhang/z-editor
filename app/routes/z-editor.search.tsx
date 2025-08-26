@@ -27,7 +27,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const perPage = parseInt(url.searchParams.get('perPage') || DEFAULT_DOCUMENTS_PER_PAGE.toString(), 10);
   const documentsPerPage = DOCUMENTS_PER_PAGE_OPTIONS.includes(perPage) ? perPage : DEFAULT_DOCUMENTS_PER_PAGE;
   const offset = (page - 1) * documentsPerPage;
-  const selectedTags: string[] = query ? query.match(/#\w+/g) || [] : [];
+  const selectedTags: string[] = query ? query.match(/#\S+/g) || [] : [];
 
   let tagStatsResult = await getTagStatistics(request, selectedTags.length > 0 ? selectedTags : undefined);
   const tagStats = tagStatsResult.data || [];
@@ -154,7 +154,6 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
   const { state } = useNavigation();
   const [searchParams] = useSearchParams();
   const [searchValue, setSearchValue] = useState(query);
-  const nonTagQuery = query ? query.replace(/#\w+/g, '').trim() : '';
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

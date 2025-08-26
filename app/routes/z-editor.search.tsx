@@ -27,7 +27,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const perPage = parseInt(url.searchParams.get('perPage') || DEFAULT_DOCUMENTS_PER_PAGE.toString(), 10);
   const documentsPerPage = DOCUMENTS_PER_PAGE_OPTIONS.includes(perPage) ? perPage : DEFAULT_DOCUMENTS_PER_PAGE;
   const offset = (page - 1) * documentsPerPage;
-  const selectedTags = query ? query.match(/#\w+/g) || [] : [];
+  const selectedTags: string[] = query ? query.match(/#\w+/g) || [] : [];
 
   let tagStatsResult = await getTagStatistics(request, selectedTags.length > 0 ? selectedTags : undefined);
   const tagStats = tagStatsResult.data || [];
@@ -92,12 +92,69 @@ export function headers() {
   };
 }
 
+type TagSelectorProps = {
+  tagStats: { tag_name: string; document_count: number; }[];
+  onTagSelect: (tag: string) => void;
+};
+
+const TagSelector = ({ tagStats, onTagSelect }: TagSelectorProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredTags = tagStats.filter(stat => stat.tag_name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  if (!tagStats.length) return null;
+
+  return (
+    <div un-relative="~">
+      <input
+        type="text"
+        placeholder="Add tag"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        onFocus={() => setIsOpen(true)}
+        onBlur={() => setTimeout(() => setIsOpen(false), 150)}
+        onKeyDown={event => {
+          if (searchTerm && event.key === 'Enter' && filteredTags.length === 1) {
+            onTagSelect(filteredTags[0].tag_name);
+          }
+        }}
+        un-px="3" un-py="1" un-text="sm" un-border="~ gray-300" un-rounded="full" un-bg="white hover:gray-50" un-outline="none" un-ring="focus:2 focus:blue-500" un-border-focus="blue-500" un-w="32"
+      />
+      {isOpen && (
+        <div un-absolute="~ top-full left-0" un-mt="1" un-w="64" un-bg="white" un-border="~ gray-200" un-rounded="lg" un-shadow="lg" un-z="50">
+          <div un-max-h="48" un-overflow="y-auto">
+            {filteredTags.length > 0 ? (
+              filteredTags.map(stat => (
+                <div
+                  key={stat.tag_name}
+                  un-px="3" un-py="2" un-bg="hover:gray-50" un-cursor="pointer" un-flex="~ justify-between items-center" un-text="sm"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => onTagSelect(stat.tag_name)}
+                >
+                  <span>{stat.tag_name}</span>
+                  <span un-text="gray-400 xs">({stat.document_count})</span>
+                </div>
+              ))
+            ) : (
+              <div un-px="3" un-py="4" un-text="center gray-500 sm">
+                🔍 No matching tag
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const Search = ({ loaderData }: Route.ComponentProps) => {
   const { documents, query, error, currentPage = 1, totalPages = 1, totalCount = 0, documentsPerPage = DEFAULT_DOCUMENTS_PER_PAGE, selectedTags = [], tagStats = [] } = loaderData;
   const navigate = useNavigate();
   const { state } = useNavigation();
   const [searchParams] = useSearchParams();
   const [searchValue, setSearchValue] = useState(query);
+  const nonTagQuery = query ? query.replace(/#\w+/g, '').trim() : '';
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -136,6 +193,11 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
     navigate(`/z-editor/search${queryString ? `?${queryString}` : ''}`);
   };
 
+  const handleAddTag = (tag: string) => {
+    const newQuery = `${searchValue?.trim()} ${tag}`;
+    navigate(`/z-editor/search?query=${encodeURIComponent(newQuery)}`);
+  };
+
   useEffect(() => {
     const urlQuery = searchParams.get('query');
     setSearchValue(urlQuery ?? '');
@@ -169,27 +231,33 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
       {/* filter by time range */}
 
       <header un-flex='~' un-px='2' un-items='center' >
-        {selectedTags.length > 0 && (
-          <div un-flex="~ wrap" un-gap="2" un-mb="2" un-mx="2">
-            {selectedTags.map(tag => (
-              <Badge un-cursor='pointer'
-                key={tag}
-                variant="default"
-                deletable={true}
-                onDelete={() => {
-                  const newQuery = searchValue?.replace(tag, '').replace(/\s+/, ' ').trim();
-                  if (!newQuery || newQuery.trim() === '') {
-                    navigate('/z-editor/search');
-                  } else {
-                    navigate(`/z-editor/search?query=${encodeURIComponent(newQuery)}`);
-                  }
-                }}
-              >
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        )}
+        <div un-flex="~ wrap" un-gap="2" un-mb="2" un-mx="2" un-items="center">
+          {selectedTags.length > 0 && (
+            <>
+              {selectedTags.map(tag => (
+                <Badge un-cursor='pointer'
+                  key={tag}
+                  variant="default"
+                  deletable={true}
+                  onDelete={() => {
+                    const newQuery = searchValue?.replace(tag, '').replace(/\s+/, ' ').trim();
+                    if (!newQuery || newQuery.trim() === '') {
+                      navigate('/z-editor/search');
+                    } else {
+                      navigate(`/z-editor/search?query=${encodeURIComponent(newQuery)}`);
+                    }
+                  }}
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </>
+          )}
+          <TagSelector
+            tagStats={tagStats}
+            onTagSelect={handleAddTag}
+          />
+        </div>
         <Form un-shadow="g" un-m='2' un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'
           onSubmit={handleSearch}
         >

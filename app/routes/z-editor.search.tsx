@@ -29,6 +29,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const offset = (page - 1) * documentsPerPage;
   const selectedTags: string[] = query ? query.match(/#\S+/g) || [] : [];
 
+  // todo, make all Promise awaited at the same time for perfromances
   let tagStatsResult = await getTagStatistics(request, selectedTags.length > 0 ? selectedTags : undefined);
   const tagStats = tagStatsResult.data || [];
 
@@ -122,20 +123,22 @@ const TagSelector = ({ tagStats, onTagSelect }: TagSelectorProps) => {
         un-px="3" un-py="1" un-text="sm" un-border="~ gray-300" un-rounded="full" un-bg="white hover:gray-50" un-outline="none" un-ring="focus:2 focus:blue-500" un-border-focus="blue-500" un-w="32"
       />
       {isOpen && (
-        <div un-absolute="~ top-full left-0" un-mt="1" un-w="64" un-bg="white" un-border="~ gray-200" un-rounded="lg" un-shadow="lg" un-z="50">
-          <div un-max-h="48" un-overflow="y-auto">
+        <div un-absolute="~ top-full left-0" un-mt="1" un-w="120" un-bg="white" un-border="~ gray-200" un-rounded="lg" un-shadow="lg" un-z="50">
+          <div un-max-h="70" un-overflow="y-auto" un-p="2">
             {filteredTags.length > 0 ? (
-              filteredTags.map(stat => (
-                <div
-                  key={stat.tag_name}
-                  un-px="3" un-py="2" un-bg="hover:gray-50" un-cursor="pointer" un-flex="~ justify-between items-center" un-text="sm"
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => onTagSelect(stat.tag_name)}
-                >
-                  <span>{stat.tag_name}</span>
-                  <span un-text="gray-400 xs">({stat.document_count})</span>
-                </div>
-              ))
+              <div un-flex="~ wrap" un-gap="2">
+                {filteredTags.map(stat => (
+                  <span
+                    key={stat.tag_name}
+                    un-inline-flex="~" un-items='center' un-px="2" un-py="1" un-bg="blue-100 hover:blue-800" un-cursor="pointer" un-rounded="full" un-text="sm blue-800 hover:white" un-gap="1" un-whitespace="nowrap"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => onTagSelect(stat.tag_name)}
+                  >
+                    <span>{stat.tag_name}</span>
+                    <span un-text="white" un-bg="slate-400" un-px="1" un-border="rounded" un-leading="none">{stat.document_count}</span>
+                  </span>
+                ))}
+              </div>
             ) : (
               <div un-px="3" un-py="4" un-text="center gray-500 sm">
                 🔍 No matching tag
@@ -193,6 +196,10 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
   };
 
   const handleAddTag = (tag: string) => {
+    if (selectedTags.includes(tag)) {
+      return;
+    }
+
     const newQuery = `${searchValue?.trim()} ${tag}`;
     navigate(`/z-editor/search?query=${encodeURIComponent(newQuery)}`);
   };
@@ -252,10 +259,7 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
               ))}
             </>
           )}
-          <TagSelector
-            tagStats={tagStats}
-            onTagSelect={handleAddTag}
-          />
+          <TagSelector tagStats={tagStats} onTagSelect={handleAddTag} />
         </div>
         <Form un-shadow="g" un-m='2' un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'
           onSubmit={handleSearch}
@@ -301,7 +305,7 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
       <ul un-ml='4' un-flex='~ wrap' un-gap='4'>
         {documents?.map((doc) => (
           <li key={doc.id} >
-            <ZEditorCard document={doc} />
+            <ZEditorCard document={doc} addTag={handleAddTag} />
           </li>
         ))}
       </ul>

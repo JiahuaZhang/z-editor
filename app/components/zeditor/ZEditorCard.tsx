@@ -64,7 +64,7 @@ const formatDate = (dateStr: string | null): string => {
   }
 };
 
-export const ZEditorCard = ({ document, addTag }: { document: Document; addTag: (tag: string) => void; }) => {
+export const ZEditorCard = ({ document, addTag, selectedTags }: { document: Document; addTag: (tag: string) => void; selectedTags: string[]; }) => {
   const preview = editorStatePreview(document);
 
   return <div un-max-w="xl" un-p="2" un-grid='~' un-gap='2' un-border='blue-200 hover:blue-400 rounded solid 2' un-shadow="hover:xl">
@@ -77,7 +77,7 @@ export const ZEditorCard = ({ document, addTag }: { document: Document; addTag: 
       document.tag && document.tag.length > 0
       && <div un-flex="~" un-overflow-x="auto" un-whitespace="nowrap" un-gap="2" un-pb='0.5' >
         {document.tag.map((tag, index) => (
-          <span key={index} un-bg="blue-100" un-text="blue-800 sm" un-px="1.5" un-py="1" un-rounded="xl" un-cursor='pointer'
+          <span key={index} un-bg="blue-100" un-text="blue-800 sm" un-px="1.5" un-py="1" un-rounded="xl" un-cursor={selectedTags.includes(tag) ? 'not-allowed' : 'pointer'}
             onClick={() => addTag(tag)}
           >
             {tag}

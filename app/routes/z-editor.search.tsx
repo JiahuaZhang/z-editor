@@ -305,7 +305,7 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
       <ul un-ml='4' un-flex='~ wrap' un-gap='4'>
         {documents?.map((doc) => (
           <li key={doc.id} >
-            <ZEditorCard document={doc} addTag={handleAddTag} />
+            <ZEditorCard document={doc} addTag={handleAddTag} selectedTags={selectedTags} />
           </li>
         ))}
       </ul>

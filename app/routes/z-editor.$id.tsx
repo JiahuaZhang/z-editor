@@ -1,8 +1,8 @@
-import { LoaderFunctionArgs, useLoaderData } from 'react-router';
 import { ZEditor } from '~/components/zeditor/zeditor';
 import { createSupabaseServerClient } from '~/util/supabase.server';
+import type { Route } from './+types/z-editor.$id';
 
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
   const { supabase, headers } = createSupabaseServerClient(request);
   const documentId = params.id;
 
@@ -24,8 +24,8 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   return { document };
 };
 
-export default function DocumentPage() {
-  const { document, error } = useLoaderData<typeof loader>();
+export default function DocumentPage({ loaderData }: Route.ComponentProps) {
+  const { document, error } = loaderData;
 
   if (error) {
     return (

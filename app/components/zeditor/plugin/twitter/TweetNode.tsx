@@ -86,7 +86,7 @@ const TweetComponent = ({
       format={format}
       nodeKey={nodeKey}>
       {isTweetLoading ? loadingComponent : null}
-      <div un-w='[550px]'
+      <div un-w='90'
         un-border={`${isSelected ? '2 rounded blue-500' : '2 transparent'}`}
         ref={containerRef}
       />

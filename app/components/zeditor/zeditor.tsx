@@ -42,7 +42,8 @@ const Plugins = ({ document, comments, children, ...rest }: { document?: any; co
       <RichTextPlugin
         contentEditable={
           <div>
-            <ContentEditable un-p='2' un-pl='6' un-z='5' un-position='relative' id='lexical-content-deitable' un-min-h='100' un-border='rounded-b 1 solid zinc-400' />
+            <ContentEditable un-p='2' un-pl='6' un-z='5' un-position='relative' id='lexical-content-deitable' un-min-h='[calc(100vh-90px)]' un-border='rounded-b 1 solid zinc-400'
+            />
           </div>
         }
         placeholder={

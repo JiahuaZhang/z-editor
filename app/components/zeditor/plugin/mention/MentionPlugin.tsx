@@ -624,7 +624,7 @@ export const MentionPlugin = () => {
       ) =>
         anchorElementRef.current && results.length
           ? createPortal(
-            <div un-border='rounded 2 solid blue-1' un-min-w='80' un-bg='white'>
+            <div un-border='rounded 2 solid blue-100' un-min-w='80' un-bg='white'>
               <ul>
                 {options.map((option, i: number) => (
                   <MentionsTypeaheadMenuItem

@@ -130,7 +130,7 @@ export const initialConfig: InitialConfigType = {
   onError: console.error,
   nodes: [HeadingNode, ListNode, ListItemNode, QuoteNode, CodeNode, CodeHighlightNode, TableNode, TableRowNode, TableCellNode, HashtagNode, LinkNode, AutoLinkNode, StickyNode, ImageNode, InlineImageNode, EmojiNode, ExcalidrawNode, EquationNode, HorizontalRuleNode, TweetNode, YouTubeNode, MarkNode, CollapsibleContainerNode, CollapsibleTitleNode, CollapsibleContentNode, PageBreakNode, LayoutContainerNode, LayoutItemNode, SpecialTextNode, TimeNode],
   // editorState: $generateContent,
-  editable: false
+  // editable: true
 };
 
 export const generateInitConfig = (namespace: string) => ({

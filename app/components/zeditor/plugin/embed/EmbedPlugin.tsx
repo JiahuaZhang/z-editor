@@ -79,7 +79,7 @@ const AutoEmbedMenuItem = ({ index, isSelected, onClick, onMouseEnter, option }:
   onClick: () => void;
   onMouseEnter: () => void;
   option: EmbedOption;
-}) => <li un-bg={`${isSelected && 'blue-1'}`}
+}) => <li un-bg={`${isSelected && 'blue-100'}`}
   un-grid='~'
   un-grid-flow='col'
   un-justify='start'
@@ -101,7 +101,7 @@ const AutoEmbedMenu = ({ options, selectedItemIndex, onOptionClick, onOptionMous
   onOptionClick: (option: AutoEmbedOption, index: number) => void;
   onOptionMouseEnter: (index: number) => void;
   options: EmbedOption[];
-}) => <ul un-border='rounded 2 solid blue-1' un-bg='white' un-position='relative' un-z='5'>
+}) => <ul un-border='rounded 2 solid blue-100' un-bg='white' un-position='relative' un-z='5'>
     {options.map((option, index) => <AutoEmbedMenuItem
       index={index}
       isSelected={selectedItemIndex === index}

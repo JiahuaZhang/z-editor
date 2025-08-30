@@ -126,13 +126,13 @@ const SavedDocumentPersistence = ({ upsertDocument, deleteDocument, fetcher, edi
       }}
     >
       {isChanged && (
-        <Tooltip title='Sync Document'>
-          <span className="i-material-symbols-light:sync" un-text='xl blue-400' />
+        <Tooltip title='Save Document'>
+          <span className="i-material-symbols-light:save" un-text='xl blue-400' un-cursor='pointer' />
         </Tooltip>
       )}
       {!isChanged && (
-        <Tooltip title='Document Already Saved' >
-          <span className="i-material-symbols-light:save" un-text='xl blue-400' un-cursor='pointer' />
+        <Tooltip title='Document Already Sync' >
+          <span className="i-material-symbols-light:sync" un-text='xl green-500' />
         </Tooltip>
       )}
       {fetcher.data?.error && (

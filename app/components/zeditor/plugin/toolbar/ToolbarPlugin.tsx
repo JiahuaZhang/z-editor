@@ -60,7 +60,7 @@ export const ToolbarPlugin = () => {
     )
   ), [activeEditor]);
 
-  return <div un-position='sticky' un-w='full' un-top='0' un-border-b='1px solid gray-400' un-bg={`${isFocus ? 'gradient-to-r' : 'white'}`} un-z='10'
+  return <div un-position='sticky' un-w='full' un-top='0' un-border-b='1px solid gray-400' un-bg={`${isFocus ? 'linear-to-r' : 'white'}`} un-z='10'
     un-from='blue-50' un-to='purple-50' un-text='2xl' un-grid='~' un-grid-flow='col' un-justify='start' un-items='center' un-gap='1'>
     <button un-hover='bg-blue-600 [&>span]:text-white' un-border='rounded' un-inline='grid' un-py='1' un-disabled='[&>span]:text-gray-400 hover:bg-transparent cursor-not-allowed' disabled={!canUndo || !editor.isEditable()}
       onClick={() => activeEditor.dispatchCommand(UNDO_COMMAND, undefined)}

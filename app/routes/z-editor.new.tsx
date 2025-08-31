@@ -13,9 +13,11 @@ const NewPlugin = () => {
 };
 
 const Page = () => {
-  return <ZEditor>
-    <NewPlugin />
-  </ZEditor>;
+  return <div un-h='[calc(100vh-46px)]'  >
+    <ZEditor>
+      <NewPlugin />
+    </ZEditor>
+  </div>;
 };
 
 export default Page;

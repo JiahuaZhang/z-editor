@@ -64,7 +64,7 @@ export const PopupPlugin = () => {
         setIsInsertEquationMode(true);
         return false;
       }, COMMAND_PRIORITY_LOW)
-    )
+    );
   }, [editor]);
 
   const insertImage = useCallback(({ src = 'https://picsum.photos/200/300', altText = 'random image' }: { src?: string, altText?: string; }) => {
@@ -129,7 +129,7 @@ export const PopupPlugin = () => {
           }}
         >
           <Form.Item label='File' name='images' valuePropName='images' rules={[{ required: true, message: 'Please upload image!' }]} >
-            <Upload.Dragger listType='picture' accept='image/*' onPreview={() => { }}
+            <Upload.Dragger listType='picture' accept='image/*' onPreview={() => {}}
               beforeUpload={() => false}
               itemRender={(originalNode, file, _fileList) => {
                 return <div>
@@ -165,7 +165,7 @@ export const PopupPlugin = () => {
           }}
         >
           <Form.Item label='File' name='images' valuePropName='images' rules={[{ required: true, message: 'Please upload image!' }]} >
-            <Upload.Dragger listType='picture' accept='image/*' onPreview={() => { }} maxCount={1}
+            <Upload.Dragger listType='picture' accept='image/*' onPreview={() => {}} maxCount={1}
               beforeUpload={() => false}
               itemRender={(originalNode, file, _fileList) => {
                 return <div>
@@ -259,12 +259,12 @@ export const PopupPlugin = () => {
           </Form.Item>
           <KatexRenderer equation={equation} inline={false} onDoubleClick={() => {}} katexRef={katexRef} />
           <Form.Item label={null} wrapperCol={{ offset: 20 }} >
-            <Button un-bg='blue-6' type='primary' htmlType='submit' >
+            <Button un-bg='blue-600' type='primary' htmlType='submit' >
               Submit
             </Button>
           </Form.Item>
         </Form>
       </Modal>
     }
-  </>
-}
+  </>;
+};

@@ -2,6 +2,7 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import _ from 'lodash';
 import { generateInitConfig } from '../config';
 import { CommentContext } from '../plugin/comment/CommentContext';
+import { DocumentSynchronizationContext } from '../plugin/document-synchronization/DocumentSynchronizationPlugin';
 import { HashTagContext } from '../plugin/hashtag/HashTagPlugin';
 import { TimeNodeContext } from '../plugin/time/TimePlugin';
 import { ActiveEditorContext } from './ActiveEditor';
@@ -19,7 +20,9 @@ export const EditorContext = ({ children }: { children: JSX.Element; }) => <Lexi
             <CommentContext>
               <HashTagContext>
                 <TimeNodeContext>
-                  {children}
+                  <DocumentSynchronizationContext>
+                    {children}
+                  </DocumentSynchronizationContext>
                 </TimeNodeContext>
               </HashTagContext>
             </CommentContext>

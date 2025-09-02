@@ -4,6 +4,7 @@ import { CodeHighlightPlugin } from './code/CodeHighlightPlugin';
 import { CollapsiblePlugin } from './collapsible/CollapsiblePlugin';
 import { CommentPlugin } from './comment/CommentPlugin';
 import { ComponentPickerMenuPlugin } from './component-picker/ComponentPickerPlugin';
+import { DocumentSynchronizationPlugin } from './document-synchronization/DocumentSynchronizationPlugin';
 import { DragDropPastePlugin } from './drag-drop-paste/DragDropPastePlugin';
 import { DraggableBlockPlugin } from './draggable/DraggableBlockPlugin';
 import { EmbedPlugin } from './embed/EmbedPlugin';
@@ -80,4 +81,5 @@ export namespace Plugin {
   export const DraggableBlock = DraggableBlockPlugin;
   export const Popup = PopupPlugin;
   export const Time = TimePlugin;
+  export const DocumentSynchronization = DocumentSynchronizationPlugin;
 }

@@ -94,6 +94,7 @@ const Plugins = ({ document, comments, children, ...rest }: { document?: any; co
     <TabIndentationPlugin />
     <Plugin.DraggableBlock />
     <Plugin.Time />
+    <Plugin.DocumentSynchronization />
 
     <ClearEditorPlugin />
 

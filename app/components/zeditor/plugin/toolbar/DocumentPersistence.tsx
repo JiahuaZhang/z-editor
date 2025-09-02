@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FetcherWithComponents, useFetcher, useNavigate, useParams } from 'react-router';
 import { Comments, useCommentContext } from '../comment/CommentContext';
+import { useDocumentSynchronizationContext } from '../document-synchronization/DocumentSynchronizationPlugin';
 import { useHashTagContext } from '../hashtag/HashTagPlugin';
 import { TimeNode } from '../time/TimeNode';
 import { useTimeNodeContext } from '../time/TimePlugin';
@@ -145,6 +146,7 @@ const SavedDocumentPersistence = ({ upsertDocument, deleteDocument, fetcher, edi
 };
 
 export const DocumentPersistence = () => {
+  const { syncStatus, setSyncStatus } = useDocumentSynchronizationContext();
   const fetcher = useFetcher();
   const [editor] = useLexicalComposerContext();
   const { comments } = useCommentContext();
@@ -152,13 +154,12 @@ export const DocumentPersistence = () => {
   const timeNodeMap = useTimeNodeContext();
   const params = useParams();
   const navigate = useNavigate();
-  const [status, setStatus] = useState<DocumentSyncStatus>('loading');
 
   useEffect(() => {
     if (params.id === undefined) {
-      setStatus('new');
+      setSyncStatus('new');
     } else {
-      setStatus('saved');
+      setSyncStatus('saved');
     }
   }, [params.id]);
 
@@ -171,7 +172,7 @@ export const DocumentPersistence = () => {
       if (fetcher.data?.status === 201 && fetcher.data?.statusText === 'Created') {
         navigate(`/z-editor/${fetcher.data.data[0].id}`);
       } else if (fetcher.data?.status === 200 && fetcher.data?.statusText === 'OK') {
-        setStatus('saved');
+        setSyncStatus('saved');
       }
     }
   }, [fetcher.state, fetcher.data]);
@@ -202,11 +203,11 @@ export const DocumentPersistence = () => {
     });
   }, [params.id]);
 
-  if (status === 'loading') {
+  if (syncStatus === 'loading') {
     return <span className="i-ph:spinner" un-text='xl blue-300' un-cursor='pointer' un-animate='spin' />;
   }
 
-  if (status === 'new') {
+  if (syncStatus === 'new') {
     return <NewDocumentPersistence upsertDocument={upsertDocument} fetcher={fetcher} />;
   }
 

@@ -4,24 +4,26 @@ import { createContext, Dispatch, SetStateAction, useContext, useState } from 'r
 type DocumentSyncStatus = 'loading' | 'new' | 'saved';
 
 type DocumentSynchronization = {
-  state: DocumentSyncStatus;
-  setState: Dispatch<SetStateAction<DocumentSyncStatus>>;
+  syncStatus: DocumentSyncStatus;
+  setSyncStatus: Dispatch<SetStateAction<DocumentSyncStatus>>;
 };
 
 const Context = createContext<DocumentSynchronization>({
-  state: 'loading',
-  setState: () => {}
+  syncStatus: 'loading',
+  setSyncStatus: () => {}
 });
 
 export const DocumentSynchronizationContext = ({ children }: { children: React.ReactNode; }) => {
-  const [state, setState] = useState<DocumentSyncStatus>('loading');
+  const [syncStatus, setSyncStatus] = useState<DocumentSyncStatus>('loading');
 
-  return <Context.Provider value={{ state, setState }}>{children}</Context.Provider>;
+  return <Context.Provider value={{ syncStatus, setSyncStatus }}>{children}</Context.Provider>;
 };
+
+export const useDocumentSynchronizationContext = () => useContext(Context);
 
 export const DocumentSynchronizationPlugin = () => {
   const [editor] = useLexicalComposerContext();
-  const { state, setState } = useContext(Context);
+  const { syncStatus, setSyncStatus } = useDocumentSynchronizationContext();
 
   return null;
 };

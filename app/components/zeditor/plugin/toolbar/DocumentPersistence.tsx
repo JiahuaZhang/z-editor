@@ -4,14 +4,12 @@ import dayjs from 'dayjs';
 import { LexicalEditor } from 'lexical';
 import _ from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { FetcherWithComponents, useFetcher, useNavigate, useParams } from 'react-router';
+import { FetcherWithComponents, useParams } from 'react-router';
 import { Comments, useCommentContext } from '../comment/CommentContext';
 import { useDocumentSynchronizationContext } from '../document-synchronization/DocumentSynchronizationPlugin';
 import { useHashTagContext } from '../hashtag/HashTagPlugin';
 import { TimeNode } from '../time/TimeNode';
 import { useTimeNodeContext } from '../time/TimePlugin';
-
-type DocumentSyncStatus = 'loading' | 'new' | 'saved';
 
 const autoSaveInterval = (Number(import.meta.env.VITE_AUTO_SAVE_INTERVAL) || 30) * 1000;
 
@@ -146,36 +144,12 @@ const SavedDocumentPersistence = ({ upsertDocument, deleteDocument, fetcher, edi
 };
 
 export const DocumentPersistence = () => {
-  const { syncStatus, setSyncStatus } = useDocumentSynchronizationContext();
-  const fetcher = useFetcher();
+  const { syncStatus, fetcher } = useDocumentSynchronizationContext();
   const [editor] = useLexicalComposerContext();
   const { comments } = useCommentContext();
   const hashTagMap = useHashTagContext();
   const timeNodeMap = useTimeNodeContext();
   const params = useParams();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (params.id === undefined) {
-      setSyncStatus('new');
-    } else {
-      setSyncStatus('saved');
-    }
-  }, [params.id]);
-
-  useEffect(() => {
-    if (fetcher.state === 'submitting' || fetcher.state === 'loading') {
-      if (fetcher.data?.status === 204 && fetcher.data?.statusText === 'No Content') {
-        navigate('/z-editor/search');
-      }
-    } else if (fetcher.state === 'idle') {
-      if (fetcher.data?.status === 201 && fetcher.data?.statusText === 'Created') {
-        navigate(`/z-editor/${fetcher.data.data[0].id}`);
-      } else if (fetcher.data?.status === 200 && fetcher.data?.statusText === 'OK') {
-        setSyncStatus('saved');
-      }
-    }
-  }, [fetcher.state, fetcher.data]);
 
   const upsertDocument = useCallback(async () => {
     const content = editor.getEditorState().toJSON();

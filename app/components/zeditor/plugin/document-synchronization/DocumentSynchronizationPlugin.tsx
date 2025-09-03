@@ -1,9 +1,12 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
+import { COMMAND_PRIORITY_NORMAL, createCommand } from 'lexical';
+import { createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useState } from 'react';
 import { FetcherWithComponents, useFetcher, useNavigate, useParams } from 'react-router';
 import { useCommentContext } from '../comment/CommentContext';
 import { useHashTagContext } from '../hashtag/HashTagPlugin';
 import { useTimeNodeContext } from '../time/TimePlugin';
+
+export const DOCUMENT_SYNC_COMMAND = createCommand<void>('DOCUMENT_SYNC_COMMAND');
 
 type DocumentSyncStatus = 'loading' | 'new' | 'saved';
 
@@ -58,6 +61,36 @@ export const DocumentSynchronizationPlugin = () => {
       }
     }
   }, [fetcher.state, fetcher.data]);
+
+  const upsertDocument = useCallback(async () => {
+    const content = editor.getEditorState().toJSON();
+    const tag = [...new Set(Object.values(hashTagMap))];
+    const reminder = Object.values(timeNodeMap).filter(node => node.getReminders().length > 0).map(node => node.exportJSON());
+    const document = {
+      content,
+      comment: comments,
+      tag,
+      reminder,
+      id: params.id,
+    };
+
+    await fetcher.submit(document as any, {
+      method: 'post',
+      action: '/api/document/upsert',
+      encType: 'application/json'
+    });
+  }, [editor, params.id, comments, hashTagMap, timeNodeMap]);
+
+  useEffect(() => {
+    return editor.registerCommand(
+      DOCUMENT_SYNC_COMMAND,
+      () => {
+        upsertDocument();
+        return true;
+      },
+      COMMAND_PRIORITY_NORMAL
+    );
+  }, [editor, upsertDocument]);
 
   return null;
 };

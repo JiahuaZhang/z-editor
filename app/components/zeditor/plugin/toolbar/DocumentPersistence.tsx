@@ -6,15 +6,17 @@ import _ from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FetcherWithComponents, useParams } from 'react-router';
 import { Comments, useCommentContext } from '../comment/CommentContext';
-import { useDocumentSynchronizationContext } from '../document-synchronization/DocumentSynchronizationPlugin';
+import { DOCUMENT_SYNC_COMMAND, useDocumentSynchronizationContext } from '../document-synchronization/DocumentSynchronizationPlugin';
 import { useHashTagContext } from '../hashtag/HashTagPlugin';
 import { TimeNode } from '../time/TimeNode';
 import { useTimeNodeContext } from '../time/TimePlugin';
 
 const autoSaveInterval = (Number(import.meta.env.VITE_AUTO_SAVE_INTERVAL) || 30) * 1000;
 
-const NewDocumentPersistence = ({ upsertDocument, fetcher }: { upsertDocument: () => void, fetcher: FetcherWithComponents<any>; }) => {
-  return <button onClick={upsertDocument}>
+const NewDocumentPersistence = ({ fetcher }: { fetcher: FetcherWithComponents<any>; }) => {
+  const [editor] = useLexicalComposerContext();
+
+  return <button onClick={() => editor.dispatchCommand(DOCUMENT_SYNC_COMMAND, undefined)}>
     <Tooltip title='Create New Document'>
       <span className="i-mdi:create" un-text='xl green-600' />
     </Tooltip>
@@ -41,7 +43,7 @@ const isTimeNodeMapChanged = (prev: Record<string, TimeNode>, current: Record<st
   return !_.isEqual(p, c);
 };
 
-const SavedDocumentPersistence = ({ upsertDocument, deleteDocument, fetcher, editor, comments, hashTagMap, timeNodeMap }: { upsertDocument: () => Promise<void>, deleteDocument: () => void, fetcher: FetcherWithComponents<any>, editor: LexicalEditor, comments: Comments, hashTagMap: Record<string, string>, timeNodeMap: Record<string, TimeNode>; }) => {
+const SavedDocumentPersistence = ({ deleteDocument, fetcher, editor, comments, hashTagMap, timeNodeMap }: { deleteDocument: () => void, fetcher: FetcherWithComponents<any>, editor: LexicalEditor, comments: Comments, hashTagMap: Record<string, string>, timeNodeMap: Record<string, TimeNode>; }) => {
   const [isChanged, setIsChanged] = useState(false);
   const prevComments = useRef(comments);
   const prevHashTagMap = useRef(hashTagMap);
@@ -55,7 +57,8 @@ const SavedDocumentPersistence = ({ upsertDocument, deleteDocument, fetcher, edi
       autoSaveTimer.current = null;
     }
 
-    await upsertDocument();
+    editor.dispatchCommand(DOCUMENT_SYNC_COMMAND, undefined);
+    // figure out how to sync up after using editor command
     prevComments.current = comments;
     prevHashTagMap.current = hashTagMap;
     prevTimeNodeMap.current = timeNodeMap;
@@ -151,25 +154,6 @@ export const DocumentPersistence = () => {
   const timeNodeMap = useTimeNodeContext();
   const params = useParams();
 
-  const upsertDocument = useCallback(async () => {
-    const content = editor.getEditorState().toJSON();
-    const tag = [...new Set(Object.values(hashTagMap))];
-    const reminder = Object.values(timeNodeMap).filter(node => node.getReminders().length > 0).map(node => node.exportJSON());
-    const document = {
-      content,
-      comment: comments,
-      tag,
-      reminder,
-      id: params.id,
-    };
-
-    await fetcher.submit(document as any, {
-      method: 'post',
-      action: '/api/document/upsert',
-      encType: 'application/json'
-    });
-  }, [editor, params.id, comments, hashTagMap, timeNodeMap]);
-
   const deleteDocument = useCallback(async () => {
     await fetcher.submit({ id: params.id! }, {
       method: 'post',
@@ -182,8 +166,8 @@ export const DocumentPersistence = () => {
   }
 
   if (syncStatus === 'new') {
-    return <NewDocumentPersistence upsertDocument={upsertDocument} fetcher={fetcher} />;
+    return <NewDocumentPersistence fetcher={fetcher} />;
   }
 
-  return <SavedDocumentPersistence upsertDocument={upsertDocument} deleteDocument={deleteDocument} fetcher={fetcher} editor={editor} comments={comments} hashTagMap={hashTagMap} timeNodeMap={timeNodeMap} />;
+  return <SavedDocumentPersistence deleteDocument={deleteDocument} fetcher={fetcher} editor={editor} comments={comments} hashTagMap={hashTagMap} timeNodeMap={timeNodeMap} />;
 };

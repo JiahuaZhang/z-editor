@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import { LexicalEditor } from 'lexical';
 import _ from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { FetcherWithComponents, useParams } from 'react-router';
 import { Comments, useCommentContext } from '../comment/CommentContext';
 import { DOCUMENT_DELETE_COMMAND, DOCUMENT_SYNC_COMMAND, useDocumentSynchronizationContext } from '../document-synchronization/DocumentSynchronizationPlugin';
 import { useHashTagContext } from '../hashtag/HashTagPlugin';
@@ -13,8 +12,9 @@ import { useTimeNodeContext } from '../time/TimePlugin';
 
 const autoSaveInterval = (Number(import.meta.env.VITE_AUTO_SAVE_INTERVAL) || 30) * 1000;
 
-const NewDocumentPersistence = ({ fetcher }: { fetcher: FetcherWithComponents<any>; }) => {
+const NewDocumentPersistence = () => {
   const [editor] = useLexicalComposerContext();
+  const { fetcher } = useDocumentSynchronizationContext();
 
   return <button onClick={() => editor.dispatchCommand(DOCUMENT_SYNC_COMMAND, undefined)}>
     <Tooltip title='Create New Document'>
@@ -43,7 +43,8 @@ const isTimeNodeMapChanged = (prev: Record<string, TimeNode>, current: Record<st
   return !_.isEqual(p, c);
 };
 
-const SavedDocumentPersistence = ({ fetcher, editor, comments, hashTagMap, timeNodeMap }: { fetcher: FetcherWithComponents<any>, editor: LexicalEditor, comments: Comments, hashTagMap: Record<string, string>, timeNodeMap: Record<string, TimeNode>; }) => {
+const SavedDocumentPersistence = ({ editor, comments, hashTagMap, timeNodeMap }: { editor: LexicalEditor, comments: Comments, hashTagMap: Record<string, string>, timeNodeMap: Record<string, TimeNode>; }) => {
+  const { fetcher } = useDocumentSynchronizationContext();
   const [isChanged, setIsChanged] = useState(false);
   const prevComments = useRef(comments);
   const prevHashTagMap = useRef(hashTagMap);
@@ -147,27 +148,19 @@ const SavedDocumentPersistence = ({ fetcher, editor, comments, hashTagMap, timeN
 };
 
 export const DocumentPersistence = () => {
-  const { syncStatus, fetcher } = useDocumentSynchronizationContext();
+  const { syncStatus } = useDocumentSynchronizationContext();
   const [editor] = useLexicalComposerContext();
   const { comments } = useCommentContext();
   const hashTagMap = useHashTagContext();
   const timeNodeMap = useTimeNodeContext();
-  const params = useParams();
-
-  const deleteDocument = useCallback(async () => {
-    await fetcher.submit({ id: params.id! }, {
-      method: 'post',
-      action: '/api/document/delete'
-    });
-  }, [params.id]);
 
   if (syncStatus === 'loading') {
     return <span className="i-ph:spinner" un-text='xl blue-300' un-cursor='pointer' un-animate='spin' />;
   }
 
   if (syncStatus === 'new') {
-    return <NewDocumentPersistence fetcher={fetcher} />;
+    return <NewDocumentPersistence />;
   }
 
-  return <SavedDocumentPersistence fetcher={fetcher} editor={editor} comments={comments} hashTagMap={hashTagMap} timeNodeMap={timeNodeMap} />;
+  return <SavedDocumentPersistence editor={editor} comments={comments} hashTagMap={hashTagMap} timeNodeMap={timeNodeMap} />;
 };

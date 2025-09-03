@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FetcherWithComponents, useParams } from 'react-router';
 import { Comments, useCommentContext } from '../comment/CommentContext';
-import { DOCUMENT_SYNC_COMMAND, useDocumentSynchronizationContext } from '../document-synchronization/DocumentSynchronizationPlugin';
+import { DOCUMENT_DELETE_COMMAND, DOCUMENT_SYNC_COMMAND, useDocumentSynchronizationContext } from '../document-synchronization/DocumentSynchronizationPlugin';
 import { useHashTagContext } from '../hashtag/HashTagPlugin';
 import { TimeNode } from '../time/TimeNode';
 import { useTimeNodeContext } from '../time/TimePlugin';
@@ -43,7 +43,7 @@ const isTimeNodeMapChanged = (prev: Record<string, TimeNode>, current: Record<st
   return !_.isEqual(p, c);
 };
 
-const SavedDocumentPersistence = ({ deleteDocument, fetcher, editor, comments, hashTagMap, timeNodeMap }: { deleteDocument: () => void, fetcher: FetcherWithComponents<any>, editor: LexicalEditor, comments: Comments, hashTagMap: Record<string, string>, timeNodeMap: Record<string, TimeNode>; }) => {
+const SavedDocumentPersistence = ({ fetcher, editor, comments, hashTagMap, timeNodeMap }: { fetcher: FetcherWithComponents<any>, editor: LexicalEditor, comments: Comments, hashTagMap: Record<string, string>, timeNodeMap: Record<string, TimeNode>; }) => {
   const [isChanged, setIsChanged] = useState(false);
   const prevComments = useRef(comments);
   const prevHashTagMap = useRef(hashTagMap);
@@ -122,7 +122,7 @@ const SavedDocumentPersistence = ({ deleteDocument, fetcher, editor, comments, h
               <span className="i-bi:trash3" un-text='xl red-400 group-hover:white' />
               Delete
             </button>,
-            onClick: deleteDocument,
+            onClick: () => editor.dispatchCommand(DOCUMENT_DELETE_COMMAND, undefined),
           },
         ],
       }}
@@ -169,5 +169,5 @@ export const DocumentPersistence = () => {
     return <NewDocumentPersistence fetcher={fetcher} />;
   }
 
-  return <SavedDocumentPersistence deleteDocument={deleteDocument} fetcher={fetcher} editor={editor} comments={comments} hashTagMap={hashTagMap} timeNodeMap={timeNodeMap} />;
+  return <SavedDocumentPersistence fetcher={fetcher} editor={editor} comments={comments} hashTagMap={hashTagMap} timeNodeMap={timeNodeMap} />;
 };

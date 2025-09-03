@@ -7,6 +7,7 @@ import { useHashTagContext } from '../hashtag/HashTagPlugin';
 import { useTimeNodeContext } from '../time/TimePlugin';
 
 export const DOCUMENT_SYNC_COMMAND = createCommand<void>('DOCUMENT_SYNC_COMMAND');
+export const DOCUMENT_DELETE_COMMAND = createCommand<void>('DOCUMENT_DELETE_COMMAND');
 
 type DocumentSyncStatus = 'loading' | 'new' | 'saved';
 
@@ -81,6 +82,17 @@ export const DocumentSynchronizationPlugin = () => {
     });
   }, [editor, params.id, comments, hashTagMap, timeNodeMap]);
 
+  const deleteDocument = useCallback(async () => {
+    if (params.id === undefined) {
+      return;
+    }
+
+    await fetcher.submit({ id: params.id! }, {
+      method: 'post',
+      action: '/api/document/delete'
+    });
+  }, [params.id]);
+
   useEffect(() => {
     return editor.registerCommand(
       DOCUMENT_SYNC_COMMAND,
@@ -91,6 +103,17 @@ export const DocumentSynchronizationPlugin = () => {
       COMMAND_PRIORITY_NORMAL
     );
   }, [editor, upsertDocument]);
+
+  useEffect(() => {
+    return editor.registerCommand(
+      DOCUMENT_DELETE_COMMAND,
+      () => {
+        deleteDocument();
+        return true;
+      },
+      COMMAND_PRIORITY_NORMAL
+    );
+  }, [editor, deleteDocument]);
 
   return null;
 };

@@ -1,16 +1,15 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { Dropdown, Tooltip } from 'antd';
 import dayjs from 'dayjs';
-import { LexicalEditor } from 'lexical';
 import _ from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Comments, useCommentContext } from '../comment/CommentContext';
+import { useCommentContext } from '../comment/CommentContext';
 import { DOCUMENT_DELETE_COMMAND, DOCUMENT_SYNC_COMMAND, useDocumentSynchronizationContext } from '../document-synchronization/DocumentSynchronizationPlugin';
 import { useHashTagContext } from '../hashtag/HashTagPlugin';
 import { TimeNode } from '../time/TimeNode';
 import { useTimeNodeContext } from '../time/TimePlugin';
 
-const autoSaveInterval = (Number(import.meta.env.VITE_AUTO_SAVE_INTERVAL) || 30) * 1000;
+const autoSaveInterval = (Number(import.meta.env.VITE_AUTO_SAVE_INTERVAL) || 1) * 1000;
 
 const NewDocumentPersistence = () => {
   const [editor] = useLexicalComposerContext();
@@ -43,8 +42,12 @@ const isTimeNodeMapChanged = (prev: Record<string, TimeNode>, current: Record<st
   return !_.isEqual(p, c);
 };
 
-const SavedDocumentPersistence = ({ editor, comments, hashTagMap, timeNodeMap }: { editor: LexicalEditor, comments: Comments, hashTagMap: Record<string, string>, timeNodeMap: Record<string, TimeNode>; }) => {
+const SavedDocumentPersistence = () => {
   const { fetcher } = useDocumentSynchronizationContext();
+  const [editor] = useLexicalComposerContext();
+  const { comments } = useCommentContext();
+  const hashTagMap = useHashTagContext();
+  const timeNodeMap = useTimeNodeContext();
   const [isChanged, setIsChanged] = useState(false);
   const prevComments = useRef(comments);
   const prevHashTagMap = useRef(hashTagMap);
@@ -149,10 +152,6 @@ const SavedDocumentPersistence = ({ editor, comments, hashTagMap, timeNodeMap }:
 
 export const DocumentPersistence = () => {
   const { syncStatus } = useDocumentSynchronizationContext();
-  const [editor] = useLexicalComposerContext();
-  const { comments } = useCommentContext();
-  const hashTagMap = useHashTagContext();
-  const timeNodeMap = useTimeNodeContext();
 
   if (syncStatus === 'loading') {
     return <span className="i-ph:spinner" un-text='xl blue-300' un-cursor='pointer' un-animate='spin' />;
@@ -162,5 +161,5 @@ export const DocumentPersistence = () => {
     return <NewDocumentPersistence />;
   }
 
-  return <SavedDocumentPersistence editor={editor} comments={comments} hashTagMap={hashTagMap} timeNodeMap={timeNodeMap} />;
+  return <SavedDocumentPersistence />;
 };

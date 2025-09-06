@@ -24,6 +24,7 @@ import { StickyNode } from './plugin/sticky-note/StickNote';
 import { TimeNode } from './plugin/time/TimeNode';
 import { TweetNode } from './plugin/twitter/TweetNode';
 import { YouTubeNode } from './plugin/youtube/YouTubeNode';
+import { LexicalEditor, SerializedEditorState } from 'lexical';
 
 export const initialConfig: InitialConfigType = {
   namespace: 'z-editor',
@@ -133,7 +134,13 @@ export const initialConfig: InitialConfigType = {
   // editable: true
 };
 
-export const generateInitConfig = (namespace: string) => ({
+export const generateInitConfig = (namespace: string, document?: SerializedEditorState) => ({
   ...initialConfig,
   namespace,
+  ...(document && {
+    editorState: (editor: LexicalEditor) => {
+      const editorState = editor.parseEditorState(document);
+      editor.setEditorState(editorState);
+    }
+  }),
 });

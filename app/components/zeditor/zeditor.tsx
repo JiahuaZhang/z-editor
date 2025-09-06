@@ -13,6 +13,7 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
+import { SerializedEditorState } from 'lexical';
 import { useEffect } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 import { EditorContext } from './context/EditorContext';
@@ -28,13 +29,8 @@ const Plugins = ({ document, comments, children, ...rest }: { document?: any; co
   const { setComments } = useCommentContext();
 
   useEffect(() => {
-    if (!document) return;
-
-    setTimeout(() => editor.update(() => editor.setEditorState(editor.parseEditorState(document))), 0);
-
     setComments(comments ?? []);
-  }, [editor, document, comments]);
-
+  }, [comments]);
 
   return <main un-h='full' un-border=' solid blue-400' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
     <Plugin.Toolbar.Top />
@@ -104,8 +100,8 @@ const Plugins = ({ document, comments, children, ...rest }: { document?: any; co
   </main>;
 };
 
-export const ZEditor = ({ document, comments, children, ...rest }: { document?: any; comments?: any[]; children?: React.ReactNode; }) => <ClientOnly>{() =>
-  <EditorContext>
+export const ZEditor = ({ document, comments, children, ...rest }: { document?: SerializedEditorState; comments?: any[]; children?: React.ReactNode; }) => <ClientOnly>{() =>
+  <EditorContext document={document}>
     <Plugins document={document} comments={comments} {...rest} >
       {children}
     </Plugins>

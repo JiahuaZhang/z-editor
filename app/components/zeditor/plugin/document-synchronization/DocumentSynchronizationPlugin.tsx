@@ -154,6 +154,13 @@ export const DocumentSynchronizationPlugin = () => {
   }, [comments, hashTagMap, timeNodeMap, editor, upsertDocument]);
 
   useEffect(() => {
+    prevComments.current = comments;
+    prevHashTagMap.current = hashTagMap;
+    prevTimeNodeMap.current = timeNodeMap;
+    prevEditorState.current = editor.getEditorState();
+  }, [editor]);
+
+  useEffect(() => {
     if (prevComments.current && !_.isEqual(prevComments.current, comments)) {
       setSyncStatus(prev => prev === 'saved' ? 'changed' : prev);
       prevComments.current = comments;

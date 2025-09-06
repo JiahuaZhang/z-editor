@@ -1,15 +1,20 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import dayjs from 'dayjs';
 import { COMMAND_PRIORITY_NORMAL, createCommand } from 'lexical';
-import { createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useState } from 'react';
+import _ from 'lodash';
+import { createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { FetcherWithComponents, useFetcher, useNavigate, useParams } from 'react-router';
 import { useCommentContext } from '../comment/CommentContext';
 import { useHashTagContext } from '../hashtag/HashTagPlugin';
+import { TimeNode } from '../time/TimeNode';
 import { useTimeNodeContext } from '../time/TimePlugin';
 
 export const DOCUMENT_SYNC_COMMAND = createCommand<void>('DOCUMENT_SYNC_COMMAND');
 export const DOCUMENT_DELETE_COMMAND = createCommand<void>('DOCUMENT_DELETE_COMMAND');
 
-type DocumentSyncStatus = 'loading' | 'new' | 'saved';
+const autoSaveInterval = (Number(import.meta.env.VITE_AUTO_SAVE_INTERVAL) || 1) * 1000;
+
+type DocumentSyncStatus = 'loading' | 'new' | 'saved' | 'changed';
 
 type DocumentSynchronization = {
   syncStatus: DocumentSyncStatus;
@@ -32,14 +37,34 @@ export const DocumentSynchronizationContext = ({ children }: { children: React.R
 
 export const useDocumentSynchronizationContext = () => useContext(Context);
 
+const isTimeNodeMapChanged = (prev: Record<string, TimeNode>, current: Record<string, TimeNode>) => {
+  if (Object.keys(prev).length !== Object.keys(current).length) {
+    return true;
+  }
+
+  const p = Object.values(prev)
+    .sort((a, b) => dayjs(a.getDate()).diff(dayjs(b.getDate()), 'day') || dayjs(a.getTime()).diff(dayjs(b.getTime()), 'second'))
+    .map(n => ({ __date: n.getDate(), __time: n.getTime(), __format: n.getFormat(), __reminders: n.getReminders() }));
+  const c = Object.values(current)
+    .sort((a, b) => dayjs(a.getDate()).diff(dayjs(b.getDate()), 'day') || dayjs(a.getTime()).diff(dayjs(b.getTime()), 'second'))
+    .map(n => ({ __date: n.getDate(), __time: n.getTime(), __format: n.getFormat(), __reminders: n.getReminders() }));
+
+  return !_.isEqual(p, c);
+};
+
 export const DocumentSynchronizationPlugin = () => {
-  const { syncStatus, setSyncStatus, fetcher } = useDocumentSynchronizationContext();
+  const { setSyncStatus, fetcher } = useDocumentSynchronizationContext();
   const [editor] = useLexicalComposerContext();
   const { comments } = useCommentContext();
   const hashTagMap = useHashTagContext();
   const timeNodeMap = useTimeNodeContext();
   const params = useParams();
   const navigate = useNavigate();
+  const prevComments = useRef(comments);
+  const prevHashTagMap = useRef(hashTagMap);
+  const prevTimeNodeMap = useRef(timeNodeMap);
+  const prevEditorState = useRef(editor.getEditorState());
+  const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (params.id === undefined) {
@@ -114,6 +139,60 @@ export const DocumentSynchronizationPlugin = () => {
       COMMAND_PRIORITY_NORMAL
     );
   }, [editor, deleteDocument]);
+
+  const update = useCallback(async () => {
+    if (autoSaveTimer.current) {
+      clearTimeout(autoSaveTimer.current);
+      autoSaveTimer.current = null;
+    }
+
+    await upsertDocument();
+    prevComments.current = comments;
+    prevHashTagMap.current = hashTagMap;
+    prevTimeNodeMap.current = timeNodeMap;
+    prevEditorState.current = editor.getEditorState();
+  }, [comments, hashTagMap, timeNodeMap, editor, upsertDocument]);
+
+  useEffect(() => {
+    if (prevComments.current && !_.isEqual(prevComments.current, comments)) {
+      setSyncStatus(prev => prev === 'saved' ? 'changed' : prev);
+      prevComments.current = comments;
+    }
+  }, [comments]);
+
+  useEffect(() => {
+    if (prevHashTagMap.current && !_.isEqual(Object.values(prevHashTagMap.current).sort(), Object.values(hashTagMap).sort())) {
+      setSyncStatus(prev => prev === 'saved' ? 'changed' : prev);
+      prevHashTagMap.current = hashTagMap;
+    }
+  }, [hashTagMap]);
+
+  useEffect(() => {
+    if (prevTimeNodeMap.current && isTimeNodeMapChanged(prevTimeNodeMap.current, timeNodeMap)) {
+      setSyncStatus(prev => prev === 'saved' ? 'changed' : prev);
+      prevTimeNodeMap.current = timeNodeMap;
+    }
+  }, [timeNodeMap]);
+
+  useEffect(() => {
+    return editor.registerUpdateListener(async listener => {
+      if (!_.isEqual(prevEditorState.current.toJSON(), listener.editorState.toJSON())) {
+        setSyncStatus(prev => prev === 'saved' ? 'changed' : prev);
+        if (autoSaveTimer.current) { clearTimeout(autoSaveTimer.current); }
+        autoSaveTimer.current = setTimeout(update, autoSaveInterval);
+      }
+    });
+  }, [editor]);
+
+  useEffect(() => {
+    if (fetcher.data?.status === 200 && fetcher.data?.statusText === 'OK') {
+      setSyncStatus(prev => prev === 'saved' ? 'changed' : prev);
+      if (autoSaveTimer.current) {
+        clearTimeout(autoSaveTimer.current);
+        autoSaveTimer.current = null;
+      }
+    }
+  }, [fetcher.data, editor]);
 
   return null;
 };

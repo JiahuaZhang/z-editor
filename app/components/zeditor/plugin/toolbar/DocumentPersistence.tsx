@@ -1,15 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { Dropdown, Tooltip } from 'antd';
-import dayjs from 'dayjs';
-import _ from 'lodash';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useCommentContext } from '../comment/CommentContext';
 import { DOCUMENT_DELETE_COMMAND, DOCUMENT_SYNC_COMMAND, useDocumentSynchronizationContext } from '../document-synchronization/DocumentSynchronizationPlugin';
-import { useHashTagContext } from '../hashtag/HashTagPlugin';
-import { TimeNode } from '../time/TimeNode';
-import { useTimeNodeContext } from '../time/TimePlugin';
-
-const autoSaveInterval = (Number(import.meta.env.VITE_AUTO_SAVE_INTERVAL) || 1) * 1000;
 
 const NewDocumentPersistence = () => {
   const [editor] = useLexicalComposerContext();
@@ -27,92 +18,15 @@ const NewDocumentPersistence = () => {
   </button>;
 };
 
-const isTimeNodeMapChanged = (prev: Record<string, TimeNode>, current: Record<string, TimeNode>) => {
-  if (Object.keys(prev).length !== Object.keys(current).length) {
-    return true;
-  }
-
-  const p = Object.values(prev)
-    .sort((a, b) => dayjs(a.getDate()).diff(dayjs(b.getDate()), 'day') || dayjs(a.getTime()).diff(dayjs(b.getTime()), 'second'))
-    .map(n => ({ __date: n.getDate(), __time: n.getTime(), __format: n.getFormat(), __reminders: n.getReminders() }));
-  const c = Object.values(current)
-    .sort((a, b) => dayjs(a.getDate()).diff(dayjs(b.getDate()), 'day') || dayjs(a.getTime()).diff(dayjs(b.getTime()), 'second'))
-    .map(n => ({ __date: n.getDate(), __time: n.getTime(), __format: n.getFormat(), __reminders: n.getReminders() }));
-
-  return !_.isEqual(p, c);
-};
 
 const SavedDocumentPersistence = () => {
+  const { syncStatus } = useDocumentSynchronizationContext();
   const { fetcher } = useDocumentSynchronizationContext();
   const [editor] = useLexicalComposerContext();
-  const { comments } = useCommentContext();
-  const hashTagMap = useHashTagContext();
-  const timeNodeMap = useTimeNodeContext();
-  const [isChanged, setIsChanged] = useState(false);
-  const prevComments = useRef(comments);
-  const prevHashTagMap = useRef(hashTagMap);
-  const prevTimeNodeMap = useRef(timeNodeMap);
-  const prevEditorState = useRef(editor.getEditorState());
-  const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
-
-  const update = useCallback(async () => {
-    if (autoSaveTimer.current) {
-      clearTimeout(autoSaveTimer.current);
-      autoSaveTimer.current = null;
-    }
-
-    editor.dispatchCommand(DOCUMENT_SYNC_COMMAND, undefined);
-    // figure out how to sync up after using editor command
-    prevComments.current = comments;
-    prevHashTagMap.current = hashTagMap;
-    prevTimeNodeMap.current = timeNodeMap;
-    prevEditorState.current = editor.getEditorState();
-  }, [comments, hashTagMap, timeNodeMap, editor]);
-
-  useEffect(() => {
-    if (prevComments.current && !_.isEqual(prevComments.current, comments)) {
-      setIsChanged(true);
-      prevComments.current = comments;
-    }
-  }, [comments]);
-
-  useEffect(() => {
-    if (prevHashTagMap.current && !_.isEqual(Object.values(prevHashTagMap.current).sort(), Object.values(hashTagMap).sort())) {
-      setIsChanged(true);
-      prevHashTagMap.current = hashTagMap;
-    }
-  }, [hashTagMap]);
-
-  useEffect(() => {
-    if (prevTimeNodeMap.current && isTimeNodeMapChanged(prevTimeNodeMap.current, timeNodeMap)) {
-      setIsChanged(true);
-      prevTimeNodeMap.current = timeNodeMap;
-    }
-  }, [timeNodeMap]);
-
-  useEffect(() => {
-    return editor.registerUpdateListener(async listener => {
-      if (!_.isEqual(prevEditorState.current.toJSON(), listener.editorState.toJSON())) {
-        if (!isChanged) { setIsChanged(true); }
-        if (autoSaveTimer.current) { clearTimeout(autoSaveTimer.current); }
-        autoSaveTimer.current = setTimeout(update, autoSaveInterval);
-      }
-    });
-  }, [editor, isChanged]);
-
-  useEffect(() => {
-    if (fetcher.data?.status === 200 && fetcher.data?.statusText === 'OK') {
-      setIsChanged(false);
-      if (autoSaveTimer.current) {
-        clearTimeout(autoSaveTimer.current);
-        autoSaveTimer.current = null;
-      }
-    }
-  }, [fetcher.data, editor]);
 
   return <div un-inline='grid' un-grid-auto-flow='col' un-items='center' un-gap='0.5'>
     <Dropdown.Button className='[&>button:last-child]:w-5 [&>button:first-child]:(px-3)'
-      onClick={update}
+      onClick={() => editor.dispatchCommand(DOCUMENT_SYNC_COMMAND, undefined)}
       trigger={['click']}
       icon={<div un-grid='~'><span className="i-ph:caret-down" un-text='xl gray-400' un-w='4' /></div>}
       menu={{
@@ -131,12 +45,12 @@ const SavedDocumentPersistence = () => {
         ],
       }}
     >
-      {isChanged && (
+      {syncStatus === 'changed' && (
         <Tooltip title='Save Document'>
           <span className="i-material-symbols-light:save" un-text='xl blue-400' un-cursor='pointer' />
         </Tooltip>
       )}
-      {!isChanged && (
+      {syncStatus !== 'changed' && (
         <Tooltip title='Document Already Sync' >
           <span className="i-material-symbols-light:sync" un-text='xl green-500' />
         </Tooltip>

@@ -71,8 +71,6 @@ const EscapeHandlerPlugin = ({ onEscape, }: { onEscape: (e: KeyboardEvent) => bo
   return null;
 };
 
-const UnoTrick = () => <div un-left='2' un-top='1' un-right='0.2' un-text='gray-4 red-4 blue-4' un-pointer-events='none' un-border-l='solid zinc-2 15' un-justify='around' />;
-
 const PlainTextEditor = ({ autoFocus, onEscape, onChange, editorRef, placeholder = 'Type a comment...', ...rest }: {
   autoFocus?: boolean;
   className?: string;
@@ -92,7 +90,7 @@ const PlainTextEditor = ({ autoFocus, onEscape, onChange, editorRef, placeholder
       <div un-position='relative' un-m='1' >
         <PlainTextPlugin
           contentEditable={
-            <ContentEditable un-outline='none' un-border='2 gray-2 solid rounded focus:blue-400' un-p='1' aria-placeholder={placeholder}
+            <ContentEditable un-outline='none' un-border='2 gray-200 solid rounded focus:blue-400' un-p='1' aria-placeholder={placeholder}
               placeholder={<div un-position='absolute' un-top='1' un-left='2' un-text='gray-400' un-pointer-events='none' >{placeholder}</div>}
               {...rest}
             />
@@ -309,34 +307,34 @@ const CommentsPanelListComment = ({ comment, deleteComment, thread }: {
   const { toggle: isDeletingComment, setToggle: setIsDeletingComment, containerRef } = useToggle();
 
   return (
-    <li un-position='relative' un-cursor='pointer' className="[&>button>span]:opacity-0 [&:hover>button>span]:opacity-100" un-border={`${isDeletingComment && '2! solid red-4 rounded'}`} un-border-l={`${!isDeletingComment ? '4 solid zinc-4' : ''}`} un-ml='4' un-grid='~' >
-      <div ref={containerRef} un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingComment ? '14' : '0'}`} un-opacity={`${isDeletingComment ? '100' : '0'}`} un-transition='all' un-duration='500'
+    <li un-position='relative' un-cursor='pointer' className="[&>button>span]:opacity-0 [&:hover>button>span]:opacity-100" un-border={`${isDeletingComment && '2! solid red-400 rounded'}`} un-border-l={`${!isDeletingComment ? '4 solid zinc-400' : ''}`} un-ml='4' un-grid='~' >
+      <div ref={containerRef} un-bg='zinc-100' un-border='rounded' un-h={`${isDeletingComment ? '14' : '0'}`} un-opacity={`${isDeletingComment ? '100' : '0'}`} un-transition='all' un-duration='500'
         un-pointer-events={`${!isDeletingComment && 'none'}`}>
         <h1 un-text='center' un-font='bold' un-my='1' >Delete Comment</h1>
         <div un-flex='~' un-mx='2' >
-          <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-4' className='[&:hover>span]:text-white' un-py='1'
+          <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-400' className='[&:hover>span]:text-white' un-py='1'
             onClick={() => {
               deleteComment(comment, thread);
               setIsDeletingComment(false);
             }} >
-            <span className="i-bi:trash3" un-text='xl red-4' />
+            <span className="i-bi:trash3" un-text='xl red-400' />
           </button>
-          <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:blue-4' className='[&:hover>span]:text-white' un-py='1'
+          <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:blue-400' className='[&:hover>span]:text-white' un-py='1'
             onClick={() => setIsDeletingComment(false)} >
-            <span className="i-material-symbols-light:close" un-text='xl blue-4' />
+            <span className="i-material-symbols-light:close" un-text='xl blue-400' />
           </button>
         </div>
       </div>
       <div>
         <span un-font='bold' un-p='1'>{comment.author}</span>
-        <span un-text='gray-4' > · {dayjs(comment.timeStamp).fromNow()}</span>
+        <span un-text='gray-400' > · {dayjs(comment.timeStamp).fromNow()}</span>
       </div>
-      <p un-px='2' un-text={`${comment.deleted ? 'gray-4' : 'gray-7'}`}>
+      <p un-px='2' un-text={`${comment.deleted ? 'gray-400' : 'gray-700'}`}>
         {comment.content}
       </p>
       <button un-position='absolute' un-right='1' un-top='1' un-pointer-events={`${(comment.deleted || isDeletingComment) && 'none'}`} un-opacity={`${comment.deleted || isDeletingComment ? '0' : '100'}`}
         onClick={() => setIsDeletingComment(true)}>
-        <span className="i-bi:trash3" un-text='hover:orange-6' />
+        <span className="i-bi:trash3" un-text='hover:orange-600' />
       </button>
     </li>
   );
@@ -397,23 +395,23 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
           <div un-flex='~' un-mx='2' >
             <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-400' className='[&:hover>span]:text-white' un-py='1'
               onClick={() => deleteCommentOrThread(commentOrThread)} >
-              <span className="i-bi:trash3" un-text='xl red-4' />
+              <span className="i-bi:trash3" un-text='xl red-400' />
             </button>
             <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:blue-400' className='[&:hover>span]:text-white' un-py='1'
               onClick={() => setIsDeletingThread(false)} >
-              <span className="i-material-symbols-light:close" un-text='xl blue-4' />
+              <span className="i-material-symbols-light:close" un-text='xl blue-400' />
             </button>
           </div>
         </div>
         <div un-position='relative'
           className="[&>button>span]:opacity-0 [&:hover>button>span]:opacity-100">
           <blockquote un-p='2' un-cursor='pointer' >
-            {'> '} <span un-bg='yellow-2' >{commentOrThread.quote}</span>
+            {'> '} <span un-bg='yellow-200' >{commentOrThread.quote}</span>
           </blockquote>
           <button un-position='absolute' un-right='1' un-top='1'
             un-pointer-events={`${isDeletingThread && 'none'}`} un-opacity={`${isDeletingThread ? '0' : '100'}`}
             onClick={() => setIsDeletingThread(true)}>
-            <span className="i-bi:trash3" un-text='hover:orange-6' />
+            <span className="i-bi:trash3" un-text='hover:orange-600' />
           </button>
           {/* {
             !isDeletingThread &&
@@ -498,7 +496,7 @@ const CommentsPanel = ({ activeIDs, deleteCommentOrThread, comments, submitAddCo
   return (
     <div>
       {isEmpty ? (
-        <div un-text='center gray-4' un-p='2'>No Comments</div>
+        <div un-text='center gray-400' un-p='2'>No Comments</div>
       ) : (
         <CommentsPanelList
           activeIDs={activeIDs}
@@ -738,7 +736,7 @@ export const CommentPlugin = ({ ...rest }: {}) => {
           onClick={() => setShowSidebar(true)}
         >
           <Tooltip title='Expand Comments' >
-            <span className="i-material-symbols-light:keyboard-double-arrow-left" un-text='xl hover:blue-6' />
+            <span className="i-material-symbols-light:keyboard-double-arrow-left" un-text='xl hover:blue-600' />
           </Tooltip>
         </button>
       }

@@ -23,8 +23,8 @@ const InternalEquationEditor = (
   }, [forwardedRef, equation]);
 
   return inline ? (
-    <span un-bg='slate-2' un-flex='inline' un-border='rounded' un-gap='0.5' >
-      <span un-text='gray-4'>$</span>
+    <span un-bg='slate-200' un-flex='inline' un-border='rounded' un-gap='0.5' >
+      <span un-text='gray-400'>$</span>
       <input un-bg='inherit' un-outline='none'
         value={equation}
         onChange={onChange}
@@ -38,11 +38,11 @@ const InternalEquationEditor = (
           }
         }}
       />
-      <span un-text='gray-4'>$</span>
+      <span un-text='gray-400'>$</span>
     </span>
   ) : (
-    <div un-bg='slate-2' un-border='rounded' >
-      <span un-text='gray-4'>{'$$\n'}</span>
+    <div un-bg='slate-200' un-border='rounded' >
+      <span un-text='gray-400'>{'$$\n'}</span>
       <textarea un-bg='inherit' un-outline='none' un-w='full' un-resize='none'
         value={equation}
         onChange={onChange}
@@ -56,7 +56,7 @@ const InternalEquationEditor = (
           }
         }}
       />
-      <span un-text='gray-4'>{'\n$$'}</span>
+      <span un-text='gray-400'>{'\n$$'}</span>
     </div>
   );
 };

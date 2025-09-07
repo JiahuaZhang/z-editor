@@ -23,7 +23,7 @@ import { MATCHERS, validateUrl } from './util/url';
 
 export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zinc-600' />;
 
-const Plugins = ({ document, comments, children, ...rest }: { document?: any; comments?: any[]; children?: React.ReactNode; }) => {
+const Plugins = ({ comments, children, ...rest }: { comments?: any[]; children?: React.ReactNode; }) => {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
   const { setComments } = useCommentContext();
@@ -102,7 +102,7 @@ const Plugins = ({ document, comments, children, ...rest }: { document?: any; co
 
 export const ZEditor = ({ document, comments, children, ...rest }: { document?: SerializedEditorState; comments?: any[]; children?: React.ReactNode; }) => <ClientOnly>{() =>
   <EditorContext document={document}>
-    <Plugins document={document} comments={comments} {...rest} >
+    <Plugins comments={comments} {...rest} >
       {children}
     </Plugins>
   </EditorContext>

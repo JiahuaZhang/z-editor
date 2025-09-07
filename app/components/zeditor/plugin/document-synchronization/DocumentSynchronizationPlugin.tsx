@@ -12,7 +12,7 @@ import { useTimeNodeContext } from '../time/TimePlugin';
 export const DOCUMENT_SYNC_COMMAND = createCommand<void>('DOCUMENT_SYNC_COMMAND');
 export const DOCUMENT_DELETE_COMMAND = createCommand<void>('DOCUMENT_DELETE_COMMAND');
 
-const autoSaveInterval = (Number(import.meta.env.VITE_AUTO_SAVE_INTERVAL) || 1) * 1000;
+const autoSaveInterval = (Number(import.meta.env.VITE_AUTO_SAVE_INTERVAL) || 30) * 1000;
 
 type DocumentSyncStatus = 'loading' | 'new' | 'saved' | 'changed';
 

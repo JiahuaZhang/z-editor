@@ -161,7 +161,7 @@ export const StickyComponent = ({
         un-bg={`${color === 'yellow' ? '[linear-gradient(135deg,#ff8_81%,#ff8_82%,#ff8_82%,#ffffc6)]' : '[linear-gradient(135deg,#f7cbe8_81%,#f7cbe8_82%,#f7cbe8_82%,#e7bfe1)]'} `}
         un-cursor='move'
         un-position='relative'
-        un-border='rounded-br-[_75px_12px] 1px solid slate-1'
+        un-border='rounded-br-[_75px_12px] 1px solid slate-100'
         un-p='2'
         className={`sticky-note after:([content:""] absolute z--1 right-0 bottom-18px w-[120px] h-[25px] bg-[#0003] shadow-[2px_15px_5px_#0006])`}
         onPointerDown={(event) => {
@@ -195,14 +195,14 @@ export const StickyComponent = ({
             aria-label="Change sticky note color"
             title="Color"
           >
-            <div className="i-mdi:paint" un-text={`${color === 'yellow' ? 'hover:pink-6' : 'hover:yellow-6'}`} ></div>
+            <div className="i-mdi:paint" un-text={`${color === 'yellow' ? 'hover:pink-600' : 'hover:yellow-600'}`} ></div>
           </button>
           <button un-cursor='pointer'
             un-pointer-events='auto'
             onClick={handleDelete}
             aria-label="Delete sticky note"
             title="Delete">
-            <div className="i-mdi:close" un-text='hover:red-6' ></div>
+            <div className="i-mdi:close" un-text='hover:red-600' ></div>
           </button>
         </header>
         <LexicalNestedComposer initialEditor={caption}>
@@ -215,7 +215,7 @@ export const StickyComponent = ({
                 un-cursor='text'
                 un-px='1'
                 aria-placeholder="What's up?"
-                placeholder={<div un-position='absolute' un-top='32px' un-left='3' un-pointer-events='none' un-text='zinc-4' >
+                placeholder={<div un-position='absolute' un-top='32px' un-left='3' un-pointer-events='none' un-text='zinc-400' >
                   What's up?
                 </div>}
               />

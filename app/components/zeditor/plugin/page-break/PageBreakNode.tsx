@@ -53,9 +53,9 @@ const PageBreakComponent = ({ nodeKey }: { nodeKey: NodeKey; }) => {
   }, [clearSelection, editor, isSelected, nodeKey, $onDelete, setSelected]);
 
   return <div un-select='none' un-position='relative' un-my='4' un-mx='0' >
-    <div un-border={`1 dashed ${isSelected ? 'blue-4' : 'gray-4'}`} />
+    <div un-border={`1 dashed ${isSelected ? 'blue-400' : 'gray-400'}`} />
     <div un-position='absolute' un-top='-1.75' un-left='3' className="i-ph:scissors"></div>
-    <div un-position='absolute' un-top='-3.25' un-left='[calc(50%-50px)]' un-border='rounded 2 solid gray-4' un-px='1' un-bg='white' >
+    <div un-position='absolute' un-top='-3.25' un-left='[calc(50%-50px)]' un-border='rounded 2 solid gray-400' un-px='1' un-bg='white' >
       PAGE BREAK
     </div>
   </div>;

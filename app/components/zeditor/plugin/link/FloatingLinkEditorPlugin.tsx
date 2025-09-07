@@ -174,10 +174,10 @@ const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anc
         un-border='rounded'
         un-py='2'
         un-px='3'
-        un-text='3.75 gray-7'>
+        un-text='3.75 gray-700'>
         <input
           un-outline='none'
-          un-bg='zinc-2'
+          un-bg='zinc-200'
           un-py='1'
           un-px='2'
           un-text='black'
@@ -221,7 +221,7 @@ const FloatingLinkEditor = ({ editor, anchorElem }: { editor: LexicalEditor; anc
         un-border='rounded'
         un-py='2'
         un-px='3'
-        un-text='3.75 gray-7'
+        un-text='3.75 gray-700'
         className="link-view">
         <a un-break='~ words' un-text='blue-600' un-max-w='150' un-overflow-y='auto'
           href={sanitizeUrl(linkUrl)}

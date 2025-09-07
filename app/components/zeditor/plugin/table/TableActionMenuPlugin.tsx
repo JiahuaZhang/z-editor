@@ -151,7 +151,7 @@ const TableCellActionMenuContainer = ({ anchorElem, cellMerge, }: {
     <div un-z='5' un-position='absolute' ref={menuButtonRef}>
       {tableCellNode != null && (
         <>
-          <button un-border='rounded-lg' un-bg='gray-2' un-w='6' un-h='5' un-flex='~' un-items='center' un-justify='center'
+          <button un-border='rounded-lg' un-bg='gray-200' un-w='6' un-h='5' un-flex='~' un-items='center' un-justify='center'
             type="button"
             onClick={(e) => {
               e.stopPropagation();

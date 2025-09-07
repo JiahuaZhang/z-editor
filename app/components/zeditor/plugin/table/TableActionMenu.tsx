@@ -409,12 +409,12 @@ export const TableActionMenu = ({
   );
 
   return createPortal(
-    <div un-border='rounded 1 solid blue-4' un-position='fixed' un-z='10' un-bg='white' un-grid='~' un-gap='1' un-p='1' un-shadow='2xl gray-4'
+    <div un-border='rounded 1 solid blue-400' un-position='fixed' un-z='10' un-bg='white' un-grid='~' un-gap='1' un-p='1' un-shadow='2xl gray-400'
       ref={dropDownRef}
       onClick={(e) => e.stopPropagation()}>
       {
         !showColorPicker && cellMerge && canMergeCells
-        && <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        && <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={mergeTableCellsAtSelection}
           data-test-id="table-merge-cells">
@@ -423,7 +423,7 @@ export const TableActionMenu = ({
       }
       {
         !showColorPicker && cellMerge && canUnmergeCell
-        && <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        && <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={unmergeTableCellsAtSelection}
           data-test-id="table-unmerge-cells">
@@ -436,7 +436,7 @@ export const TableActionMenu = ({
         defaultValue={backgroundColor}
         onChangeComplete={color => handleCellBackgroundColor(`#${color.toHex()}`)}
       >
-        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={() => setShowColorPicker(true)}
           data-test-id="table-background-color">
@@ -444,14 +444,14 @@ export const TableActionMenu = ({
         </button>
       </ColorPicker>
       {!showColorPicker && <>
-        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={toggleRowStriping}
           data-test-id="table-row-striping">
           Toggle Row Striping
         </button>
         <hr />
-        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={() => insertTableRowAtSelection(false)}
           data-test-id="table-insert-row-above">
@@ -459,7 +459,7 @@ export const TableActionMenu = ({
           {selectionCounts.rows === 1 ? 'row' : `${selectionCounts.rows} rows`}{' '}
           above
         </button>
-        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={() => insertTableRowAtSelection(true)}
           data-test-id="table-insert-row-below">
@@ -468,7 +468,7 @@ export const TableActionMenu = ({
           below
         </button>
         <hr />
-        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={() => insertTableColumnAtSelection(false)}
           data-test-id="table-insert-column-before">
@@ -476,7 +476,7 @@ export const TableActionMenu = ({
           {selectionCounts.columns === 1 ? 'column' : `${selectionCounts.columns} columns`}{' '}
           left
         </button>
-        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={() => insertTableColumnAtSelection(true)}
           data-test-id="table-insert-column-after">
@@ -485,32 +485,32 @@ export const TableActionMenu = ({
           right
         </button>
         <hr />
-        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={deleteTableColumnAtSelection}
           data-test-id="table-delete-columns">
           Delete column
         </button>
-        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={deleteTableRowAtSelection}
           data-test-id="table-delete-rows">
           Delete row
         </button>
-        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={deleteTableAtSelection}
           data-test-id="table-delete">
           Delete table
         </button>
         <hr />
-        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={toggleTableRowIsHeader}>
           {(tableCellNode.__headerState & TableCellHeaderStates.ROW) === TableCellHeaderStates.ROW ? 'Remove' : 'Add'}{' '}
           row header
         </button>
-        <button un-border='rounded' un-p='1' un-bg='hover:blue-6' un-text='hover:white'
+        <button un-border='rounded' un-p='1' un-bg='hover:blue-600' un-text='hover:white'
           type="button"
           onClick={toggleTableColumnIsHeader}
           data-test-id="table-column-header">

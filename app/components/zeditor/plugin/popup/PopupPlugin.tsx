@@ -73,19 +73,19 @@ export const PopupPlugin = () => {
 
   return <><Modal open={isInsertingImage} footer={null} onCancel={() => setIsInsertingImage(false)} title='Insert Image' >
     <div un-grid='~' un-gap='6' un-mt='2' >
-      <button un-bg='blue-5 hover:white' un-mx='30' un-border='rounded blue-5 2' un-text='white lg hover:blue-5' un-p='2'
+      <button un-bg='blue-500 hover:white' un-mx='30' un-border='rounded blue-500 2' un-text='white lg hover:blue-500' un-p='2'
         onClick={() => {
           setIsInsertingImage(false);
           insertImage({});
         }}
       >Random</button>
-      <button un-bg='blue-5 hover:white' un-mx='30' un-border='rounded blue-5 2' un-text='white lg hover:blue-5' un-p='2'
+      <button un-bg='blue-500 hover:white' un-mx='30' un-border='rounded blue-500 2' un-text='white lg hover:blue-500' un-p='2'
         onClick={() => {
           setIsInsertingImage(false);
           setIsImageUrlMode(true);
         }}
       >URL</button>
-      <button un-bg='blue-5 hover:white' un-mx='30' un-border='rounded blue-5 2' un-text='white lg hover:blue-5' un-p='2'
+      <button un-bg='blue-500 hover:white' un-mx='30' un-border='rounded blue-500 2' un-text='white lg hover:blue-500' un-p='2'
         onClick={() => {
           setIsInsertingImage(false);
           setIsImageFileMode(true);
@@ -110,7 +110,7 @@ export const PopupPlugin = () => {
             <Input placeholder='Random unsplash image' />
           </Form.Item>
           <Form.Item label={null} wrapperCol={{ offset: 20 }} >
-            <Button un-bg='blue-6' type='primary' htmlType='submit' >
+            <Button un-bg='blue-600' type='primary' htmlType='submit' >
               Submit
             </Button>
           </Form.Item>
@@ -136,17 +136,17 @@ export const PopupPlugin = () => {
                   {originalNode}
                   <div un-flex='~' un-gap='1' un-mt='1' un-items='center' >
                     Alt Text:
-                    <input un-flex-grow='1' un-border='rounded 2 solid gray-2' un-p='0.5' defaultValue={file.name} onChange={event => file.name = event.target.value} />
+                    <input un-flex-grow='1' un-border='rounded 2 solid gray-200' un-p='0.5' defaultValue={file.name} onChange={event => file.name = event.target.value} />
                   </div>
                 </div>;
               }}
             >
-              <span className="i-material-symbols-light:upload" un-text='6xl blue-6' />
+              <span className="i-material-symbols-light:upload" un-text='6xl blue-600' />
               <p>Click or drag file to this area to upload</p>
             </Upload.Dragger>
           </Form.Item>
           <Form.Item label={null} wrapperCol={{ offset: 20 }} >
-            <Button un-bg='blue-6' type='primary' htmlType='submit' >
+            <Button un-bg='blue-600' type='primary' htmlType='submit' >
               Submit
             </Button>
           </Form.Item>
@@ -172,12 +172,12 @@ export const PopupPlugin = () => {
                   {originalNode}
                   <div un-flex='~' un-gap='1' un-mt='1' un-items='center' >
                     Alt Text:
-                    <input un-flex-grow='1' un-border='rounded 2 solid gray-2' un-p='0.5' defaultValue={file.name} onChange={event => file.name = event.target.value} />
+                    <input un-flex-grow='1' un-border='rounded 2 solid gray-200' un-p='0.5' defaultValue={file.name} onChange={event => file.name = event.target.value} />
                   </div>
                 </div>;
               }}
             >
-              <span className="i-material-symbols-light:upload" un-text='6xl blue-6' />
+              <span className="i-material-symbols-light:upload" un-text='6xl blue-600' />
               <p>Click or drag file to this area to upload</p>
             </Upload.Dragger>
           </Form.Item>
@@ -192,7 +192,7 @@ export const PopupPlugin = () => {
             <Checkbox />
           </Form.Item>
           <Form.Item label={null} wrapperCol={{ offset: 20 }} >
-            <Button un-bg='blue-6' type='primary' htmlType='submit' >
+            <Button un-bg='blue-600' type='primary' htmlType='submit' >
               Submit
             </Button>
           </Form.Item>
@@ -217,7 +217,7 @@ export const PopupPlugin = () => {
           <InputNumber />
         </Form.Item>
         <Form.Item label={null} wrapperCol={{ offset: 18 }} >
-          <Button un-bg='blue-6' type='primary' htmlType='submit' >
+          <Button un-bg='blue-600' type='primary' htmlType='submit' >
             Submit
           </Button>
         </Form.Item>
@@ -227,7 +227,7 @@ export const PopupPlugin = () => {
       <div un-grid='~' un-justify='center' >
         {
           DEFAULT_LAYOUTS.map(item =>
-            <button un-w='100' un-p='2' un-grid='~' un-grid-flow='col' un-gap='2' un-border='rounded' un-bg='hover:blue-3' un-auto-cols={`[${item.layout}]`}
+            <button un-w='100' un-p='2' un-grid='~' un-grid-flow='col' un-gap='2' un-border='rounded' un-bg='hover:blue-300' un-auto-cols={`[${item.layout}]`}
               key={item.layout}
               onClick={() => {
                 editor.dispatchCommand(INSERT_LAYOUT_COMMAND, item.layout.replaceAll('_', ' '));
@@ -235,7 +235,7 @@ export const PopupPlugin = () => {
               }}
             >
               {
-                item.children.map((child, index) => <div key={index} un-border='rounded 2 dashed gray-4' un-text='center' >{child}</div>)
+                item.children.map((child, index) => <div key={index} un-border='rounded 2 dashed gray-400' un-text='center' >{child}</div>)
               }
             </button>)
         }

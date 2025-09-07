@@ -55,7 +55,7 @@ const AddCommentBox = ({ anchorKey, editor, onAddComment }: {
 
   return (
     <div un-position='fixed' un-z='10' ref={boxRef}>
-      <button un-bg='white hover:blue-5' un-py='2' un-px='1' un-border='rounded-full 2 solid zinc-4 hover:none' un-flex='~' un-text='hover:white'
+      <button un-bg='white hover:blue-500' un-py='2' un-px='1' un-border='rounded-full 2 solid zinc-400 hover:none' un-flex='~' un-text='hover:white'
         onClick={onAddComment}>
         <span className="i-material-symbols-light:comment-outline" un-text='3xl' />
       </button>
@@ -92,8 +92,8 @@ const PlainTextEditor = ({ autoFocus, onEscape, onChange, editorRef, placeholder
       <div un-position='relative' un-m='1' >
         <PlainTextPlugin
           contentEditable={
-            <ContentEditable un-outline='none' un-border='2 gray-2 solid rounded focus:blue-4' un-p='1' aria-placeholder={placeholder}
-              placeholder={<div un-position='absolute' un-top='1' un-left='2' un-text='gray-4' un-pointer-events='none' >{placeholder}</div>}
+            <ContentEditable un-outline='none' un-border='2 gray-2 solid rounded focus:blue-400' un-p='1' aria-placeholder={placeholder}
+              placeholder={<div un-position='absolute' un-top='1' un-left='2' un-text='gray-400' un-pointer-events='none' >{placeholder}</div>}
               {...rest}
             />
           }
@@ -238,11 +238,11 @@ const CommentInputBox = ({ editor, cancelAddComment, submitAddComment }: {
       className='[&:before]:([content:""] position-absolute border-8 border-t-white border-l-white border-b-transparent border-r-transparent border-solid rotate-45 left-[calc(50%-8px)] top--1.8 shadow-[-3px_-3px_3px_0_#eee])' ref={boxRef} >
       <PlainTextEditor onEscape={onEscape} onChange={onChange} un-min-w='80' un-min-h='25' />
       <div un-flex='~' un-justify='between' un-gap='2' un-mx='2'>
-        <button un-bg='zinc-2 hover:zinc-3' un-px='2' un-py='1' un-border='rounded' un-flex='1'
+        <button un-bg='zinc-200 hover:zinc-300' un-px='2' un-py='1' un-border='rounded' un-flex='1'
           onClick={cancelAddComment}>
           Cancel
         </button>
-        <button un-bg='hover:white disabled:zinc-1 blue-5' un-text='hover:blue-4 white disabled:gray-6' un-font='bold disabled:normal' un-px='2' un-py='1' un-border='rounded' un-cursor='disabled:not-allowed' un-flex='1'
+        <button un-bg='hover:white disabled:zinc-100 blue-500' un-text='hover:blue-400 white disabled:gray-600' un-font='bold disabled:normal' un-px='2' un-py='1' un-border='rounded' un-cursor='disabled:not-allowed' un-flex='1'
           onClick={submitComment}
           disabled={!canSubmit}>
           Comment
@@ -288,7 +288,7 @@ const CommentsComposer = ({ submitAddComment, thread, placeholder }: {
         editorRef={editorRef}
         placeholder={placeholder}
       />
-      <button un-position='absolute' un-top='1' un-right='2' un-cursor={`${canSubmit ? 'pointer' : 'not-allowed'}`} un-text={`${canSubmit ? 'hover:blue-4' : ''} focus:blue-4`}
+      <button un-position='absolute' un-top='1' un-right='2' un-cursor={`${canSubmit ? 'pointer' : 'not-allowed'}`} un-text={`${canSubmit ? 'hover:blue-400' : ''} focus:blue-400`}
         un-outline='none'
         onClick={submitComment}
         disabled={!canSubmit}>
@@ -388,18 +388,18 @@ const ThreadOrComment = ({ commentOrThread, markNodeMap, isActive, deleteComment
     };
 
     return (
-      <li un-bg={`${isActive ? 'zinc-1' : ''}`} un-border-l={`${isActive && !isDeletingThread ? 'solid zinc-2 15' : ''}`} un-border={`${isDeletingThread && '2 solid red-4 rounded'}`}
+      <li un-bg={`${isActive ? 'zinc-100' : ''}`} un-border-l={`${isActive && !isDeletingThread ? 'solid zinc-200 15' : ''}`} un-border={`${isDeletingThread && '2 solid red-400 rounded'}`}
         key={id}
         onClick={handleClickThread}>
-        <div ref={containerRef} un-bg='zinc-1' un-border='rounded' un-h={`${isDeletingThread ? '14' : '0'}`} un-opacity={`${isDeletingThread ? '100' : '0'}`} un-transition='all' un-duration='500'
+        <div ref={containerRef} un-bg='zinc-100' un-border='rounded' un-h={`${isDeletingThread ? '14' : '0'}`} un-opacity={`${isDeletingThread ? '100' : '0'}`} un-transition='all' un-duration='500'
           un-pointer-events={`${!isDeletingThread && 'none'}`} >
           <h1 un-text='center' un-font='bold' un-my='1' >Delete Thread?</h1>
           <div un-flex='~' un-mx='2' >
-            <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-4' className='[&:hover>span]:text-white' un-py='1'
+            <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:red-400' className='[&:hover>span]:text-white' un-py='1'
               onClick={() => deleteCommentOrThread(commentOrThread)} >
               <span className="i-bi:trash3" un-text='xl red-4' />
             </button>
-            <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:blue-4' className='[&:hover>span]:text-white' un-py='1'
+            <button un-flex='~ 1' un-justify='center' un-items='center' un-border='rounded' un-bg='hover:blue-400' className='[&:hover>span]:text-white' un-py='1'
               onClick={() => setIsDeletingThread(false)} >
               <span className="i-material-symbols-light:close" un-text='xl blue-4' />
             </button>
@@ -734,7 +734,7 @@ export const CommentPlugin = ({ ...rest }: {}) => {
       }
       {
         !showSidebar && <button un-position='absolute' un-right='0.2' un-top='1'
-          un-border='2 rounded solid gray-3 hover:blue-4' un-z='10' un-flex='~'
+          un-border='2 rounded solid gray-300 hover:blue-400' un-z='10' un-flex='~'
           onClick={() => setShowSidebar(true)}
         >
           <Tooltip title='Expand Comments' >
@@ -747,7 +747,7 @@ export const CommentPlugin = ({ ...rest }: {}) => {
           showSidebar && <>
             <Tooltip title='Hide Comments'>
               <h1 un-flex='~' un-items='center' un-justify='center' un-text='white' un-cursor='pointer' un-w='full'
-                un-px='2' un-py='1' un-bg='blue-5 hover:gray-5'
+                un-px='2' un-py='1' un-bg='blue-500 hover:gray-500'
                 onClick={() => setShowSidebar(false)}>
                 Comments <span className="i-material-symbols-light:keyboard-double-arrow-right" un-text='xl' />
               </h1>

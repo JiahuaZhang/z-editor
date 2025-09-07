@@ -1,12 +1,10 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import dayjs from 'dayjs';
 import { COMMAND_PRIORITY_NORMAL, createCommand } from 'lexical';
 import _ from 'lodash';
 import { createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { FetcherWithComponents, useFetcher, useNavigate, useParams } from 'react-router';
 import { useCommentContext } from '../comment/CommentContext';
 import { useHashTagContext } from '../hashtag/HashTagPlugin';
-import { TimeNode } from '../time/TimeNode';
 import { useTimeNodeContext } from '../time/TimePlugin';
 
 export const DOCUMENT_SYNC_COMMAND = createCommand<void>('DOCUMENT_SYNC_COMMAND');
@@ -37,21 +35,6 @@ export const DocumentSynchronizationContext = ({ children }: { children: React.R
 
 export const useDocumentSynchronizationContext = () => useContext(Context);
 
-const isTimeNodeMapChanged = (prev: Record<string, TimeNode>, current: Record<string, TimeNode>) => {
-  if (Object.keys(prev).length !== Object.keys(current).length) {
-    return true;
-  }
-
-  const p = Object.values(prev)
-    .sort((a, b) => dayjs(a.getDate()).diff(dayjs(b.getDate()), 'day') || dayjs(a.getTime()).diff(dayjs(b.getTime()), 'second'))
-    .map(n => ({ __date: n.getDate(), __time: n.getTime(), __format: n.getFormat(), __reminders: n.getReminders() }));
-  const c = Object.values(current)
-    .sort((a, b) => dayjs(a.getDate()).diff(dayjs(b.getDate()), 'day') || dayjs(a.getTime()).diff(dayjs(b.getTime()), 'second'))
-    .map(n => ({ __date: n.getDate(), __time: n.getTime(), __format: n.getFormat(), __reminders: n.getReminders() }));
-
-  return !_.isEqual(p, c);
-};
-
 export const DocumentSynchronizationPlugin = () => {
   const { setSyncStatus, fetcher } = useDocumentSynchronizationContext();
   const [editor] = useLexicalComposerContext();
@@ -61,8 +44,6 @@ export const DocumentSynchronizationPlugin = () => {
   const params = useParams();
   const navigate = useNavigate();
   const prevComments = useRef(comments);
-  const prevHashTagMap = useRef(hashTagMap);
-  const prevTimeNodeMap = useRef(timeNodeMap);
   const prevEditorState = useRef(editor.getEditorState());
   const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
 
@@ -148,15 +129,11 @@ export const DocumentSynchronizationPlugin = () => {
 
     await upsertDocument();
     prevComments.current = comments;
-    prevHashTagMap.current = hashTagMap;
-    prevTimeNodeMap.current = timeNodeMap;
     prevEditorState.current = editor.getEditorState();
   }, [comments, hashTagMap, timeNodeMap, editor, upsertDocument]);
 
   useEffect(() => {
     prevComments.current = comments;
-    prevHashTagMap.current = hashTagMap;
-    prevTimeNodeMap.current = timeNodeMap;
     prevEditorState.current = editor.getEditorState();
   }, [editor]);
 
@@ -166,20 +143,6 @@ export const DocumentSynchronizationPlugin = () => {
       prevComments.current = comments;
     }
   }, [comments]);
-
-  useEffect(() => {
-    if (prevHashTagMap.current && !_.isEqual(Object.values(prevHashTagMap.current).sort(), Object.values(hashTagMap).sort())) {
-      setSyncStatus(prev => prev === 'saved' ? 'changed' : prev);
-      prevHashTagMap.current = hashTagMap;
-    }
-  }, [hashTagMap]);
-
-  useEffect(() => {
-    if (prevTimeNodeMap.current && isTimeNodeMapChanged(prevTimeNodeMap.current, timeNodeMap)) {
-      setSyncStatus(prev => prev === 'saved' ? 'changed' : prev);
-      prevTimeNodeMap.current = timeNodeMap;
-    }
-  }, [timeNodeMap]);
 
   useEffect(() => {
     return editor.registerUpdateListener(async listener => {

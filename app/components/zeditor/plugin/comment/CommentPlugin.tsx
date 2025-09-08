@@ -23,6 +23,8 @@ import { createComment, createThread, Thread, useCommentContext, type Comment, t
 
 dayjs.extend(relativeTime);
 
+export const UnoTrick = () => <div un-left='2' un-top='1' un-right='0.2' un-pointer-events='none' un-border-l='solid zinc-2 15' un-justify='around' />;
+
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand('INSERT_INLINE_COMMAND',);
 
 const AddCommentBox = ({ anchorKey, editor, onAddComment }: {

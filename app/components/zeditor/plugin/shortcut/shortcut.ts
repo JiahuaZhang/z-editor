@@ -37,6 +37,7 @@ export const SHORTCUTS = Object.freeze({
   ITALIC: IS_APPLE ? '⌘+I' : 'Ctrl+I',
   UNDERLINE: IS_APPLE ? '⌘+U' : 'Ctrl+U',
   INSERT_LINK: IS_APPLE ? '⌘+K' : 'Ctrl+K',
+  SAVE_DOCUMENT: IS_APPLE ? '⌘+S' : 'Ctrl+S',
 });
 
 export const controlOrMeta = (metaKey: boolean, ctrlKey: boolean) => IS_APPLE ? metaKey : ctrlKey;
@@ -217,4 +218,9 @@ export const isClearFormatting = (event: KeyboardEvent) => {
 export const isInsertLink = (event: KeyboardEvent) => {
   const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
   return code === 'KeyK' && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+};
+
+export const isSaveDocument = (event: KeyboardEvent) => {
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === 'KeyS' && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 };

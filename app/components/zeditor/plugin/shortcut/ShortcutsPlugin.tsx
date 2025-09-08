@@ -7,7 +7,8 @@ import { useFloatContext } from '../../context/FloatContext';
 import { useToolbarContext } from '../../context/ToolbarContext';
 import { sanitizeUrl } from '../../util/url';
 import { clearSelectionFormatting, formatBulletList, formatCheckList, formatCode, formatHeading, formatNumberedList, formatParagraph, formatQuote, updateFontSize, UpdateFontSizeType } from '../../util/utils';
-import { isCapitalize, isCenterAlign, isClearFormatting, isDecreaseFontSize, isFormatBulletList, isFormatCheckList, isFormatCode, isFormatHeading, isFormatNumberedList, isFormatParagraph, isFormatQuote, isIncreaseFontSize, isIndent, isInsertCodeBlock, isInsertLink, isJustifyAlign, isLeftAlign, isLowercase, isOutdent, isRightAlign, isStrikeThrough, isSubscript, isSuperscript, isUppercase } from './shortcut';
+import { DOCUMENT_SYNC_COMMAND } from '../document-synchronization/DocumentSynchronizationPlugin';
+import { isCapitalize, isCenterAlign, isClearFormatting, isDecreaseFontSize, isFormatBulletList, isFormatCheckList, isFormatCode, isFormatHeading, isFormatNumberedList, isFormatParagraph, isFormatQuote, isIncreaseFontSize, isIndent, isInsertCodeBlock, isInsertLink, isJustifyAlign, isLeftAlign, isLowercase, isOutdent, isRightAlign, isSaveDocument, isStrikeThrough, isSubscript, isSuperscript, isUppercase } from './shortcut';
 
 export const ShortcutsPlugin = () => {
   const editor = useActiveEditorContext();
@@ -95,6 +96,9 @@ export const ShortcutsPlugin = () => {
         setIsLinkEditMode(!toolbarContext.isLink);
 
         editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
+      } else if (isSaveDocument(event)) {
+        event.preventDefault();
+        editor.dispatchCommand(DOCUMENT_SYNC_COMMAND, undefined);
       }
 
       return false;

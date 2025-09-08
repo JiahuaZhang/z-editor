@@ -99,27 +99,23 @@ export const DocumentSynchronizationPlugin = () => {
     });
   }, [params.id]);
 
-  useEffect(() => {
-    return editor.registerCommand(
-      DOCUMENT_SYNC_COMMAND,
-      () => {
-        upsertDocument();
-        return true;
-      },
-      COMMAND_PRIORITY_NORMAL
-    );
-  }, [editor, upsertDocument]);
+  useEffect(() => editor.registerCommand(
+    DOCUMENT_SYNC_COMMAND,
+    () => {
+      upsertDocument();
+      return true;
+    },
+    COMMAND_PRIORITY_NORMAL
+  ), [editor, upsertDocument]);
 
-  useEffect(() => {
-    return editor.registerCommand(
-      DOCUMENT_DELETE_COMMAND,
-      () => {
-        deleteDocument();
-        return true;
-      },
-      COMMAND_PRIORITY_NORMAL
-    );
-  }, [editor, deleteDocument]);
+  useEffect(() => editor.registerCommand(
+    DOCUMENT_DELETE_COMMAND,
+    () => {
+      deleteDocument();
+      return true;
+    },
+    COMMAND_PRIORITY_NORMAL
+  ), [editor, deleteDocument]);
 
   const update = useCallback(async () => {
     if (autoSaveTimer.current) {

@@ -68,8 +68,8 @@ export const ZEditorCard = ({ document, addTag, selectedTags }: { document: Docu
   const preview = editorStatePreview(document);
 
   return <div un-max-w="xl" un-p="2" un-grid='~' un-gap='2' un-border='blue-200 hover:blue-400 rounded solid 2' un-shadow="hover:xl">
-    <Link to={`/z-editor/${document.id}`} >
-      <pre un-h='60' un-overflow-y="auto" un-overflow-x='hidden' un-font='sans' un-text='wrap' >
+    <Link un-min-w='0' to={`/z-editor/${document.id}`}  >
+      <pre un-h='60' un-overflow-y="auto" un-overflow-x='hidden' un-font='sans' un-whitespace='pre-wrap' un-break='words' >
         {preview}
       </pre>
     </Link>

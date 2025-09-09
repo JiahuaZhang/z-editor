@@ -1,25 +1,14 @@
-dashboard, for reminders, textcont would be empty for them, should keep the time atleast.
+time reminder, bugfix & actual go through usage.
+search, filter by time.
 
 reminder:
-- should be dynamic?
 - auto expand today's alert only?
 - should have animations that's about to trigger?
 - notification part
 - sync up alert part
 
-route?
-/user/:id/panel? serach? filter?
-sync search input with url
-
-/user/:id/doc/:doc-id?edit=true
-sync edit with url
-
 need to check on validation:
 multiple tabs -> what if I change one content, another tab? Need to sync? or just throw error?
-
-panel / home / list
-- new page
-- list recent pages (limit)
 
 future todo:
 

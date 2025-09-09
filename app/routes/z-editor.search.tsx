@@ -17,8 +17,8 @@ import type { Route } from './+types/z-editor.search';
 
 type Document = Tables<'editor_documents'>;
 
-const DEFAULT_DOCUMENTS_PER_PAGE = 10;
-const DOCUMENTS_PER_PAGE_OPTIONS = [10, 20];
+const DEFAULT_DOCUMENTS_PER_PAGE = 20;
+const DOCUMENTS_PER_PAGE_OPTIONS = [10, 20, 40];
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const url = new URL(request.url);

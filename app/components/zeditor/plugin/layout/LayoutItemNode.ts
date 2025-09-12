@@ -1,9 +1,17 @@
 import { addClassNamesToElement } from '@lexical/utils';
-import { DOMConversionMap, DOMConversionOutput, EditorConfig, ElementNode, LexicalNode, SerializedElementNode } from 'lexical';
+import { $isParagraphNode, DOMConversionMap, DOMConversionOutput, EditorConfig, ElementNode, LexicalNode, SerializedElementNode } from 'lexical';
 
 export type SerializedLayoutItemNode = SerializedElementNode;
 
 const $convertLayoutItemElement = (): DOMConversionOutput | null => ({ node: $createLayoutItemNode() });
+
+export const $isEmptyLayoutItemNode = (node: LexicalNode): boolean => {
+  if (!$isLayoutItemNode(node) || node.getChildrenSize() !== 1) {
+    return false;
+  }
+  const firstChild = node.getFirstChild();
+  return $isParagraphNode(firstChild) && firstChild.isEmpty();
+};
 
 export class LayoutItemNode extends ElementNode {
   static getType(): string {
@@ -27,6 +35,15 @@ export class LayoutItemNode extends ElementNode {
     return false;
   }
 
+  collapseAtStart(): boolean {
+    const parent = this.getParentOrThrow();
+    if (this.is(parent.getFirstChild()) && parent.getChildren().every($isEmptyLayoutItemNode)) {
+      parent.remove();
+      return true;
+    }
+    return false;
+  }
+
   static importDOM(): DOMConversionMap | null {
     return {
       div: (domNode: HTMLElement) => {
@@ -41,8 +58,8 @@ export class LayoutItemNode extends ElementNode {
     };
   }
 
-  static importJSON(): LayoutItemNode {
-    return $createLayoutItemNode();
+  static importJSON(serializedNode: SerializedLayoutItemNode): LayoutItemNode {
+    return $createLayoutItemNode().updateFromJSON(serializedNode);
   }
 
   isShadowRoot(): boolean {
@@ -52,8 +69,6 @@ export class LayoutItemNode extends ElementNode {
   exportJSON(): SerializedLayoutItemNode {
     return {
       ...super.exportJSON(),
-      type: 'layout-item',
-      version: 1,
     };
   }
 }

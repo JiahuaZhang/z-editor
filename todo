@@ -1,5 +1,11 @@
 time reminder, bugfix & actual go through usage.
-search, filter by time.
+search, filter by time
+
+for z-editor.search, have a refresh button, which invoke to clear cache
+
+UI
+header 1 ~ 6, css style 都太丑
+中文字体太丑
 
 reminder:
 - auto expand today's alert only?

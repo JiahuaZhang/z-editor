@@ -3,7 +3,6 @@ import { AutoLinkPlugin } from '@lexical/react/LexicalAutoLinkPlugin';
 import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
 import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
 import { ClickableLinkPlugin } from '@lexical/react/LexicalClickableLinkPlugin';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
@@ -24,7 +23,6 @@ import { MATCHERS, validateUrl } from './util/url';
 export const UnoStaticTrick = () => <div un-top='2.25' un-left='6.5' un-text='zinc-600' />;
 
 const Plugins = ({ comments, children, ...rest }: { comments?: any[]; children?: React.ReactNode; }) => {
-  const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
   const { setComments } = useCommentContext();
 
@@ -33,7 +31,7 @@ const Plugins = ({ comments, children, ...rest }: { comments?: any[]; children?:
   }, [comments]);
 
   return <main un-h='full' un-border=' solid blue-400' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
-    <Plugin.Toolbar.Top />
+    {/* <Plugin.Toolbar.Top /> */}
     <div un-grid='~' un-grid-flow='col' un-auto-cols='[1fr_max-content]' un-w='full' un-position='relative' >
       <RichTextPlugin
         contentEditable={
@@ -47,7 +45,7 @@ const Plugins = ({ comments, children, ...rest }: { comments?: any[]; children?:
         }
         ErrorBoundary={LexicalErrorBoundary}
       />
-      <Plugin.Comment />
+      {/* <Plugin.Comment /> */}
     </div >
     <Plugin.Popup />
     <Plugin.Toolbar.Floating />
@@ -68,14 +66,11 @@ const Plugins = ({ comments, children, ...rest }: { comments?: any[]; children?:
     <Plugin.Link.Float />
     <Plugin.Image.Insert />
     <Plugin.Image.Inline />
-    {/* <Plugin.Emoji.Transform /> */}
     <Plugin.HorizontalRule />
     <Plugin.PageBreak />
     <Plugin.Emoji.Picker />
     <Plugin.Excalidraw />
-    {/* <Plugin.AutoComplete /> */}
     <Plugin.Layout />
-    {/* <Plugin.SpecialText /> */}
     <Plugin.Shortcuts />
     <Plugin.Equation />
     <Plugin.Collapsible />
@@ -86,7 +81,6 @@ const Plugins = ({ comments, children, ...rest }: { comments?: any[]; children?:
     <Plugin.ComponentPicker />
     <Plugin.SpeechToText />
     <Plugin.Markdown />
-    {/* <Plugin.TabFocus /> */}
     <TabIndentationPlugin />
     <Plugin.DraggableBlock />
     <Plugin.Time />
@@ -94,6 +88,10 @@ const Plugins = ({ comments, children, ...rest }: { comments?: any[]; children?:
 
     <ClearEditorPlugin />
 
+    {/* <Plugin.Emoji.Transform /> */}
+    {/* <Plugin.AutoComplete /> */}
+    {/* <Plugin.SpecialText /> */}
+    {/* <Plugin.TabFocus /> */}
     {/* <SelectionAlwaysOnDisplay /> */}
     {/* <TreeView editor={editor} /> */}
     {children}

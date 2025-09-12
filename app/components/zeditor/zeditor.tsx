@@ -31,7 +31,7 @@ const Plugins = ({ comments, children, ...rest }: { comments?: any[]; children?:
   }, [comments]);
 
   return <main un-h='full' un-border=' solid blue-400' un-overflow-y='auto' un-flex='~ col' un-items='center' un-max-w='screen-xl' un-mx='auto' {...rest} >
-    {/* <Plugin.Toolbar.Top /> */}
+    <Plugin.Toolbar.Top />
     <div un-grid='~' un-grid-flow='col' un-auto-cols='[1fr_max-content]' un-w='full' un-position='relative' >
       <RichTextPlugin
         contentEditable={
@@ -45,7 +45,7 @@ const Plugins = ({ comments, children, ...rest }: { comments?: any[]; children?:
         }
         ErrorBoundary={LexicalErrorBoundary}
       />
-      {/* <Plugin.Comment /> */}
+      <Plugin.Comment />
     </div >
     <Plugin.Popup />
     <Plugin.Toolbar.Floating />

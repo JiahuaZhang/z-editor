@@ -160,10 +160,10 @@ export const ToolbarContext = ({ children }: { children: JSX.Element; }) => {
 
   }, [editor, activeEditor, setToolbarContext]);
 
-  useEffect(() => activeEditor.getEditorState().read($updateToolbar), [activeEditor, $updateToolbar]);
+  useEffect(() => activeEditor.read($updateToolbar), [activeEditor, $updateToolbar]);
 
   useEffect(() => mergeRegister(
-    activeEditor.registerUpdateListener(({ editorState }) => editorState.read($updateToolbar)),
+    activeEditor.registerUpdateListener(() => activeEditor.read($updateToolbar)),
     activeEditor.registerCommand(CAN_UNDO_COMMAND, canUndo => {
       setToolbarContext(prev => ({ ...prev, canUndo }));
       return false;

@@ -45,7 +45,7 @@ const Alert = () => {
           un-items='center'
           un-gap='2'
         >
-          <TimeAlert key={i} timeNode={r} />
+          <TimeAlert key={`${d.id}-${i}`} timeNode={r} />
           {
             i === 0 && <Link className="group" un-flex='' un-justify='' un-px='2' un-py='1' un-bg='hover:blue-500'
               un-border='rounded'

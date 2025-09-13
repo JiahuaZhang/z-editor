@@ -66,7 +66,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
     .from('editor_documents')
     .select('*')
     .range(offset, offset + documentsPerPage - 1)
-    .order('created', { ascending: false });
+    .order('updated', { ascending: false });
 
   if (error) {
     console.error('Error fetching documents:', error);

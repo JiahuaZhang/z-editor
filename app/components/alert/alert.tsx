@@ -1,6 +1,6 @@
-import { Badge, Tooltip } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip';
 import { Reminder, SerializedTimeNode, TimeNodeFormat, WeekDay } from '../zeditor/plugin/time/TimeNode';
 
 let globalNow = dayjs();
@@ -225,17 +225,24 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
               un-position="relative"
             >
               {quarter.date.format('MMM DD')}
-              {quarter.isAdjusted && (<Tooltip title={`${quarter.date.subtract(1, 'month').format('MMM')} ${date.format('DD')} is an invalid date`} >
-                <span un-cursor='pointer'
-                  un-position="absolute"
-                  un-top="-1"
-                  un-right="-1"
-                  un-w="2"
-                  un-h="2"
-                  un-bg="red-400"
-                  un-border="rounded-full"
-                />
-              </Tooltip>
+              {quarter.isAdjusted && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span
+                      un-cursor='pointer'
+                      un-position="absolute"
+                      un-top="-1"
+                      un-right="-1"
+                      un-w="2"
+                      un-h="2"
+                      un-bg="red-400"
+                      un-border="rounded-full"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent un-text='white' >
+                    {`${quarter.date.subtract(1, 'month').format('MMM')} ${date.format('DD')} is an invalid date`}
+                  </TooltipContent>
+                </Tooltip>
               )}
             </span>
           ))}
@@ -265,17 +272,22 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
           >
             {annualDate.format('MMM DD')}
             {isAdjusted && (
-              <Tooltip title={`Feb 29 is not valid in ${now.year()}`}>
-                <span
-                  un-cursor="pointer"
-                  un-position="absolute"
-                  un-top="-1"
-                  un-right="-1"
-                  un-w="2"
-                  un-h="2"
-                  un-bg="orange-400"
-                  un-border="rounded-full"
-                />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span
+                    un-cursor="pointer"
+                    un-position="absolute"
+                    un-top="-1"
+                    un-right="-1"
+                    un-w="2"
+                    un-h="2"
+                    un-bg="orange-400"
+                    un-border="rounded-full"
+                  />
+                </TooltipTrigger>
+                <TooltipContent un-text='white' >
+                  {`Feb 29 is not valid in ${now.year()}`}
+                </TooltipContent>
               </Tooltip>
             )}
           </span>
@@ -347,9 +359,24 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
             <span un-text="white">{timeObj.format('hh:mm:ss A')}</span>
           </div>
 
-          <Badge count={reminders.length} size='small' color='#00a6f4' >
+          <div un-position="relative" un-inline-block="">
             <div className="i-mdi:bell" un-text="lg amber-500" />
-          </Badge>
+            {reminders.length > 0 && (
+              <span un-position='absolute'
+                un-top='-2'
+                un-right='-2'
+                un-h='4'
+                un-w='4'
+                un-bg='red-400'
+                un-flex='~'
+                un-justify='center'
+                un-text='xs white'
+                un-border='rounded-full'
+              >
+                {reminders.length}
+              </span>
+            )}
+          </div>
         </div>
 
         <span

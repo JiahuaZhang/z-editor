@@ -32,13 +32,14 @@ const Alert = () => {
   }
 
   return (
-    <div un-m="4" un-flex='~' un-gap='4'>
+    <div un-m="4" un-flex='~ wrap' un-gap='4'>
       {data.map(d => <div key={d.id}
         un-border='2 solid stone-100 rounded'
         un-bg='stone-50'
         un-p='2'
         un-flex="~ col"
-        un-gap="4"
+        un-gap="2"
+        un-h="fit"
       >
         {d.reminder.map((r: SerializedTimeNode, i: number) => (<div key={`${d.id}-${i}`}
           un-flex='~'

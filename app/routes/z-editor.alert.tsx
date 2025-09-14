@@ -40,12 +40,13 @@ const Alert = () => {
         un-flex="~ col"
         un-gap="4"
       >
-        {d.reminder.map((r: SerializedTimeNode, i: number) => (<div un-flex='~'
+        {d.reminder.map((r: SerializedTimeNode, i: number) => (<div key={`${d.id}-${i}`}
+          un-flex='~'
           un-justify='between'
           un-items='center'
           un-gap='2'
         >
-          <TimeAlert key={`${d.id}-${i}`} timeNode={r} />
+          <TimeAlert timeNode={r} />
           {
             i === 0 && <Link className="group" un-flex='' un-justify='' un-px='2' un-py='1' un-bg='hover:blue-500'
               un-border='rounded'

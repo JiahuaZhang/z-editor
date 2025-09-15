@@ -50,13 +50,14 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
       if (reminder.once) {
         const reminderDateTime = date.hour(time.hour()).minute(time.minute()).second(time.second());
         const isExpired = reminderDateTime.isBefore(now);
+        const isToday = reminderDateTime.isSame(now, 'day');
 
         return (
           <div un-flex="~" un-items='center' un-gap="2" >
             {
               isExpired
                 ? <span className="i-mdi:bell-alert" un-text="sm orange-200" />
-                : <span className="i-mdi:bell-alert" un-text="sm orange-600" un-animate='ping' />
+                : <span className="i-mdi:bell-alert" un-text="sm orange-600" un-animate={isToday ? 'ping' : ''} />
             }
             <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-400' : 'emerald-500'}`} />
             <span un-text={`sm ${isExpired ? 'gray-400' : 'white'}`} un-font="medium" un-bg={`${!isExpired && 'emerald-500'}`} un-py='1' un-px={`${!isExpired && '2'}`} un-border='rounded' >
@@ -388,8 +389,6 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
       {isOpen && (
         <div un-border="2 solid blue-200 rounded" un-px='2' un-py='1' un-flex="~ col" un-gap="2" >
           {reminders.map((reminder, index) => <ReminderAlert key={index} reminder={reminder} date={dateObj} time={timeObj} format={format} />)}
-          {/* <div >
-          </div> */}
         </div>
       )}
     </div>

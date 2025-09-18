@@ -87,12 +87,6 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   };
 };
 
-export function headers() {
-  return {
-    "Cache-Control": "max-age=3000, s-maxage=36000",
-  };
-}
-
 type TagSelectorProps = {
   tagStats: { tag_name: string; document_count: number; }[];
   onTagSelect: (tag: string) => void;

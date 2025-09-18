@@ -1,4 +1,3 @@
-time reminder, bugfix & actual go through usage.
 search, filter by time
 
 for z-editor.search, have a refresh button, which invoke to clear cache
@@ -19,6 +18,11 @@ multiple tabs -> what if I change one content, another tab? Need to sync? or jus
 future todo:
 
 make sorted by updated / created configurable
+
+alert smart sort:
+base on today, prioritize days after today within a week.
+then prioritize days before a week
+? make it configurable? searchabe?
 
 生成式 ui
 https://github.com/vercel-labs/ai-sdk-preview-rsc-genui

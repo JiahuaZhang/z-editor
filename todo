@@ -1,6 +1,7 @@
 search, filter by time
-
-for z-editor.search, have a refresh button, which invoke to clear cache
+before, after specific date
+range: from, to date range
+days: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, could be Monday or Tuesday or Saturday, Weekend, Weekday
 
 UI
 header 1 ~ 6, css style 都太丑

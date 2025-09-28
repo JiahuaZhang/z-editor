@@ -95,10 +95,15 @@ You are an expert in Remix, Supabase, UnoCSS, Vite, React-Router, and TypeScript
   - Instead of `className="flex items-center"` use `un-flex="~ items-center"`
   - Instead of `className="bg-blue-500"` use `un-bg="blue-500"`
   - Instead of `className="text-lg font-bold"` use `un-text="lg" un-font="bold"`
+- Use semantic spacing: `un-gap="1"`, `un-px="2"`, `un-py="1"`
+- Combine hover states: `un-bg="blue-400 hover:gray-200"`
+- Use positioning utilities: `un-absolute="~"`, `un-relative="~"`
 
 ### Icons
 - Utilize icons from https://icon-sets.iconify.design/
 - Example: `<span className="i-material-symbols:delete"/>`
+- Combine with UnoCSS sizing: `<span className="i-mdi:calendar-month" un-text="xl" />`
+- Use semantic icons for feedback: `i-mdi:check-circle` for success, `i-mdi:error` for errors
 
 ### Import Order
 1. Remix core modules
@@ -143,3 +148,11 @@ You are an expert in Remix, Supabase, UnoCSS, Vite, React-Router, and TypeScript
 - Follow Remix's best practices for file structure and data fetching
 - Optimize for performance and accessibility
 - Code must be clean, readable, and maintainable
+
+### Component Design Patterns
+- Keep components focused with single responsibility
+- Use clear TypeScript prop types with descriptive names
+- Provide immediate user feedback with visual states (success/error/loading)
+- Group related UI elements logically (examples, input, feedback)
+- Use conditional rendering for dynamic content display
+- Implement accessible patterns with semantic HTML and ARIA labels

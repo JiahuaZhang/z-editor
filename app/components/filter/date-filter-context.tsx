@@ -3,7 +3,7 @@ import { DateRange } from 'react-day-picker';
 
 type DateFilterMode = 'before' | 'after' | 'range';
 
-type DateFilterState = {
+export type DateFilterState = {
   enabled: boolean;
   setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   mode: DateFilterMode;
@@ -14,47 +14,57 @@ type DateFilterState = {
   setRangeSelection: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
 };
 
-const defaultDateFilterState: DateFilterState = {
-  enabled: false,
-  setEnabled: () => {},
-  mode: 'after',
-  setMode: () => {},
-  date: new Date(),
-  setDate: () => {},
-  rangeSelection: undefined,
-  setRangeSelection: () => {}
-};
-
-const DateFilterContext = createContext<DateFilterState>(defaultDateFilterState);
-
-export const DateFilterProvider = ({ children }: { children: ReactNode; }) => {
-  const [enabled, setEnabled] = useState(false);
-  const [mode, setMode] = useState<DateFilterMode>('after');
-  const [date, setDate] = useState<Date | null>(new Date());
-  const [rangeSelection, setRangeSelection] = useState<DateRange | undefined>({ from: new Date() });
-
-  const value: DateFilterState = {
-    enabled,
-    setEnabled,
-    mode,
-    setMode,
-    date,
-    setDate,
-    rangeSelection,
-    setRangeSelection
+const createDateFilterContext = (contextName: 'updated' | 'created' = 'created') => {
+  const defaultDateFilterState: DateFilterState = {
+    enabled: false,
+    setEnabled: () => {},
+    mode: 'after',
+    setMode: () => {},
+    date: new Date(),
+    setDate: () => {},
+    rangeSelection: undefined,
+    setRangeSelection: () => {}
   };
 
-  return (
-    <DateFilterContext.Provider value={value} >
-      {children}
-    </DateFilterContext.Provider>
-  );
+  const DateFilterContext = createContext<DateFilterState>(defaultDateFilterState);
+
+  const DateFilterProvider = ({ children }: { children: ReactNode; }) => {
+    const [enabled, setEnabled] = useState(false);
+    const [mode, setMode] = useState<DateFilterMode>('after');
+    const [date, setDate] = useState<Date | null>(new Date());
+    const [rangeSelection, setRangeSelection] = useState<DateRange | undefined>({ from: new Date() });
+
+    const value: DateFilterState = {
+      enabled,
+      setEnabled,
+      mode,
+      setMode,
+      date,
+      setDate,
+      rangeSelection,
+      setRangeSelection
+    };
+
+    return (
+      <DateFilterContext.Provider value={value}>
+        {children}
+      </DateFilterContext.Provider>
+    );
+  };
+
+  const useDateFilter = () => {
+    const context = useContext(DateFilterContext);
+    if (context === undefined) {
+      throw new Error(`useDateFilter must be used within a ${contextName}DateFilterProvider`);
+    }
+    return context;
+  };
+
+  return {
+    DateFilterProvider,
+    useDateFilter
+  };
 };
 
-export const useDateFilter = () => {
-  const context = useContext(DateFilterContext);
-  if (context === undefined) {
-    throw new Error('useDateFilter must be used within a DateFilterProvider');
-  }
-  return context;
-};
+export const { DateFilterProvider: CreatedDateFilterProvider, useDateFilter: useCreatedDateFilter } = createDateFilterContext('created');
+export const { DateFilterProvider: UpdatedDateFilterProvider, useDateFilter: useUpdatedDateFilter } = createDateFilterContext('updated');

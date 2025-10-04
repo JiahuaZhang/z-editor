@@ -1,20 +1,17 @@
-import { useState } from 'react';
-import { DateRange } from 'react-day-picker';
 import { Calendar } from '../ui/calendar';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
+import { DateFilterState } from './date-filter-context';
 import { NaturalLanguageDateInput } from './natural-language-date-input';
 
 type DateFilterSectionProps = {
   type: 'created' | 'updated';
+  useContext: () => DateFilterState;
 };
 
-export const DateFilterSection = ({ type }: DateFilterSectionProps) => {
-  const [enabled, setEnabled] = useState(false);
-  const [mode, setMode] = useState<'before' | 'after' | 'range'>('after');
-  const [date, setDate] = useState<Date | null>(new Date());
-  const [rangeSelection, setRangeSelection] = useState<DateRange | undefined>({ from: new Date() });
+export const DateFilterSection = ({ type, useContext }: DateFilterSectionProps) => {
+  const { enabled, setEnabled, mode, setMode, date, setDate, rangeSelection, setRangeSelection } = useContext();
 
   return (
     <div un-border="1 gray-200 rounded" un-p="2" un-space-y='2' >

@@ -2,7 +2,7 @@ import { Calendar } from '../ui/calendar';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
-import { DateFilterState } from './date-filter-context';
+import { DateFilterState, useCreatedDateFilter, useUpdatedDateFilter } from './date-filter-context';
 import { NaturalLanguageDateInput } from './natural-language-date-input';
 
 type DateFilterSectionProps = {
@@ -15,7 +15,7 @@ export const DateFilterSection = ({ type, useContext }: DateFilterSectionProps) 
 
   return (
     <div un-border="1 gray-200 rounded" un-p="2" un-space-y='2' >
-      <div un-flex="~ items-center justify-between" un-p="2" un-rounded="~" un-bg="hover:gray-50" un-transition="colors">
+      <div un-flex="~ items-center justify-between gap-2" un-p="2" un-rounded="~" un-bg="hover:gray-50" un-transition="colors">
         <div un-flex="~ items-center gap-2">
           <Label un-text="lg"
             un-font="semibold"
@@ -65,4 +65,14 @@ export const DateFilterSection = ({ type, useContext }: DateFilterSectionProps) 
         </div>
       )}
     </div>);
+};
+
+export const ExtraDateFilter = (props: any) => {
+  return <div un-my='2' un-space='y-2' {...props} >
+    <h1>Filter Document by date</h1>
+    <div un-flex='~ gap-2'>
+      <DateFilterSection type="created" useContext={useCreatedDateFilter} />
+      <DateFilterSection type="updated" useContext={useUpdatedDateFilter} />
+    </div>
+  </div>;
 };

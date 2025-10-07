@@ -148,7 +148,7 @@ export const DocumentSynchronizationPlugin = () => {
         autoSaveTimer.current = setTimeout(update, autoSaveInterval);
       }
     });
-  }, [editor]);
+  }, [editor, update]);
 
   useEffect(() => {
     if (fetcher.data?.status === 200 && fetcher.data?.statusText === 'OK') {

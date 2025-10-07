@@ -151,6 +151,7 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
   const { state } = useNavigation();
   const [searchParams] = useSearchParams();
   const [searchValue, setSearchValue] = useState(query);
+  const [hasExtraConfig, setHasExtraConfig] = useState(false);
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -228,65 +229,70 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
   return (
     <div>
       <title>Search</title>
-      {/* filter by time range */}
 
-      <header un-flex='~' un-px='2' un-items='center' >
-        <div un-flex="~ wrap" un-gap="2" un-mb="2" un-mx="2" un-items="center">
-          {selectedTags.length > 0 && (
-            <>
-              {selectedTags.map(tag => (
-                <Badge un-cursor='pointer'
-                  key={tag}
-                  variant="default"
-                  deletable={true}
-                  onDelete={() => {
-                    const newQuery = searchValue?.replace(tag, '').replace(/\s+/, ' ').trim();
-                    if (!newQuery || newQuery.trim() === '') {
-                      navigate('/z-editor/search');
-                    } else {
-                      navigate(`/z-editor/search?query=${encodeURIComponent(newQuery)}`);
-                    }
-                  }}
-                >
-                  {tag}
-                </Badge>
+      <header>
+        <div un-flex='~' un-px='2' un-items='center' >
+          <div un-flex="~ wrap" un-gap="2" un-mb="2" un-mx="2" un-items="center">
+            {selectedTags.length > 0 && (
+              <>
+                {selectedTags.map(tag => (
+                  <Badge un-cursor='pointer'
+                    key={tag}
+                    variant="default"
+                    deletable={true}
+                    onDelete={() => {
+                      const newQuery = searchValue?.replace(tag, '').replace(/\s+/, ' ').trim();
+                      if (!newQuery || newQuery.trim() === '') {
+                        navigate('/z-editor/search');
+                      } else {
+                        navigate(`/z-editor/search?query=${encodeURIComponent(newQuery)}`);
+                      }
+                    }}
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </>
+            )}
+            <TagSelector tagStats={tagStats} onTagSelect={handleAddTag} />
+          </div>
+          <Form un-shadow="g" un-m='2' un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'
+            onSubmit={handleSearch}
+          >
+            <input un-p='2' un-px='4' un-border='gray-200 1 solid rounded focus:blue-400' un-outline='none'
+              autoFocus
+              type="text"
+              name="search"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search..."
+            />
+            <button un-bg='blue-400 hover:white' un-text='white hover:blue-400' un-p='2' un-px='4' un-border='rounded solid blue-400 2' un-cursor='pointer' un-shadow='sm'
+              type="submit"
+            >
+              OK
+            </button>
+          </Form>
+
+          <div un-flex="~" un-items='center' un-gap="1" >
+            <button un-flex='~ items-center' un-p='2' un-border='rounded' un-bg={`${hasExtraConfig && 'blue-400'}`}
+              onClick={() => setHasExtraConfig(prev => !prev)} >
+              <span className="i-mdi:cog" un-text={`lg ${hasExtraConfig && 'white'}`} un-cursor='pointer' />
+            </button>
+            <select
+              un-p="1" un-border="blue-400 1 solid rounded" un-bg="white" un-text="sm" un-cursor="pointer"
+              value={documentsPerPage}
+              onChange={(e) => handlePerPageChange(parseInt(e.target.value, 10))}
+            >
+              {DOCUMENTS_PER_PAGE_OPTIONS.map((option) => (
+                <option
+                  key={option}
+                  value={option}>
+                  {option} / page
+                </option>
               ))}
-            </>
-          )}
-          <TagSelector tagStats={tagStats} onTagSelect={handleAddTag} />
-        </div>
-        <Form un-shadow="g" un-m='2' un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'
-          onSubmit={handleSearch}
-        >
-          <input un-p='2' un-px='4' un-border='gray-200 1 solid rounded focus:blue-400' un-outline='none'
-            autoFocus
-            type="text"
-            name="search"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="Search..."
-          />
-          <button un-bg='blue-400 hover:white' un-text='white hover:blue-400' un-p='2' un-px='4' un-border='rounded solid blue-400 2' un-cursor='pointer' un-shadow='sm'
-            type="submit"
-          >
-            OK
-          </button>
-        </Form>
-
-        <div un-flex="~" un-items='center' un-gap="2" >
-          <select
-            un-p="1" un-border="blue-400 1 solid rounded" un-bg="white" un-text="sm" un-cursor="pointer"
-            value={documentsPerPage}
-            onChange={(e) => handlePerPageChange(parseInt(e.target.value, 10))}
-          >
-            {DOCUMENTS_PER_PAGE_OPTIONS.map((option) => (
-              <option
-                key={option}
-                value={option}>
-                {option} / page
-              </option>
-            ))}
-          </select>
+            </select>
+          </div>
         </div>
       </header>
       {

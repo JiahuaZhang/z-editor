@@ -1,5 +1,5 @@
 import { createCookieSessionStorage, redirect } from 'react-router';
-import { createSupabaseServerClient } from '~/util/supabase.server';
+import { createSupabaseServerClient } from './supabase.server';
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {

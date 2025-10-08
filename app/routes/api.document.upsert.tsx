@@ -1,5 +1,5 @@
 import { ActionFunction, redirect } from 'react-router';
-import { createSupabaseServerClient } from '~/util/supabase.server';
+import { createSupabaseServerClient } from '~/service/supabase.server';
 
 export const loader = () => redirect('/');
 

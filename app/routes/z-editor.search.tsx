@@ -11,85 +11,14 @@ import {
   PaginationPrevious,
 } from "~/components/ui/pagination";
 import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
-import { createSupabaseServerClient, searchDocuments } from '~/util/supabase.server';
-import { Tables } from '~/util/supabase.type';
-import { getTagStatistics } from '~/util/tag-stats.server';
+import { DEFAULT_DOCUMENTS_PER_PAGE, DOCUMENTS_PER_PAGE_OPTIONS } from '~/lib/constant';
+import { getDocumentsWithPagination } from '~/service/document.search.server';
 import type { Route } from './+types/z-editor.search';
 
-type Document = Tables<'editor_documents'>;
-
-const DEFAULT_DOCUMENTS_PER_PAGE = 20;
-const DOCUMENTS_PER_PAGE_OPTIONS = [10, 20, 40];
-
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const url = new URL(request.url);
-  const query = url.searchParams.get('query');
-  const page = parseInt(url.searchParams.get('page') || '1', 10);
-  const perPage = parseInt(url.searchParams.get('perPage') || DEFAULT_DOCUMENTS_PER_PAGE.toString(), 10);
-  const documentsPerPage = DOCUMENTS_PER_PAGE_OPTIONS.includes(perPage) ? perPage : DEFAULT_DOCUMENTS_PER_PAGE;
-  const offset = (page - 1) * documentsPerPage;
-  const selectedTags: string[] = query ? query.match(/#\S+/g) || [] : [];
-
-  // todo, make all Promise awaited at the same time for perfromances
-  let tagStatsResult = await getTagStatistics(request, selectedTags.length > 0 ? selectedTags : undefined);
-  const tagStats = tagStatsResult.data || [];
-
-  if (query) {
-    const result = await searchDocuments(request, query);
-    if (result.error) {
-      return { error: result.error, status: result.status };
-    }
-
-    const allDocuments = result.data as Document[];
-    const totalCount = allDocuments.length;
-    const documents = allDocuments.slice(offset, offset + documentsPerPage);
-    const totalPages = Math.ceil(totalCount / documentsPerPage);
-
-    return {
-      documents,
-      query,
-      currentPage: page,
-      totalPages,
-      totalCount,
-      documentsPerPage,
-      selectedTags,
-      tagStats
-    };
-  }
-
-  const { supabase } = createSupabaseServerClient(request);
-
-  const { count } = await supabase
-    .from('editor_documents')
-    .select('*', { count: 'exact', head: true });
-
-  const { data, error } = await supabase
-    .from('editor_documents')
-    .select('*')
-    .range(offset, offset + documentsPerPage - 1)
-    .order('updated', { ascending: false });
-
-  if (error) {
-    console.error('Error fetching documents:', error);
-    return { error: 'Failed to fetch documents', status: 500 };
-  }
-
-  const totalPages = Math.ceil((count || 0) / documentsPerPage);
-
-  return {
-    documents: data as Document[],
-    query: '',
-    currentPage: page,
-    totalPages,
-    totalCount: count || 0,
-    documentsPerPage,
-    selectedTags,
-    tagStats
-  };
-};
+export const loader = async ({ request }: Route.LoaderArgs) => getDocumentsWithPagination(request);
 
 const Search = ({ loaderData }: Route.ComponentProps) => {
-  const { documents, query, error, currentPage = 1, totalPages = 1, totalCount = 0, documentsPerPage = DEFAULT_DOCUMENTS_PER_PAGE, selectedTags = [], tagStats = [] } = loaderData;
+  const { documents, query, error, currentPage = 1, totalPages = 1, documentsPerPage = DEFAULT_DOCUMENTS_PER_PAGE, selectedTags = [], tagStats = [] } = loaderData;
   const navigate = useNavigate();
   const { state } = useNavigation();
   const [searchParams] = useSearchParams();

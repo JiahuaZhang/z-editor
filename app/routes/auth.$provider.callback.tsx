@@ -1,5 +1,5 @@
 import { LoaderFunction, redirect } from 'react-router';
-import { createSupabaseServerClient } from '~/util/supabase.server';
+import { createSupabaseServerClient } from '~/service/supabase.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const requestUrl = new URL(request.url);

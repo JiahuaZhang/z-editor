@@ -1,5 +1,5 @@
 import { ZEditor } from '~/components/zeditor/zeditor';
-import { createSupabaseServerClient } from '~/util/supabase.server';
+import { createSupabaseServerClient } from '~/service/supabase.server';
 import type { Route } from './+types/z-editor.$id';
 
 export const loader = async ({ params, request }: Route.LoaderArgs) => {

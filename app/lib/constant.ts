@@ -1,0 +1,2 @@
+export const DEFAULT_DOCUMENTS_PER_PAGE = 20;
+export const DOCUMENTS_PER_PAGE_OPTIONS = [10, 20, 40];

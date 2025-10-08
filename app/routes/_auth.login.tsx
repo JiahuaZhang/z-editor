@@ -1,6 +1,6 @@
 import { redirect, useSubmit } from 'react-router';
 import { FacebookLoginButton, GoogleLoginButton } from 'react-social-login-buttons';
-import { createSupabaseServerClient } from '~/util/supabase.server';
+import { createSupabaseServerClient } from '~/service/supabase.server';
 
 export const loader = async ({ request }: { request: Request; }) => {
   const { supabase, headers } = createSupabaseServerClient(request);

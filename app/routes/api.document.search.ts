@@ -1,5 +1,5 @@
 import { ActionFunction } from 'react-router';
-import { searchDocuments } from '~/util/supabase.server';
+import { searchDocuments } from '~/service/supabase.server';
 
 export const action: ActionFunction = async ({ request, params }) => {
   const formData = await request.formData();

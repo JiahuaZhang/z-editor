@@ -1,4 +1,4 @@
-import { getTagStatistics } from '~/util/tag-stats.server';
+import { getTagStatistics } from '~/service/tag-stats.server';
 import type { Route } from './+types/api.tag-stats';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

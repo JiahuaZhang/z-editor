@@ -2,7 +2,7 @@ import { PostgrestError } from '@supabase/supabase-js';
 import { Link, LoaderFunction, useLoaderData } from "react-router";
 import { TimeAlert } from '~/components/alert/alert';
 import { SerializedTimeNode } from '~/components/zeditor/plugin/time/TimeNode';
-import { createSupabaseServerClient } from '~/util/supabase.server';
+import { createSupabaseServerClient } from '~/service/supabase.server';
 
 type LoaderData = {
   data: {

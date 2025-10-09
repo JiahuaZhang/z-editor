@@ -8,7 +8,6 @@ CREATE TABLE editor_documents (
     comment JSONB[],
     user_id UUID NOT NULL,
     is_public BOOLEAN DEFAULT FALSE,
-    -- search_content TEXT
 );
 
 CREATE FUNCTION update_updated_column()

@@ -6,21 +6,38 @@ const TimeComponent = lazy(() => import('./TimeComponent').then(module => ({ def
 export type TimeNodeFormat = 'date' | 'time' | 'both';
 export const ALL_WEEK_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as const;
 export type WeekDay = typeof ALL_WEEK_DAYS[number];
-export type Reminder = { type: 'daily'; once: boolean; }
+export type Alert = { type: 'daily'; once: boolean; }
   | { type: 'weekly'; weekly: WeekDay[]; }
   | { type: 'monthly'; monthly: 'this' | '1st' | '2nd' | '3rd' | '4th' | '5th' | 'last'; }
   | { type: 'quarterly'; }
   | { type: 'annually'; };
 
-export type SerializedTimeNode = Spread<{ date: string, time: string, format: TimeNodeFormat; reminders: Reminder[]; }, SerializedLexicalNode>;
+// Backward compatibility type alias
+export type Reminder = Alert;
+
+export type SerializedTimeNode = Spread<{
+  date: string;
+  time: string;
+  format: TimeNodeFormat;
+  alert: Alert[];
+  version: number;
+}, SerializedLexicalNode>;
+
+export type SerializedTimeNodeV1 = Spread<{
+  date: string;
+  time: string;
+  format: TimeNodeFormat;
+  reminders: Alert[];
+  version?: number;
+}, SerializedLexicalNode>;
 
 const $convertTimeNodeElement = (domNode: HTMLSpanElement) => {
   if (domNode.getAttribute('lexical-special') === 'time') {
     const date = domNode.getAttribute('lexical-data-date') || '';
     const time = domNode.getAttribute('lexical-data-time') || '';
     const format = domNode.getAttribute('lexical-data-format') || 'time';
-    const reminders = domNode.getAttribute('lexical-data-reminder') || '[]';
-    const node = $createTimeNode(date, time, format as TimeNodeFormat, JSON.parse(reminders));
+    const alert = domNode.getAttribute('lexical-data-alert') || '[]';
+    const node = $createTimeNode(date, time, format as TimeNodeFormat, JSON.parse(alert));
     return { node };
   }
   return null;
@@ -30,14 +47,14 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
   __date: string;
   __time: string;
   __format: TimeNodeFormat;
-  __reminders: Reminder[];
+  __alert: Alert[];
 
-  constructor(date: string, time: string, __format: TimeNodeFormat = 'time', __reminders: Reminder[] = [], key?: NodeKey) {
+  constructor(date: string, time: string, __format: TimeNodeFormat = 'time', __alert: Alert[] = [], key?: NodeKey) {
     super(key);
     this.__date = date;
     this.__time = time;
     this.__format = __format;
-    this.__reminders = __reminders;
+    this.__alert = __alert;
   }
 
   static getType() {
@@ -45,7 +62,7 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
   }
 
   static clone(node: TimeNode) {
-    return new TimeNode(node.__date, node.__time, node.__format, node.__reminders, node.getKey());
+    return new TimeNode(node.__date, node.__time, node.__format, node.__alert, node.getKey());
   }
 
   static importDOM(): DOMConversionMap {
@@ -69,7 +86,7 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
     element.setAttribute('lexical-data-date', this.__date);
     element.setAttribute('lexical-data-time', this.__time);
     element.setAttribute('lexical-data-format', this.__format);
-    element.setAttribute('lexical-data-reminder', JSON.stringify(this.__reminders));
+    element.setAttribute('lexical-data-alert', JSON.stringify(this.__alert));
     return { element };
   }
 
@@ -81,7 +98,7 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
     return <TimeComponent date={this.__date}
       time={this.__time}
       format={this.__format}
-      reminders={this.__reminders}
+      alert={this.__alert}
       nodeKey={this.getKey()} />;
   }
 
@@ -112,56 +129,108 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
     return this.__format;
   }
 
-  setReminders(reminders: Reminder[]) {
+  setAlert(alert: Alert[]) {
     const self = this.getWritable();
-    self.__reminders = reminders;
+    self.__alert = alert;
   }
 
-  getReminders() {
-    return this.__reminders;
+  getAlert() {
+    return this.__alert;
   }
 
-  addReminder(reminder: Reminder) {
+  addAlert(alert: Alert) {
     const self = this.getWritable();
 
-    if (reminder.type === 'weekly') {
-      const existingReminder = self.__reminders.find(r => r.type === 'weekly');
-      if (existingReminder) {
-        existingReminder.weekly = [...new Set([...reminder.weekly, ...existingReminder.weekly])];
+    if (alert.type === 'weekly') {
+      const existingAlert = self.__alert.find(r => r.type === 'weekly');
+      if (existingAlert) {
+        existingAlert.weekly = [...new Set([...alert.weekly, ...existingAlert.weekly])];
         return;
       }
-    } else if (reminder.type === 'monthly') {
-      if (self.__reminders.find(r => r.type === 'monthly' && r.monthly === reminder.monthly)) return;
+    } else if (alert.type === 'monthly') {
+      if (self.__alert.find(r => r.type === 'monthly' && r.monthly === alert.monthly)) return;
     }
 
-    self.__reminders.push(reminder);
+    self.__alert.push(alert);
   }
 
-  removeReminder(index: number) {
+  removeAlert(index: number) {
     const self = this.getWritable();
-    self.__reminders.splice(index, 1);
+    self.__alert.splice(index, 1);
   }
 
-  isReminderValid(reminder: Reminder) {
+  /**
+   * @deprecated
+   */
+  setReminders(reminders: Alert[]) {
+    this.setAlert(reminders);
+  }
+
+  /**
+   * @deprecated
+   */
+  getReminders() {
+    return this.getAlert();
+  }
+
+  /**
+   * @deprecated
+   */
+  addReminder(reminder: Alert) {
+    this.addAlert(reminder);
+  }
+
+  /**
+   * @deprecated
+   */
+  removeReminder(index: number) {
+    this.removeAlert(index);
+  }
+
+  isAlertValid(alert: Alert) {
     if (this.__format === 'date') return false;
 
     if (this.__format === 'time') {
-      if (reminder.type === 'daily' && reminder.once) return false;
+      if (alert.type === 'daily' && alert.once) return false;
 
-      return !(reminder.type === 'monthly'
-        || reminder.type === 'quarterly'
-        || reminder.type === 'annually');
+      return !(alert.type === 'monthly'
+        || alert.type === 'quarterly'
+        || alert.type === 'annually');
     }
 
     return true;
   }
 
-  getValidReminders() {
-    return this.__reminders.filter(r => this.isReminderValid(r));
+  getValidAlert() {
+    return this.__alert.filter(r => this.isAlertValid(r));
   }
 
-  static importJSON(serializedNode: SerializedTimeNode) {
-    return $createTimeNode(serializedNode.date, serializedNode.time, serializedNode.format, serializedNode.reminders);
+  /**
+   * @deprecated
+   */
+  isReminderValid(reminder: Alert) {
+    return this.isAlertValid(reminder);
+  }
+
+  /**
+   * @deprecated
+   */
+  getValidReminders() {
+    return this.getValidAlert();
+  }
+
+  static importJSON(serializedNode: SerializedLexicalNode) {
+    const timeNode = serializedNode as SerializedTimeNode | SerializedTimeNodeV1;
+
+    // Handle backward compatibility for version 1
+    if (!timeNode.version || timeNode.version === 1) {
+      const v1Node = timeNode as SerializedTimeNodeV1;
+      return $createTimeNode(v1Node.date, v1Node.time, v1Node.format, v1Node.reminders || []);
+    }
+
+    // Handle version 2 and future versions
+    const v2Node = timeNode as SerializedTimeNode;
+    return $createTimeNode(v2Node.date, v2Node.time, v2Node.format, v2Node.alert || []);
   }
 
   exportJSON() {
@@ -170,12 +239,12 @@ export class TimeNode extends DecoratorNode<JSX.Element> {
       date: this.__date,
       time: this.__time,
       format: this.__format,
-      reminders: this.__reminders,
-      version: 1,
+      alert: this.__alert,
+      version: 2,
     };
   }
 }
 
-export const $createTimeNode = (date: string, time: string, format: TimeNodeFormat, reminder: Reminder[] = []) => new TimeNode(date, time, format, reminder);
+export const $createTimeNode = (date: string, time: string, format: TimeNodeFormat, alert: Alert[] = []) => new TimeNode(date, time, format, alert);
 
 export const $isTimeNode = (node: LexicalNode | null | undefined): node is TimeNode => node instanceof TimeNode;

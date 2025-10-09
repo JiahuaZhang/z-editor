@@ -7,8 +7,8 @@ import { $getNodeByKey, COMMAND_PRIORITY_LOW, KEY_ENTER_COMMAND, KEY_ESCAPE_COMM
 import { useCallback, useEffect, useState } from 'react';
 import { Calendar } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { Reminder, TimeNode, TimeNodeFormat } from './TimeNode';
-import { TimeReminderComponent } from './TimeReminderComponent';
+import { TimeAlertComponent } from './TimeAlertComponent';
+import { Alert, TimeNode, TimeNodeFormat } from './TimeNode';
 
 export const getReadableTime = (format: TimeNodeFormat, date: dayjs.Dayjs, time: dayjs.Dayjs) => {
   if (format === 'time') {
@@ -49,7 +49,7 @@ export const getReadableTime = (format: TimeNodeFormat, date: dayjs.Dayjs, time:
   }
 };
 
-export const TimeComponent = ({ date, time, format, reminders = [], nodeKey }: { date: string, time: string, format: TimeNodeFormat; nodeKey?: NodeKey; reminders?: Reminder[]; }) => {
+export const TimeComponent = ({ date, time, format, alert = [], nodeKey }: { date: string, time: string, format: TimeNodeFormat; nodeKey?: NodeKey; alert?: Alert[]; }) => {
   const [editor] = useLexicalComposerContext();
   const node = editor.getEditorState().read(() => $getNodeByKey(nodeKey ?? '') as TimeNode);
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey ?? '');
@@ -145,7 +145,7 @@ export const TimeComponent = ({ date, time, format, reminders = [], nodeKey }: {
       />
     }
 
-    <TimeReminderComponent format={format} reminders={reminders} date={dateObj} time={timeObj} editor={editor} node={node} />
+    <TimeAlertComponent format={format} alert={alert} date={dateObj} time={timeObj} editor={editor} node={node} />
   </div>;
 
   return <Popover content={content} trigger='click' open={isOpen}

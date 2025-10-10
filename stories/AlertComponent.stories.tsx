@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import dayjs from 'dayjs';
-import { ReminderAlert } from '~/components/alert/alert';
+import { AlertComponent } from '~/components/alert/alert';
 import { WeekDay } from '~/components/zeditor/plugin/time/TimeNode';
 
-const meta: Meta<typeof ReminderAlert> = {
-  title: 'Components/ReminderAlert',
-  component: ReminderAlert,
+const meta: Meta<typeof AlertComponent> = {
+  title: 'Components/AlertComponent',
+  component: AlertComponent,
   parameters: {
     layout: 'centered',
     backgrounds: {
@@ -31,7 +31,7 @@ type Story = StoryObj<typeof meta>;
 
 export const OnceExpiredToday: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'daily',
       once: true,
     },
@@ -42,7 +42,7 @@ export const OnceExpiredToday: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A daily reminder that was set for today but has already expired (30 mins ago). Shows orange bell alert and gray text.',
+        story: 'A daily alert that was set for today but has already expired (30 mins ago). Shows orange bell alert and gray text.',
       },
     },
   },
@@ -50,7 +50,7 @@ export const OnceExpiredToday: Story = {
 
 export const OnceNotExpiredToday: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'daily',
       once: true,
     },
@@ -61,7 +61,7 @@ export const OnceNotExpiredToday: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A daily reminder that is set for today but has not expired yet (30 mins from now). Shows active orange bell and green text.',
+        story: 'A daily alert that is set for today but has not expired yet (30 mins from now). Shows active orange bell and green text.',
       },
     },
   },
@@ -69,7 +69,7 @@ export const OnceNotExpiredToday: Story = {
 
 export const OnceExpiredWeeksAgo: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'daily',
       once: true,
     },
@@ -80,7 +80,7 @@ export const OnceExpiredWeeksAgo: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A daily reminder that was set for 2 weeks ago and has long expired. No bell icon since it\'s not today, shows gray text.',
+        story: 'A daily alert that was set for 2 weeks ago and has long expired. No bell icon since it\'s not today, shows gray text.',
       },
     },
   },
@@ -88,7 +88,7 @@ export const OnceExpiredWeeksAgo: Story = {
 
 export const DailyBefore30Minutes: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'daily',
       once: false,
     },
@@ -99,7 +99,7 @@ export const DailyBefore30Minutes: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A recurring daily reminder that will trigger in 30 minutes. Shows active bell ring icon and green text.',
+        story: 'A recurring daily alert that will trigger in 30 minutes. Shows active bell ring icon and green text.',
       },
     },
   },
@@ -107,7 +107,7 @@ export const DailyBefore30Minutes: Story = {
 
 export const DailyAfter30Minutes: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'daily',
       once: false,
     },
@@ -118,15 +118,15 @@ export const DailyAfter30Minutes: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A recurring daily reminder that was supposed to trigger 30 minutes ago. Shows dimmed bell ring icon and gray text.',
+        story: 'A recurring daily alert that was supposed to trigger 30 minutes ago. Shows dimmed bell ring icon and gray text.',
       },
     },
   },
 };
 
-export const WeeklyReminder1: Story = {
+export const WeeklyAlert1: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'weekly',
       weekly: ['Monday', 'Wednesday', 'Friday'],
     },
@@ -137,15 +137,15 @@ export const WeeklyReminder1: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A weekly reminder that repeats on Monday, Wednesday, and Friday. Shows different UI with day badges.',
+        story: 'A weekly alert that repeats on Monday, Wednesday, and Friday. Shows different UI with day badges.',
       },
     },
   },
 };
 
-export const WeeklyReminder2: Story = {
+export const WeeklyAlert2: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'weekly',
       weekly: ['Tuesday', 'Thursday',],
     },
@@ -156,15 +156,15 @@ export const WeeklyReminder2: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A weekly reminder that repeats on Monday, Wednesday, and Friday. Shows different UI with day badges.',
+        story: 'A weekly alert that repeats on Tuesday and Thursday. Shows different UI with day badges.',
       },
     },
   },
 };
 
-export const WeeklyReminder3: Story = {
+export const WeeklyAlert3: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'weekly',
       weekly: ['Saturday', 'Sunday',],
     },
@@ -175,7 +175,7 @@ export const WeeklyReminder3: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A weekly reminder that repeats on Monday, Wednesday, and Friday. Shows different UI with day badges.',
+        story: 'A weekly alert that repeats on Saturday and Sunday. Shows different UI with day badges.',
       },
     },
   },
@@ -183,7 +183,7 @@ export const WeeklyReminder3: Story = {
 
 export const TodayExpiredAlert: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'weekly',
       weekly: [dayjs().format('dddd') as WeekDay],
     },
@@ -194,7 +194,7 @@ export const TodayExpiredAlert: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A weekly reminder for today that has already expired (30 min ago). Shows dimmed bell icon and gray text indicating it has passed.',
+        story: 'A weekly alert for today that has already expired (30 min ago). Shows dimmed bell icon and gray text indicating it has passed.',
       },
     },
   },
@@ -202,7 +202,7 @@ export const TodayExpiredAlert: Story = {
 
 export const Today30MinsBefore: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'weekly',
       weekly: [dayjs().format('dddd') as WeekDay],
     },
@@ -213,7 +213,7 @@ export const Today30MinsBefore: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A weekly reminder for today that will trigger in 30 minutes. Shows active bell ring icon and green text indicating upcoming alert.',
+        story: 'A weekly alert for today that will trigger in 30 minutes. Shows active bell ring icon and green text indicating upcoming alert.',
       },
     },
   },
@@ -221,7 +221,7 @@ export const Today30MinsBefore: Story = {
 
 export const MonthlyThisDay: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'monthly',
       monthly: 'this',
     },
@@ -232,7 +232,7 @@ export const MonthlyThisDay: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A monthly reminder set for "this day" (15th of each month). Shows monthly calendar icon with "This day" badge.',
+        story: 'A monthly alert set for "this day" (15th of each month). Shows monthly calendar icon with "This day" badge.',
       },
     },
   },
@@ -240,7 +240,7 @@ export const MonthlyThisDay: Story = {
 
 export const Monthly1stWeek: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'monthly',
       monthly: '1st',
     },
@@ -251,7 +251,7 @@ export const Monthly1stWeek: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A monthly reminder set for the 1st week of each month. Shows monthly calendar icon with "1st week" badge.',
+        story: 'A monthly alert set for the 1st week of each month. Shows monthly calendar icon with "1st week" badge.',
       },
     },
   },
@@ -259,7 +259,7 @@ export const Monthly1stWeek: Story = {
 
 export const Monthly2ndWeek: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'monthly',
       monthly: '2nd',
     },
@@ -270,7 +270,7 @@ export const Monthly2ndWeek: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A monthly reminder set for the 2nd week of each month. Shows monthly calendar icon with "2nd week" badge.',
+        story: 'A monthly alert set for the 2nd week of each month. Shows monthly calendar icon with "2nd week" badge.',
       },
     },
   },
@@ -278,7 +278,7 @@ export const Monthly2ndWeek: Story = {
 
 export const Monthly3rdWeek: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'monthly',
       monthly: '3rd',
     },
@@ -289,7 +289,7 @@ export const Monthly3rdWeek: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A monthly reminder set for the 3rd week of each month. Shows monthly calendar icon with "3rd week" badge.',
+        story: 'A monthly alert set for the 3rd week of each month. Shows monthly calendar icon with "3rd week" badge.',
       },
     },
   },
@@ -297,7 +297,7 @@ export const Monthly3rdWeek: Story = {
 
 export const Monthly4thWeek: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'monthly',
       monthly: '4th',
     },
@@ -308,7 +308,7 @@ export const Monthly4thWeek: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A monthly reminder set for the 4th week of each month. Shows monthly calendar icon with "4th week" badge.',
+        story: 'A monthly alert set for the 4th week of each month. Shows monthly calendar icon with "4th week" badge.',
       },
     },
   },
@@ -316,7 +316,7 @@ export const Monthly4thWeek: Story = {
 
 export const Monthly5thWeek: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'monthly',
       monthly: '5th',
     },
@@ -327,7 +327,7 @@ export const Monthly5thWeek: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A monthly reminder set for the 5th week of each month. Shows monthly calendar icon with "5th week" badge.',
+        story: 'A monthly alert set for the 5th week of each month. Shows monthly calendar icon with "5th week" badge.',
       },
     },
   },
@@ -335,7 +335,7 @@ export const Monthly5thWeek: Story = {
 
 export const MonthlyLastWeek: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'monthly',
       monthly: 'last',
     },
@@ -346,7 +346,7 @@ export const MonthlyLastWeek: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A monthly reminder set for the last week of each month. Shows monthly calendar icon with "last week" badge.',
+        story: 'A monthly alert set for the last week of each month. Shows monthly calendar icon with "last week" badge.',
       },
     },
   },
@@ -354,7 +354,7 @@ export const MonthlyLastWeek: Story = {
 
 export const Monthly5thSaturdayUnavailable: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'monthly',
       monthly: '5th',
     },
@@ -365,7 +365,7 @@ export const Monthly5thSaturdayUnavailable: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A monthly reminder set for the 5th Saturday, but July 2025 only has 4 Saturdays. Shows grayed-out "5th Sat" text without the date badge to indicate the reminder is not available this month.',
+        story: 'A monthly alert set for the 5th Saturday, but July 2025 only has 4 Saturdays. Shows grayed-out "5th Sat" text without the date badge to indicate the alert is not available this month.',
       },
     },
   },
@@ -373,7 +373,7 @@ export const Monthly5thSaturdayUnavailable: Story = {
 
 export const MonthlyTodayExpired: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'monthly',
       monthly: 'this',
     },
@@ -384,7 +384,7 @@ export const MonthlyTodayExpired: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A monthly reminder for today that expired 5 minutes ago. Shows dimmed bell alert icon and gray text indicating the alert has passed.',
+        story: 'A monthly alert for today that expired 5 minutes ago. Shows dimmed bell alert icon and gray text indicating the alert has passed.',
       },
     },
   },
@@ -392,7 +392,7 @@ export const MonthlyTodayExpired: Story = {
 
 export const MonthlyTodayUpcoming: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'monthly',
       monthly: 'this',
     },
@@ -403,7 +403,7 @@ export const MonthlyTodayUpcoming: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A monthly reminder for today that will trigger in 3 minutes. Shows active bell alert icon and purple text indicating upcoming alert.',
+        story: 'A monthly alert for today that will trigger in 3 minutes. Shows active bell alert icon and purple text indicating upcoming alert.',
       },
     },
   },
@@ -411,7 +411,7 @@ export const MonthlyTodayUpcoming: Story = {
 
 export const QuarterlyQ1: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'quarterly',
     },
     date: dayjs('2024-08-03'),
@@ -421,7 +421,7 @@ export const QuarterlyQ1: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A quarterly reminder set for Q1 (January 15th). Shows quarterly calendar icon with date in MMM DD format and Q1 badge.',
+        story: 'A quarterly alert set for Q1 (January 15th). Shows quarterly calendar icon with date in MMM DD format and Q1 badge.',
       },
     },
   },
@@ -429,7 +429,7 @@ export const QuarterlyQ1: Story = {
 
 export const QuarterlyQ2: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'quarterly',
     },
     date: dayjs('2024-04-20'),
@@ -439,7 +439,7 @@ export const QuarterlyQ2: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A quarterly reminder set for Q2 (April 20th). Shows quarterly calendar icon with date in MMM DD format and Q2 badge.',
+        story: 'A quarterly alert set for Q2 (April 20th). Shows quarterly calendar icon with date in MMM DD format and Q2 badge.',
       },
     },
   },
@@ -447,7 +447,7 @@ export const QuarterlyQ2: Story = {
 
 export const QuarterlyQ3: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'quarterly',
     },
     date: dayjs('2024-07-10'),
@@ -457,7 +457,7 @@ export const QuarterlyQ3: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A quarterly reminder set for Q3 (July 10th). Shows quarterly calendar icon with date in MMM DD format and Q3 badge.',
+        story: 'A quarterly alert set for Q3 (July 10th). Shows quarterly calendar icon with date in MMM DD format and Q3 badge.',
       },
     },
   },
@@ -465,7 +465,7 @@ export const QuarterlyQ3: Story = {
 
 export const QuarterlyQ4: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'quarterly',
     },
     date: dayjs('2024-10-25'),
@@ -475,7 +475,7 @@ export const QuarterlyQ4: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A quarterly reminder set for Q4 (October 25th). Shows quarterly calendar icon with date in MMM DD format and Q4 badge.',
+        story: 'A quarterly alert set for Q4 (October 25th). Shows quarterly calendar icon with date in MMM DD format and Q4 badge.',
       },
     },
   },
@@ -483,7 +483,7 @@ export const QuarterlyQ4: Story = {
 
 export const QuarterlyTodayExpired: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'quarterly',
     },
     date: dayjs().subtract(2, 'minute'),
@@ -493,7 +493,7 @@ export const QuarterlyTodayExpired: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A quarterly reminder for today that expired 2 minutes ago. Shows dimmed bell alert icon and gray text indicating the alert has passed.',
+        story: 'A quarterly alert for today that expired 2 minutes ago. Shows dimmed bell alert icon and gray text indicating the alert has passed.',
       },
     },
   },
@@ -501,7 +501,7 @@ export const QuarterlyTodayExpired: Story = {
 
 export const QuarterlyTodayUpcoming: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'quarterly',
     },
     date: dayjs().add(1, 'hour'),
@@ -511,7 +511,7 @@ export const QuarterlyTodayUpcoming: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A quarterly reminder for today that will trigger in 1 hour. Shows active bell alert icon and orange text indicating upcoming alert.',
+        story: 'A quarterly alert for today that will trigger in 1 hour. Shows active bell alert icon and orange text indicating upcoming alert.',
       },
     },
   },
@@ -519,7 +519,7 @@ export const QuarterlyTodayUpcoming: Story = {
 
 export const QuarterlyFeb29LeapYear: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'quarterly',
     },
     date: dayjs('2024-02-29'), // Leap year Feb 29
@@ -529,7 +529,7 @@ export const QuarterlyFeb29LeapYear: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A quarterly reminder set for Feb 29th (leap year). Shows all 4 quarterly dates: Feb 28 or 29th, May 29th, Aug 29th, Nov 29th. Feb 29th will be adjusted in non-leap years with red indicator.',
+        story: 'A quarterly alert set for Feb 29th (leap year). Shows all 4 quarterly dates: Feb 28 or 29th, May 29th, Aug 29th, Nov 29th. Feb 29th will be adjusted in non-leap years with red indicator.',
       },
     },
   },
@@ -537,7 +537,7 @@ export const QuarterlyFeb29LeapYear: Story = {
 
 export const QuarterlyFeb30Invalid: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'quarterly',
     },
     date: dayjs('2024-05-30'),
@@ -547,7 +547,7 @@ export const QuarterlyFeb30Invalid: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A quarterly reminder set for Feb 30th (invalid date). Shows adjusted dates: Feb 28/29 (with red indicator), May 30th, Aug 30th, Nov 30th.',
+        story: 'A quarterly alert set for Feb 30th (invalid date). Shows adjusted dates: Feb 28/29 (with red indicator), May 30th, Aug 30th, Nov 30th.',
       },
     },
   },
@@ -555,7 +555,7 @@ export const QuarterlyFeb30Invalid: Story = {
 
 export const QuarterlyFeb31Invalid: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'quarterly',
     },
     date: dayjs('2024-05-31'), // Force Feb 31 (invalid)
@@ -565,7 +565,7 @@ export const QuarterlyFeb31Invalid: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A quarterly reminder set for Feb 31st (invalid date). Shows adjusted dates: Feb 28/29 (with red indicator), May 31st, Aug 31st, Nov 30th (adjusted as well).',
+        story: 'A quarterly alert set for Feb 31st (invalid date). Shows adjusted dates: Feb 28/29 (with red indicator), May 31st, Aug 31st, Nov 30th (adjusted as well).',
       },
     },
   },
@@ -573,7 +573,7 @@ export const QuarterlyFeb31Invalid: Story = {
 
 export const QuarterlyApr31Invalid: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'quarterly',
     },
     date: dayjs('2024-01-31'),
@@ -583,7 +583,7 @@ export const QuarterlyApr31Invalid: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A quarterly reminder set for Apr 30 (invalid - April has 30 days). Shows adjusted dates: Jan 31st, Apr 30 (with red indicator), Jul 31st, Oct 31st.',
+        story: 'A quarterly alert set for Apr 30 (invalid - April has 30 days). Shows adjusted dates: Jan 31st, Apr 30 (with red indicator), Jul 31st, Oct 31st.',
       },
     },
   },
@@ -591,7 +591,7 @@ export const QuarterlyApr31Invalid: Story = {
 
 export const QuarterlySep31Invalid: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'quarterly',
     },
     date: dayjs('2024-03-31'),
@@ -601,7 +601,7 @@ export const QuarterlySep31Invalid: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A quarterly reminder set for Sep 31st (invalid - September has 30 days). Shows adjusted dates: Mar 31st, Jun 30, Sep 30 (with red indicator), Dec 31st',
+        story: 'A quarterly alert set for Sep 31st (invalid - September has 30 days). Shows adjusted dates: Mar 31st, Jun 30, Sep 30 (with red indicator), Dec 31st',
       },
     },
   },
@@ -609,7 +609,7 @@ export const QuarterlySep31Invalid: Story = {
 
 export const AnnuallyRegularDate: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'annually',
     },
     date: dayjs('2024-06-15'),
@@ -619,7 +619,7 @@ export const AnnuallyRegularDate: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'A regular annual reminder set for June 15th. Shows calendar star icon with "Jun 15" badge in red theme.',
+        story: 'A regular annual alert set for June 15th. Shows calendar star icon with "Jun 15" badge in red theme.',
       },
     },
   },
@@ -627,7 +627,7 @@ export const AnnuallyRegularDate: Story = {
 
 export const AnnuallyTodayUpcoming: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'annually',
     },
     date: dayjs().add(2, 'hour'),
@@ -637,7 +637,7 @@ export const AnnuallyTodayUpcoming: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'An annual reminder for today that will trigger in 2 hours. Shows active bell alert icon and red background indicating upcoming alert.',
+        story: 'An annual alert for today that will trigger in 2 hours. Shows active bell alert icon and red background indicating upcoming alert.',
       },
     },
   },
@@ -645,7 +645,7 @@ export const AnnuallyTodayUpcoming: Story = {
 
 export const AnnuallyTodayExpired: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'annually',
     },
     date: dayjs(),
@@ -655,7 +655,7 @@ export const AnnuallyTodayExpired: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'An annual reminder for today that expired 1 minute ago. Shows dimmed bell alert icon and gray text indicating the alert has passed.',
+        story: 'An annual alert for today that expired 1 minute ago. Shows dimmed bell alert icon and gray text indicating the alert has passed.',
       },
     },
   },
@@ -663,7 +663,7 @@ export const AnnuallyTodayExpired: Story = {
 
 export const AnnuallyFeb29LeapYear: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'annually',
     },
     date: dayjs('2024-02-29'),
@@ -673,7 +673,7 @@ export const AnnuallyFeb29LeapYear: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'An annual reminder set for Feb 29th (leap year). In non-leap years, it will be adjusted to Feb 28th with an orange indicator dot.',
+        story: 'An annual alert set for Feb 29th (leap year). In non-leap years, it will be adjusted to Feb 28th with an orange indicator dot.',
       },
     },
   },
@@ -681,7 +681,7 @@ export const AnnuallyFeb29LeapYear: Story = {
 
 export const AnnuallyNewYearsDay: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'annually',
     },
     date: dayjs('2024-01-01'),
@@ -691,7 +691,7 @@ export const AnnuallyNewYearsDay: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'An annual reminder for New Year\'s Day (Jan 01). Shows calendar star icon with "Jan 01" badge.',
+        story: 'An annual alert for New Year\'s Day (Jan 01). Shows calendar star icon with "Jan 01" badge.',
       },
     },
   },
@@ -699,7 +699,7 @@ export const AnnuallyNewYearsDay: Story = {
 
 export const AnnuallyChristmas: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'annually',
     },
     date: dayjs('2024-12-25'),
@@ -709,7 +709,7 @@ export const AnnuallyChristmas: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'An annual reminder for Christmas Day (Dec 25). Shows calendar star icon with "Dec 25" badge.',
+        story: 'An annual alert for Christmas Day (Dec 25). Shows calendar star icon with "Dec 25" badge.',
       },
     },
   },
@@ -717,7 +717,7 @@ export const AnnuallyChristmas: Story = {
 
 export const AnnuallyBirthday: Story = {
   args: {
-    reminder: {
+    alert: {
       type: 'annually',
     },
     date: dayjs('2024-03-22'),
@@ -727,7 +727,7 @@ export const AnnuallyBirthday: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'An annual reminder for a birthday (Mar 22). Shows calendar star icon with "Mar 22" badge in date-only format.',
+        story: 'An annual alert for a birthday (Mar 22). Shows calendar star icon with "Mar 22" badge in date-only format.',
       },
     },
   },

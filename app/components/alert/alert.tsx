@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip';
-import { Reminder, SerializedTimeNode, TimeNodeFormat, WeekDay } from '../zeditor/plugin/time/TimeNode';
+import { Alert, SerializedTimeNode, TimeNodeFormat, WeekDay } from '../zeditor/plugin/time/TimeNode';
 
 let globalNow = dayjs();
 let globalListeners: Set<(now: Dayjs) => void> = new Set();
@@ -42,15 +42,15 @@ const useSharedNow = () => {
 
 export const _StupidUno = <div un-bg="red-400" />;
 
-export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Reminder; date: Dayjs; time: Dayjs; format: TimeNodeFormat; }) => {
+export const AlertComponent = ({ alert, date, time, format }: { alert: Alert; date: Dayjs; time: Dayjs; format: TimeNodeFormat; }) => {
   const now = useSharedNow();
 
-  switch (reminder.type) {
+  switch (alert.type) {
     case 'daily':
-      if (reminder.once) {
-        const reminderDateTime = date.hour(time.hour()).minute(time.minute()).second(time.second());
-        const isExpired = reminderDateTime.isBefore(now);
-        const isToday = reminderDateTime.isSame(now, 'day');
+      if (alert.once) {
+        const alertDateTime = date.hour(time.hour()).minute(time.minute()).second(time.second());
+        const isExpired = alertDateTime.isBefore(now);
+        const isToday = alertDateTime.isSame(now, 'day');
 
         return (
           <div un-flex="~" un-items='center' un-gap="2" >
@@ -61,13 +61,13 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
             }
             <span className="i-mdi:calendar-today" un-text={`sm ${isExpired ? 'gray-400' : 'emerald-500'}`} />
             <span un-text={`sm ${isExpired ? 'gray-400' : 'white'}`} un-font="medium" un-bg={`${!isExpired && 'emerald-500'}`} un-py='1' un-px={`${!isExpired && '2'}`} un-border='rounded' >
-              {reminderDateTime.format('MMM DD, YYYY hh:mm:ss A')}
+              {alertDateTime.format('MMM DD, YYYY hh:mm:ss A')}
             </span>
           </div>
         );
       } else {
-        const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
-        const isExpired = todayReminderTime.isBefore(now);
+        const todayAlertTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
+        const isExpired = todayAlertTime.isBefore(now);
 
         return (
           <div un-flex="~" un-items='center' un-gap="2">
@@ -83,16 +83,16 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
 
     case 'weekly': {
       const currentDayName = now.format('dddd');
-      const isToday = reminder.weekly.includes(currentDayName as WeekDay);
-      const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
-      const isExpired = isToday && todayReminderTime.isBefore(now);
+      const isToday = alert.weekly.includes(currentDayName as WeekDay);
+      const todayAlertTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
+      const isExpired = isToday && todayAlertTime.isBefore(now);
 
       return (
         <div un-flex="~ col" un-gap="2">
           <div un-flex="~ items-center" un-gap="2">
             {isToday && <span className={`i-mdi:bell-alert ${!isExpired && 'animate-ping'}`} un-text={`sm ${isExpired ? "gray-400" : "orange-600"}`} />}
             <span className="i-mdi:calendar-week" un-text={`sm ${isExpired ? "gray-400" : "blue-600"}`} />
-            {reminder.weekly.map(day => {
+            {alert.weekly.map(day => {
               const isCurrentDay = day === currentDayName;
               return (
                 <span key={day}
@@ -128,12 +128,12 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
       let alertDate = date;
       let isDateAvailable = true;
 
-      if (reminder.monthly === 'last') {
+      if (alert.monthly === 'last') {
         const lastDayOfMonth = now.endOf('month');
         const daysFromEnd = (lastDayOfMonth.day() - now.day() + 7) % 7;
         alertDate = lastDayOfMonth.subtract(daysFromEnd, 'day');
-      } else if (reminder.monthly !== 'this') {
-        const weekNumber = parseInt(reminder.monthly.replace(/\D/g, ''));
+      } else if (alert.monthly !== 'this') {
+        const weekNumber = parseInt(alert.monthly.replace(/\D/g, ''));
         const firstDayOfMonth = now.startOf('month');
         const firstOccurrence = firstDayOfMonth.day(alertDate.day());
 
@@ -146,8 +146,8 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
       }
 
       const isToday = isDateAvailable && alertDate.isSame(now, 'day');
-      const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
-      const isExpired = isToday && todayReminderTime.isBefore(now);
+      const todayAlertTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
+      const isExpired = isToday && todayAlertTime.isBefore(now);
 
       return (
         <div un-flex="~ items-center" un-gap="2">
@@ -166,7 +166,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
                 {alertDate.format('MMM DD')}
               </span>
             )}
-            {reminder.monthly !== 'this' && (
+            {alert.monthly !== 'this' && (
               <span
                 un-px="2"
                 un-py="1"
@@ -175,7 +175,7 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
                 un-border="rounded"
                 un-font="medium"
               >
-                {reminder.monthly === 'last' ? 'last' : reminder.monthly} {date.format('ddd')}
+                {alert.monthly === 'last' ? 'last' : alert.monthly} {date.format('ddd')}
               </span>
             )}
           </div>
@@ -207,8 +207,8 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
       quarterlyDates.sort((a, b) => a.date.month() - b.date.month());
 
       const hasToday = quarterlyDates.some(q => q.isToday);
-      const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
-      const isExpired = hasToday && todayReminderTime.isBefore(now);
+      const todayAlertTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
+      const isExpired = hasToday && todayAlertTime.isBefore(now);
 
       return (
         <div un-flex="~ items-center" un-gap="2">
@@ -255,8 +255,8 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
       const annualDate = date.year(now.year());
       const isAdjusted = annualDate.date() !== date.date();
       const isToday = annualDate.isSame(now, 'day');
-      const todayReminderTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
-      const isExpired = isToday && todayReminderTime.isBefore(now);
+      const todayAlertTime = now.hour(time.hour()).minute(time.minute()).second(time.second());
+      const isExpired = isToday && todayAlertTime.isBefore(now);
 
       return (
         <div un-flex="~ items-center" un-gap="2">
@@ -302,10 +302,10 @@ export const ReminderAlert = ({ reminder, date, time, format }: { reminder: Remi
 };
 
 export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
-  const { date, time, format, reminders } = timeNode;
+  const { date, time, format, alert } = timeNode;
   const dateObj = dayjs(date);
   const timeObj = dayjs(time);
-  const [isOpen, setIsOpen] = useState(false); // todo, should be smartly auto open when there's an active reminder
+  const [isOpen, setIsOpen] = useState(false); // todo, should be smartly auto open when there's an active alert
 
   return (
     <div className={''}
@@ -362,7 +362,7 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
 
           <div un-position="relative" un-inline-block="">
             <div className="i-mdi:bell" un-text="lg amber-500" />
-            {reminders.length > 0 && (
+            {alert.length > 0 && (
               <span un-position='absolute'
                 un-top='-2'
                 un-right='-2'
@@ -374,7 +374,7 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
                 un-text='xs white'
                 un-border='rounded-full'
               >
-                {reminders.length}
+                {alert.length}
               </span>
             )}
           </div>
@@ -388,7 +388,7 @@ export const TimeAlert = ({ timeNode }: { timeNode: SerializedTimeNode; }) => {
 
       {isOpen && (
         <div un-border="2 solid blue-200 rounded" un-px='2' un-py='1' un-flex="~ col" un-gap="2" >
-          {reminders.map((reminder, index) => <ReminderAlert key={index} reminder={reminder} date={dateObj} time={timeObj} format={format} />)}
+          {alert.map((a, index) => <AlertComponent key={index} alert={a} date={dateObj} time={timeObj} format={format} />)}
         </div>
       )}
     </div>

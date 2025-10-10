@@ -12,9 +12,6 @@ export type Alert = { type: 'daily'; once: boolean; }
   | { type: 'quarterly'; }
   | { type: 'annually'; };
 
-// Backward compatibility type alias
-export type Reminder = Alert;
-
 export type SerializedTimeNode = Spread<{
   date: string;
   time: string;

@@ -29,13 +29,13 @@ const meta: Meta<typeof TimeAlert> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const SingleDailyReminder: Story = {
+export const SingleDailyAlert: Story = {
   args: {
     timeNode: {
       date: dayjs().format(),
       time: dayjs().add(30, 'minute').format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'daily',
           once: false,
@@ -46,19 +46,19 @@ export const SingleDailyReminder: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with a single daily recurring reminder. Shows date and time badges with one reminder alert.',
+        story: 'TimeAlert with a single daily recurring alert. Shows date and time badges with one alert.',
       },
     },
   },
 };
 
-export const MultipleDailyReminders: Story = {
+export const MultipleDailyAlerts: Story = {
   args: {
     timeNode: {
       date: dayjs().format(),
       time: dayjs().add(1, 'hour').format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'daily',
           once: true,
@@ -73,19 +73,19 @@ export const MultipleDailyReminders: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with multiple daily reminders - one "once" and one recurring. Badge shows count of 2.',
+        story: 'TimeAlert with multiple daily alerts - one "once" and one recurring. Badge shows count of 2.',
       },
     },
   },
 };
 
-export const WeeklyRemindersCollection: Story = {
+export const WeeklyAlertsCollection: Story = {
   args: {
     timeNode: {
       date: dayjs().format(),
       time: dayjs().hour(9).minute(0).format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'weekly',
           weekly: ['Monday', 'Wednesday', 'Friday'],
@@ -104,19 +104,19 @@ export const WeeklyRemindersCollection: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with multiple weekly reminders covering different days. Badge shows count of 3.',
+        story: 'TimeAlert with multiple weekly alerts covering different days. Badge shows count of 3.',
       },
     },
   },
 };
 
-export const MonthlyRemindersVariety: Story = {
+export const MonthlyAlertsVariety: Story = {
   args: {
     timeNode: {
       date: dayjs('2024-03-15').format(),
       time: dayjs('2024-03-15').hour(14).minute(30).format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'monthly',
           monthly: 'this',
@@ -139,19 +139,19 @@ export const MonthlyRemindersVariety: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with various monthly reminders - this day, 1st week, 2nd week, and last week. Badge shows count of 4.',
+        story: 'TimeAlert with various monthly alerts - this day, 1st week, 2nd week, and last week. Badge shows count of 4.',
       },
     },
   },
 };
 
-export const QuarterlyReminders: Story = {
+export const QuarterlyAlerts: Story = {
   args: {
     timeNode: {
       date: dayjs('2024-08-03').format(),
       time: dayjs('2024-08-03').hour(10).minute(0).format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'quarterly',
         },
@@ -164,19 +164,19 @@ export const QuarterlyReminders: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with multiple quarterly reminders. Shows Q1-Q4 badges for each reminder.',
+        story: 'TimeAlert with multiple quarterly alerts. Shows Q1-Q4 badges for each alert.',
       },
     },
   },
 };
 
-export const AnnualReminders: Story = {
+export const AnnualAlerts: Story = {
   args: {
     timeNode: {
       date: dayjs('2024-06-15').format(),
       time: dayjs('2024-06-15').hour(10).minute(0).format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'annually',
         },
@@ -192,19 +192,19 @@ export const AnnualReminders: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with multiple annual reminders. Shows calendar star icons with date badges.',
+        story: 'TimeAlert with multiple annual alerts. Shows calendar star icons with date badges.',
       },
     },
   },
 };
 
-export const MixedReminderTypes: Story = {
+export const MixedAlertTypes: Story = {
   args: {
     timeNode: {
       date: dayjs().format(),
       time: dayjs().add(2, 'hour').format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'daily',
           once: false,
@@ -229,7 +229,7 @@ export const MixedReminderTypes: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with all reminder types mixed together. Badge shows count of 5 with diverse reminder alerts.',
+        story: 'TimeAlert with all alert types mixed together. Badge shows count of 5 with diverse alerts.',
       },
     },
   },
@@ -241,7 +241,7 @@ export const TimeOnlyFormat: Story = {
       date: dayjs().format(),
       time: dayjs().add(30, 'minute').format(),
       format: 'time',
-      reminders: [
+      alert: [
         {
           type: 'daily',
           once: false,
@@ -256,7 +256,7 @@ export const TimeOnlyFormat: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with time-only format. Only shows time badge without date, with 2 reminders.',
+        story: 'TimeAlert with time-only format. Only shows time badge without date, with 2 alerts.',
       },
     },
   },
@@ -268,7 +268,7 @@ export const DateOnlyFormat: Story = {
       date: dayjs('2024-03-22').format(),
       time: dayjs('2024-03-22').hour(12).minute(0).format(),
       format: 'date',
-      reminders: [
+      alert: [
         {
           type: 'monthly',
           monthly: 'this',
@@ -282,19 +282,19 @@ export const DateOnlyFormat: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with date-only format. Only shows date badge without time, with 2 reminders.',
+        story: 'TimeAlert with date-only format. Only shows date badge without time, with 2 alerts.',
       },
     },
   },
 };
 
-export const ExpiredRemindersToday: Story = {
+export const ExpiredAlertsToday: Story = {
   args: {
     timeNode: {
       date: dayjs().format(),
       time: dayjs().subtract(30, 'minute').format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'daily',
           once: true,
@@ -313,19 +313,19 @@ export const ExpiredRemindersToday: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with multiple expired reminders for today. All reminders show dimmed bell icons and gray text.',
+        story: 'TimeAlert with multiple expired alerts for today. All alerts show dimmed bell icons and gray text.',
       },
     },
   },
 };
 
-export const UpcomingRemindersToday: Story = {
+export const UpcomingAlertsToday: Story = {
   args: {
     timeNode: {
       date: dayjs().format(),
       time: dayjs().add(15, 'minute').format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'daily',
           once: false,
@@ -343,7 +343,7 @@ export const UpcomingRemindersToday: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with multiple upcoming reminders for today. All reminders show active bell icons with colored text.',
+        story: 'TimeAlert with multiple upcoming alerts for today. All alerts show active bell icons with colored text.',
       },
     },
   },
@@ -355,7 +355,7 @@ export const LeapYearEdgeCases: Story = {
       date: dayjs('2024-02-29').format(),
       time: dayjs('2024-02-29').hour(10).minute(0).format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'quarterly',
         },
@@ -368,7 +368,7 @@ export const LeapYearEdgeCases: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with leap year date (Feb 29). Shows how quarterly and annual reminders handle leap year adjustments.',
+        story: 'TimeAlert with leap year date (Feb 29). Shows how quarterly and annual alerts handle leap year adjustments.',
       },
     },
   },
@@ -380,7 +380,7 @@ export const InvalidDateAdjustments: Story = {
       date: dayjs('2024-05-31').format(),
       time: dayjs('2024-05-31').hour(14).minute(30).format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'quarterly',
         },
@@ -400,13 +400,13 @@ export const InvalidDateAdjustments: Story = {
   },
 };
 
-export const WeekendOnlyReminders: Story = {
+export const WeekendOnlyAlerts: Story = {
   args: {
     timeNode: {
       date: dayjs().format(),
       time: dayjs().hour(9).minute(0).format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'weekly',
           weekly: ['Saturday', 'Sunday'],
@@ -421,7 +421,7 @@ export const WeekendOnlyReminders: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert focused on weekend reminders. Shows weekly weekend-only and monthly last week reminders.',
+        story: 'TimeAlert focused on weekend alerts. Shows weekly weekend-only and monthly last week alerts.',
       },
     },
   },
@@ -433,7 +433,7 @@ export const BusinessDaysOnly: Story = {
       date: dayjs().format(),
       time: dayjs().hour(9).minute(0).format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'weekly',
           weekly: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
@@ -452,19 +452,19 @@ export const BusinessDaysOnly: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with business days focus. Shows weekday-only weekly reminder plus first and second week monthly reminders.',
+        story: 'TimeAlert with business days focus. Shows weekday-only weekly alert plus first and second week monthly alerts.',
       },
     },
   },
 };
 
-export const SingleReminderEachType: Story = {
+export const SingleAlertEachType: Story = {
   args: {
     timeNode: {
       date: dayjs().format(),
       time: dayjs().add(1, 'hour').format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'daily',
           once: true,
@@ -475,19 +475,19 @@ export const SingleReminderEachType: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with just one daily "once" reminder. Minimal case showing single reminder behavior.',
+        story: 'TimeAlert with just one daily "once" alert. Minimal case showing single alert behavior.',
       },
     },
   },
 };
 
-export const MaxRemindersStress: Story = {
+export const MaxAlertsStress: Story = {
   args: {
     timeNode: {
       date: dayjs().format(),
       time: dayjs().add(30, 'minute').format(),
       format: 'both',
-      reminders: [
+      alert: [
         { type: 'daily', once: true },
         { type: 'daily', once: false },
         { type: 'weekly', weekly: ['Monday', 'Wednesday', 'Friday'] },
@@ -509,7 +509,7 @@ export const MaxRemindersStress: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert stress test with maximum reminders (15 total). Tests UI performance and layout with many reminder alerts.',
+        story: 'TimeAlert stress test with maximum alerts (15 total). Tests UI performance and layout with many alerts.',
       },
     },
   },
@@ -521,7 +521,7 @@ export const EarlyMorningTime: Story = {
       date: dayjs().format(),
       time: dayjs().hour(6).minute(0).format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'daily',
           once: false,
@@ -536,7 +536,7 @@ export const EarlyMorningTime: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with early morning time (6:00 AM). Shows business day reminders for early schedule.',
+        story: 'TimeAlert with early morning time (6:00 AM). Shows business day alerts for early schedule.',
       },
     },
   },
@@ -548,7 +548,7 @@ export const LateNightTime: Story = {
       date: dayjs().format(),
       time: dayjs().hour(23).minute(30).format(),
       format: 'both',
-      reminders: [
+      alert: [
         {
           type: 'daily',
           once: true,
@@ -563,7 +563,7 @@ export const LateNightTime: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TimeAlert with late night time (11:30 PM). Shows end-of-day reminders.',
+        story: 'TimeAlert with late night time (11:30 PM). Shows end-of-day alerts.',
       },
     },
   },

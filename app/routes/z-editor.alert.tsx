@@ -7,7 +7,7 @@ import { createSupabaseServerClient } from '~/service/supabase.server';
 type LoaderData = {
   data: {
     id: string;
-    reminder: SerializedTimeNode[];
+    alert: SerializedTimeNode[];
   }[] | null;
   error: PostgrestError | null;
 };
@@ -15,8 +15,8 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ request }): Promise<LoaderData> => {
   const { supabase } = createSupabaseServerClient(request);
   const { data, error } = await supabase.from('editor_documents')
-    .select('id, reminder')
-    .gt('reminder->0', 'null');
+    .select('id, alert')
+    .gt('alert->0', 'null');
   return { data, error };
 };
 
@@ -41,7 +41,7 @@ const Alert = () => {
         un-gap="2"
         un-h="fit"
       >
-        {d.reminder.map((r: SerializedTimeNode, i: number) => (<div key={`${d.id}-${i}`}
+        {d.alert.map((r: SerializedTimeNode, i: number) => (<div key={`${d.id}-${i}`}
           un-flex='~'
           un-justify='between'
           un-items='center'

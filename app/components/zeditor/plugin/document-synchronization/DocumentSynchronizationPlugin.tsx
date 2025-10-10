@@ -72,12 +72,12 @@ export const DocumentSynchronizationPlugin = () => {
   const upsertDocument = useCallback(async () => {
     const content = editor.getEditorState().toJSON();
     const tag = [...new Set(Object.values(hashTagMap))];
-    const reminder = Object.values(timeNodeMap).filter(node => node.getReminders().length > 0).map(node => node.exportJSON());
+    const alert = Object.values(timeNodeMap).filter(node => node.getAlert().length > 0).map(node => node.exportJSON());
     const document = {
       content,
       comment: comments,
       tag,
-      reminder,
+      alert,
       id: params.id,
     };
 

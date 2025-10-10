@@ -4,10 +4,10 @@ CREATE TABLE editor_documents (
     created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     tag TEXT[],
-    reminder JSONB[],
+    alert JSONB[],
     comment JSONB[],
     user_id UUID NOT NULL,
-    is_public BOOLEAN DEFAULT FALSE,
+    is_public BOOLEAN DEFAULT FALSE
 );
 
 CREATE FUNCTION update_updated_column()
@@ -153,6 +153,7 @@ CREATE EXTENSION IF NOT EXISTS pgroonga;
 CREATE INDEX pgroonga_editor_documents_content_index
 ON editor_documents USING PGroonga (content pgroonga_jsonb_full_text_search_ops_v2);
 CREATE INDEX idx_editor_documents_tag_gin ON editor_documents USING GIN (tag);
+CREATE INDEX idx_editor_documents_alert_gin ON editor_documents USING GIN (alert);
 
 CREATE OR REPLACE FUNCTION search_documents_combined(
     tags TEXT[] DEFAULT NULL,

@@ -1,6 +1,6 @@
 import { DEFAULT_DOCUMENTS_PER_PAGE } from '~/lib/constant';
-import { Tables } from '~/util/supabase.type';
 import { getTagStatistics, type TagStat } from '~/service/tag-stats.server';
+import { Tables } from '~/util/supabase.type';
 import { createSupabaseServerClient, searchDocuments } from './supabase.server';
 
 type Document = Tables<'editor_documents'>;
@@ -80,7 +80,7 @@ export async function getDocumentsWithPagination(request: Request): Promise<Sear
     return { error: 'Failed to fetch documents', status: 500 };
   }
 
-  const totalPages = Math.ceil((count || 0) / documentsPerPage);
+  const totalPages = Math.ceil((count ?? 0) / documentsPerPage);
 
   return {
     documents: data as Document[],

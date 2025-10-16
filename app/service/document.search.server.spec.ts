@@ -18,7 +18,8 @@ describe('getSearchParams', () => {
       const result = getSearchParams(request);
 
       expect(result).toEqual({
-        query: '',
+        word: [],
+        phrase: [],
         tag: [],
         page: 1,
         perPage: DEFAULT_DOCUMENTS_PER_PAGE,
@@ -26,11 +27,44 @@ describe('getSearchParams', () => {
       });
     });
 
-    it('should parse query parameter correctly', () => {
+    it('should parse query parameter into words', () => {
       const request = createMockRequest({ query: 'test search' });
       const result = getSearchParams(request);
 
-      expect(result.query).toBe('test search');
+      expect(result.word).toEqual(['test', 'search']);
+      expect(result.phrase).toEqual([]);
+    });
+
+    it('should extract phrases from query', () => {
+      const request = createMockRequest({ query: 'hello "exact phrase" world' });
+      const result = getSearchParams(request);
+
+      expect(result.word).toEqual(['hello', 'world']);
+      expect(result.phrase).toEqual(['exact phrase']);
+    });
+
+    it('should handle multiple phrases in query', () => {
+      const request = createMockRequest({ query: '"first phrase" and "second phrase" with words' });
+      const result = getSearchParams(request);
+
+      expect(result.word).toEqual(['and', 'with', 'words']);
+      expect(result.phrase).toEqual(['first phrase', 'second phrase']);
+    });
+
+    it('should handle empty query parameter', () => {
+      const request = createMockRequest({ query: '' });
+      const result = getSearchParams(request);
+
+      expect(result.word).toEqual([]);
+      expect(result.phrase).toEqual([]);
+    });
+
+    it('should handle query with only phrases', () => {
+      const request = createMockRequest({ query: '"only phrase"' });
+      const result = getSearchParams(request);
+
+      expect(result.word).toEqual([]);
+      expect(result.phrase).toEqual(['only phrase']);
     });
 
     it('should parse page and perPage parameters correctly', () => {
@@ -67,6 +101,48 @@ describe('getSearchParams', () => {
       expect(result.page).toBeNaN();
       expect(result.perPage).toBeNaN();
       expect(result.offset).toBeNaN();
+    });
+  });
+
+  describe('Query Parameters', () => {
+    it('should handle complex query with words and phrases', () => {
+      const request = createMockRequest({
+        query: 'javascript "react hooks" typescript "best practices" tutorial'
+      });
+      const result = getSearchParams(request);
+
+      expect(result.word).toEqual(['javascript', 'typescript', 'tutorial']);
+      expect(result.phrase).toEqual(['react hooks', 'best practices']);
+    });
+
+    it('should handle query with extra whitespace', () => {
+      const request = createMockRequest({
+        query: '  hello   "world test"   foo   bar  '
+      });
+      const result = getSearchParams(request);
+
+      expect(result.word).toEqual(['hello', 'foo', 'bar']);
+      expect(result.phrase).toEqual(['world test']);
+    });
+
+    it('should handle malformed quotes gracefully', () => {
+      const request = createMockRequest({
+        query: 'hello "unclosed quote and more words'
+      });
+      const result = getSearchParams(request);
+
+      expect(result.word).toEqual(['hello', '"unclosed', 'quote', 'and', 'more', 'words']);
+      expect(result.phrase).toEqual([]);
+    });
+
+    it('should handle empty phrases', () => {
+      const request = createMockRequest({
+        query: 'hello "" world'
+      });
+      const result = getSearchParams(request);
+
+      expect(result.word).toEqual(['hello', '""', 'world']);
+      expect(result.phrase).toEqual([]);
     });
   });
 
@@ -321,7 +397,7 @@ describe('getSearchParams', () => {
   describe('Composite Cases', () => {
     it('should handle all parameters together', () => {
       const request = createMockRequest({
-        query: 'test search',
+        query: 'test "search phrase"',
         tag: 'javascript,react',
         created_from: '2024-01-01',
         created_to: '2024-01-31',
@@ -333,7 +409,8 @@ describe('getSearchParams', () => {
       const result = getSearchParams(request);
 
       expect(result).toEqual({
-        query: 'test search',
+        word: ['test'],
+        phrase: ['search phrase'],
         tag: ['javascript', 'react'],
         created: {
           from: new Date('2024-01-01'),
@@ -349,7 +426,7 @@ describe('getSearchParams', () => {
 
     it('should handle mixed valid and invalid parameters', () => {
       const request = createMockRequest({
-        query: 'valid query',
+        query: 'valid "query phrase"',
         tag: 'valid,tags',
         created: 'invalid-date',
         updated_from: '2024-01-01',
@@ -361,7 +438,8 @@ describe('getSearchParams', () => {
       const result = getSearchParams(request);
 
       expect(result).toEqual({
-        query: 'valid query',
+        word: ['valid'],
+        phrase: ['query phrase'],
         tag: ['valid', 'tags'],
         created: undefined, // invalid date ignored
         updated: undefined, // invalid range ignored
@@ -420,7 +498,7 @@ describe('getSearchParams', () => {
       const request = new Request(url.toString());
       const result = getSearchParams(request);
 
-      expect(result.query).toBe('hello world');
+      expect(result.word).toEqual(['hello', 'world']);
       expect(result.tag).toEqual(['javascript', 'react native']);
     });
 
@@ -437,7 +515,7 @@ describe('getSearchParams', () => {
   describe('Type Safety', () => {
     it('should return correct TypeScript types', () => {
       const request = createMockRequest({
-        query: 'test',
+        query: 'test "phrase"',
         tag: 'javascript',
         created_before: '2024-01-01',
         updated_from: '2024-02-01',
@@ -447,7 +525,8 @@ describe('getSearchParams', () => {
       const result = getSearchParams(request);
 
       // Type assertions to ensure correct types
-      expect(typeof result.query).toBe('string');
+      expect(Array.isArray(result.word)).toBe(true);
+      expect(Array.isArray(result.phrase)).toBe(true);
       expect(Array.isArray(result.tag)).toBe(true);
       expect(typeof result.created).toBe('object');
       expect(result.created && 'before' in result.created).toBe(true);

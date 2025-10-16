@@ -102,7 +102,8 @@ export type DateFilter = { at: Date; }
   | { lastDays: number; };
 
 export type SearchParams = {
-  query: string;
+  word: string[];
+  phrase: string[];
   tag: string[];
   created?: DateFilter;
   updated?: DateFilter;
@@ -115,6 +116,23 @@ export type SearchParams = {
 const parseDate = (dateStr: string): Date | null => {
   const date = new Date(dateStr);
   return isNaN(date.getTime()) ? null : date;
+};
+
+const extractWordsAndPhrases = (query: string): { word: string[]; phrase: string[]; } => {
+  const word: string[] = [];
+  const phrase: string[] = [];
+
+  const phraseRegex = /"([^"]+)"/g;
+  let remainingQuery = query;
+
+  let match;
+  while ((match = phraseRegex.exec(remainingQuery)) !== null) {
+    phrase.push(match[1]);
+  }
+  remainingQuery = remainingQuery.replace(phraseRegex, '');
+  word.push(...remainingQuery.trim().split(/\s+/).filter(Boolean));
+
+  return { word, phrase };
 };
 
 const parseDateFilter = (url: URL, fieldName: string): DateFilter | undefined => {
@@ -156,12 +174,14 @@ export const getSearchParams = (request: Request): SearchParams => {
   const offset = (page - 1) * perPage;
   const tag = (url.searchParams.get('tag') ?? '').split(',').filter(Boolean);
 
+  const { word, phrase } = extractWordsAndPhrases(query);
   const created = parseDateFilter(url, 'created');
   const updated = parseDateFilter(url, 'updated');
   const alert = parseDateFilter(url, 'alert');
 
   return {
-    query,
+    word,
+    phrase,
     tag,
     created,
     updated,

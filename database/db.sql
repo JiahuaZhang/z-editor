@@ -251,3 +251,120 @@ BEGIN
   ORDER BY document_count DESC, te.tag_name ASC;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION search_documents_advanced(
+    word_array TEXT[] DEFAULT NULL,
+    phrase_array TEXT[] DEFAULT NULL,
+    tag_array TEXT[] DEFAULT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    created_before TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    created_after TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    created_from TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    created_to TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    updated_before TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    updated_after TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    updated_from TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    updated_to TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    alert_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    alert_before TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    alert_after TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    alert_from TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    alert_to TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    limit_count INTEGER DEFAULT 50,
+    offset_count INTEGER DEFAULT 0
+)
+RETURNS SETOF editor_documents
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    pgroonga_query_string TEXT := '';
+    where_clauses TEXT[] := ARRAY[]::TEXT[];
+    final_query TEXT;
+    keyword TEXT;
+    phrase TEXT;
+BEGIN
+    IF tag_array IS NOT NULL AND array_length(tag_array, 1) > 0 THEN
+        where_clauses := array_append(where_clauses, FORMAT('tag @> %L', tag_array));
+    END IF;
+
+    IF word_array IS NOT NULL AND array_length(word_array, 1) > 0 THEN
+        FOREACH keyword IN ARRAY word_array
+        LOOP
+            pgroonga_query_string := pgroonga_query_string || ' ' || keyword || '*';
+        END LOOP;
+    END IF;
+
+    IF phrase_array IS NOT NULL AND array_length(phrase_array, 1) > 0 THEN
+        FOREACH phrase IN ARRAY phrase_array
+        LOOP
+            pgroonga_query_string := pgroonga_query_string || ' "' || phrase || '"';
+        END LOOP;
+    END IF;
+
+    IF TRIM(pgroonga_query_string) != '' THEN
+        where_clauses := array_append(where_clauses, FORMAT('content &@~ %L', TRIM(pgroonga_query_string)));
+    END IF;
+
+    IF created_at IS NOT NULL THEN
+        where_clauses := array_append(where_clauses, FORMAT('DATE(created) = DATE(%L)', created_at));
+    ELSIF created_before IS NOT NULL THEN
+        where_clauses := array_append(where_clauses, FORMAT('created <= %L', created_before));
+    ELSIF created_after IS NOT NULL THEN
+        where_clauses := array_append(where_clauses, FORMAT('created >= %L', created_after));
+    ELSIF created_from IS NOT NULL AND created_to IS NOT NULL THEN
+        where_clauses := array_append(where_clauses, FORMAT('created >= %L AND created <= %L', created_from, created_to));
+    END IF;
+
+    IF updated_at IS NOT NULL THEN
+        where_clauses := array_append(where_clauses, FORMAT('DATE(updated) = DATE(%L)', updated_at));
+    ELSIF updated_before IS NOT NULL THEN
+        where_clauses := array_append(where_clauses, FORMAT('updated <= %L', updated_before));
+    ELSIF updated_after IS NOT NULL THEN
+        where_clauses := array_append(where_clauses, FORMAT('updated >= %L', updated_after));
+    ELSIF updated_from IS NOT NULL AND updated_to IS NOT NULL THEN
+        where_clauses := array_append(where_clauses, FORMAT('updated >= %L AND updated <= %L', updated_from, updated_to));
+    END IF;
+
+    IF alert_at IS NOT NULL THEN
+        where_clauses := array_append(where_clauses, 
+            FORMAT('EXISTS (
+                SELECT 1 FROM unnest(alert) AS alert_item
+                WHERE DATE((alert_item->>''date'')::timestamp) = DATE(%L)
+            )', alert_at, alert_at));
+    ELSIF alert_before IS NOT NULL THEN
+        where_clauses := array_append(where_clauses, 
+            FORMAT('EXISTS (
+                SELECT 1 FROM unnest(alert) AS alert_item
+                WHERE (alert_item->>''date'')::timestamp <= %L
+            )', alert_before, alert_before));
+    ELSIF alert_after IS NOT NULL THEN
+        where_clauses := array_append(where_clauses, 
+            FORMAT('EXISTS (
+                SELECT 1 FROM unnest(alert) AS alert_item
+                WHERE (alert_item->>''date'')::timestamp >= %L
+            )', alert_after, alert_after));
+    ELSIF alert_from IS NOT NULL AND alert_to IS NOT NULL THEN
+        where_clauses := array_append(where_clauses, 
+            FORMAT('EXISTS (
+                SELECT 1 FROM unnest(alert) AS alert_item
+                WHERE ((alert_item->>''date'')::timestamp >= %L AND (alert_item->>''date'')::timestamp <= %L)
+            )', alert_from, alert_to, alert_from, alert_to));
+    END IF;
+
+    IF array_length(where_clauses, 1) > 0 THEN
+        final_query := FORMAT('SELECT * FROM editor_documents WHERE %s ORDER BY created DESC LIMIT %s OFFSET %s', 
+                             array_to_string(where_clauses, ' AND '), 
+                             limit_count, 
+                             offset_count);
+    ELSE
+        final_query := FORMAT('SELECT * FROM editor_documents ORDER BY created DESC LIMIT %s OFFSET %s', 
+                             limit_count, 
+                             offset_count);
+    END IF;
+
+    RAISE NOTICE 'Executing advanced search query: %', final_query;
+
+    RETURN QUERY EXECUTE final_query;
+END;
+$$;

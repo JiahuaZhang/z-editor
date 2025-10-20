@@ -29,6 +29,16 @@ export type SearchResult = {
   tagStats?: never;
 };
 
+export type AdvancedSearchResult = {
+  documents: Document[];
+  totalPages: number;
+  totalCount: number;
+  searchParams: SearchParams;
+} | {
+  error: string;
+  status: number;
+};
+
 export async function getDocumentsWithPagination(request: Request): Promise<SearchResult> {
   const url = new URL(request.url);
   const query = url.searchParams.get('query');
@@ -191,3 +201,92 @@ export const getSearchParams = (request: Request): SearchParams => {
     offset,
   };
 };
+
+export async function advanceSearch(request: Request, searchParams: SearchParams): Promise<AdvancedSearchResult> {
+  const { supabase } = createSupabaseServerClient(request);
+
+  let textSearchIds: string[] = [];
+  let hasTextSearch = false;
+  if (searchParams.word.length > 0 || searchParams.phrase.length > 0) {
+    hasTextSearch = true;
+    const { data: searchIds, error: searchError } = await supabase.rpc('search_document_content', {
+      word_array: searchParams.word,
+      phrase_array: searchParams.phrase
+    });
+
+    if (searchError) {
+      console.error('Error in text search:', searchError);
+      return { error: 'Failed to perform text search', status: 500 };
+    }
+
+    textSearchIds = searchIds ?? [];
+
+    if (textSearchIds.length === 0) {
+      return {
+        documents: [],
+        totalPages: 0,
+        totalCount: 0,
+        searchParams
+      };
+    }
+  }
+
+  let query = supabase.from('editor_documents').select('*', { count: 'exact' });
+
+  if (hasTextSearch && textSearchIds.length > 0) {
+    query = query.in('id', textSearchIds);
+  }
+
+  if (searchParams.tag.length > 0) {
+    query = query.contains('tag', searchParams.tag);
+  }
+
+  if (searchParams.created) {
+    if ('at' in searchParams.created) {
+      const date = searchParams.created.at.toISOString().split('T')[0];
+      query = query.gte('created', `${date}T00:00:00Z`).lt('created', `${date}T23:59:59Z`);
+    } else if ('before' in searchParams.created) {
+      query = query.lt('created', searchParams.created.before.toISOString());
+    } else if ('after' in searchParams.created) {
+      query = query.gt('created', searchParams.created.after.toISOString());
+    } else if ('from' in searchParams.created && 'to' in searchParams.created) {
+      query = query.gte('created', searchParams.created.from.toISOString())
+        .lte('created', searchParams.created.to.toISOString());
+    }
+  }
+
+  if (searchParams.updated) {
+    if ('at' in searchParams.updated) {
+      const date = searchParams.updated.at.toISOString().split('T')[0];
+      query = query.gte('updated', `${date}T00:00:00Z`).lt('updated', `${date}T23:59:59Z`);
+    } else if ('before' in searchParams.updated) {
+      query = query.lt('updated', searchParams.updated.before.toISOString());
+    } else if ('after' in searchParams.updated) {
+      query = query.gt('updated', searchParams.updated.after.toISOString());
+    } else if ('from' in searchParams.updated && 'to' in searchParams.updated) {
+      query = query.gte('updated', searchParams.updated.from.toISOString())
+        .lte('updated', searchParams.updated.to.toISOString());
+    }
+  }
+
+  query = query.order('updated', { ascending: false })
+    .range(searchParams.offset, searchParams.offset + searchParams.perPage - 1);
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    console.error('Error in advanced search:', error);
+    return { error: 'Failed to perform advanced search', status: 500 };
+  }
+
+  const documents = data as Document[];
+  const totalCount = count || 0;
+  const totalPages = Math.ceil(totalCount / searchParams.perPage);
+
+  return {
+    documents,
+    totalPages,
+    totalCount,
+    searchParams
+  };
+}

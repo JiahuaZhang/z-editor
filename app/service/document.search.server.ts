@@ -104,11 +104,11 @@ export async function getDocumentsWithPagination(request: Request): Promise<Sear
   };
 }
 
-export type DateFilter = { at: Date; }
-  | { before: Date; }
-  | { after: Date; }
-  | { from: Date; to: Date; }
-  | { around: Date; days: number; }
+export type DateFilter = { at: string; }
+  | { before: string; }
+  | { after: string; }
+  | { from: string; to: string; }
+  | { around: string; days: number; }
   | { lastDays: number; };
 
 export type SearchParams = {
@@ -121,11 +121,6 @@ export type SearchParams = {
   page: number;
   perPage: number;
   offset: number;
-};
-
-const parseDate = (dateStr: string): Date | null => {
-  const date = new Date(dateStr);
-  return isNaN(date.getTime()) ? null : date;
 };
 
 const extractWordsAndPhrases = (query: string): { word: string[]; phrase: string[]; } => {
@@ -146,32 +141,18 @@ const extractWordsAndPhrases = (query: string): { word: string[]; phrase: string
 };
 
 const parseDateFilter = (url: URL, fieldName: string): DateFilter | undefined => {
-  const atParam = url.searchParams.get(fieldName);
-  const beforeParam = url.searchParams.get(`${fieldName}_before`);
-  const afterParam = url.searchParams.get(`${fieldName}_after`);
-  const fromParam = url.searchParams.get(`${fieldName}_from`);
-  const toParam = url.searchParams.get(`${fieldName}_to`);
+  const at = url.searchParams.get(fieldName);
+  if (at) return { at };
 
-  if (atParam) {
-    const date = parseDate(atParam);
-    if (date) return { at: date };
-  }
+  const before = url.searchParams.get(`${fieldName}_before`);
+  if (before) return { before };
 
-  if (beforeParam) {
-    const date = parseDate(beforeParam);
-    if (date) return { before: date };
-  }
+  const after = url.searchParams.get(`${fieldName}_after`);
+  if (after) return { after };
 
-  if (afterParam) {
-    const date = parseDate(afterParam);
-    if (date) return { after: date };
-  }
-
-  if (fromParam && toParam) {
-    const fromDate = parseDate(fromParam);
-    const toDate = parseDate(toParam);
-    if (fromDate && toDate) return { from: fromDate, to: toDate };
-  }
+  const from = url.searchParams.get(`${fieldName}_from`);
+  const to = url.searchParams.get(`${fieldName}_to`);
+  if (from && to) return { from, to };
 
   return undefined;
 };
@@ -202,7 +183,8 @@ export const getSearchParams = (request: Request): SearchParams => {
   };
 };
 
-export async function advanceSearch(request: Request, searchParams: SearchParams): Promise<AdvancedSearchResult> {
+export async function advanceSearch(request: Request): Promise<AdvancedSearchResult> {
+  const searchParams = getSearchParams(request);
   const { supabase } = createSupabaseServerClient(request);
 
   let textSearchIds: string[] = [];
@@ -243,29 +225,29 @@ export async function advanceSearch(request: Request, searchParams: SearchParams
 
   if (searchParams.created) {
     if ('at' in searchParams.created) {
-      const date = searchParams.created.at.toISOString().split('T')[0];
+      const date = new Date(searchParams.created.at).toISOString().split('T')[0];
       query = query.gte('created', `${date}T00:00:00Z`).lt('created', `${date}T23:59:59Z`);
     } else if ('before' in searchParams.created) {
-      query = query.lt('created', searchParams.created.before.toISOString());
+      query = query.lt('created', new Date(searchParams.created.before).toISOString());
     } else if ('after' in searchParams.created) {
-      query = query.gt('created', searchParams.created.after.toISOString());
+      query = query.gt('created', new Date(searchParams.created.after).toISOString());
     } else if ('from' in searchParams.created && 'to' in searchParams.created) {
-      query = query.gte('created', searchParams.created.from.toISOString())
-        .lte('created', searchParams.created.to.toISOString());
+      query = query.gte('created', new Date(searchParams.created.from).toISOString())
+        .lte('created', new Date(searchParams.created.to).toISOString());
     }
   }
 
   if (searchParams.updated) {
     if ('at' in searchParams.updated) {
-      const date = searchParams.updated.at.toISOString().split('T')[0];
+      const date = new Date(searchParams.updated.at).toISOString().split('T')[0];
       query = query.gte('updated', `${date}T00:00:00Z`).lt('updated', `${date}T23:59:59Z`);
     } else if ('before' in searchParams.updated) {
-      query = query.lt('updated', searchParams.updated.before.toISOString());
+      query = query.lt('updated', new Date(searchParams.updated.before).toISOString());
     } else if ('after' in searchParams.updated) {
-      query = query.gt('updated', searchParams.updated.after.toISOString());
+      query = query.gt('updated', new Date(searchParams.updated.after).toISOString());
     } else if ('from' in searchParams.updated && 'to' in searchParams.updated) {
-      query = query.gte('updated', searchParams.updated.from.toISOString())
-        .lte('updated', searchParams.updated.to.toISOString());
+      query = query.gte('updated', new Date(searchParams.updated.from).toISOString())
+        .lte('updated', new Date(searchParams.updated.to).toISOString());
     }
   }
 

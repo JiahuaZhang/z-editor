@@ -180,7 +180,7 @@ export type Database = {
           | { indexname: unknown; keywords: string[]; targets: string[] }
           | { keywords: string[]; target: string }
           | { keywords: string[]; targets: string[] }
-        Returns: string
+        Returns: string[]
       }
       pgroonga_index_column_name: {
         Args:
@@ -405,7 +405,7 @@ export type Database = {
         Returns: string
       }
       pgroonga_tokenize: {
-        Args: { target: string }
+        Args: { options: string[]; target: string }
         Returns: Json[]
       }
       pgroonga_vacuum: {
@@ -440,6 +440,44 @@ export type Database = {
       pgroonga_wal_truncate: {
         Args: Record<PropertyKey, never> | { indexname: unknown }
         Returns: number
+      }
+      search_document_content: {
+        Args: { phrase_array?: string[]; word_array?: string[] }
+        Returns: string[]
+      }
+      search_documents_advanced: {
+        Args: {
+          alert_after?: string
+          alert_at?: string
+          alert_before?: string
+          alert_from?: string
+          alert_to?: string
+          created_after?: string
+          created_at?: string
+          created_before?: string
+          created_from?: string
+          created_to?: string
+          limit_count?: number
+          offset_count?: number
+          phrase_array?: string[]
+          tag_array?: string[]
+          updated_after?: string
+          updated_at?: string
+          updated_before?: string
+          updated_from?: string
+          updated_to?: string
+          word_array?: string[]
+        }
+        Returns: {
+          alert: Json[] | null
+          content: Json
+          created: string | null
+          id: string
+          is_public: boolean | null
+          tag: string[] | null
+          updated: string | null
+          user_id: string
+        }[]
       }
       search_documents_combined: {
         Args: { phrases?: string[]; tags?: string[]; words?: string[] }

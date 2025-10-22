@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { DEFAULT_DOCUMENTS_PER_PAGE } from '~/lib/constant';
-import { getSearchParams } from './document.search.server';
+import { advanceSearch, getSearchParams } from './document.search.server';
 
 const createMockRequest = (searchParams: Record<string, string> = {}): Request => {
   const url = new URL('https://example.com/search');
@@ -188,21 +188,21 @@ describe('getSearchParams', () => {
       const request = createMockRequest({ created: '2024-01-15' });
       const result = getSearchParams(request);
 
-      expect(result.created).toEqual({ at: new Date('2024-01-15') });
+      expect(result.created).toEqual({ at: '2024-01-15' });
     });
 
     it('should parse created_before parameter', () => {
       const request = createMockRequest({ created_before: '2024-01-15' });
       const result = getSearchParams(request);
 
-      expect(result.created).toEqual({ before: new Date('2024-01-15') });
+      expect(result.created).toEqual({ before: '2024-01-15' });
     });
 
     it('should parse created_after parameter', () => {
       const request = createMockRequest({ created_after: '2024-01-15' });
       const result = getSearchParams(request);
 
-      expect(result.created).toEqual({ after: new Date('2024-01-15') });
+      expect(result.created).toEqual({ after: '2024-01-15' });
     });
 
     it('should parse created date range correctly', () => {
@@ -213,8 +213,8 @@ describe('getSearchParams', () => {
       const result = getSearchParams(request);
 
       expect(result.created).toEqual({
-        from: new Date('2024-01-01'),
-        to: new Date('2024-01-31')
+        from: '2024-01-01',
+        to: '2024-01-31'
       });
     });
 
@@ -242,7 +242,7 @@ describe('getSearchParams', () => {
       });
       const result = getSearchParams(request);
 
-      expect(result.created).toEqual({ at: new Date('2024-01-15') });
+      expect(result.created).toEqual({ at: '2024-01-15' });
     });
 
     it('should prioritize before/after over range parameters', () => {
@@ -253,24 +253,7 @@ describe('getSearchParams', () => {
       });
       const result = getSearchParams(request);
 
-      expect(result.created).toEqual({ before: new Date('2024-01-15') });
-    });
-
-    it('should handle invalid created dates gracefully', () => {
-      const request = createMockRequest({ created: 'invalid-date' });
-      const result = getSearchParams(request);
-
-      expect(result.created).toBeUndefined();
-    });
-
-    it('should handle invalid created range gracefully', () => {
-      const request = createMockRequest({
-        created_from: 'invalid',
-        created_to: 'also-invalid'
-      });
-      const result = getSearchParams(request);
-
-      expect(result.created).toBeUndefined();
+      expect(result.created).toEqual({ before: '2024-01-15' });
     });
   });
 
@@ -279,21 +262,21 @@ describe('getSearchParams', () => {
       const request = createMockRequest({ updated: '2024-02-15' });
       const result = getSearchParams(request);
 
-      expect(result.updated).toEqual({ at: new Date('2024-02-15') });
+      expect(result.updated).toEqual({ at: '2024-02-15' });
     });
 
     it('should parse updated_before parameter', () => {
       const request = createMockRequest({ updated_before: '2024-02-15' });
       const result = getSearchParams(request);
 
-      expect(result.updated).toEqual({ before: new Date('2024-02-15') });
+      expect(result.updated).toEqual({ before: '2024-02-15' });
     });
 
     it('should parse updated_after parameter', () => {
       const request = createMockRequest({ updated_after: '2024-02-15' });
       const result = getSearchParams(request);
 
-      expect(result.updated).toEqual({ after: new Date('2024-02-15') });
+      expect(result.updated).toEqual({ after: '2024-02-15' });
     });
 
     it('should parse updated date range correctly', () => {
@@ -304,8 +287,8 @@ describe('getSearchParams', () => {
       const result = getSearchParams(request);
 
       expect(result.updated).toEqual({
-        from: new Date('2024-02-01'),
-        to: new Date('2024-02-29')
+        from: '2024-02-01',
+        to: '2024-02-29'
       });
     });
 
@@ -333,14 +316,7 @@ describe('getSearchParams', () => {
       });
       const result = getSearchParams(request);
 
-      expect(result.updated).toEqual({ at: new Date('2024-02-15') });
-    });
-
-    it('should handle invalid updated dates gracefully', () => {
-      const request = createMockRequest({ updated: 'not-a-date' });
-      const result = getSearchParams(request);
-
-      expect(result.updated).toBeUndefined();
+      expect(result.updated).toEqual({ at: '2024-02-15' });
     });
   });
 
@@ -349,21 +325,21 @@ describe('getSearchParams', () => {
       const request = createMockRequest({ alert: '2024-03-15' });
       const result = getSearchParams(request);
 
-      expect(result.alert).toEqual({ at: new Date('2024-03-15') });
+      expect(result.alert).toEqual({ at: '2024-03-15' });
     });
 
     it('should parse alert_before parameter', () => {
       const request = createMockRequest({ alert_before: '2024-03-15' });
       const result = getSearchParams(request);
 
-      expect(result.alert).toEqual({ before: new Date('2024-03-15') });
+      expect(result.alert).toEqual({ before: '2024-03-15' });
     });
 
     it('should parse alert_after parameter', () => {
       const request = createMockRequest({ alert_after: '2024-03-15' });
       const result = getSearchParams(request);
 
-      expect(result.alert).toEqual({ after: new Date('2024-03-15') });
+      expect(result.alert).toEqual({ after: '2024-03-15' });
     });
 
     it('should parse alert date range correctly', () => {
@@ -374,16 +350,9 @@ describe('getSearchParams', () => {
       const result = getSearchParams(request);
 
       expect(result.alert).toEqual({
-        from: new Date('2024-03-01'),
-        to: new Date('2024-03-31')
+        from: '2024-03-01',
+        to: '2024-03-31'
       });
-    });
-
-    it('should handle invalid alert date gracefully', () => {
-      const request = createMockRequest({ alert: 'invalid-alert-date' });
-      const result = getSearchParams(request);
-
-      expect(result.alert).toBeUndefined();
     });
 
     it('should handle empty alert parameter', () => {
@@ -413,11 +382,11 @@ describe('getSearchParams', () => {
         phrase: ['search phrase'],
         tag: ['javascript', 'react'],
         created: {
-          from: new Date('2024-01-01'),
-          to: new Date('2024-01-31')
+          from: '2024-01-01',
+          to: '2024-01-31'
         },
-        updated: { at: new Date('2024-02-15') },
-        alert: { before: new Date('2024-03-15') },
+        updated: { at: '2024-02-15' },
+        alert: { before: '2024-03-15' },
         page: 2,
         perPage: 25,
         offset: 25 // (2-1) * 25
@@ -441,9 +410,9 @@ describe('getSearchParams', () => {
         word: ['valid'],
         phrase: ['query phrase'],
         tag: ['valid', 'tags'],
-        created: undefined, // invalid date ignored
-        updated: undefined, // invalid range ignored
-        alert: { after: new Date('2024-03-15') },
+        created: { at: 'invalid-date' }, // now accepts any string
+        updated: { from: '2024-01-01', to: 'invalid-date' }, // now accepts any string
+        alert: { after: '2024-03-15' },
         page: NaN, // invalid page becomes NaN
         perPage: 20,
         offset: NaN
@@ -468,12 +437,12 @@ describe('getSearchParams', () => {
       });
       const result = getSearchParams(request);
 
-      expect(result.created).toEqual({ at: new Date('2024-01-15T10:30:00Z') });
+      expect(result.created).toEqual({ at: '2024-01-15T10:30:00Z' });
       expect(result.updated).toEqual({
-        from: new Date('2024-02-01T00:00:00Z'),
-        to: new Date('2024-02-29T23:59:59Z')
+        from: '2024-02-01T00:00:00Z',
+        to: '2024-02-29T23:59:59Z'
       });
-      expect(result.alert).toEqual({ before: new Date('2024-03-15T14:30:00.000Z') });
+      expect(result.alert).toEqual({ before: '2024-03-15T14:30:00.000Z' });
     });
 
     it('should handle edge case with very large page numbers', () => {
@@ -554,17 +523,6 @@ describe('Simplified Implementation Behavior', () => {
     expect(result.created).toBeUndefined();
   });
 
-  it('should return undefined for invalid date ranges', () => {
-    const request = createMockRequest({
-      updated_from: 'invalid-date',
-      updated_to: 'also-invalid'
-    });
-    const result = getSearchParams(request);
-
-    // Should return undefined for invalid dates
-    expect(result.updated).toBeUndefined();
-  });
-
   it('should preserve raw tag splitting behavior', () => {
     const request = createMockRequest({
       tag: 'a,,b,  ,c'
@@ -601,10 +559,10 @@ describe('Simplified Implementation Behavior', () => {
   describe('DateFilter Behavior', () => {
     it('should handle all date filter types for created field', () => {
       const testCases = [
-        { params: { created: '2024-01-15' }, expected: { at: new Date('2024-01-15') } },
-        { params: { created_before: '2024-01-15' }, expected: { before: new Date('2024-01-15') } },
-        { params: { created_after: '2024-01-15' }, expected: { after: new Date('2024-01-15') } },
-        { params: { created_from: '2024-01-01', created_to: '2024-01-31' }, expected: { from: new Date('2024-01-01'), to: new Date('2024-01-31') } }
+        { params: { created: '2024-01-15' }, expected: { at: '2024-01-15' } },
+        { params: { created_before: '2024-01-15' }, expected: { before: '2024-01-15' } },
+        { params: { created_after: '2024-01-15' }, expected: { after: '2024-01-15' } },
+        { params: { created_from: '2024-01-01', created_to: '2024-01-31' }, expected: { from: '2024-01-01', to: '2024-01-31' } }
       ];
 
       testCases.forEach(({ params, expected }) => {
@@ -616,10 +574,10 @@ describe('Simplified Implementation Behavior', () => {
 
     it('should handle all date filter types for updated field', () => {
       const testCases = [
-        { params: { updated: '2024-02-15' }, expected: { at: new Date('2024-02-15') } },
-        { params: { updated_before: '2024-02-15' }, expected: { before: new Date('2024-02-15') } },
-        { params: { updated_after: '2024-02-15' }, expected: { after: new Date('2024-02-15') } },
-        { params: { updated_from: '2024-02-01', updated_to: '2024-02-29' }, expected: { from: new Date('2024-02-01'), to: new Date('2024-02-29') } }
+        { params: { updated: '2024-02-15' }, expected: { at: '2024-02-15' } },
+        { params: { updated_before: '2024-02-15' }, expected: { before: '2024-02-15' } },
+        { params: { updated_after: '2024-02-15' }, expected: { after: '2024-02-15' } },
+        { params: { updated_from: '2024-02-01', updated_to: '2024-02-29' }, expected: { from: '2024-02-01', to: '2024-02-29' } }
       ];
 
       testCases.forEach(({ params, expected }) => {
@@ -631,10 +589,10 @@ describe('Simplified Implementation Behavior', () => {
 
     it('should handle all date filter types for alert field', () => {
       const testCases = [
-        { params: { alert: '2024-03-15' }, expected: { at: new Date('2024-03-15') } },
-        { params: { alert_before: '2024-03-15' }, expected: { before: new Date('2024-03-15') } },
-        { params: { alert_after: '2024-03-15' }, expected: { after: new Date('2024-03-15') } },
-        { params: { alert_from: '2024-03-01', alert_to: '2024-03-31' }, expected: { from: new Date('2024-03-01'), to: new Date('2024-03-31') } }
+        { params: { alert: '2024-03-15' }, expected: { at: '2024-03-15' } },
+        { params: { alert_before: '2024-03-15' }, expected: { before: '2024-03-15' } },
+        { params: { alert_after: '2024-03-15' }, expected: { after: '2024-03-15' } },
+        { params: { alert_from: '2024-03-01', alert_to: '2024-03-31' }, expected: { from: '2024-03-01', to: '2024-03-31' } }
       ] as const;
 
       testCases.forEach(({ params, expected }) => {
@@ -654,7 +612,7 @@ describe('Simplified Implementation Behavior', () => {
       });
       const result = getSearchParams(request);
 
-      expect(result.created).toEqual({ at: new Date('2024-01-15') });
+      expect(result.created).toEqual({ at: '2024-01-15' });
     });
 
     it('should handle mixed date filter types across fields', () => {
@@ -666,9 +624,150 @@ describe('Simplified Implementation Behavior', () => {
       });
       const result = getSearchParams(request);
 
-      expect(result.created).toEqual({ before: new Date('2024-01-15') });
-      expect(result.updated).toEqual({ after: new Date('2024-02-01') });
-      expect(result.alert).toEqual({ from: new Date('2024-03-01'), to: new Date('2024-03-31') });
+      expect(result.created).toEqual({ before: '2024-01-15' });
+      expect(result.updated).toEqual({ after: '2024-02-01' });
+      expect(result.alert).toEqual({ from: '2024-03-01', to: '2024-03-31' });
+    });
+  });
+});
+
+describe('executeAdvancedSearch Integration Tests', () => {
+  let authCookie: string = '';
+
+  beforeAll(async () => {
+    authCookie = process.env.TEST_AUTH_COOKIE || 'sb-oclmlxhybvqbomhjeuhu-auth-token.0=base64-eyJhY2Nlc3NfdG9rZW4iOiJleUpoYkdjaU9pSklVekkxTmlJc0ltdHBaQ0k2SW05cFptNVFWQ3Q1WmxGM0szWmphRTRpTENKMGVYQWlPaUpLVjFRaWZRLmV5SnBjM01pT2lKb2RIUndjem92TDI5amJHMXNlR2g1WW5aeFltOXRhR3BsZFdoMUxuTjFjR0ZpWVhObExtTnZMMkYxZEdndmRqRWlMQ0p6ZFdJaU9pSXlaR0ppTlRnelppMHhOV0UwTFRSaU9HVXRZbVU1TkMwNVpHVTBOREl3WkRka1lXWWlMQ0poZFdRaU9pSmhkWFJvWlc1MGFXTmhkR1ZrSWl3aVpYaHdJam94TnpZd01UWXlOek15TENKcFlYUWlPakUzTmpBeE5Ua3hNeklzSW1WdFlXbHNJam9pYUhWbmFIcG9ZVzVuYUhwQVoyMWhhV3d1WTI5dElpd2ljR2h2Ym1VaU9pSWlMQ0poY0hCZmJXVjBZV1JoZEdFaU9uc2ljSEp2ZG1sa1pYSWlPaUpuYjI5bmJHVWlMQ0p3Y205MmFXUmxjbk1pT2xzaVoyOXZaMnhsSWwxOUxDSjFjMlZ5WDIxbGRHRmtZWFJoSWpwN0ltRjJZWFJoY2w5MWNtd2lPaUpvZEhSd2N6b3ZMMnhvTXk1bmIyOW5iR1YxYzJWeVkyOXVkR1Z1ZEM1amIyMHZZUzlCUTJjNGIyTkxTVzFsVUZGSmJITm9hakk1YUU0eU9HTkdSR281WHpZelUxWTNaV3RKY1V0eE0zbDNPR2N6YWs1Q1oyeG5WMWhyV0Qxek9UWXRZeUlzSW1WdFlXbHNJam9pYUhWbmFIcG9ZVzVuYUhwQVoyMWhhV3d1WTI5dElpd2laVzFoYVd4ZmRtVnlhV1pwWldRaU9uUnlkV1VzSW1aMWJHeGZibUZ0WlNJNklrcHBZV2gxWVNCYWFHRnVaeUlzSW1semN5STZJbWgwZEhCek9pOHZZV05qYjNWdWRITXVaMjl2WjJ4bExtTnZiU0lzSW01aGJXVWlPaUpLYVdGb2RXRWdXbWhoYm1jaUxDSndhRzl1WlY5MlpYSnBabWxsWkNJNlptRnNjMlVzSW5CcFkzUjFjbVVpT2lKb2RIUndjem92TDJ4b015NW5iMjluYkdWMWMyVnlZMjl1ZEdWdWRDNWpiMjB2WVM5QlEyYzRiMk5MU1cxbFVGRkpiSE5vYWpJNWFFNHlPR05HUkdvNVh6WXpVMVkzWld0SmNVdHhNM2wzT0djemFrNUNaMnhuVjFocldEMXpPVFl0WXlJc0luQnliM1pwWkdWeVgybGtJam9pTVRFd05ERTNOVGMyTXpVeE5qZ3hNakkyTURZNUlpd2ljM1ZpSWpvaVRURXdOREUzTlRjMk16VXhOamd4TWpJMk1EWTVJbjBzSW5KdmJHVWlPaUpoZFhSb1pXNTBhV05oZEdWa0lpd2lZV0ZzSWpvaVlXRnNNU0lzSW1GdGNpSTZXM3NpYldWMGFHOWtJam9pYjJGMWRHZ2lMQ0owYVcxbGMzUmhiWEFpT2pFM05qQXhOVGt4TXpKOVhTd2ljMlZ6YzJsdmJsOXBaQ0k2SW1ZM1pXSmtOV1EzTFRkak56TXRORFExTlMwNE1HWTJMVGs1TVRNNE5EUmhNakZrTWlJc0ltbHpYMkZ1YjI1NWJXOTFjeUk2Wm1Gc2MyVjkuUjdETXJWMTh4Wjh3VW5iVTg0c3NJMmF6NlA2OF9tWVRQVWEwd3QtRU5kZyIsInRva2VuX3R5cGUiOiJiZWFyZXIiLCJleHBpcmVzX2luIjozNjAwLCJleHBpcmVzX2F0IjoxNzYwMTYyNzMyLCJyZWZyZXNoX3Rva2VuIjoieWpuanRnNnRra2FpIiwidXNlciI6eyJpZCI6IjJkYmI1ODNmLTE1YTQtNGI4ZS1iZTk0LTlkZTQ0MjBkN2RhZiIsImF1ZCI6ImF1dGhlbnRpY2F0ZWQiLCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImVtYWlsIjoiaHVnaHpoYW5naHpAZ21haWwuY29tIiwiZW1haWxfY29uZmlybWVkX2F0IjoiMjAyNS0wNS0yM1QwNjoyNTowMC41ODk3OTlaIiwicGhvbmUiOiIiLCJjb25maXJtZWRfYXQiOiIyMDI1LTA1LTIzVDA2OjI1OjAwLjU4OTc5OVoiLCJsYXN0X3NpZ25faW5fYXQiOiIyMDI1LTEwLTExVDA1OjA1OjMyLjMyODM0OTIwNFoiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJnb29nbGUiLCJwcm92aWRlcnMiOlsiZ29vZ2xlIl19LCJ1c2VyX21ldGFkYXRhIjp7ImF2YXRhcl91cmwiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLSW1lUFFJbHNoajI5aE4yOGNGRGo5XzYzU1Y3ZWtJcUtxM3l3OGczak5CZ2xnV1hrWD1zOTYtYyIsImVtYWlsIjoiaHVnaHpoYW5naHpAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZ1bGxfbmFtZSI6IkppYWh1YSBaaGFuZyIsImlzcyI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbSIsIm5hbWUiOiJKaWFodWEgWmhhbmciLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLSW1lUFFJbHNoajI5aE4yOGNGRGo5XzYzU1Y3ZWtJcUtxM3l3OGczak5CZ2xnV1hrWD1zOTYtYyIsInByb3ZpZGVyX2lkIjoiMTEwNDE3NTc2MzUxNjgxMjI2MDY5Iiwic3ViIjoiMTEwNDE3NTc2MzUxNjgxMjI2MDY5In0sImlkZW50aXRpZXMiOlt7ImlkZW50aXR5X2lkIjoiYjc0YjVmYzAtZjIyYy00ZDU2LWIxNTMtMGZlMjYyMGNiMWRhIiwiaWQiOiIxMTA0MTc1NzYzNTE2ODEyMjYwNjkiLCJ1c2VyX2lkIjoiMmRiYjU4M2YtMTVhNC00YjhlLWJlOTQtOWRlNDQyM; sb-oclmlxhybvqbomhjeuhu-auth-token.1=GQ3ZGFmIiwiaWRlbnRpdHlfZGF0YSI6eyJhdmF0YXJfdXJsIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS0ltZVBRSWxzaGoyOWhOMjhjRkRqOV82M1NWN2VrSXFLcTN5dzhnM2pOQmdsZ1dYa1g9czk2LWMiLCJlbWFpbCI6Imh1Z2h6aGFuZ2h6QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmdWxsX25hbWUiOiJKaWFodWEgWmhhbmciLCJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYW1lIjoiSmlhaHVhIFpoYW5nIiwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS0ltZVBRSWxzaGoyOWhOMjhjRkRqOV82M1NWN2VrSXFLcTN5dzhnM2pOQmdsZ1dYa1g9czk2LWMiLCJwcm92aWRlcl9pZCI6IjExMDQxNzU3NjM1MTY4MTIyNjA2OSIsInN1YiI6IjExMDQxNzU3NjM1MTY4MTIyNjA2OSJ9LCJwcm92aWRlciI6Imdvb2dsZSIsImxhc3Rfc2lnbl9pbl9hdCI6IjIwMjUtMDUtMjNUMDY6MjU6MDAuNTcwMjEzWiIsImNyZWF0ZWRfYXQiOiIyMDI1LTA1LTIzVDA2OjI1OjAwLjU3MDI3NloiLCJ1cGRhdGVkX2F0IjoiMjAyNS0xMC0xMVQwNTowNTozMi4yNTIwNzFaIiwiZW1haWwiOiJodWdoemhhbmdoekBnbWFpbC5jb20ifV0sImNyZWF0ZWRfYXQiOiIyMDI1LTA1LTIzVDA2OjI1OjAwLjU0MTQ5NFoiLCJ1cGRhdGVkX2F0IjoiMjAyNS0xMC0xMVQwNTowNTozMi4zNTk3MjlaIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0sInByb3ZpZGVyX3Rva2VuIjoieWEyOS5hMEFRUV9CRFNBR2hyVHFELUZGY1dSczZDYWQzMHlmdXk4NlRhbXRqNlhNRGVYSFRmZWtiVk1qTVNFSkozRkJlNU11X01FWGk1UnkxZ21nOUZXdWMzV29LUkNJOXVON0NjZmo4bTRKaXppdF9KMGc3N1NYZkhNY3VRWDJLbE1Xa3FPQ0RFWWFoNUYwbVFUaGtEUlNTTVI0dGtOR0FPdlRGc3hxQTh3eHVGaXdjZ2VNT0VKTzZiRnI3QzdscGR6ZVBKeFYybjJyc1BBd1FhQ2dZS0FUOFNBUlFTRlFIR1gyTWlsdEppYjZtWGxwM21lbV9rdTN5bFRRMDIwOSJ9';
+
+    if (!authCookie) {
+      console.log('\n🔐 Authentication Required for Integration Tests');
+      console.log('Please visit: http://localhost:5173/auth/google');
+      console.log('After login, copy the session cookie and set TEST_AUTH_COOKIE environment variable');
+      console.log('You can find the cookie in browser dev tools > Application > Cookies');
+      console.log('Look for cookies starting with "sb-" from your Supabase domain\n');
+    }
+  });
+
+  const createMockRequest = (searchParams: Record<string, string> = {}): Request => {
+    const url = new URL('https://example.com/search');
+    Object.entries(searchParams).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+
+    const headers = new Headers();
+    if (authCookie) {
+      headers.set('Cookie', authCookie);
+    }
+
+    return new Request(url.toString(), { headers });
+  };
+
+  describe('Database Integration', () => {
+    it('should fetch all documents from database with authentication', async () => {
+      if (!authCookie) {
+        console.log('⚠️  Skipping test - no authentication cookie provided');
+        console.log('Set TEST_AUTH_COOKIE environment variable to run this test');
+        return;
+      }
+
+      const request = createMockRequest({ perPage: '10' });
+      const result = await advanceSearch(request);
+
+      console.log('📊 Search Result:', {
+        hasError: 'error' in result,
+        documentCount: 'documents' in result ? result.documents.length : 0,
+        totalCount: 'totalCount' in result ? result.totalCount : 0
+      });
+
+      expect(result).not.toHaveProperty('error');
+      if ('documents' in result) {
+        expect(Array.isArray(result.documents)).toBe(true);
+        expect(typeof result.totalCount).toBe('number');
+        expect(typeof result.totalPages).toBe('number');
+        expect(result.searchParams.perPage).toBe(10);
+
+        // Log some sample data if available
+        if (result.documents.length > 0) {
+          console.log('📄 Sample document structure:', {
+            id: result.documents[0].id,
+            hasContent: !!result.documents[0].content,
+            tags: result.documents[0].tag,
+            created: result.documents[0].created,
+            updated: result.documents[0].updated
+          });
+        }
+      }
+    });
+
+    it('should handle date filtering with string dates', async () => {
+      if (!authCookie) {
+        console.log('⚠️  Skipping test - no authentication cookie provided');
+        return;
+      }
+
+      const request = createMockRequest({
+        created_after: '2020-01-01',
+        updated_before: '2025-12-31',
+        perPage: '5'
+      });
+      const result = await advanceSearch(request);
+
+      console.log('📅 Date Filter Result:', {
+        hasError: 'error' in result,
+        documentCount: 'documents' in result ? result.documents.length : 0,
+        totalCount: 'totalCount' in result ? result.totalCount : 0,
+        searchParams: 'searchParams' in result ? result.searchParams : null
+      });
+
+      expect(result).not.toHaveProperty('error');
+      if ('documents' in result) {
+        expect(Array.isArray(result.documents)).toBe(true);
+        expect(typeof result.totalCount).toBe('number');
+        expect(result.searchParams.created).toEqual({ after: '2020-01-01' });
+        expect(result.searchParams.updated).toEqual({ before: '2025-12-31' });
+
+        // Verify date filtering worked if we have documents
+        if (result.documents.length > 0) {
+          result.documents.forEach(doc => {
+            const createdDate = new Date(doc.created!).getTime();
+            const updatedDate = new Date(doc.updated!).getTime();
+            expect(createdDate).toBeGreaterThan(new Date('2020-01-01').getTime());
+            expect(updatedDate).toBeLessThan(new Date('2025-12-31').getTime());
+          });
+        }
+      }
+    });
+
+    it('should handle date range filtering', async () => {
+      if (!authCookie) {
+        console.log('⚠️  Skipping test - no authentication cookie provided');
+        return;
+      }
+
+      const request = createMockRequest({
+        created_from: '2024-01-01',
+        created_to: '2024-12-31',
+        perPage: '5'
+      });
+      const result = await advanceSearch(request);
+
+      console.log('📅 Date Range Result:', {
+        hasError: 'error' in result,
+        documentCount: 'documents' in result ? result.documents.length : 0,
+        searchParams: 'searchParams' in result ? result.searchParams : null
+      });
+
+      expect(result).not.toHaveProperty('error');
+      if ('documents' in result) {
+        expect(result.searchParams.created).toEqual({ from: '2024-01-01', to: '2024-12-31' });
+
+        // Verify date range filtering if we have documents
+        if (result.documents.length > 0) {
+          result.documents.forEach(doc => {
+            const createdDate = new Date(doc.created!).getTime();
+            expect(createdDate).toBeGreaterThanOrEqual(new Date('2024-01-01').getTime());
+            expect(createdDate).toBeLessThanOrEqual(new Date('2024-12-31').getTime());
+          });
+        }
+      }
     });
   });
 });

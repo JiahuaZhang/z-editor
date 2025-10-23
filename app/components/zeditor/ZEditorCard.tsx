@@ -7,6 +7,7 @@ import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import utc from 'dayjs/plugin/utc';
 import { $getRoot, createEditor } from 'lexical';
 import { Link } from 'react-router';
 import { Tables } from '~/util/supabase.type';
@@ -29,6 +30,7 @@ import { TweetNode } from './plugin/twitter/TweetNode';
 import { YouTubeNode } from './plugin/youtube/YouTubeNode';
 
 dayjs.extend(relativeTime);
+dayjs.extend(utc);
 
 type Document = Tables<'editor_documents'>;
 
@@ -49,10 +51,10 @@ const editorStatePreview = (document: Document, limit: number = 600) => {
 const formatDate = (dateStr: string | null): string => {
   if (!dateStr) return 'Unknown';
 
-  const date = dayjs(dateStr);
+  const date = dayjs.utc(dateStr);
   if (!date.isValid()) return 'Unknown';
 
-  const now = dayjs();
+  const now = dayjs.utc();
   if (date.isSame(now, 'day')) {
     return 'Today';
   } else if (now.diff(date, 'day') === 1) {

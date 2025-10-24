@@ -30,14 +30,20 @@ export type SearchResult = {
   tagStats?: never;
 };
 
+export type ErrorResult = {
+  error: string;
+  status: number;
+};
+
 export type AdvancedSearchResult = {
   documents: Document[];
   totalPages: number;
   totalCount: number;
   searchParams: SearchParams;
-} | {
-  error: string;
-  status: number;
+};
+
+export type NewSearchResult = AdvancedSearchResult & {
+  tagStat: TagStat[];
 };
 
 export async function getDocumentsWithPagination(request: Request): Promise<SearchResult> {
@@ -183,7 +189,7 @@ export const getSearchParams = (request: Request): SearchParams => {
   };
 };
 
-export async function advanceSearch(supabase: SupabaseClient<any, "public", any>, searchParams: SearchParams): Promise<AdvancedSearchResult> {
+export async function advanceSearch(supabase: SupabaseClient<any, "public", any>, searchParams: SearchParams): Promise<AdvancedSearchResult | ErrorResult> {
   let textSearchIds: string[] = [];
   let hasTextSearch = false;
   if (searchParams.word.length > 0 || searchParams.phrase.length > 0) {
@@ -267,5 +273,23 @@ export async function advanceSearch(supabase: SupabaseClient<any, "public", any>
     totalPages,
     totalCount,
     searchParams
+  };
+}
+
+export async function newSearch(request: Request): Promise<NewSearchResult | ErrorResult> {
+  const searchParams = getSearchParams(request);
+  const { supabase } = createSupabaseServerClient(request);
+
+  const tagStatsResult = await getTagStatistics(supabase, searchParams.tag.length > 0 ? searchParams.tag : undefined);
+  const tagStats = tagStatsResult.data || [];
+
+  const result = await advanceSearch(supabase, searchParams);
+  if ('error' in result) {
+    return result;
+  }
+
+  return {
+    ...result,
+    tagStat: tagStats
   };
 }

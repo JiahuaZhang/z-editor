@@ -1,3 +1,4 @@
+import { createSupabaseServerClient } from '~/service/supabase.server';
 import { getTagStatistics } from '~/service/tag-stats.server';
 import type { Route } from './+types/api.tag-stats';
 
@@ -11,7 +12,8 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
       selectedTags = selectedTagsParam.split(',').map(tag => tag.trim()).filter(tag => !!tag);
     }
 
-    const result = await getTagStatistics(request, selectedTags);
+    const { supabase } = createSupabaseServerClient(request);
+    const result = await getTagStatistics(supabase, selectedTags);
 
     if (result.error) {
       return Response.json({ error: result.error }, { status: 500 });

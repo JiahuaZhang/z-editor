@@ -1,17 +1,15 @@
-import { createSupabaseServerClient } from './supabase.server';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 export type TagStat = {
   tag_name: string;
   document_count: number;
 };
 
-export async function getTagStatistics(request: Request, selectedTags?: string[]): Promise<{
+export async function getTagStatistics(supabase: SupabaseClient<any, "public", any>, selectedTags?: string[]): Promise<{
   data: TagStat[] | null;
   error: string | null;
 }> {
   try {
-    const { supabase } = createSupabaseServerClient(request);
-
     let data, error;
 
     if (selectedTags && selectedTags.length > 0) {

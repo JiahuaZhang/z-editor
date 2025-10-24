@@ -1,8 +1,8 @@
+import { SupabaseClient } from '@supabase/supabase-js';
 import { DEFAULT_DOCUMENTS_PER_PAGE } from '~/lib/constant';
 import { getTagStatistics, type TagStat } from '~/service/tag-stats.server';
 import { Tables } from '~/util/supabase.type';
 import { createSupabaseServerClient, searchDocuments } from './supabase.server';
-import { SupabaseClient } from '@supabase/supabase-js';
 
 type Document = Tables<'editor_documents'>;
 
@@ -48,7 +48,8 @@ export async function getDocumentsWithPagination(request: Request): Promise<Sear
   const offset = (page - 1) * documentsPerPage;
   const selectedTags: string[] = query ? query.match(/#\S+/g) || [] : [];
 
-  const tagStatsResult = await getTagStatistics(request, selectedTags.length > 0 ? selectedTags : undefined);
+  const { supabase } = createSupabaseServerClient(request);
+  const tagStatsResult = await getTagStatistics(supabase, selectedTags.length > 0 ? selectedTags : undefined);
   const tagStats = tagStatsResult.data || [];
 
   if (query) {
@@ -73,8 +74,6 @@ export async function getDocumentsWithPagination(request: Request): Promise<Sear
       tagStats
     };
   }
-
-  const { supabase } = createSupabaseServerClient(request);
 
   const { count } = await supabase
     .from('editor_documents')

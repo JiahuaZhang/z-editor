@@ -2,6 +2,7 @@ import { DEFAULT_DOCUMENTS_PER_PAGE } from '~/lib/constant';
 import { getTagStatistics, type TagStat } from '~/service/tag-stats.server';
 import { Tables } from '~/util/supabase.type';
 import { createSupabaseServerClient, searchDocuments } from './supabase.server';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 type Document = Tables<'editor_documents'>;
 
@@ -183,10 +184,7 @@ export const getSearchParams = (request: Request): SearchParams => {
   };
 };
 
-export async function advanceSearch(request: Request): Promise<AdvancedSearchResult> {
-  const searchParams = getSearchParams(request);
-  const { supabase } = createSupabaseServerClient(request);
-
+export async function advanceSearch(supabase: SupabaseClient<any, "public", any>, searchParams: SearchParams): Promise<AdvancedSearchResult> {
   let textSearchIds: string[] = [];
   let hasTextSearch = false;
   if (searchParams.word.length > 0 || searchParams.phrase.length > 0) {

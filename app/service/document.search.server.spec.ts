@@ -631,10 +631,18 @@ describe('Simplified Implementation Behavior', () => {
   });
 });
 
-describe('executeAdvancedSearch Integration Tests', () => {
+describe('advanceSearch Integration Tests', () => {
+  let supabaseClient: any;
   let authCookie: string = '';
 
   beforeAll(async () => {
+    // Import createClient dynamically to avoid issues in test environment
+    const { createClient } = await import('@supabase/supabase-js');
+    supabaseClient = createClient(
+      process.env.VITE_SUPABASE_URL!,
+      process.env.VITE_SUPABASE_KEY!
+    );
+
     authCookie = process.env.TEST_AUTH_COOKIE || '';
 
     if (!authCookie) {
@@ -669,7 +677,8 @@ describe('executeAdvancedSearch Integration Tests', () => {
       }
 
       const request = createMockRequest({ perPage: '10' });
-      const result = await advanceSearch(request);
+      const searchParams = getSearchParams(request);
+      const result = await advanceSearch(supabaseClient, searchParams);
 
       console.log('📊 Search Result:', {
         hasError: 'error' in result,
@@ -708,7 +717,8 @@ describe('executeAdvancedSearch Integration Tests', () => {
         updated_before: '2025-12-31',
         perPage: '5'
       });
-      const result = await advanceSearch(request);
+      const searchParams = getSearchParams(request);
+      const result = await advanceSearch(supabaseClient, searchParams);
 
       console.log('📅 Date Filter Result:', {
         hasError: 'error' in result,
@@ -747,7 +757,8 @@ describe('executeAdvancedSearch Integration Tests', () => {
         created_to: '2024-12-31',
         perPage: '5'
       });
-      const result = await advanceSearch(request);
+      const searchParams = getSearchParams(request);
+      const result = await advanceSearch(supabaseClient, searchParams);
 
       console.log('📅 Date Range Result:', {
         hasError: 'error' in result,

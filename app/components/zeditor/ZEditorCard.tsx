@@ -82,7 +82,7 @@ export const ZEditorCard = ({ document, addTag, selectedTags }: { document: Docu
           <span key={index} un-bg="blue-100" un-text="blue-800 sm" un-px="1.5" un-py="1" un-rounded="xl" un-cursor={selectedTags.includes(tag) ? 'not-allowed' : 'pointer'}
             onClick={() => addTag(tag)}
           >
-            {tag}
+            #{tag}
           </span>
         ))}
       </div>

@@ -12,9 +12,9 @@ import {
 } from "~/components/ui/pagination";
 import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
 import { DEFAULT_DOCUMENTS_PER_PAGE, DOCUMENTS_PER_PAGE_OPTIONS } from '~/lib/constant';
-import { NewSearchResult } from '~/service/document.search.server';
+import { AdvancedSearchResult } from '~/service/document.search.server';
 
-export const SearchPage = (arg: NewSearchResult) => {
+export const SearchPage = (arg: AdvancedSearchResult) => {
   const { searchParams: { query, tag, page, perPage, offset }, documents, totalPages, totalCount, tagStat } = arg;
   const navigate = useNavigate();
   const { state } = useNavigation();

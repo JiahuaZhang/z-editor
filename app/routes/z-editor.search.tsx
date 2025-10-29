@@ -1,9 +1,9 @@
 import { useNavigate, useNavigation } from "react-router";
 import { SearchPage } from '~/components/search/search.page';
-import { newSearch } from '~/service/document.search.server';
+import { searchAll } from '~/service/document.search.server';
 import type { Route } from './+types/z-editor.search';
 
-export const loader = async ({ request }: Route.LoaderArgs) => newSearch(request);
+export const loader = async ({ request }: Route.LoaderArgs) => searchAll(request);
 
 const Search = ({ loaderData }: Route.ComponentProps) => {
   const navigate = useNavigate();

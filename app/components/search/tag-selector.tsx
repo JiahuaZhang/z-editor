@@ -41,7 +41,7 @@ export const TagSelector = ({ tagStats, onTagSelect }: TagSelectorProps) => {
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => onTagSelect(stat.tag_name)}
                   >
-                    <span>{stat.tag_name}</span>
+                    <span>#{stat.tag_name}</span>
                     <span un-text="white" un-bg="slate-400" un-px="1" un-border="rounded" un-leading="none">{stat.document_count}</span>
                   </span>
                 ))}

@@ -35,6 +35,26 @@ export type ErrorResult = {
   status: number;
 };
 
+export type DateFilter = { at: string; }
+  | { before: string; }
+  | { after: string; }
+  | { from: string; to: string; }
+  | { around: string; days: number; }
+  | { lastDays: number; };
+
+export type SearchParams = {
+  query: string;
+  word: string[];
+  phrase: string[];
+  tag: string[];
+  created?: DateFilter;
+  updated?: DateFilter;
+  alert?: DateFilter;
+  page: number;
+  perPage: number;
+  offset: number;
+};
+
 export type AdvancedSearchResult = {
   documents: Document[];
   totalPages: number;
@@ -110,25 +130,6 @@ export async function getDocumentsWithPagination(request: Request): Promise<Sear
   };
 }
 
-export type DateFilter = { at: string; }
-  | { before: string; }
-  | { after: string; }
-  | { from: string; to: string; }
-  | { around: string; days: number; }
-  | { lastDays: number; };
-
-export type SearchParams = {
-  word: string[];
-  phrase: string[];
-  tag: string[];
-  created?: DateFilter;
-  updated?: DateFilter;
-  alert?: DateFilter;
-  page: number;
-  perPage: number;
-  offset: number;
-};
-
 const extractWordsAndPhrases = (query: string): { word: string[]; phrase: string[]; } => {
   const word: string[] = [];
   const phrase: string[] = [];
@@ -177,6 +178,7 @@ export const getSearchParams = (request: Request): SearchParams => {
   const alert = parseDateFilter(url, 'alert');
 
   return {
+    query,
     word,
     phrase,
     tag,
@@ -280,16 +282,13 @@ export async function newSearch(request: Request): Promise<NewSearchResult | Err
   const searchParams = getSearchParams(request);
   const { supabase } = createSupabaseServerClient(request);
 
-  const tagStatsResult = await getTagStatistics(supabase, searchParams.tag.length > 0 ? searchParams.tag : undefined);
-  const tagStats = tagStatsResult.data || [];
-
   const result = await advanceSearch(supabase, searchParams);
   if ('error' in result) {
     return result;
   }
 
-  return {
-    ...result,
-    tagStat: tagStats
-  };
+  const tagStatResult = await getTagStatistics(supabase, searchParams.tag.length > 0 ? searchParams.tag : undefined);
+  const tagStat = tagStatResult.data || [];
+
+  return { ...result, tagStat };
 }

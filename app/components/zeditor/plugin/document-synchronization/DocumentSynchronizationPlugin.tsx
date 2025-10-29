@@ -71,7 +71,7 @@ export const DocumentSynchronizationPlugin = () => {
 
   const upsertDocument = useCallback(async () => {
     const content = editor.getEditorState().toJSON();
-    const tag = [...new Set(Object.values(hashTagMap))];
+    const tag = [...new Set(Object.values(hashTagMap).map(tag => tag.replace(/^#/, '')))];
     const alert = Object.values(timeNodeMap).filter(node => node.getAlert().length > 0).map(node => node.exportJSON());
     const document = {
       content,

@@ -17,6 +17,7 @@ export type Database = {
       editor_documents: {
         Row: {
           alert: Json[] | null
+          comment: Json[] | null
           content: Json
           created: string | null
           id: string
@@ -27,6 +28,7 @@ export type Database = {
         }
         Insert: {
           alert?: Json[] | null
+          comment?: Json[] | null
           content: Json
           created?: string | null
           id?: string
@@ -37,6 +39,7 @@ export type Database = {
         }
         Update: {
           alert?: Json[] | null
+          comment?: Json[] | null
           content?: Json
           created?: string | null
           id?: string
@@ -60,18 +63,18 @@ export type Database = {
         }[]
       }
       get_tag_statistics: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           document_count: number
           tag_name: string
         }[]
       }
-      pgroonga_command: {
-        Args:
-          | { arguments: string[]; groongacommand: string }
-          | { groongacommand: string }
-        Returns: string
-      }
+      pgroonga_command:
+        | {
+            Args: { arguments: string[]; groongacommand: string }
+            Returns: string
+          }
+        | { Args: { groongacommand: string }; Returns: string }
       pgroonga_command_escape_value: {
         Args: { value: string }
         Returns: string
@@ -87,151 +90,198 @@ export type Database = {
           weights?: number[]
         }
         Returns: Database["public"]["CompositeTypes"]["pgroonga_condition"]
+        SetofOptions: {
+          from: "*"
+          to: "pgroonga_condition"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       pgroonga_equal_query_text_array: {
         Args: { query: string; targets: string[] }
         Returns: boolean
       }
-      pgroonga_equal_query_text_array_condition: {
-        Args:
-          | {
+      pgroonga_equal_query_text_array_condition:
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_condition"]
               targets: string[]
             }
-          | {
+            Returns: boolean
+          }
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition"]
               targets: string[]
             }
-        Returns: boolean
-      }
+            Returns: boolean
+          }
       pgroonga_equal_query_varchar_array: {
         Args: { query: string; targets: string[] }
         Returns: boolean
       }
-      pgroonga_equal_query_varchar_array_condition: {
-        Args:
-          | {
+      pgroonga_equal_query_varchar_array_condition:
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_condition"]
               targets: string[]
             }
-          | {
+            Returns: boolean
+          }
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition"]
               targets: string[]
             }
-        Returns: boolean
-      }
+            Returns: boolean
+          }
       pgroonga_equal_text: {
         Args: { other: string; target: string }
         Returns: boolean
       }
-      pgroonga_equal_text_condition: {
-        Args:
-          | {
+      pgroonga_equal_text_condition:
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_condition"]
               target: string
             }
-          | {
+            Returns: boolean
+          }
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition"]
               target: string
             }
-        Returns: boolean
-      }
+            Returns: boolean
+          }
       pgroonga_equal_varchar: {
         Args: { other: string; target: string }
         Returns: boolean
       }
-      pgroonga_equal_varchar_condition: {
-        Args:
-          | {
+      pgroonga_equal_varchar_condition:
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_condition"]
               target: string
             }
-          | {
+            Returns: boolean
+          }
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition"]
               target: string
             }
-        Returns: boolean
-      }
-      pgroonga_escape: {
-        Args:
-          | { special_characters: string; value: string }
-          | { value: boolean }
-          | { value: number }
-          | { value: number }
-          | { value: number }
-          | { value: number }
-          | { value: number }
-          | { value: string }
-          | { value: string }
-          | { value: string }
-        Returns: string
-      }
-      pgroonga_flush: {
-        Args: { indexname: unknown }
-        Returns: boolean
-      }
-      pgroonga_handler: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      pgroonga_highlight_html: {
-        Args:
-          | { indexname: unknown; keywords: string[]; target: string }
-          | { indexname: unknown; keywords: string[]; targets: string[] }
-          | { keywords: string[]; target: string }
-          | { keywords: string[]; targets: string[] }
-        Returns: string[]
-      }
-      pgroonga_index_column_name: {
-        Args:
-          | { columnindex: number; indexname: unknown }
-          | { columnname: string; indexname: unknown }
-        Returns: string
-      }
-      pgroonga_is_writable: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      pgroonga_list_broken_indexes: {
-        Args: Record<PropertyKey, never>
-        Returns: string[]
-      }
-      pgroonga_list_lagged_indexes: {
-        Args: Record<PropertyKey, never>
-        Returns: string[]
-      }
-      pgroonga_match_positions_byte: {
-        Args:
-          | { indexname: unknown; keywords: string[]; target: string }
-          | { keywords: string[]; target: string }
-        Returns: number[]
-      }
-      pgroonga_match_positions_character: {
-        Args:
-          | { indexname: unknown; keywords: string[]; target: string }
-          | { keywords: string[]; target: string }
-        Returns: number[]
-      }
-      pgroonga_match_term: {
-        Args:
-          | { target: string[]; term: string }
-          | { target: string[]; term: string }
-          | { target: string; term: string }
-          | { target: string; term: string }
-        Returns: boolean
-      }
-      pgroonga_match_text_array_condition: {
-        Args:
-          | {
+            Returns: boolean
+          }
+      pgroonga_escape:
+        | {
+            Args: { value: string }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pgroonga_escape(value => bool), public.pgroonga_escape(value => int8), public.pgroonga_escape(value => int2), public.pgroonga_escape(value => int4), public.pgroonga_escape(value => text), public.pgroonga_escape(value => float4), public.pgroonga_escape(value => float8), public.pgroonga_escape(value => timestamp), public.pgroonga_escape(value => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+        | {
+            Args: { value: string }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pgroonga_escape(value => bool), public.pgroonga_escape(value => int8), public.pgroonga_escape(value => int2), public.pgroonga_escape(value => int4), public.pgroonga_escape(value => text), public.pgroonga_escape(value => float4), public.pgroonga_escape(value => float8), public.pgroonga_escape(value => timestamp), public.pgroonga_escape(value => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+        | {
+            Args: { special_characters: string; value: string }
+            Returns: string
+          }
+        | {
+            Args: { value: string }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pgroonga_escape(value => bool), public.pgroonga_escape(value => int8), public.pgroonga_escape(value => int2), public.pgroonga_escape(value => int4), public.pgroonga_escape(value => text), public.pgroonga_escape(value => float4), public.pgroonga_escape(value => float8), public.pgroonga_escape(value => timestamp), public.pgroonga_escape(value => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+        | {
+            Args: { value: number }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pgroonga_escape(value => bool), public.pgroonga_escape(value => int8), public.pgroonga_escape(value => int2), public.pgroonga_escape(value => int4), public.pgroonga_escape(value => text), public.pgroonga_escape(value => float4), public.pgroonga_escape(value => float8), public.pgroonga_escape(value => timestamp), public.pgroonga_escape(value => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+        | {
+            Args: { value: number }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pgroonga_escape(value => bool), public.pgroonga_escape(value => int8), public.pgroonga_escape(value => int2), public.pgroonga_escape(value => int4), public.pgroonga_escape(value => text), public.pgroonga_escape(value => float4), public.pgroonga_escape(value => float8), public.pgroonga_escape(value => timestamp), public.pgroonga_escape(value => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+        | {
+            Args: { value: number }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pgroonga_escape(value => bool), public.pgroonga_escape(value => int8), public.pgroonga_escape(value => int2), public.pgroonga_escape(value => int4), public.pgroonga_escape(value => text), public.pgroonga_escape(value => float4), public.pgroonga_escape(value => float8), public.pgroonga_escape(value => timestamp), public.pgroonga_escape(value => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+        | {
+            Args: { value: number }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pgroonga_escape(value => bool), public.pgroonga_escape(value => int8), public.pgroonga_escape(value => int2), public.pgroonga_escape(value => int4), public.pgroonga_escape(value => text), public.pgroonga_escape(value => float4), public.pgroonga_escape(value => float8), public.pgroonga_escape(value => timestamp), public.pgroonga_escape(value => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+        | {
+            Args: { value: number }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pgroonga_escape(value => bool), public.pgroonga_escape(value => int8), public.pgroonga_escape(value => int2), public.pgroonga_escape(value => int4), public.pgroonga_escape(value => text), public.pgroonga_escape(value => float4), public.pgroonga_escape(value => float8), public.pgroonga_escape(value => timestamp), public.pgroonga_escape(value => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+        | {
+            Args: { value: boolean }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pgroonga_escape(value => bool), public.pgroonga_escape(value => int8), public.pgroonga_escape(value => int2), public.pgroonga_escape(value => int4), public.pgroonga_escape(value => text), public.pgroonga_escape(value => float4), public.pgroonga_escape(value => float8), public.pgroonga_escape(value => timestamp), public.pgroonga_escape(value => timestamptz). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+      pgroonga_flush: { Args: { indexname: unknown }; Returns: boolean }
+      pgroonga_highlight_html:
+        | {
+            Args: { indexname: unknown; keywords: string[]; targets: string[] }
+            Returns: string[]
+          }
+        | { Args: { keywords: string[]; targets: string[] }; Returns: string[] }
+        | {
+            Args: { indexname: unknown; keywords: string[]; target: string }
+            Returns: string
+          }
+        | { Args: { keywords: string[]; target: string }; Returns: string }
+      pgroonga_index_column_name:
+        | { Args: { columnname: string; indexname: unknown }; Returns: string }
+        | { Args: { columnindex: number; indexname: unknown }; Returns: string }
+      pgroonga_is_writable: { Args: never; Returns: boolean }
+      pgroonga_list_broken_indexes: { Args: never; Returns: string[] }
+      pgroonga_list_lagged_indexes: { Args: never; Returns: string[] }
+      pgroonga_match_positions_byte:
+        | {
+            Args: { indexname: unknown; keywords: string[]; target: string }
+            Returns: number[]
+          }
+        | { Args: { keywords: string[]; target: string }; Returns: number[] }
+      pgroonga_match_positions_character:
+        | {
+            Args: { indexname: unknown; keywords: string[]; target: string }
+            Returns: number[]
+          }
+        | { Args: { keywords: string[]; target: string }; Returns: number[] }
+      pgroonga_match_term:
+        | { Args: { target: string[]; term: string }; Returns: boolean }
+        | { Args: { target: string; term: string }; Returns: boolean }
+        | { Args: { target: string[]; term: string }; Returns: boolean }
+        | { Args: { target: string; term: string }; Returns: boolean }
+      pgroonga_match_text_array_condition:
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_condition"]
               target: string[]
             }
-          | {
+            Returns: boolean
+          }
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition"]
               target: string[]
             }
-        Returns: boolean
-      }
+            Returns: boolean
+          }
       pgroonga_match_text_array_condition_with_scorers: {
         Args: {
           condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition_with_scorers"]
@@ -239,18 +289,21 @@ export type Database = {
         }
         Returns: boolean
       }
-      pgroonga_match_text_condition: {
-        Args:
-          | {
+      pgroonga_match_text_condition:
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_condition"]
               target: string
             }
-          | {
+            Returns: boolean
+          }
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition"]
               target: string
             }
-        Returns: boolean
-      }
+            Returns: boolean
+          }
       pgroonga_match_text_condition_with_scorers: {
         Args: {
           condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition_with_scorers"]
@@ -258,18 +311,21 @@ export type Database = {
         }
         Returns: boolean
       }
-      pgroonga_match_varchar_condition: {
-        Args:
-          | {
+      pgroonga_match_varchar_condition:
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_condition"]
               target: string
             }
-          | {
+            Returns: boolean
+          }
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition"]
               target: string
             }
-        Returns: boolean
-      }
+            Returns: boolean
+          }
       pgroonga_match_varchar_condition_with_scorers: {
         Args: {
           condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition_with_scorers"]
@@ -277,26 +333,25 @@ export type Database = {
         }
         Returns: boolean
       }
-      pgroonga_normalize: {
-        Args: { normalizername: string; target: string } | { target: string }
-        Returns: string
-      }
-      pgroonga_prefix_varchar_condition: {
-        Args:
-          | {
+      pgroonga_normalize:
+        | { Args: { normalizername: string; target: string }; Returns: string }
+        | { Args: { target: string }; Returns: string }
+      pgroonga_prefix_varchar_condition:
+        | {
+            Args: {
               conditoin: Database["public"]["CompositeTypes"]["pgroonga_condition"]
               target: string
             }
-          | {
+            Returns: boolean
+          }
+        | {
+            Args: {
               conditoin: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition"]
               target: string
             }
-        Returns: boolean
-      }
-      pgroonga_query_escape: {
-        Args: { query: string }
-        Returns: string
-      }
+            Returns: boolean
+          }
+      pgroonga_query_escape: { Args: { query: string }; Returns: string }
       pgroonga_query_expand: {
         Args: {
           query: string
@@ -310,18 +365,21 @@ export type Database = {
         Args: { index_name?: string; query: string }
         Returns: string[]
       }
-      pgroonga_query_text_array_condition: {
-        Args:
-          | {
+      pgroonga_query_text_array_condition:
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_condition"]
               targets: string[]
             }
-          | {
+            Returns: boolean
+          }
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition"]
               targets: string[]
             }
-        Returns: boolean
-      }
+            Returns: boolean
+          }
       pgroonga_query_text_array_condition_with_scorers: {
         Args: {
           condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition_with_scorers"]
@@ -329,18 +387,21 @@ export type Database = {
         }
         Returns: boolean
       }
-      pgroonga_query_text_condition: {
-        Args:
-          | {
+      pgroonga_query_text_condition:
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_condition"]
               target: string
             }
-          | {
+            Returns: boolean
+          }
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition"]
               target: string
             }
-        Returns: boolean
-      }
+            Returns: boolean
+          }
       pgroonga_query_text_condition_with_scorers: {
         Args: {
           condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition_with_scorers"]
@@ -348,18 +409,21 @@ export type Database = {
         }
         Returns: boolean
       }
-      pgroonga_query_varchar_condition: {
-        Args:
-          | {
+      pgroonga_query_varchar_condition:
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_condition"]
               target: string
             }
-          | {
+            Returns: boolean
+          }
+        | {
+            Args: {
               condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition"]
               target: string
             }
-        Returns: boolean
-      }
+            Returns: boolean
+          }
       pgroonga_query_varchar_condition_with_scorers: {
         Args: {
           condition: Database["public"]["CompositeTypes"]["pgroonga_full_text_search_condition_with_scorers"]
@@ -386,12 +450,9 @@ export type Database = {
         Args: { result: Json }
         Returns: Record<string, unknown>[]
       }
-      pgroonga_score: {
-        Args:
-          | { ctid: unknown; tableoid: unknown }
-          | { row: Record<string, unknown> }
-        Returns: number
-      }
+      pgroonga_score:
+        | { Args: { row: Record<string, unknown> }; Returns: number }
+        | { Args: { ctid: unknown; tableoid: unknown }; Returns: number }
       pgroonga_set_writable: {
         Args: { newwritable: boolean }
         Returns: boolean
@@ -400,32 +461,25 @@ export type Database = {
         Args: { keywords: string[]; target: string; width?: number }
         Returns: string[]
       }
-      pgroonga_table_name: {
-        Args: { indexname: unknown }
-        Returns: string
-      }
+      pgroonga_table_name: { Args: { indexname: unknown }; Returns: string }
       pgroonga_tokenize: {
         Args: { options: string[]; target: string }
         Returns: Json[]
       }
-      pgroonga_vacuum: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      pgroonga_wal_apply: {
-        Args: Record<PropertyKey, never> | { indexname: unknown }
-        Returns: number
-      }
-      pgroonga_wal_set_applied_position: {
-        Args:
-          | Record<PropertyKey, never>
-          | { block: number; indexname: unknown; offset: number }
-          | { block: number; offset: number }
-          | { indexname: unknown }
-        Returns: boolean
-      }
+      pgroonga_vacuum: { Args: never; Returns: boolean }
+      pgroonga_wal_apply:
+        | { Args: { indexname: unknown }; Returns: number }
+        | { Args: never; Returns: number }
+      pgroonga_wal_set_applied_position:
+        | { Args: { indexname: unknown }; Returns: boolean }
+        | {
+            Args: { block: number; indexname: unknown; offset: number }
+            Returns: boolean
+          }
+        | { Args: never; Returns: boolean }
+        | { Args: { block: number; offset: number }; Returns: boolean }
       pgroonga_wal_status: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           current_block: number
           current_offset: number
@@ -437,10 +491,9 @@ export type Database = {
           oid: unknown
         }[]
       }
-      pgroonga_wal_truncate: {
-        Args: Record<PropertyKey, never> | { indexname: unknown }
-        Returns: number
-      }
+      pgroonga_wal_truncate:
+        | { Args: { indexname: unknown }; Returns: number }
+        | { Args: never; Returns: number }
       search_document_content: {
         Args: { phrase_array?: string[]; word_array?: string[] }
         Returns: string[]
@@ -470,6 +523,7 @@ export type Database = {
         }
         Returns: {
           alert: Json[] | null
+          comment: Json[] | null
           content: Json
           created: string | null
           id: string
@@ -478,11 +532,18 @@ export type Database = {
           updated: string | null
           user_id: string
         }[]
+        SetofOptions: {
+          from: "*"
+          to: "editor_documents"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       search_documents_combined: {
         Args: { phrases?: string[]; tags?: string[]; words?: string[] }
         Returns: {
           alert: Json[] | null
+          comment: Json[] | null
           content: Json
           created: string | null
           id: string
@@ -491,6 +552,12 @@ export type Database = {
           updated: string | null
           user_id: string
         }[]
+        SetofOptions: {
+          from: "*"
+          to: "editor_documents"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
     }
     Enums: {

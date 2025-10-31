@@ -13,6 +13,7 @@ import {
 import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
 import { DEFAULT_DOCUMENTS_PER_PAGE, DOCUMENTS_PER_PAGE_OPTIONS } from '~/lib/constant';
 import { AdvancedSearchResult } from '~/service/document.search.server';
+import { ExtraDateFilter } from '../filter/date-filter-section';
 
 export const SearchPage = (arg: AdvancedSearchResult) => {
   const { searchParams: { query, tag, page, perPage, offset }, documents, totalPages, totalCount, tagStat } = arg;
@@ -33,7 +34,7 @@ export const SearchPage = (arg: AdvancedSearchResult) => {
       query.push(`query=${encodeURIComponent(searchValue)}`);
     }
 
-    if (tags) {
+    if (tags.length) {
       query.push(`tag=${tags.join(',')}`);
     }
 
@@ -65,7 +66,7 @@ export const SearchPage = (arg: AdvancedSearchResult) => {
 
       <header>
         <div un-flex='~' un-px='2' un-items='center' >
-          <div un-flex="~ wrap" un-gap="2" un-mb="2" un-mx="2" un-items="center">
+          <div un-flex="~ wrap" un-gap="2" un-mx="2" un-items="center">
             {tags.length > 0 && (
               <>
                 {tags.map(tag => (
@@ -88,7 +89,7 @@ export const SearchPage = (arg: AdvancedSearchResult) => {
               setNeedUpdate(true);
             }} />
           </div>
-          <Form un-shadow="g" un-m='2' un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'
+          <Form un-shadow="g" un-mx='auto' un-grid='~' un-grid-flow='col' un-justify='center' un-gap='2'
             onSubmit={event => {
               event.preventDefault();
               setNeedUpdate(true);
@@ -132,6 +133,8 @@ export const SearchPage = (arg: AdvancedSearchResult) => {
             </select>
           </div>
         </div>
+
+        <ExtraDateFilter />
       </header>
 
       {

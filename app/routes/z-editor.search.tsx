@@ -1,4 +1,5 @@
 import { useNavigate, useNavigation } from "react-router";
+import { CreatedDateFilterProvider, UpdatedDateFilterProvider } from '~/components/filter/date-filter-context';
 import { SearchPage } from '~/components/search/search.page';
 import { searchAll } from '~/service/document.search.server';
 import type { Route } from './+types/z-editor.search';
@@ -31,7 +32,12 @@ const Search = ({ loaderData }: Route.ComponentProps) => {
     </div>;
   }
 
-  return <SearchPage {...loaderData} />;
+  return <CreatedDateFilterProvider>
+    <UpdatedDateFilterProvider>
+      <SearchPage {...loaderData} />;
+    </UpdatedDateFilterProvider>
+  </CreatedDateFilterProvider>;
+
 };
 
 export default Search;

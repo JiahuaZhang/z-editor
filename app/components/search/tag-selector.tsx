@@ -14,8 +14,9 @@ export const TagSelector = ({ tagStats, onTagSelect }: TagSelectorProps) => {
   if (!tagStats.length) return null;
 
   return (
-    <div un-relative="~">
-      <input
+    <div un-relative="~" >
+      <input un-px="3" un-py="1" un-text="sm" un-border="~ gray-300" un-rounded="full"
+        un-bg="white hover:gray-50" un-outline="none" un-ring="focus:2 focus:blue-500" un-border-focus="blue-500" un-w="32"
         type="text"
         placeholder="Add tag"
         value={searchTerm}
@@ -27,7 +28,6 @@ export const TagSelector = ({ tagStats, onTagSelect }: TagSelectorProps) => {
             onTagSelect(filteredTags[0].tag_name);
           }
         }}
-        un-px="3" un-py="1" un-text="sm" un-border="~ gray-300" un-rounded="full" un-bg="white hover:gray-50" un-outline="none" un-ring="focus:2 focus:blue-500" un-border-focus="blue-500" un-w="32"
       />
       {isOpen && (
         <div un-absolute="~ top-full left-0" un-mt="1" un-w="120" un-bg="white" un-border="~ gray-200" un-rounded="lg" un-shadow="lg" un-z="50">

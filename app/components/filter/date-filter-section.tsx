@@ -67,12 +67,21 @@ export const DateFilterSection = ({ type, useContext }: DateFilterSectionProps) 
     </div>);
 };
 
-export const ExtraDateFilter = (props: any) => {
-  return <div un-my='2' un-space='y-2' {...props} >
-    <h1>Filter Document by date</h1>
-    <div un-flex='~ gap-2'>
-      <DateFilterSection type="created" useContext={useCreatedDateFilter} />
-      <DateFilterSection type="updated" useContext={useUpdatedDateFilter} />
+export const ExtraDateFilter = ({ onApply, ...rest }: { onApply: () => void; }) => {
+  return <div un-flex='~ justify-end' {...rest} >
+    <div un-border='rounded 2 solid blue-200' un-w='fit' un-p='2' un-grid='~ justify-end gap-2' >
+      <h1 un-text='right' >Filter Document by date</h1>
+      <div un-flex='~ gap-2'>
+        <DateFilterSection type="created" useContext={useCreatedDateFilter} />
+        <DateFilterSection type="updated" useContext={useUpdatedDateFilter} />
+      </div>
+      <button un-bg='blue-400 hover:white' un-text='white hover:blue-400 sm' un-p='1' un-px='2' un-border='rounded solid blue-400 2'
+        un-cursor='pointer' un-shadow='sm' un-ml='auto'
+        type="submit"
+        onClick={onApply}
+      >
+        Apply
+      </button>
     </div>
   </div>;
 };

@@ -13,7 +13,26 @@ import {
 import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
 import { DEFAULT_DOCUMENTS_PER_PAGE, DOCUMENTS_PER_PAGE_OPTIONS } from '~/lib/constant';
 import { AdvancedSearchResult } from '~/service/document.search.server';
+import { DateFilterState, useCreatedDateFilter, useUpdatedDateFilter } from '../filter/date-filter-context';
 import { ExtraDateFilter } from '../filter/date-filter-section';
+
+export const dateFilterToQuery = ({ enabled, mode, date, rangeSelection }: DateFilterState, field: string) => {
+  if (!enabled) return '';
+
+  if (mode === 'before' && date) {
+    return `${field}_before=${date.toISOString()}`;
+  } else if (mode === 'after' && date) {
+    return `${field}_after=${date.toISOString()}`;
+  } else {
+    if (rangeSelection?.from === rangeSelection?.to) {
+      return `${field}=${rangeSelection?.from?.toISOString()}`;
+    } else if (rangeSelection?.from && rangeSelection?.to) {
+      return `${field}_from=${rangeSelection?.from?.toISOString()}&${field}_to=${rangeSelection?.to?.toISOString()}`;
+    }
+  }
+
+  return '';
+};
 
 export const SearchPage = (arg: AdvancedSearchResult) => {
   const { searchParams: { query, tag, page, perPage, offset }, documents, totalPages, totalCount, tagStat } = arg;
@@ -25,6 +44,8 @@ export const SearchPage = (arg: AdvancedSearchResult) => {
   const [currentPerPage, setCurrentPerPage] = useState(perPage);
   const [hasExtraConfig, setHasExtraConfig] = useState(false);
   const [needUpdate, setNeedUpdate] = useState(false);
+  const createdDateFilter = useCreatedDateFilter();
+  const updatedDateFilter = useUpdatedDateFilter();
 
   const update = () => {
     let url = '/z-editor/search';
@@ -46,6 +67,16 @@ export const SearchPage = (arg: AdvancedSearchResult) => {
       query.push(`perPage=${currentPerPage}`);
     }
 
+    const updatedDateFilterQuery = dateFilterToQuery(updatedDateFilter, 'created');
+    if (updatedDateFilterQuery) {
+      query.push(updatedDateFilterQuery);
+    }
+
+    const createdDateFilterQuery = dateFilterToQuery(createdDateFilter, 'updated');
+    if (createdDateFilterQuery) {
+      query.push(createdDateFilterQuery);
+    }
+
     if (query.length) {
       navigate(`${url}?${query.join('&')}`);
     } else {
@@ -61,7 +92,7 @@ export const SearchPage = (arg: AdvancedSearchResult) => {
   }, [needUpdate]);
 
   return (
-    <div>
+    <div un-space='y-2' >
       <title>Search</title>
 
       <header>
@@ -134,7 +165,8 @@ export const SearchPage = (arg: AdvancedSearchResult) => {
           </div>
         </div>
 
-        <ExtraDateFilter />
+        {hasExtraConfig && <ExtraDateFilter onApply={() => setNeedUpdate(true)} />}
+
       </header>
 
       {
@@ -169,7 +201,7 @@ export const SearchPage = (arg: AdvancedSearchResult) => {
       }
 
       {totalPages > 1 && (
-        <div un-mt="8" un-mb="4">
+        <div>
           <Pagination>
             <PaginationContent>
               <PaginationItem>

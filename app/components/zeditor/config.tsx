@@ -30,12 +30,12 @@ export const initialConfig: InitialConfigType = {
   namespace: 'z-editor',
   theme: {
     heading: {
-      h1: 'text-4xl font-bold text-blue-950 ',
-      h2: 'text-3xl font-bold text-blue-900 ',
-      h3: 'text-2xl font-bold text-blue-800 ',
-      h4: 'text-xl font-bold text-blue-700 ',
-      h5: 'text-lg font-bold text-blue-600 ',
-      h6: 'text-base font-bold font-blue-500 '
+      h1: 'text-4xl font-bold text-slate-950 ',
+      h2: 'text-3xl font-bold text-slate-900 ',
+      h3: 'text-2xl font-bold text-slate-800 ',
+      h4: 'text-xl font-bold text-slate-700 ',
+      h5: 'text-lg font-bold text-slate-600 ',
+      h6: 'text-base font-bold font-slate-500 '
     },
     text: {
       bold: '',

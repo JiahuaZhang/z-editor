@@ -1,12 +1,3 @@
-search, filter by time
-before, after specific date
-range: from, to date range
-days: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, could be Monday or Tuesday or Saturday, Weekend, Weekday
-
-UI
-header 1 ~ 6, css style 都太丑
-中文字体太丑
-
 reminder:
 - auto expand today's alert only?
 - should have animations that's about to trigger?

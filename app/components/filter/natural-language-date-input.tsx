@@ -18,6 +18,12 @@ export const NaturalLanguageDateInput = ({ onDateChange, date }: NaturalLanguage
     onDateChange(parseDate(value));
   }, [value]);
 
+  useEffect(() => {
+    if (value) return;
+
+    setValue(date?.toDateString() || '');
+  }, [value, date]);
+
   return (
     <div un-grid='~' un-gap='1' >
       <div un-flex="~ wrap" un-gap='1' un-mb="2">

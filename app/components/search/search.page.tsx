@@ -12,11 +12,11 @@ import {
 } from "~/components/ui/pagination";
 import { ZEditorCard } from '~/components/zeditor/ZEditorCard';
 import { DEFAULT_DOCUMENTS_PER_PAGE, DOCUMENTS_PER_PAGE_OPTIONS } from '~/lib/constant';
-import { AdvancedSearchResult } from '~/service/document.search.server';
+import { AdvancedSearchResult, DateFilter } from '~/service/document.search.server';
 import { DateFilterState, useCreatedDateFilter, useUpdatedDateFilter } from '../filter/date-filter-context';
 import { ExtraDateFilter } from '../filter/date-filter-section';
 
-export const dateFilterToQuery = ({ enabled, mode, date, rangeSelection }: DateFilterState, field: string) => {
+const dateFilterToQuery = ({ enabled, mode, date, rangeSelection }: DateFilterState, field: string) => {
   if (!enabled) return '';
 
   if (mode === 'before' && date) {
@@ -34,8 +34,26 @@ export const dateFilterToQuery = ({ enabled, mode, date, rangeSelection }: DateF
   return '';
 };
 
+const updateDateFilterFromParams = (params: DateFilter, dateFilterState: DateFilterState) => {
+  dateFilterState.setEnabled(true);
+
+  if ('at' in params) {
+    dateFilterState.setMode('range');
+    dateFilterState.setRangeSelection({ from: new Date(params.at), to: new Date(params.at) });
+  } else if ('before' in params) {
+    dateFilterState.setMode('before');
+    dateFilterState.setDate(new Date(params.before));
+  } else if ('after' in params) {
+    dateFilterState.setMode('after');
+    dateFilterState.setDate(new Date(params.after));
+  } else if ('from' in params && params.to) {
+    dateFilterState.setMode('range');
+    dateFilterState.setRangeSelection({ from: new Date(params.from), to: new Date(params.to) });
+  }
+};
+
 export const SearchPage = (arg: AdvancedSearchResult) => {
-  const { searchParams: { query, tag, page, perPage, offset }, documents, totalPages, totalCount, tagStat } = arg;
+  const { searchParams: { query, tag, page, perPage, created, updated, offset }, documents, totalPages, totalCount, tagStat } = arg;
   const navigate = useNavigate();
   const { state } = useNavigation();
   const [searchValue, setSearchValue] = useState(query);
@@ -67,12 +85,12 @@ export const SearchPage = (arg: AdvancedSearchResult) => {
       query.push(`perPage=${currentPerPage}`);
     }
 
-    const updatedDateFilterQuery = dateFilterToQuery(updatedDateFilter, 'created');
+    const updatedDateFilterQuery = dateFilterToQuery(updatedDateFilter, 'updated');
     if (updatedDateFilterQuery) {
       query.push(updatedDateFilterQuery);
     }
 
-    const createdDateFilterQuery = dateFilterToQuery(createdDateFilter, 'updated');
+    const createdDateFilterQuery = dateFilterToQuery(createdDateFilter, 'created');
     if (createdDateFilterQuery) {
       query.push(createdDateFilterQuery);
     }
@@ -90,6 +108,18 @@ export const SearchPage = (arg: AdvancedSearchResult) => {
     update();
     setNeedUpdate(false);
   }, [needUpdate]);
+
+  useEffect(() => {
+    if (!created) return;
+
+    updateDateFilterFromParams(created, createdDateFilter);
+  }, [created]);
+
+  useEffect(() => {
+    if (!updated) return;
+
+    updateDateFilterFromParams(updated, updatedDateFilter);
+  }, [updated]);
 
   return (
     <div un-space='y-2' >

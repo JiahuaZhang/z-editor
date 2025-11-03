@@ -9,9 +9,11 @@ multiple tabs -> what if I change one content, another tab? Need to sync? or jus
 
 future todo:
 
-make sorted by updated / created configurable
-
 alert smart sort:
+future alerts
+vs
+past alerts
+
 base on today, prioritize days after today within a week.
 then prioritize days before a week
 ? make it configurable? searchabe?
@@ -32,6 +34,7 @@ markdown convert
 https://github.com/facebook/lexical/blob/main/packages/lexical-playground/src/plugins/ActionsPlugin/index.tsx#L170
 
 time component
+date field only, and should still able to set up alert
 after preseee enter / space to toggle, should smartly switch focus
 
 multiple social account?

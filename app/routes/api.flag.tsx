@@ -1,0 +1,1 @@
+export const loader = async () => process.env.NODE_ENV;

@@ -1,1 +1,1 @@
-export const loader = async () => process.env.NODE_ENV;
+export const loader = async () => process.env.NODE_ENV as "development" | "production";

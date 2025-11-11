@@ -1,3 +1,4 @@
+import futureData from '~/data/future.json';
 import { authenticate } from '~/service/session.server';
 import type { Route } from './+types/api.twelve-data.$';
 
@@ -5,6 +6,10 @@ const TWELVE_DATA_API_KEY = import.meta.env.VITE_TWELVE_DATA_API_KEY || '';
 const BASE_URL = 'https://api.twelvedata.com';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  if (process.env.NODE_ENV === 'development') {
+    return futureData;
+  }
+
   if (process.env.NODE_ENV !== 'development') {
     await authenticate(request);
   }

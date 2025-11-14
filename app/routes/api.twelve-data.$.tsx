@@ -6,15 +6,18 @@ const TWELVE_DATA_API_KEY = import.meta.env.VITE_TWELVE_DATA_API_KEY || '';
 const BASE_URL = 'https://api.twelvedata.com';
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const url = new URL(request.url);
+
   if (process.env.NODE_ENV === 'development') {
-    return futureData;
+    if (url.searchParams.get('symbol') === 'SPY') {
+      return futureData;
+    }
   }
 
   if (process.env.NODE_ENV !== 'development') {
     await authenticate(request);
   }
 
-  const url = new URL(request.url);
   const endpoint = params['*'];
   const apiUrl = new URL(`${BASE_URL}/${endpoint}`);
   url.searchParams.forEach((value, key) => {

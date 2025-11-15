@@ -9,6 +9,7 @@ type StockSymbol = {
 
 const POPULAR_STOCKS: StockSymbol[] = [
   { symbol: 'SPY', name: 'S&P 500 ETF' },
+  { symbol: 'QQQ', name: 'Nasdaq 100 ETF' },
   { symbol: 'NVDA', name: 'NVIDIA Corporation' },
   { symbol: 'AAPL', name: 'Apple Inc.' },
   { symbol: 'MSFT', name: 'Microsoft Corporation' },

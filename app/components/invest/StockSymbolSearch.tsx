@@ -8,6 +8,8 @@ type StockSymbol = {
 };
 
 const POPULAR_STOCKS: StockSymbol[] = [
+  { symbol: '^SPX', name: 'S&P 500 INDEX' },
+  { symbol: '^NDX', name: 'NASDAQ-100' },
   { symbol: 'SPY', name: 'S&P 500 ETF' },
   { symbol: 'QQQ', name: 'Nasdaq 100 ETF' },
   { symbol: 'NVDA', name: 'NVIDIA Corporation' },
@@ -40,7 +42,7 @@ type StockSymbolSearchProps = {
 // default list, after typing, try to hit api as well? update new dropdown. (should cache api results -- backend)
 export function StockSymbolSearch({ onSubmit }: StockSymbolSearchProps) {
   const [searchParams] = useSearchParams();
-  const [inputValue, setInputValue] = useState('SPY');
+  const [inputValue, setInputValue] = useState('^SPX');
   const [isOpen, setIsOpen] = useState(false);
   const [filteredStocks, setFilteredStocks] = useState<StockSymbol[]>(POPULAR_STOCKS);
   const containerRef = useRef<HTMLDivElement>(null);

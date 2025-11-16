@@ -40,8 +40,7 @@ export const useReport = () => {
 
   return useCallback(
     (content: string) => {
-      // eslint-disable-next-line no-console
-      console.log(content);
+      console.debug(content);
       const element = getElement();
       if (timer.current !== null) {
         clearTimeout(timer.current);

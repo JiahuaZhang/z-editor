@@ -24,7 +24,7 @@ export async function getTagStatistics(supabase: SupabaseClient<any, "public", a
 
     if (error) {
       if (error.message?.toLowerCase().includes('function')) {
-        console.log('Database function not found, falling back to client-side aggregation');
+        console.error('Database function not found, falling back to client-side aggregation');
         return { data: null, error: 'function_not_found' };
       }
       console.error('Error fetching tag statistics:', error);

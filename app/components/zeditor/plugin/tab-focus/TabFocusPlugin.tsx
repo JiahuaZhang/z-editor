@@ -13,7 +13,7 @@ const registerKeyTimeStampTracker = () => {
     (event: KeyboardEvent) => {
       // Tab
       if (event.key === 'Tab') {
-        console.log('update timestamp', event.timeStamp);
+        console.debug('update timestamp', event.timeStamp);
 
         lastTabKeyDownTimestamp = event.timeStamp;
       }

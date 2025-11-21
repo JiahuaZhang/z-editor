@@ -141,7 +141,7 @@ const tooltip = <Tooltip
 />;
 
 export const YahooCandleChart = ({ data }: Props) => {
-  const chartData = toChartData(data);
+  const chartData = toChartData(data).slice(200);
 
   if (chartData.length === 0) {
     return (
@@ -154,7 +154,7 @@ export const YahooCandleChart = ({ data }: Props) => {
   const minPrice = Math.min(...chartData.map((d) => d.low));
   const maxPrice = Math.max(...chartData.map((d) => d.high));
   const padding = (maxPrice - minPrice) * 0.05;
-  const priceRange = maxPrice - minPrice + padding * 2;
+  const domainMin = minPrice - padding;
   const maxVolume = Math.max(...chartData.map((d) => d.volume));
 
   const CustomCandlestick = (props: any) => {
@@ -165,13 +165,14 @@ export const YahooCandleChart = ({ data }: Props) => {
 
     const isGreen = close >= open;
     const color = isGreen ? '#16a34a' : '#dc2626';
+    const range = high - domainMin;
+    const ratio = range > 0 ? height / range : 0;
 
     const priceToY = (price: number) => {
-      const ratio = (maxPrice + padding - price) / priceRange;
-      return y + ratio * height;
+      return y + (high - price) * ratio;
     };
 
-    const yHigh = priceToY(high);
+    const yHigh = y;
     const yLow = priceToY(low);
     const yOpen = priceToY(open);
     const yClose = priceToY(close);

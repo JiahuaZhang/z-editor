@@ -3,6 +3,7 @@ import {
   Bar,
   CartesianGrid,
   ComposedChart,
+  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -18,9 +19,36 @@ type ChartData = {
   low: number;
   close: number;
   volume: number;
+  indicator?: {
+    sma?: Record<number, number | null>;
+  };
 };
 
 type Props = { data: Yahoo.ChartResponse; };
+
+export const addSMA = (data: ChartData[], period: number) => {
+  const sums = new Array(data.length).fill(null);
+  sums[0] = data[0].close;
+  for (let i = 1; i < period; i++) {
+    sums[i] = sums[i - 1] + data[i].close;
+  }
+  for (let i = period; i < data.length; i++) {
+    sums[i] = sums[i - 1] + data[i].close - data[i - period].close;
+  }
+
+  for (let i = period - 1; i < data.length; i++) {
+    const item = data[i];
+    if (!item.indicator) {
+      item.indicator = {};
+    }
+    if (!item.indicator.sma) {
+      item.indicator.sma = {};
+    }
+    item.indicator.sma[period] = sums[i] / period;
+  }
+
+  return data;
+};
 
 const toChartData = (data: Yahoo.ChartResponse): ChartData[] => {
   if (!data?.chart?.result?.[0]) {
@@ -36,7 +64,7 @@ const toChartData = (data: Yahoo.ChartResponse): ChartData[] => {
 
   const quote = indicators.quote[0];
 
-  return timestamp.map((ts, index) => ({
+  const chartData = timestamp.map((ts, index) => ({
     datetime: dayjs.unix(ts).format('YYYY-MM-DD HH:mm:ss'),
     displayTime: dayjs.unix(ts).format('M/D'),
     open: quote.open[index],
@@ -45,6 +73,11 @@ const toChartData = (data: Yahoo.ChartResponse): ChartData[] => {
     close: quote.close[index],
     volume: quote.volume[index],
   }));
+
+  addSMA(chartData, 50);
+  addSMA(chartData, 200);
+
+  return chartData;
 };
 
 const CustomVolumeBar = (props: any) => {
@@ -84,6 +117,18 @@ const tooltip = <Tooltip
               <span un-text="sm">Close:</span>
               <span un-text="sm">{data.close.toFixed(3)}</span>
             </div>
+            {data.indicator?.sma?.[50] && (
+              <div un-flex="~" un-justify="between" un-text="blue-600">
+                <span un-text="sm">SMA50:</span>
+                <span un-text="sm">{data.indicator.sma[50].toFixed(3)}</span>
+              </div>
+            )}
+            {data.indicator?.sma?.[200] && (
+              <div un-flex="~" un-justify="between" un-text="purple-600">
+                <span un-text="sm">SMA200:</span>
+                <span un-text="sm">{data.indicator.sma[200].toFixed(3)}</span>
+              </div>
+            )}
           </div>
           <p un-text="sm" un-mt="1">
             Vol: {data.volume.toLocaleString()}
@@ -164,6 +209,8 @@ export const YahooCandleChart = ({ data }: Props) => {
           />
           {tooltip}
           <Bar dataKey="high" shape={<CustomCandlestick />} />
+          <Line type="monotone" dataKey="indicator.sma.50" stroke="#2563eb" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+          <Line type="monotone" dataKey="indicator.sma.200" stroke="#9333ea" dot={false} strokeWidth={1.5} isAnimationActive={false} />
         </ComposedChart>
       </ResponsiveContainer>
       <ResponsiveContainer width="100%" height="25%">

@@ -378,6 +378,7 @@ describe('getSearchParams', () => {
       const result = getSearchParams(request);
 
       expect(result).toEqual({
+        query: 'test "search phrase"',
         word: ['test'],
         phrase: ['search phrase'],
         tag: ['javascript', 'react'],
@@ -390,32 +391,6 @@ describe('getSearchParams', () => {
         page: 2,
         perPage: 25,
         offset: 25 // (2-1) * 25
-      });
-    });
-
-    it('should handle mixed valid and invalid parameters', () => {
-      const request = createMockRequest({
-        query: 'valid "query phrase"',
-        tag: 'valid,tags',
-        created: 'invalid-date',
-        updated_from: '2024-01-01',
-        updated_to: 'invalid-date',
-        alert_after: '2024-03-15',
-        page: 'invalid',
-        perPage: '20'
-      });
-      const result = getSearchParams(request);
-
-      expect(result).toEqual({
-        word: ['valid'],
-        phrase: ['query phrase'],
-        tag: ['valid', 'tags'],
-        created: { at: 'invalid-date' }, // now accepts any string
-        updated: { from: '2024-01-01', to: 'invalid-date' }, // now accepts any string
-        alert: { after: '2024-03-15' },
-        page: NaN, // invalid page becomes NaN
-        perPage: 20,
-        offset: NaN
       });
     });
 

@@ -21,6 +21,8 @@ type ChartData = {
   volume: number;
   indicator?: {
     sma?: Record<number, number | null>;
+    atr?: number;
+    natr?: number;
   };
 };
 
@@ -45,6 +47,42 @@ export const addSMA = (data: ChartData[], period: number) => {
       item.indicator.sma = {};
     }
     item.indicator.sma[period] = sums[i] / period;
+  }
+
+  return data;
+};
+
+export const addVolatility = (data: ChartData[], range = 14) => {
+  const trueRanges = new Array(data.length).fill(0);
+
+  trueRanges[0] = data[0].high - data[0].low;
+  for (let i = 1; i < data.length; i++) {
+    const current = data[i];
+    const prev = data[i - 1];
+
+    const hl = current.high - current.low;
+    const hpc = Math.abs(current.high - prev.close);
+    const lpc = Math.abs(current.low - prev.close);
+    trueRanges[i] = Math.max(hl, hpc, lpc);
+  }
+
+  let currentSum = 0;
+  for (let i = 0; i < range - 1; i++) {
+    currentSum += trueRanges[i];
+  }
+
+  for (let i = range - 1; i < data.length; i++) {
+    currentSum += trueRanges[i];
+
+    const atr = currentSum / range;
+    const item = data[i];
+    if (!item.indicator) {
+      item.indicator = {};
+    }
+    item.indicator.atr = atr;
+    item.indicator.natr = (atr / item.close) * 100;
+
+    currentSum -= trueRanges[i - range + 1];
   }
 
   return data;
@@ -76,6 +114,7 @@ const toChartData = (data: Yahoo.ChartResponse): ChartData[] => {
 
   addSMA(chartData, 50);
   addSMA(chartData, 200);
+  addVolatility(chartData);
 
   return chartData;
 };
@@ -92,6 +131,7 @@ const CustomVolumeBar = (props: any) => {
 };
 
 const tooltip = <Tooltip
+  wrapperStyle={{ zIndex: 1 }}
   content={({ active, payload }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
@@ -127,6 +167,12 @@ const tooltip = <Tooltip
               <div un-flex="~" un-justify="between" un-text="purple-600">
                 <span un-text="sm">SMA200:</span>
                 <span un-text="sm">{data.indicator.sma[200].toFixed(3)}</span>
+              </div>
+            )}
+            {data.indicator?.natr && (
+              <div un-flex="~" un-justify="between" un-text="orange-600">
+                <span un-text="sm">NATR:</span>
+                <span un-text="sm">{data.indicator.natr.toFixed(3)}</span>
               </div>
             )}
           </div>
@@ -198,10 +244,9 @@ export const YahooCandleChart = ({ data }: Props) => {
 
   return (
     <div un-h="140">
-      <ResponsiveContainer width="100%" height="75%">
+      <ResponsiveContainer width="100%" height="60%">
         <ComposedChart data={chartData}>
           <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
-          <XAxis dataKey="displayTime" stroke="#666" fontSize={12} hide />
           <YAxis stroke="#666"
             fontSize={14}
             fontWeight={600}
@@ -214,7 +259,19 @@ export const YahooCandleChart = ({ data }: Props) => {
           <Line type="monotone" dataKey="indicator.sma.200" stroke="#9333ea" dot={false} strokeWidth={1.5} isAnimationActive={false} />
         </ComposedChart>
       </ResponsiveContainer>
-      <ResponsiveContainer width="100%" height="25%">
+      <ResponsiveContainer width="100%" height='20%'>
+        <ComposedChart data={chartData}>
+          <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
+          <YAxis stroke="#666"
+            fontSize={12}
+            domain={['auto', 'auto']}
+            tickFormatter={(value) => `${value.toFixed(2)}%`}
+          />
+          {tooltip}
+          <Line type="monotone" dataKey="indicator.natr" stroke="#ea580c" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+        </ComposedChart>
+      </ResponsiveContainer>
+      <ResponsiveContainer width="100%" height="20%">
         <ComposedChart data={chartData}>
           <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
           <XAxis dataKey="displayTime" stroke="#666" fontSize={12} />
@@ -227,8 +284,8 @@ export const YahooCandleChart = ({ data }: Props) => {
               return value.toString();
             }}
           />
-          <Bar dataKey="volume" shape={<CustomVolumeBar />} />
           {tooltip}
+          <Bar dataKey="volume" shape={<CustomVolumeBar />} />
         </ComposedChart>
       </ResponsiveContainer>
     </div>

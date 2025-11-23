@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { useState } from 'react';
 import {
   Bar,
   CartesianGrid,
@@ -187,6 +188,7 @@ const tooltip = <Tooltip
 />;
 
 export const YahooCandleChart = ({ data }: Props) => {
+  const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'volume' | ''>('');
   const chartData = toChartData(data).slice(200);
 
   if (chartData.length === 0) {
@@ -245,36 +247,58 @@ export const YahooCandleChart = ({ data }: Props) => {
   return (
     <div un-h="140">
       <ResponsiveContainer width="100%" height="60%">
-        <ComposedChart data={chartData}>
+        <ComposedChart
+          data={chartData}
+          syncId="yahoo-chart"
+          onMouseMove={() => setHoveredChart('price')}
+          onMouseLeave={() => setHoveredChart('')}
+        >
           <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
+          <XAxis dataKey="datetime" hide />
           <YAxis stroke="#666"
             fontSize={14}
             fontWeight={600}
             domain={[minPrice - padding, maxPrice + padding]}
             tickFormatter={(value) => `${value.toFixed(1)}`}
           />
-          {tooltip}
+          {hoveredChart === 'price' && tooltip}
           <Bar dataKey="high" shape={<CustomCandlestick />} />
           <Line type="monotone" dataKey="indicator.sma.50" stroke="#2563eb" dot={false} strokeWidth={1.5} isAnimationActive={false} />
           <Line type="monotone" dataKey="indicator.sma.200" stroke="#9333ea" dot={false} strokeWidth={1.5} isAnimationActive={false} />
         </ComposedChart>
       </ResponsiveContainer>
       <ResponsiveContainer width="100%" height='20%'>
-        <ComposedChart data={chartData}>
+        <ComposedChart
+          data={chartData}
+          syncId="yahoo-chart"
+          onMouseMove={() => setHoveredChart('natr')}
+          onMouseLeave={() => setHoveredChart('')}
+        >
           <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
+          <XAxis dataKey="datetime" hide />
           <YAxis stroke="#666"
             fontSize={12}
             domain={['auto', 'auto']}
             tickFormatter={(value) => `${value.toFixed(2)}%`}
           />
-          {tooltip}
+          {hoveredChart === 'natr' && tooltip}
           <Line type="monotone" dataKey="indicator.natr" stroke="#ea580c" dot={false} strokeWidth={1.5} isAnimationActive={false} />
         </ComposedChart>
       </ResponsiveContainer>
       <ResponsiveContainer width="100%" height="20%">
-        <ComposedChart data={chartData}>
+        <ComposedChart
+          data={chartData}
+          syncId="yahoo-chart"
+          onMouseMove={() => setHoveredChart('volume')}
+          onMouseLeave={() => setHoveredChart('')}
+        >
           <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
-          <XAxis dataKey="displayTime" stroke="#666" fontSize={12} />
+          <XAxis
+            dataKey="datetime"
+            stroke="#666"
+            fontSize={12}
+            tickFormatter={(value) => dayjs(value).format('M/D')}
+          />
           <YAxis stroke="#666"
             fontSize={12}
             domain={[0, maxVolume]}
@@ -284,7 +308,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               return value.toString();
             }}
           />
-          {tooltip}
+          {hoveredChart === 'volume' && tooltip}
           <Bar dataKey="volume" shape={<CustomVolumeBar />} />
         </ComposedChart>
       </ResponsiveContainer>

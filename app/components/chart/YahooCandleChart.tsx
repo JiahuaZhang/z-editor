@@ -24,6 +24,13 @@ type ChartData = {
     sma?: Record<number, number | null>;
     atr?: number;
     natr?: number;
+    bb?: {
+      upper: number;
+      middle: number;
+      lower: number;
+      width: number;
+      squeeze: boolean;
+    };
   };
 };
 
@@ -89,6 +96,68 @@ export const addVolatility = (data: ChartData[], range = 14) => {
   return data;
 };
 
+export const addBollinger = (data: ChartData[], period = 20, stdDev = 2) => {
+  const closes = data.map(d => d.close);
+  const highs = data.map(d => d.high);
+  const lows = data.map(d => d.low);
+
+  // Calculate ATR for Keltner Channels (Standard Squeeze uses 20 period, 1.5 multiplier usually)
+  // We need TR first
+  const trs = new Array(data.length).fill(0);
+  trs[0] = highs[0] - lows[0];
+  for (let i = 1; i < data.length; i++) {
+    const hl = highs[i] - lows[i];
+    const hpc = Math.abs(highs[i] - closes[i - 1]);
+    const lpc = Math.abs(lows[i] - closes[i - 1]);
+    trs[i] = Math.max(hl, hpc, lpc);
+  }
+
+  // Calculate SMA of TR for ATR
+  // Simple SMA for ATR here to match standard KC calculation often used in Squeeze
+  const atrs = new Array(data.length).fill(0);
+  let trSum = 0;
+  for (let i = 0; i < period; i++) {
+    trSum += trs[i];
+  }
+  atrs[period - 1] = trSum / period;
+  for (let i = period; i < data.length; i++) {
+    trSum = trSum + trs[i] - trs[i - period];
+    atrs[i] = trSum / period;
+  }
+
+  for (let i = period - 1; i < data.length; i++) {
+    const slice = closes.slice(i - period + 1, i + 1);
+    const mean = slice.reduce((a, b) => a + b, 0) / period;
+
+    const squaredDiffs = slice.map(x => Math.pow(x - mean, 2));
+    const variance = squaredDiffs.reduce((a, b) => a + b, 0) / period;
+    const sd = Math.sqrt(variance);
+
+    const upper = mean + (sd * stdDev);
+    const lower = mean - (sd * stdDev);
+    const width = (upper - lower) / mean;
+
+    // Keltner Channels for Squeeze
+    // KC Middle is usually EMA, but SMA is also common. Let's use SMA(20) which is 'mean' here.
+    // KC Multiplier is usually 1.5
+    const kcUpper = mean + (1.5 * atrs[i]);
+    const kcLower = mean - (1.5 * atrs[i]);
+
+    // Squeeze is ON when BB is inside KC
+    const squeeze = upper < kcUpper && lower > kcLower;
+
+    if (!data[i].indicator) data[i].indicator = {};
+    data[i].indicator!.bb = {
+      upper,
+      middle: mean,
+      lower,
+      width: width * 100, // Percentage
+      squeeze
+    };
+  }
+  return data;
+};
+
 const toChartData = (data: Yahoo.ChartResponse): ChartData[] => {
   if (!data?.chart?.result?.[0]) {
     return [];
@@ -116,6 +185,7 @@ const toChartData = (data: Yahoo.ChartResponse): ChartData[] => {
   addSMA(chartData, 50);
   addSMA(chartData, 200);
   addVolatility(chartData);
+  addBollinger(chartData);
 
   return chartData;
 };
@@ -170,10 +240,31 @@ const tooltip = <Tooltip
                 <span un-text="sm">{data.indicator.sma[200].toFixed(3)}</span>
               </div>
             )}
+            {data.indicator?.bb && (
+              <>
+                <div un-flex="~" un-justify="between" un-text="teal-600">
+                  <span un-text="sm">BB Upper:</span>
+                  <span un-text="sm">{data.indicator.bb.upper.toFixed(3)}</span>
+                </div>
+                <div un-flex="~" un-justify="between" un-text="teal-600">
+                  <span un-text="sm">BB Lower:</span>
+                  <span un-text="sm">{data.indicator.bb.lower.toFixed(3)}</span>
+                </div>
+              </>
+            )}
             {data.indicator?.natr && (
               <div un-flex="~" un-justify="between" un-text="orange-600">
                 <span un-text="sm">NATR:</span>
                 <span un-text="sm">{data.indicator.natr.toFixed(3)}</span>
+              </div>
+            )}
+            {data.indicator?.bb && (
+              <div un-flex="~" un-justify="between" un-text="cyan-600">
+                <span un-text="sm">BBW:</span>
+                <span un-text="sm">
+                  {data.indicator.bb.width.toFixed(3)}
+                  {data.indicator.bb.squeeze && <span un-text="red-500" un-ml="1">(Squeeze)</span>}
+                </span>
               </div>
             )}
           </div>
@@ -187,8 +278,9 @@ const tooltip = <Tooltip
   }}
 />;
 
+// todo: rsi, vwap
 export const YahooCandleChart = ({ data }: Props) => {
-  const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'volume' | ''>('');
+  const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'bbw' | 'volume' | ''>('');
   const chartData = toChartData(data).slice(200);
 
   if (chartData.length === 0) {
@@ -246,7 +338,7 @@ export const YahooCandleChart = ({ data }: Props) => {
 
   return (
     <div un-h="140">
-      <ResponsiveContainer width="100%" height="60%">
+      <ResponsiveContainer width="100%" height="50%">
         <ComposedChart
           data={chartData}
           syncId="yahoo-chart"
@@ -265,9 +357,12 @@ export const YahooCandleChart = ({ data }: Props) => {
           <Bar dataKey="high" shape={<CustomCandlestick />} />
           <Line type="monotone" dataKey="indicator.sma.50" stroke="#2563eb" dot={false} strokeWidth={1.5} isAnimationActive={false} />
           <Line type="monotone" dataKey="indicator.sma.200" stroke="#9333ea" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+          <Line type="monotone" dataKey="indicator.bb.upper" stroke="#0d9488" strokeDasharray="3 3" dot={false} strokeWidth={1} isAnimationActive={false} />
+          <Line type="monotone" dataKey="indicator.bb.lower" stroke="#0d9488" strokeDasharray="3 3" dot={false} strokeWidth={1} isAnimationActive={false} />
+          <Line type="monotone" dataKey="indicator.bb.middle" stroke="#0d9488" dot={false} strokeWidth={1} isAnimationActive={false} />
         </ComposedChart>
       </ResponsiveContainer>
-      <ResponsiveContainer width="100%" height='20%'>
+      <ResponsiveContainer width="100%" height='15%'>
         <ComposedChart
           data={chartData}
           syncId="yahoo-chart"
@@ -283,6 +378,31 @@ export const YahooCandleChart = ({ data }: Props) => {
           />
           {hoveredChart === 'natr' && tooltip}
           <Line type="monotone" dataKey="indicator.natr" stroke="#ea580c" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+        </ComposedChart>
+      </ResponsiveContainer>
+      <ResponsiveContainer width="100%" height='15%'>
+        <ComposedChart
+          data={chartData}
+          syncId="yahoo-chart"
+          onMouseMove={() => setHoveredChart('bbw')}
+          onMouseLeave={() => setHoveredChart('')}
+        >
+          <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
+          <XAxis dataKey="datetime" hide />
+          <YAxis stroke="#666"
+            width={60}
+            fontSize={12}
+            domain={['auto', 'auto']}
+            tickFormatter={(value) => `${value.toFixed(2)}`}
+          />
+          {hoveredChart === 'bbw' && tooltip}
+          <Bar
+            dataKey={(entry) => entry.indicator?.bb?.squeeze ? entry.indicator.bb.width : 0}
+            fill="#f472b6"
+            barSize={2}
+            isAnimationActive={false}
+          />
+          <Line type="monotone" dataKey="indicator.bb.width" stroke="#06b6d4" dot={false} strokeWidth={1.5} isAnimationActive={false} />
         </ComposedChart>
       </ResponsiveContainer>
       <ResponsiveContainer width="100%" height="20%">

@@ -24,6 +24,7 @@ type ChartData = {
     sma?: Record<number, number | null>;
     atr?: number;
     natr?: number;
+    adr?: number;
     bb?: {
       upper: number;
       middle: number;
@@ -47,6 +48,7 @@ export type ChartConfig = {
   bbWidth: boolean;
   volume: boolean;
   donchian: boolean;
+  adr: boolean;
 };
 
 type Props = { data: Yahoo.ChartResponse; };
@@ -195,6 +197,22 @@ export const addDonchian = (data: ChartData[], period = 20) => {
   return data;
 };
 
+export const addADR = (data: ChartData[], period = 20) => {
+  const highs = data.map(d => d.high);
+  const lows = data.map(d => d.low);
+  const ranges = highs.map((h, i) => h - lows[i]);
+
+  for (let i = period - 1; i < data.length; i++) {
+    const slice = ranges.slice(i - period + 1, i + 1);
+    const sum = slice.reduce((a, b) => a + b, 0);
+    const adr = sum / period;
+
+    if (!data[i].indicator) data[i].indicator = {};
+    data[i].indicator!.adr = adr;
+  }
+  return data;
+};
+
 export const toChartData = (yahooData: Yahoo.ChartResponse): ChartData[] => {
   if (!yahooData?.chart?.result?.[0]) {
     return [];
@@ -224,6 +242,7 @@ export const toChartData = (yahooData: Yahoo.ChartResponse): ChartData[] => {
   addVolatility(chartData);
   addBollinger(chartData);
   addDonchian(chartData);
+  addADR(chartData);
 
   return chartData;
 };
@@ -308,6 +327,12 @@ const tooltip = (config: ChartConfig) => <Tooltip
                 <span un-text="sm">{data.indicator.natr.toFixed(3)}</span>
               </div>
             )}
+            {config.adr && data.indicator?.adr && (
+              <div un-flex="~" un-justify="between" un-text="indigo-500">
+                <span un-text="sm">ADR:</span>
+                <span un-text="sm">{data.indicator.adr.toFixed(3)}</span>
+              </div>
+            )}
             {config.bbWidth && data.indicator?.bb && (
               <div un-flex="~" un-justify="between" un-text="cyan-600">
                 <span un-text="sm">BBW:</span>
@@ -330,7 +355,7 @@ const tooltip = (config: ChartConfig) => <Tooltip
 
 // todo: rsi, moving average convergence divergence, vwap
 export const YahooCandleChart = ({ data }: Props) => {
-  const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'bbw' | 'volume' | ''>('');
+  const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'bbw' | 'adr' | 'volume' | ''>('');
   const [showConfig, setShowConfig] = useState(false);
   const [config, setConfig] = useState<ChartConfig>({
     sma50: true,
@@ -340,6 +365,7 @@ export const YahooCandleChart = ({ data }: Props) => {
     bbWidth: true,
     volume: true,
     donchian: false,
+    adr: false,
   });
 
   const chartData = toChartData(data).slice(200);
@@ -400,7 +426,8 @@ export const YahooCandleChart = ({ data }: Props) => {
   const volumeHeight = config.volume ? 20 : 0;
   const natrHeight = config.natr ? 15 : 0;
   const bbwHeight = config.bbWidth ? 15 : 0;
-  const priceHeight = 100 - volumeHeight - natrHeight - bbwHeight;
+  const adrHeight = config.adr ? 15 : 0;
+  const priceHeight = 100 - volumeHeight - natrHeight - bbwHeight - adrHeight;
 
   return (
     <div un-flex="~ col" un-h="140">
@@ -463,6 +490,16 @@ export const YahooCandleChart = ({ data }: Props) => {
               </div>
               <div un-h="1px" un-bg="gray-100" />
               <div un-flex="~ items-center justify-between">
+                <span un-text="sm font-semibold gray-700">ADR</span>
+                <div un-flex="~ gap-3">
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-indigo-500">
+                    <input type="checkbox" checked={config.adr} onChange={(e) => setConfig({ ...config, adr: e.target.checked })} un-accent="indigo-500" />
+                    Show
+                  </label>
+                </div>
+              </div>
+              <div un-h="1px" un-bg="gray-100" />
+              <div un-flex="~ items-center justify-between">
                 <span un-text="sm font-semibold gray-700">Volume</span>
                 <div un-flex="~ gap-3">
                   <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-gray-600">
@@ -487,7 +524,7 @@ export const YahooCandleChart = ({ data }: Props) => {
             <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
             <XAxis
               dataKey="datetime"
-              hide={config.natr || config.bbWidth || config.volume}
+              hide={config.natr || config.bbWidth || config.adr || config.volume}
               stroke="#666"
               fontSize={12}
               tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -529,7 +566,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
               <XAxis
                 dataKey="datetime"
-                hide={config.bbWidth || config.volume}
+                hide={config.bbWidth || config.adr || config.volume}
                 stroke="#666"
                 fontSize={12}
                 tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -555,7 +592,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
               <XAxis
                 dataKey="datetime"
-                hide={config.volume}
+                hide={config.adr || config.volume}
                 stroke="#666"
                 fontSize={12}
                 tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -573,6 +610,32 @@ export const YahooCandleChart = ({ data }: Props) => {
                 isAnimationActive={false}
               />
               <Line type="monotone" dataKey="indicator.bb.width" stroke="#06b6d4" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        )}
+        {config.adr && (
+          <ResponsiveContainer width="100%" height={`${adrHeight}%`}>
+            <ComposedChart
+              data={chartData}
+              syncId="yahoo-chart"
+              onMouseMove={() => setHoveredChart('adr')}
+              onMouseLeave={() => setHoveredChart('')}
+            >
+              <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
+              <XAxis
+                dataKey="datetime"
+                hide={config.volume}
+                stroke="#666"
+                fontSize={12}
+                tickFormatter={(value) => dayjs(value).format('M/D')}
+              />
+              <YAxis stroke="#666"
+                fontSize={12}
+                domain={['auto', 'auto']}
+                tickFormatter={(value) => `${value.toFixed(2)}`}
+              />
+              {hoveredChart === 'adr' && tooltip(config)}
+              <Line type="monotone" dataKey="indicator.adr" stroke="#6366f1" dot={false} strokeWidth={1.5} isAnimationActive={false} />
             </ComposedChart>
           </ResponsiveContainer>
         )}

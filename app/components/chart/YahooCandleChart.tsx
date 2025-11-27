@@ -34,6 +34,15 @@ type ChartData = {
   };
 };
 
+export type ChartConfig = {
+  sma50: boolean;
+  sma200: boolean;
+  natr: boolean;
+  bbBand: boolean;
+  bbWidth: boolean;
+  volume: boolean;
+};
+
 type Props = { data: Yahoo.ChartResponse; };
 
 export const addSMA = (data: ChartData[], period: number) => {
@@ -201,7 +210,7 @@ const CustomVolumeBar = (props: any) => {
   return <rect x={x} y={y} width={width} height={height} fill={color} />;
 };
 
-const tooltip = <Tooltip
+const tooltip = (config: ChartConfig) => <Tooltip
   wrapperStyle={{ zIndex: 1 }}
   content={({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -228,19 +237,19 @@ const tooltip = <Tooltip
               <span un-text="sm">Close:</span>
               <span un-text="sm">{data.close.toFixed(3)}</span>
             </div>
-            {data.indicator?.sma?.[50] && (
+            {config.sma50 && data.indicator?.sma?.[50] && (
               <div un-flex="~" un-justify="between" un-text="blue-600">
                 <span un-text="sm">SMA50:</span>
                 <span un-text="sm">{data.indicator.sma[50].toFixed(3)}</span>
               </div>
             )}
-            {data.indicator?.sma?.[200] && (
+            {config.sma200 && data.indicator?.sma?.[200] && (
               <div un-flex="~" un-justify="between" un-text="purple-600">
                 <span un-text="sm">SMA200:</span>
                 <span un-text="sm">{data.indicator.sma[200].toFixed(3)}</span>
               </div>
             )}
-            {data.indicator?.bb && (
+            {config.bbBand && data.indicator?.bb && (
               <>
                 <div un-flex="~" un-justify="between" un-text="teal-600">
                   <span un-text="sm">BB Upper:</span>
@@ -252,13 +261,13 @@ const tooltip = <Tooltip
                 </div>
               </>
             )}
-            {data.indicator?.natr && (
+            {config.natr && data.indicator?.natr && (
               <div un-flex="~" un-justify="between" un-text="orange-600">
                 <span un-text="sm">NATR:</span>
                 <span un-text="sm">{data.indicator.natr.toFixed(3)}</span>
               </div>
             )}
-            {data.indicator?.bb && (
+            {config.bbWidth && data.indicator?.bb && (
               <div un-flex="~" un-justify="between" un-text="cyan-600">
                 <span un-text="sm">BBW:</span>
                 <span un-text="sm">
@@ -281,6 +290,16 @@ const tooltip = <Tooltip
 // todo: rsi, vwap
 export const YahooCandleChart = ({ data }: Props) => {
   const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'bbw' | 'volume' | ''>('');
+  const [showConfig, setShowConfig] = useState(false);
+  const [config, setConfig] = useState<ChartConfig>({
+    sma50: true,
+    sma200: true,
+    natr: true,
+    bbBand: true,
+    bbWidth: true,
+    volume: true,
+  });
+
   const chartData = toChartData(data).slice(200);
 
   if (chartData.length === 0) {
@@ -336,102 +355,180 @@ export const YahooCandleChart = ({ data }: Props) => {
     );
   };
 
+  const volumeHeight = config.volume ? 20 : 0;
+  const natrHeight = config.natr ? 15 : 0;
+  const bbwHeight = config.bbWidth ? 15 : 0;
+  const priceHeight = 100 - volumeHeight - natrHeight - bbwHeight;
+
   return (
-    <div un-h="140">
-      <ResponsiveContainer width="100%" height="50%">
-        <ComposedChart
-          data={chartData}
-          syncId="yahoo-chart"
-          onMouseMove={() => setHoveredChart('price')}
-          onMouseLeave={() => setHoveredChart('')}
+    <div un-flex="~ col" un-h="140">
+      <div un-flex="~ justify-end" un-mb="1" un-relative="~">
+        <button
+          onClick={() => setShowConfig(!showConfig)}
+          un-flex='~' un-p="1" un-border="~ rounded gray-200" un-hover="bg-gray-50" un-text="gray-600"
         >
-          <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
-          <XAxis dataKey="datetime" hide />
-          <YAxis stroke="#666"
-            fontSize={14}
-            fontWeight={600}
-            domain={[minPrice - padding, maxPrice + padding]}
-            tickFormatter={(value) => `${value.toFixed(1)}`}
-          />
-          {hoveredChart === 'price' && tooltip}
-          <Bar dataKey="high" shape={<CustomCandlestick />} />
-          <Line type="monotone" dataKey="indicator.sma.50" stroke="#2563eb" dot={false} strokeWidth={1.5} isAnimationActive={false} />
-          <Line type="monotone" dataKey="indicator.sma.200" stroke="#9333ea" dot={false} strokeWidth={1.5} isAnimationActive={false} />
-          <Line type="monotone" dataKey="indicator.bb.upper" stroke="#0d9488" strokeDasharray="3 3" dot={false} strokeWidth={1} isAnimationActive={false} />
-          <Line type="monotone" dataKey="indicator.bb.lower" stroke="#0d9488" strokeDasharray="3 3" dot={false} strokeWidth={1} isAnimationActive={false} />
-          <Line type="monotone" dataKey="indicator.bb.middle" stroke="#0d9488" dot={false} strokeWidth={1} isAnimationActive={false} />
-        </ComposedChart>
-      </ResponsiveContainer>
-      <ResponsiveContainer width="100%" height='15%'>
-        <ComposedChart
-          data={chartData}
-          syncId="yahoo-chart"
-          onMouseMove={() => setHoveredChart('natr')}
-          onMouseLeave={() => setHoveredChart('')}
-        >
-          <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
-          <XAxis dataKey="datetime" hide />
-          <YAxis stroke="#666"
-            fontSize={12}
-            domain={['auto', 'auto']}
-            tickFormatter={(value) => `${value.toFixed(2)}%`}
-          />
-          {hoveredChart === 'natr' && tooltip}
-          <Line type="monotone" dataKey="indicator.natr" stroke="#ea580c" dot={false} strokeWidth={1.5} isAnimationActive={false} />
-        </ComposedChart>
-      </ResponsiveContainer>
-      <ResponsiveContainer width="100%" height='15%'>
-        <ComposedChart
-          data={chartData}
-          syncId="yahoo-chart"
-          onMouseMove={() => setHoveredChart('bbw')}
-          onMouseLeave={() => setHoveredChart('')}
-        >
-          <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
-          <XAxis dataKey="datetime" hide />
-          <YAxis stroke="#666"
-            width={60}
-            fontSize={12}
-            domain={['auto', 'auto']}
-            tickFormatter={(value) => `${value.toFixed(2)}`}
-          />
-          {hoveredChart === 'bbw' && tooltip}
-          <Bar
-            dataKey={(entry) => entry.indicator?.bb?.squeeze ? entry.indicator.bb.width : 0}
-            fill="#f472b6"
-            barSize={2}
-            isAnimationActive={false}
-          />
-          <Line type="monotone" dataKey="indicator.bb.width" stroke="#06b6d4" dot={false} strokeWidth={1.5} isAnimationActive={false} />
-        </ComposedChart>
-      </ResponsiveContainer>
-      <ResponsiveContainer width="100%" height="20%">
-        <ComposedChart
-          data={chartData}
-          syncId="yahoo-chart"
-          onMouseMove={() => setHoveredChart('volume')}
-          onMouseLeave={() => setHoveredChart('')}
-        >
-          <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
-          <XAxis
-            dataKey="datetime"
-            stroke="#666"
-            fontSize={12}
-            tickFormatter={(value) => dayjs(value).format('M/D')}
-          />
-          <YAxis stroke="#666"
-            fontSize={12}
-            domain={[0, maxVolume]}
-            tickFormatter={(value) => {
-              if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
-              if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
-              return value.toString();
-            }}
-          />
-          {hoveredChart === 'volume' && tooltip}
-          <Bar dataKey="volume" shape={<CustomVolumeBar />} />
-        </ComposedChart>
-      </ResponsiveContainer>
+          <span className="i-mdi:cog" un-text="lg" un-cursor='pointer' />
+        </button>
+        {showConfig && (
+          <div un-absolute="~" un-top="full" un-right="0" un-mt="1" un-bg="white" un-p="3" un-border="~ rounded gray-200" un-shadow="xl" un-w="64" un-z="50">
+            <div un-flex="~ col gap-2">
+              <div un-flex="~ items-center justify-between">
+                <span un-text="sm font-semibold gray-700">SMA</span>
+                <div un-flex="~ gap-3">
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-blue-600">
+                    <input type="checkbox" checked={config.sma50} onChange={(e) => setConfig({ ...config, sma50: e.target.checked })} un-accent="blue-600" />
+                    50
+                  </label>
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-purple-600">
+                    <input type="checkbox" checked={config.sma200} onChange={(e) => setConfig({ ...config, sma200: e.target.checked })} un-accent="purple-600" />
+                    200
+                  </label>
+                </div>
+              </div>
+              <div un-h="1px" un-bg="gray-100" />
+              <div un-flex="~ items-center justify-between">
+                <span un-text="sm font-semibold gray-700">ATR</span>
+                <div un-flex="~ gap-3">
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-orange-600">
+                    <input type="checkbox" checked={config.natr} onChange={(e) => setConfig({ ...config, natr: e.target.checked })} un-accent="orange-600" />
+                    NATR
+                  </label>
+                </div>
+              </div>
+              <div un-h="1px" un-bg="gray-100" />
+              <div un-flex="~ items-center justify-between">
+                <span un-text="sm font-semibold gray-700">Bollinger</span>
+                <div un-flex="~ gap-3">
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-teal-600">
+                    <input type="checkbox" checked={config.bbBand} onChange={(e) => setConfig({ ...config, bbBand: e.target.checked })} un-accent="teal-600" />
+                    Band
+                  </label>
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-cyan-600">
+                    <input type="checkbox" checked={config.bbWidth} onChange={(e) => setConfig({ ...config, bbWidth: e.target.checked })} un-accent="cyan-600" />
+                    Width
+                  </label>
+                </div>
+              </div>
+              <div un-h="1px" un-bg="gray-100" />
+              <div un-flex="~ items-center justify-between">
+                <span un-text="sm font-semibold gray-700">Volume</span>
+                <div un-flex="~ gap-3">
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-gray-600">
+                    <input type="checkbox" checked={config.volume} onChange={(e) => setConfig({ ...config, volume: e.target.checked })} un-accent="gray-600" />
+                    Show
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div un-flex="~ col 1" un-min-h="0">
+        <ResponsiveContainer width="100%" height={`${priceHeight}%`}>
+          <ComposedChart
+            data={chartData}
+            syncId="yahoo-chart"
+            onMouseMove={() => setHoveredChart('price')}
+            onMouseLeave={() => setHoveredChart('')}
+          >
+            <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
+            <XAxis dataKey="datetime" hide />
+            <YAxis stroke="#666"
+              fontSize={14}
+              fontWeight={600}
+              domain={[minPrice - padding, maxPrice + padding]}
+              tickFormatter={(value) => `${value.toFixed(1)}`}
+            />
+            {hoveredChart === 'price' && tooltip(config)}
+            <Bar dataKey="high" shape={<CustomCandlestick />} />
+            {config.sma50 && <Line type="monotone" dataKey="indicator.sma.50" stroke="#2563eb" dot={false} strokeWidth={1.5} isAnimationActive={false} />}
+            {config.sma200 && <Line type="monotone" dataKey="indicator.sma.200" stroke="#9333ea" dot={false} strokeWidth={1.5} isAnimationActive={false} />}
+            {config.bbBand && (
+              <>
+                <Line type="monotone" dataKey="indicator.bb.upper" stroke="#0d9488" strokeDasharray="3 3" dot={false} strokeWidth={1} isAnimationActive={false} />
+                <Line type="monotone" dataKey="indicator.bb.lower" stroke="#0d9488" strokeDasharray="3 3" dot={false} strokeWidth={1} isAnimationActive={false} />
+                <Line type="monotone" dataKey="indicator.bb.middle" stroke="#0d9488" dot={false} strokeWidth={1} isAnimationActive={false} />
+              </>
+            )}
+          </ComposedChart>
+        </ResponsiveContainer>
+        {config.natr && (
+          <ResponsiveContainer width="100%" height={`${natrHeight}%`}>
+            <ComposedChart
+              data={chartData}
+              syncId="yahoo-chart"
+              onMouseMove={() => setHoveredChart('natr')}
+              onMouseLeave={() => setHoveredChart('')}
+            >
+              <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
+              <XAxis dataKey="datetime" hide />
+              <YAxis stroke="#666"
+                fontSize={12}
+                domain={['auto', 'auto']}
+                tickFormatter={(value) => `${value.toFixed(2)}%`}
+              />
+              {hoveredChart === 'natr' && tooltip(config)}
+              <Line type="monotone" dataKey="indicator.natr" stroke="#ea580c" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        )}
+        {config.bbWidth && (
+          <ResponsiveContainer width="100%" height={`${bbwHeight}%`}>
+            <ComposedChart
+              data={chartData}
+              syncId="yahoo-chart"
+              onMouseMove={() => setHoveredChart('bbw')}
+              onMouseLeave={() => setHoveredChart('')}
+            >
+              <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
+              <XAxis dataKey="datetime" hide />
+              <YAxis stroke="#666"
+                fontSize={12}
+                domain={['auto', 'auto']}
+                tickFormatter={(value) => `${value.toFixed(2)}`}
+              />
+              {hoveredChart === 'bbw' && tooltip(config)}
+              <Bar
+                dataKey={(entry) => entry.indicator?.bb?.squeeze ? entry.indicator.bb.width : 0}
+                fill="#f472b6"
+                barSize={2}
+                isAnimationActive={false}
+              />
+              <Line type="monotone" dataKey="indicator.bb.width" stroke="#06b6d4" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        )}
+        {config.volume && (
+          <ResponsiveContainer width="100%" height={`${volumeHeight}%`}>
+            <ComposedChart
+              data={chartData}
+              syncId="yahoo-chart"
+              onMouseMove={() => setHoveredChart('volume')}
+              onMouseLeave={() => setHoveredChart('')}
+            >
+              <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
+              <XAxis
+                dataKey="datetime"
+                stroke="#666"
+                fontSize={12}
+                tickFormatter={(value) => dayjs(value).format('M/D')}
+              />
+              <YAxis stroke="#666"
+                fontSize={12}
+                domain={[0, maxVolume]}
+                tickFormatter={(value) => {
+                  if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+                  if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
+                  return value.toString();
+                }}
+              />
+              {hoveredChart === 'volume' && tooltip(config)}
+              <Bar dataKey="volume" shape={<CustomVolumeBar />} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        )}
+      </div>
     </div>
   );
 };

@@ -433,7 +433,13 @@ export const YahooCandleChart = ({ data }: Props) => {
             onMouseLeave={() => setHoveredChart('')}
           >
             <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
-            <XAxis dataKey="datetime" hide />
+            <XAxis
+              dataKey="datetime"
+              hide={config.natr || config.bbWidth || config.volume}
+              stroke="#666"
+              fontSize={12}
+              tickFormatter={(value) => dayjs(value).format('M/D')}
+            />
             <YAxis stroke="#666"
               fontSize={14}
               fontWeight={600}
@@ -462,7 +468,13 @@ export const YahooCandleChart = ({ data }: Props) => {
               onMouseLeave={() => setHoveredChart('')}
             >
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
-              <XAxis dataKey="datetime" hide />
+              <XAxis
+                dataKey="datetime"
+                hide={config.bbWidth || config.volume}
+                stroke="#666"
+                fontSize={12}
+                tickFormatter={(value) => dayjs(value).format('M/D')}
+              />
               <YAxis stroke="#666"
                 fontSize={12}
                 domain={['auto', 'auto']}
@@ -482,7 +494,13 @@ export const YahooCandleChart = ({ data }: Props) => {
               onMouseLeave={() => setHoveredChart('')}
             >
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
-              <XAxis dataKey="datetime" hide />
+              <XAxis
+                dataKey="datetime"
+                hide={config.volume}
+                stroke="#666"
+                fontSize={12}
+                tickFormatter={(value) => dayjs(value).format('M/D')}
+              />
               <YAxis stroke="#666"
                 fontSize={12}
                 domain={['auto', 'auto']}

@@ -31,6 +31,11 @@ type ChartData = {
       width: number;
       squeeze: boolean;
     };
+    donchian?: {
+      upper: number;
+      middle: number;
+      lower: number;
+    };
   };
 };
 
@@ -41,6 +46,7 @@ export type ChartConfig = {
   bbBand: boolean;
   bbWidth: boolean;
   volume: boolean;
+  donchian: boolean;
 };
 
 type Props = { data: Yahoo.ChartResponse; };
@@ -167,12 +173,34 @@ export const addBollinger = (data: ChartData[], period = 20, stdDev = 2) => {
   return data;
 };
 
-const toChartData = (data: Yahoo.ChartResponse): ChartData[] => {
-  if (!data?.chart?.result?.[0]) {
+export const addDonchian = (data: ChartData[], period = 20) => {
+  const highs = data.map(d => d.high);
+  const lows = data.map(d => d.low);
+
+  for (let i = period - 1; i < data.length; i++) {
+    const sliceHighs = highs.slice(i - period + 1, i + 1);
+    const sliceLows = lows.slice(i - period + 1, i + 1);
+
+    const upper = Math.max(...sliceHighs);
+    const lower = Math.min(...sliceLows);
+    const middle = (upper + lower) / 2;
+
+    if (!data[i].indicator) data[i].indicator = {};
+    data[i].indicator!.donchian = {
+      upper,
+      middle,
+      lower
+    };
+  }
+  return data;
+};
+
+export const toChartData = (yahooData: Yahoo.ChartResponse): ChartData[] => {
+  if (!yahooData?.chart?.result?.[0]) {
     return [];
   }
 
-  const result = data.chart.result[0];
+  const result = yahooData.chart.result[0];
   const { timestamp, indicators } = result;
 
   if (!timestamp || !indicators?.quote?.[0]) {
@@ -195,6 +223,7 @@ const toChartData = (data: Yahoo.ChartResponse): ChartData[] => {
   addSMA(chartData, 200);
   addVolatility(chartData);
   addBollinger(chartData);
+  addDonchian(chartData);
 
   return chartData;
 };
@@ -261,6 +290,18 @@ const tooltip = (config: ChartConfig) => <Tooltip
                 </div>
               </>
             )}
+            {config.donchian && data.indicator?.donchian && (
+              <>
+                <div un-flex="~" un-justify="between" un-text="orange-500">
+                  <span un-text="sm">DC Upper:</span>
+                  <span un-text="sm">{data.indicator.donchian.upper.toFixed(3)}</span>
+                </div>
+                <div un-flex="~" un-justify="between" un-text="orange-500">
+                  <span un-text="sm">DC Lower:</span>
+                  <span un-text="sm">{data.indicator.donchian.lower.toFixed(3)}</span>
+                </div>
+              </>
+            )}
             {config.natr && data.indicator?.natr && (
               <div un-flex="~" un-justify="between" un-text="orange-600">
                 <span un-text="sm">NATR:</span>
@@ -287,7 +328,7 @@ const tooltip = (config: ChartConfig) => <Tooltip
   }}
 />;
 
-// todo: rsi, vwap
+// todo: rsi, moving average convergence divergence, vwap
 export const YahooCandleChart = ({ data }: Props) => {
   const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'bbw' | 'volume' | ''>('');
   const [showConfig, setShowConfig] = useState(false);
@@ -298,6 +339,7 @@ export const YahooCandleChart = ({ data }: Props) => {
     bbBand: true,
     bbWidth: true,
     volume: true,
+    donchian: false,
   });
 
   const chartData = toChartData(data).slice(200);
@@ -411,6 +453,16 @@ export const YahooCandleChart = ({ data }: Props) => {
               </div>
               <div un-h="1px" un-bg="gray-100" />
               <div un-flex="~ items-center justify-between">
+                <span un-text="sm font-semibold gray-700">Donchian</span>
+                <div un-flex="~ gap-3">
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-orange-500">
+                    <input type="checkbox" checked={config.donchian} onChange={(e) => setConfig({ ...config, donchian: e.target.checked })} un-accent="orange-500" />
+                    Show
+                  </label>
+                </div>
+              </div>
+              <div un-h="1px" un-bg="gray-100" />
+              <div un-flex="~ items-center justify-between">
                 <span un-text="sm font-semibold gray-700">Volume</span>
                 <div un-flex="~ gap-3">
                   <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-gray-600">
@@ -455,6 +507,13 @@ export const YahooCandleChart = ({ data }: Props) => {
                 <Line type="monotone" dataKey="indicator.bb.upper" stroke="#0d9488" strokeDasharray="3 3" dot={false} strokeWidth={1} isAnimationActive={false} />
                 <Line type="monotone" dataKey="indicator.bb.lower" stroke="#0d9488" strokeDasharray="3 3" dot={false} strokeWidth={1} isAnimationActive={false} />
                 <Line type="monotone" dataKey="indicator.bb.middle" stroke="#0d9488" dot={false} strokeWidth={1} isAnimationActive={false} />
+              </>
+            )}
+            {config.donchian && (
+              <>
+                <Line type="monotone" dataKey="indicator.donchian.upper" stroke="#f97316" strokeDasharray="5 5" dot={false} strokeWidth={1} isAnimationActive={false} />
+                <Line type="monotone" dataKey="indicator.donchian.lower" stroke="#f97316" strokeDasharray="5 5" dot={false} strokeWidth={1} isAnimationActive={false} />
+                <Line type="monotone" dataKey="indicator.donchian.middle" stroke="#f97316" dot={false} strokeWidth={1} isAnimationActive={false} />
               </>
             )}
           </ComposedChart>

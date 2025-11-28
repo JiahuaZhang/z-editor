@@ -8,7 +8,8 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
+  ReferenceLine
 } from 'recharts';
 import type { Yahoo } from '~/types/YahooFinance';
 
@@ -25,6 +26,7 @@ type ChartData = {
     atr?: number;
     natr?: number;
     adr?: number;
+    rsi?: number;
     bb?: {
       upper: number;
       middle: number;
@@ -49,6 +51,7 @@ export type ChartConfig = {
   volume: boolean;
   donchian: boolean;
   adr: boolean;
+  rsi: boolean;
 };
 
 type Props = { data: Yahoo.ChartResponse; };
@@ -213,6 +216,51 @@ export const addADR = (data: ChartData[], period = 20) => {
   return data;
 };
 
+export const addRSI = (data: ChartData[], period = 14) => {
+  let gains = 0;
+  let losses = 0;
+
+  for (let i = 1; i <= period; i++) {
+    const change = data[i].close - data[i].close;
+    if (change > 0) {
+      gains += change;
+    } else {
+      losses -= change;
+    }
+  }
+
+  let avgGain = gains / period;
+  let avgLoss = losses / period;
+
+  for (let i = period + 1; i < data.length; i++) {
+    const change = data[i].close - data[i - 1].close;
+    let gain = 0;
+    let loss = 0;
+
+    if (change > 0) {
+      gain = change;
+    } else {
+      loss = -change;
+    }
+
+    avgGain = (avgGain * (period - 1) + gain) / period;
+    avgLoss = (avgLoss * (period - 1) + loss) / period;
+
+    let rs = 0;
+    if (avgLoss !== 0) {
+      rs = avgGain / avgLoss;
+    } else {
+      rs = avgGain === 0 ? 0 : 100; // Handle division by zero
+    }
+
+    const rsi = 100 - (100 / (1 + rs));
+
+    if (!data[i].indicator) data[i].indicator = {};
+    data[i].indicator!.rsi = rsi;
+  }
+  return data;
+};
+
 export const toChartData = (yahooData: Yahoo.ChartResponse): ChartData[] => {
   if (!yahooData?.chart?.result?.[0]) {
     return [];
@@ -243,6 +291,7 @@ export const toChartData = (yahooData: Yahoo.ChartResponse): ChartData[] => {
   addBollinger(chartData);
   addDonchian(chartData);
   addADR(chartData);
+  addRSI(chartData);
 
   return chartData;
 };
@@ -333,6 +382,12 @@ const tooltip = (config: ChartConfig) => <Tooltip
                 <span un-text="sm">{data.indicator.adr.toFixed(3)}</span>
               </div>
             )}
+            {config.rsi && data.indicator?.rsi && (
+              <div un-flex="~" un-justify="between" un-text="fuchsia-600">
+                <span un-text="sm">RSI:</span>
+                <span un-text="sm">{data.indicator.rsi.toFixed(2)}</span>
+              </div>
+            )}
             {config.bbWidth && data.indicator?.bb && (
               <div un-flex="~" un-justify="between" un-text="cyan-600">
                 <span un-text="sm">BBW:</span>
@@ -353,9 +408,9 @@ const tooltip = (config: ChartConfig) => <Tooltip
   }}
 />;
 
-// todo: rsi, moving average convergence divergence, vwap
+// todo: moving average convergence divergence, vwap
 export const YahooCandleChart = ({ data }: Props) => {
-  const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'bbw' | 'adr' | 'volume' | ''>('');
+  const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'bbw' | 'adr' | 'rsi' | 'volume' | ''>('');
   const [showConfig, setShowConfig] = useState(false);
   const [config, setConfig] = useState<ChartConfig>({
     sma50: true,
@@ -366,6 +421,7 @@ export const YahooCandleChart = ({ data }: Props) => {
     volume: true,
     donchian: false,
     adr: false,
+    rsi: false,
   });
 
   const chartData = toChartData(data).slice(200);
@@ -427,7 +483,8 @@ export const YahooCandleChart = ({ data }: Props) => {
   const natrHeight = config.natr ? 15 : 0;
   const bbwHeight = config.bbWidth ? 15 : 0;
   const adrHeight = config.adr ? 15 : 0;
-  const priceHeight = 100 - volumeHeight - natrHeight - bbwHeight - adrHeight;
+  const rsiHeight = config.rsi ? 15 : 0;
+  const priceHeight = 100 - volumeHeight - natrHeight - bbwHeight - adrHeight - rsiHeight;
 
   return (
     <div un-flex="~ col" un-h="140">
@@ -527,6 +584,16 @@ export const YahooCandleChart = ({ data }: Props) => {
               </div>
               <div un-h="1px" un-bg="gray-100" />
               <div un-flex="~ items-center justify-between">
+                <span un-text="sm font-semibold gray-700">RSI</span>
+                <div un-flex="~ gap-3">
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-fuchsia-600">
+                    <input type="checkbox" checked={config.rsi} onChange={(e) => setConfig({ ...config, rsi: e.target.checked })} un-accent="fuchsia-600" />
+                    Show
+                  </label>
+                </div>
+              </div>
+              <div un-h="1px" un-bg="gray-100" />
+              <div un-flex="~ items-center justify-between">
                 <span un-text="sm font-semibold gray-700">Volume</span>
                 <div un-flex="~ gap-3">
                   <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-gray-600">
@@ -551,7 +618,7 @@ export const YahooCandleChart = ({ data }: Props) => {
             <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
             <XAxis
               dataKey="datetime"
-              hide={config.natr || config.bbWidth || config.adr || config.volume}
+              hide={config.natr || config.bbWidth || config.adr || config.rsi || config.volume}
               stroke="#666"
               fontSize={12}
               tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -593,7 +660,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
               <XAxis
                 dataKey="datetime"
-                hide={config.bbWidth || config.adr || config.volume}
+                hide={config.bbWidth || config.adr || config.rsi || config.volume}
                 stroke="#666"
                 fontSize={12}
                 tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -619,7 +686,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
               <XAxis
                 dataKey="datetime"
-                hide={config.adr || config.volume}
+                hide={config.adr || config.rsi || config.volume}
                 stroke="#666"
                 fontSize={12}
                 tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -651,7 +718,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
               <XAxis
                 dataKey="datetime"
-                hide={config.volume}
+                hide={config.rsi || config.volume}
                 stroke="#666"
                 fontSize={12}
                 tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -663,6 +730,34 @@ export const YahooCandleChart = ({ data }: Props) => {
               />
               {hoveredChart === 'adr' && tooltip(config)}
               <Line type="monotone" dataKey="indicator.adr" stroke="#6366f1" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        )}
+        {config.rsi && (
+          <ResponsiveContainer width="100%" height={`${rsiHeight}%`}>
+            <ComposedChart
+              data={chartData}
+              syncId="yahoo-chart"
+              onMouseMove={() => setHoveredChart('rsi')}
+              onMouseLeave={() => setHoveredChart('')}
+            >
+              <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
+              <XAxis
+                dataKey="datetime"
+                hide={config.volume}
+                stroke="#666"
+                fontSize={12}
+                tickFormatter={(value) => dayjs(value).format('M/D')}
+              />
+              <YAxis stroke="#666"
+                fontSize={12}
+                domain={[0, 100]}
+                ticks={[30, 70]}
+              />
+              {hoveredChart === 'rsi' && tooltip(config)}
+              <Line type="monotone" dataKey="indicator.rsi" stroke="#c026d3" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+              <ReferenceLine y={70} stroke="#c026d3" strokeDasharray="3 3" />
+              <ReferenceLine y={30} stroke="#c026d3" strokeDasharray="3 3" />
             </ComposedChart>
           </ResponsiveContainer>
         )}

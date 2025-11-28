@@ -441,6 +441,33 @@ export const YahooCandleChart = ({ data }: Props) => {
         {showConfig && (
           <div un-absolute="~" un-top="full" un-right="0" un-mt="1" un-bg="white" un-p="3" un-border="~ rounded gray-200" un-shadow="xl" un-w="64" un-z="50">
             <div un-flex="~ col gap-2">
+              <div un-flex="~ gap-2" un-justify="end" un-mb="1">
+                <button
+                  un-text="xs blue-600 hover:blue-700"
+                  onClick={() => setConfig(prev => {
+                    const newConfig = Object.keys(prev).reduce((acc, key) => {
+                      acc[key as keyof ChartConfig] = true;
+                      return acc;
+                    }, {} as ChartConfig);
+                    return newConfig;
+                  })}
+                >
+                  All
+                </button>
+                <span un-text="gray-300">|</span>
+                <button
+                  un-text="xs gray-500 hover:gray-700"
+                  onClick={() => setConfig(prev => {
+                    const newConfig = Object.keys(prev).reduce((acc, key) => {
+                      acc[key as keyof ChartConfig] = false;
+                      return acc;
+                    }, {} as ChartConfig);
+                    return newConfig;
+                  })}
+                >
+                  None
+                </button>
+              </div>
               <div un-flex="~ items-center justify-between">
                 <span un-text="sm font-semibold gray-700">SMA</span>
                 <div un-flex="~ gap-3">

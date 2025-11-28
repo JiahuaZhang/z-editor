@@ -9,7 +9,8 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-  ReferenceLine
+  ReferenceLine,
+  Cell
 } from 'recharts';
 import type { Yahoo } from '~/types/YahooFinance';
 
@@ -27,6 +28,11 @@ type ChartData = {
     natr?: number;
     adr?: number;
     rsi?: number;
+    macd?: {
+      macd: number;
+      signal: number;
+      histogram: number;
+    };
     bb?: {
       upper: number;
       middle: number;
@@ -52,6 +58,7 @@ export type ChartConfig = {
   donchian: boolean;
   adr: boolean;
   rsi: boolean;
+  macd: boolean;
 };
 
 type Props = { data: Yahoo.ChartResponse; };
@@ -261,6 +268,64 @@ export const addRSI = (data: ChartData[], period = 14) => {
   return data;
 };
 
+export const getEMA = (data: number[], period: number) => {
+  const k = 2 / (period + 1);
+  const emaArray = new Array<number | null>(data.length).fill(null);
+
+  let sum = 0;
+  for (let i = 0; i < period; i++) {
+    sum += data[i];
+  }
+  emaArray[period - 1] = sum / period;
+
+  for (let i = period; i < data.length; i++) {
+    emaArray[i] = (data[i] * k) + (emaArray[i - 1]! * (1 - k));
+  }
+  return emaArray;
+};
+
+export const addMACD = (data: ChartData[], fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) => {
+  const closes = data.map(d => d.close);
+  const fastEMA = getEMA(closes, fastPeriod);
+  const slowEMA = getEMA(closes, slowPeriod);
+
+  const macdLine = new Array<number | null>(data.length).fill(null);
+  for (let i = 0; i < data.length; i++) {
+    if (fastEMA[i] !== null && slowEMA[i] !== null) {
+      macdLine[i] = fastEMA[i]! - slowEMA[i]!;
+    }
+  }
+
+  const validMacdIndices: number[] = [];
+  const validMacdValues: number[] = [];
+  macdLine.forEach((val, idx) => {
+    if (val !== null) {
+      validMacdIndices.push(idx);
+      validMacdValues.push(val);
+    }
+  });
+
+  const signalLineValues = getEMA(validMacdValues, signalPeriod);
+
+  for (let i = 0; i < validMacdIndices.length; i++) {
+    const signal = signalLineValues[i];
+    if (signal === null) continue;
+
+    const idx = validMacdIndices[i];
+    const macd = validMacdValues[i];
+    const histogram = macd - signal;
+
+    if (!data[idx].indicator) data[idx].indicator = {};
+    data[idx].indicator!.macd = {
+      macd,
+      signal,
+      histogram
+    };
+  }
+
+  return data;
+};
+
 export const toChartData = (yahooData: Yahoo.ChartResponse): ChartData[] => {
   if (!yahooData?.chart?.result?.[0]) {
     return [];
@@ -292,6 +357,7 @@ export const toChartData = (yahooData: Yahoo.ChartResponse): ChartData[] => {
   addDonchian(chartData);
   addADR(chartData);
   addRSI(chartData);
+  addMACD(chartData);
 
   return chartData;
 };
@@ -388,6 +454,22 @@ const tooltip = (config: ChartConfig) => <Tooltip
                 <span un-text="sm">{data.indicator.rsi.toFixed(2)}</span>
               </div>
             )}
+            {config.macd && data.indicator?.macd && (
+              <>
+                <div un-flex="~" un-justify="between" un-text="blue-500">
+                  <span un-text="sm">MACD:</span>
+                  <span un-text="sm">{data.indicator.macd.macd.toFixed(3)}</span>
+                </div>
+                <div un-flex="~" un-justify="between" un-text="orange-500">
+                  <span un-text="sm">Signal:</span>
+                  <span un-text="sm">{data.indicator.macd.signal.toFixed(3)}</span>
+                </div>
+                <div un-flex="~" un-justify="between" un-text={data.indicator.macd.histogram >= 0 ? 'green-500' : 'red-500'}>
+                  <span un-text="sm">Hist:</span>
+                  <span un-text="sm">{data.indicator.macd.histogram.toFixed(3)}</span>
+                </div>
+              </>
+            )}
             {config.bbWidth && data.indicator?.bb && (
               <div un-flex="~" un-justify="between" un-text="cyan-600">
                 <span un-text="sm">BBW:</span>
@@ -408,20 +490,21 @@ const tooltip = (config: ChartConfig) => <Tooltip
   }}
 />;
 
-// todo: moving average convergence divergence, vwap
+// todo: vwap
 export const YahooCandleChart = ({ data }: Props) => {
-  const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'bbw' | 'adr' | 'rsi' | 'volume' | ''>('');
+  const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'bbw' | 'adr' | 'rsi' | 'macd' | 'volume' | ''>('');
   const [showConfig, setShowConfig] = useState(false);
   const [config, setConfig] = useState<ChartConfig>({
-    sma50: true,
-    sma200: true,
-    natr: true,
-    bbBand: true,
-    bbWidth: true,
+    sma50: false,
+    sma200: false,
+    natr: false,
+    bbBand: false,
+    bbWidth: false,
     volume: true,
     donchian: false,
     adr: false,
     rsi: false,
+    macd: false,
   });
 
   const chartData = toChartData(data).slice(200);
@@ -484,7 +567,8 @@ export const YahooCandleChart = ({ data }: Props) => {
   const bbwHeight = config.bbWidth ? 15 : 0;
   const adrHeight = config.adr ? 15 : 0;
   const rsiHeight = config.rsi ? 15 : 0;
-  const priceHeight = 100 - volumeHeight - natrHeight - bbwHeight - adrHeight - rsiHeight;
+  const macdHeight = config.macd ? 20 : 0;
+  const priceHeight = 100 - volumeHeight - natrHeight - bbwHeight - adrHeight - rsiHeight - macdHeight;
 
   return (
     <div un-flex="~ col" un-h="140">
@@ -594,6 +678,16 @@ export const YahooCandleChart = ({ data }: Props) => {
               </div>
               <div un-h="1px" un-bg="gray-100" />
               <div un-flex="~ items-center justify-between">
+                <span un-text="sm font-semibold gray-700">MACD</span>
+                <div un-flex="~ gap-3">
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-blue-500">
+                    <input type="checkbox" checked={config.macd} onChange={(e) => setConfig({ ...config, macd: e.target.checked })} un-accent="blue-500" />
+                    Show
+                  </label>
+                </div>
+              </div>
+              <div un-h="1px" un-bg="gray-100" />
+              <div un-flex="~ items-center justify-between">
                 <span un-text="sm font-semibold gray-700">Volume</span>
                 <div un-flex="~ gap-3">
                   <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-gray-600">
@@ -618,7 +712,7 @@ export const YahooCandleChart = ({ data }: Props) => {
             <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
             <XAxis
               dataKey="datetime"
-              hide={config.natr || config.bbWidth || config.adr || config.rsi || config.volume}
+              hide={config.natr || config.bbWidth || config.adr || config.rsi || config.macd || config.volume}
               stroke="#666"
               fontSize={12}
               tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -660,7 +754,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
               <XAxis
                 dataKey="datetime"
-                hide={config.bbWidth || config.adr || config.rsi || config.volume}
+                hide={config.bbWidth || config.adr || config.rsi || config.macd || config.volume}
                 stroke="#666"
                 fontSize={12}
                 tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -686,7 +780,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
               <XAxis
                 dataKey="datetime"
-                hide={config.adr || config.rsi || config.volume}
+                hide={config.adr || config.rsi || config.macd || config.volume}
                 stroke="#666"
                 fontSize={12}
                 tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -718,7 +812,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
               <XAxis
                 dataKey="datetime"
-                hide={config.rsi || config.volume}
+                hide={config.rsi || config.macd || config.volume}
                 stroke="#666"
                 fontSize={12}
                 tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -758,6 +852,37 @@ export const YahooCandleChart = ({ data }: Props) => {
               <Line type="monotone" dataKey="indicator.rsi" stroke="#c026d3" dot={false} strokeWidth={1.5} isAnimationActive={false} />
               <ReferenceLine y={70} stroke="#c026d3" strokeDasharray="3 3" />
               <ReferenceLine y={30} stroke="#c026d3" strokeDasharray="3 3" />
+            </ComposedChart>
+          </ResponsiveContainer>
+        )}
+        {config.macd && (
+          <ResponsiveContainer width="100%" height={`${macdHeight}%`}>
+            <ComposedChart
+              data={chartData}
+              syncId="yahoo-chart"
+              onMouseMove={() => setHoveredChart('macd')}
+              onMouseLeave={() => setHoveredChart('')}
+            >
+              <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
+              <XAxis
+                dataKey="datetime"
+                hide={config.volume}
+                stroke="#666"
+                fontSize={12}
+                tickFormatter={(value) => dayjs(value).format('M/D')}
+              />
+              <YAxis stroke="#666"
+                fontSize={12}
+                domain={['auto', 'auto']}
+              />
+              {hoveredChart === 'macd' && tooltip(config)}
+              <Bar dataKey="indicator.macd.histogram" fill="#22c55e" isAnimationActive={false}>
+                {chartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.indicator?.macd?.histogram && entry.indicator.macd.histogram >= 0 ? '#22c55e' : '#ef4444'} />
+                ))}
+              </Bar>
+              <Line type="monotone" dataKey="indicator.macd.macd" stroke="#3b82f6" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+              <Line type="monotone" dataKey="indicator.macd.signal" stroke="#f97316" dot={false} strokeWidth={1.5} isAnimationActive={false} />
             </ComposedChart>
           </ResponsiveContainer>
         )}

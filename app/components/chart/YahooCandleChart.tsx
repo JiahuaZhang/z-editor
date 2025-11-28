@@ -28,6 +28,7 @@ type ChartData = {
     natr?: number;
     adr?: number;
     rsi?: number;
+    vwap?: number;
     macd?: {
       macd: number;
       signal: number;
@@ -59,6 +60,7 @@ export type ChartConfig = {
   adr: boolean;
   rsi: boolean;
   macd: boolean;
+  vwap: boolean;
 };
 
 type Props = { data: Yahoo.ChartResponse; };
@@ -326,6 +328,35 @@ export const addMACD = (data: ChartData[], fastPeriod = 12, slowPeriod = 26, sig
   return data;
 };
 
+export const addVWAP = (data: ChartData[]) => {
+  let cumulativeTPV = 0;
+  let cumulativeVolume = 0;
+  let currentDay = '';
+
+  for (let i = 0; i < data.length; i++) {
+    const { high, low, close, volume, datetime } = data[i];
+    const day = dayjs(datetime).format('YYYY-MM-DD');
+
+    if (day !== currentDay) {
+      cumulativeTPV = 0;
+      cumulativeVolume = 0;
+      currentDay = day;
+    }
+
+    const typicalPrice = (high + low + close) / 3;
+
+    cumulativeTPV += typicalPrice * volume;
+    cumulativeVolume += volume;
+
+    if (!data[i].indicator) data[i].indicator = {};
+
+    if (cumulativeVolume > 0) {
+      data[i].indicator!.vwap = cumulativeTPV / cumulativeVolume;
+    }
+  }
+  return data;
+};
+
 export const toChartData = (yahooData: Yahoo.ChartResponse): ChartData[] => {
   if (!yahooData?.chart?.result?.[0]) {
     return [];
@@ -358,6 +389,7 @@ export const toChartData = (yahooData: Yahoo.ChartResponse): ChartData[] => {
   addADR(chartData);
   addRSI(chartData);
   addMACD(chartData);
+  addVWAP(chartData);
 
   return chartData;
 };
@@ -410,6 +442,12 @@ const tooltip = (config: ChartConfig) => <Tooltip
               <div un-flex="~" un-justify="between" un-text="purple-600">
                 <span un-text="sm">SMA200:</span>
                 <span un-text="sm">{data.indicator.sma[200].toFixed(3)}</span>
+              </div>
+            )}
+            {config.vwap && data.indicator?.vwap && (
+              <div un-flex="~" un-justify="between" un-text="yellow-600">
+                <span un-text="sm">VWAP:</span>
+                <span un-text="sm">{data.indicator.vwap.toFixed(3)}</span>
               </div>
             )}
             {config.bbBand && data.indicator?.bb && (
@@ -505,6 +543,7 @@ export const YahooCandleChart = ({ data }: Props) => {
     adr: false,
     rsi: false,
     macd: false,
+    vwap: false,
   });
 
   const chartData = toChartData(data).slice(200);
@@ -620,6 +659,10 @@ export const YahooCandleChart = ({ data }: Props) => {
                     <input type="checkbox" checked={config.sma200} onChange={(e) => setConfig({ ...config, sma200: e.target.checked })} un-accent="purple-600" />
                     200
                   </label>
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-yellow-600">
+                    <input type="checkbox" checked={config.vwap} onChange={(e) => setConfig({ ...config, vwap: e.target.checked })} un-accent="yellow-600" />
+                    VWAP
+                  </label>
                 </div>
               </div>
               <div un-h="1px" un-bg="gray-100" />
@@ -727,6 +770,7 @@ export const YahooCandleChart = ({ data }: Props) => {
             <Bar dataKey="high" shape={<CustomCandlestick />} />
             {config.sma50 && <Line type="monotone" dataKey="indicator.sma.50" stroke="#2563eb" dot={false} strokeWidth={1.5} isAnimationActive={false} />}
             {config.sma200 && <Line type="monotone" dataKey="indicator.sma.200" stroke="#9333ea" dot={false} strokeWidth={1.5} isAnimationActive={false} />}
+            {config.vwap && <Line type="monotone" dataKey="indicator.vwap" stroke="#ca8a04" dot={false} strokeWidth={1.5} isAnimationActive={false} />}
             {config.bbBand && (
               <>
                 <Line type="monotone" dataKey="indicator.bb.upper" stroke="#0d9488" strokeDasharray="3 3" dot={false} strokeWidth={1} isAnimationActive={false} />

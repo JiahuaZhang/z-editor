@@ -24,6 +24,7 @@ type ChartData = {
   volume: number;
   indicator?: {
     sma?: Record<number, number | null>;
+    ema?: Record<number, number | null>;
     atr?: number;
     natr?: number;
     adr?: number;
@@ -53,6 +54,8 @@ type ChartData = {
 export type ChartConfig = {
   sma50: boolean;
   sma200: boolean;
+  ema20: boolean;
+  ema200: boolean;
   natr: boolean;
   bbBand: boolean;
   bbWidth: boolean;
@@ -288,6 +291,22 @@ export const getEMA = (data: number[], period: number) => {
   return emaArray;
 };
 
+export const addEMAIndicator = (data: ChartData[], periods: number[]) => {
+  const closes = data.map(d => d.close);
+
+  periods.forEach(period => {
+    const emaValues = getEMA(closes, period);
+    for (let i = 0; i < data.length; i++) {
+      if (!data[i].indicator) data[i].indicator = {};
+      if (!data[i].indicator!.ema) data[i].indicator!.ema = {};
+
+      data[i].indicator!.ema![period] = emaValues[i];
+    }
+  });
+
+  return data;
+};
+
 export const addMACD = (data: ChartData[], fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) => {
   const closes = data.map(d => d.close);
   const fastEMA = getEMA(closes, fastPeriod);
@@ -412,6 +431,7 @@ export const toChartData = (yahooData: Yahoo.ChartResponse): ChartData[] => {
   addMACD(chartData);
   addVWAP(chartData);
   addOBV(chartData);
+  addEMAIndicator(chartData, [20, 200]);
 
   return chartData;
 };
@@ -464,6 +484,18 @@ const tooltip = (config: ChartConfig) => <Tooltip
               <div un-flex="~" un-justify="between" un-text="purple-600">
                 <span un-text="sm">SMA200:</span>
                 <span un-text="sm">{data.indicator.sma[200].toFixed(3)}</span>
+              </div>
+            )}
+            {config.ema20 && data.indicator?.ema?.[20] && (
+              <div un-flex="~" un-justify="between" un-text="sky-500">
+                <span un-text="sm">EMA20:</span>
+                <span un-text="sm">{data.indicator.ema[20].toFixed(3)}</span>
+              </div>
+            )}
+            {config.ema200 && data.indicator?.ema?.[200] && (
+              <div un-flex="~" un-justify="between" un-text="violet-500">
+                <span un-text="sm">EMA200:</span>
+                <span un-text="sm">{data.indicator.ema[200].toFixed(3)}</span>
               </div>
             )}
             {config.vwap && data.indicator?.vwap && (
@@ -563,6 +595,8 @@ export const YahooCandleChart = ({ data }: Props) => {
   const [config, setConfig] = useState<ChartConfig>({
     sma50: false,
     sma200: false,
+    ema20: false,
+    ema200: false,
     natr: false,
     bbBand: false,
     bbWidth: false,
@@ -689,9 +723,29 @@ export const YahooCandleChart = ({ data }: Props) => {
                     <input type="checkbox" checked={config.sma200} onChange={(e) => setConfig({ ...config, sma200: e.target.checked })} un-accent="purple-600" />
                     200
                   </label>
+                </div>
+              </div>
+              <div un-h="1px" un-bg="gray-100" />
+              <div un-flex="~ items-center justify-between">
+                <span un-text="sm font-semibold gray-700">EMA</span>
+                <div un-flex="~ gap-3">
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-sky-500">
+                    <input type="checkbox" checked={config.ema20} onChange={(e) => setConfig({ ...config, ema20: e.target.checked })} un-accent="sky-500" />
+                    20
+                  </label>
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-violet-500">
+                    <input type="checkbox" checked={config.ema200} onChange={(e) => setConfig({ ...config, ema200: e.target.checked })} un-accent="violet-500" />
+                    200
+                  </label>
+                </div>
+              </div>
+              <div un-h="1px" un-bg="gray-100" />
+              <div un-flex="~ items-center justify-between">
+                <span un-text="sm font-semibold gray-700">VWAP</span>
+                <div un-flex="~ gap-3">
                   <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-yellow-600">
                     <input type="checkbox" checked={config.vwap} onChange={(e) => setConfig({ ...config, vwap: e.target.checked })} un-accent="yellow-600" />
-                    VWAP
+                    Show
                   </label>
                 </div>
               </div>
@@ -810,6 +864,8 @@ export const YahooCandleChart = ({ data }: Props) => {
             <Bar dataKey="high" shape={<CustomCandlestick />} />
             {config.sma50 && <Line type="monotone" dataKey="indicator.sma.50" stroke="#2563eb" dot={false} strokeWidth={1.5} isAnimationActive={false} />}
             {config.sma200 && <Line type="monotone" dataKey="indicator.sma.200" stroke="#9333ea" dot={false} strokeWidth={1.5} isAnimationActive={false} />}
+            {config.ema20 && <Line type="monotone" dataKey="indicator.ema.20" stroke="#0ea5e9" dot={false} strokeWidth={1.5} isAnimationActive={false} />}
+            {config.ema200 && <Line type="monotone" dataKey="indicator.ema.200" stroke="#8b5cf6" dot={false} strokeWidth={1.5} isAnimationActive={false} />}
             {config.vwap && <Line type="monotone" dataKey="indicator.vwap" stroke="#ca8a04" dot={false} strokeWidth={1.5} isAnimationActive={false} />}
             {config.bbBand && (
               <>

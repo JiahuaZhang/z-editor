@@ -31,6 +31,10 @@ type ChartData = {
     rsi?: number;
     vwap?: number;
     obv?: number;
+    stoch?: {
+      k: number;
+      d: number;
+    };
     macd?: {
       macd: number;
       signal: number;
@@ -66,6 +70,7 @@ export type ChartConfig = {
   macd: boolean;
   vwap: boolean;
   obv: boolean;
+  stoch: boolean;
 };
 
 type Props = { data: Yahoo.ChartResponse; };
@@ -291,6 +296,23 @@ export const getEMA = (data: number[], period: number) => {
   return emaArray;
 };
 
+export const getSMA = (data: number[], period: number) => {
+  const smaArray = new Array<number | null>(data.length).fill(null);
+
+  let sum = 0;
+  for (let i = 0; i < period; i++) {
+    sum += data[i];
+  }
+  smaArray[period - 1] = sum / period;
+
+  for (let i = period; i < data.length; i++) {
+    sum -= data[i - period];
+    sum += data[i];
+    smaArray[i] = sum / period;
+  }
+  return smaArray;
+};
+
 export const addEMAIndicator = (data: ChartData[], periods: number[]) => {
   const closes = data.map(d => d.close);
 
@@ -304,6 +326,48 @@ export const addEMAIndicator = (data: ChartData[], periods: number[]) => {
     }
   });
 
+  return data;
+};
+
+export const addStochastic = (data: ChartData[], period = 14, smoothK = 3, smoothD = 3) => {
+  const highs = data.map(d => d.high);
+  const lows = data.map(d => d.low);
+  const closes = data.map(d => d.close);
+
+  const kValues: number[] = new Array(period).fill(50);
+
+  for (let i = period; i < data.length; i++) {
+    const windowHighs = highs.slice(i - period + 1, i + 1);
+    const windowLows = lows.slice(i - period + 1, i + 1);
+    const highestHigh = Math.max(...windowHighs);
+    const lowestLow = Math.min(...windowLows);
+
+    const k = ((closes[i] - lowestLow) / (highestHigh - lowestLow)) * 100;
+    kValues.push(k);
+  }
+
+  // Smooth K (Slow %K)
+  const smoothKValues = getSMA(kValues, smoothK);
+
+  // %D (SMA of Slow %K)
+  // Replace nulls with 0 or handle appropriately. Since we need a continuous array for SMA,
+  // and we know the first few are null, we can just treat them as 0 or skip.
+  // Better approach: Pass only non-nulls if possible, or adjust getSMA to handle nulls.
+  // For simplicity here, let's cast or fill, but since getSMA logic handles indices,
+  // we should probably just treat nulls as 0 for the calculation or ensure we don't pass them if not needed.
+  // Actually, getSMA expects number[]. Let's map null to 0 or previous value.
+  const smoothKValuesFilled = smoothKValues.map(v => v ?? 0);
+  const dValues = getSMA(smoothKValuesFilled, smoothD);
+
+  for (let i = 0; i < data.length; i++) {
+    if (!data[i].indicator) data[i].indicator = {};
+    if (smoothKValues[i] !== null && dValues[i] !== null) {
+      data[i].indicator!.stoch = {
+        k: smoothKValues[i]!,
+        d: dValues[i]!
+      };
+    }
+  }
   return data;
 };
 
@@ -432,6 +496,7 @@ export const toChartData = (yahooData: Yahoo.ChartResponse): ChartData[] => {
   addVWAP(chartData);
   addOBV(chartData);
   addEMAIndicator(chartData, [20, 200]);
+  addStochastic(chartData);
 
   return chartData;
 };
@@ -496,6 +561,12 @@ const tooltip = (config: ChartConfig) => <Tooltip
               <div un-flex="~" un-justify="between" un-text="violet-500">
                 <span un-text="sm">EMA200:</span>
                 <span un-text="sm">{data.indicator.ema[200].toFixed(3)}</span>
+              </div>
+            )}
+            {config.stoch && data.indicator?.stoch && (
+              <div un-flex="~" un-justify="between" un-text="blue-500">
+                <span un-text="sm">Stoch:</span>
+                <span un-text="sm">K: {data.indicator.stoch.k.toFixed(1)} D: {data.indicator.stoch.d.toFixed(1)}</span>
               </div>
             )}
             {config.vwap && data.indicator?.vwap && (
@@ -590,7 +661,7 @@ const tooltip = (config: ChartConfig) => <Tooltip
 
 // todo: vwap
 export const YahooCandleChart = ({ data }: Props) => {
-  const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'bbw' | 'adr' | 'rsi' | 'macd' | 'obv' | 'volume' | ''>('');
+  const [hoveredChart, setHoveredChart] = useState<'price' | 'natr' | 'bbw' | 'adr' | 'rsi' | 'macd' | 'obv' | 'stoch' | 'volume' | ''>('');
   const [showConfig, setShowConfig] = useState(false);
   const [config, setConfig] = useState<ChartConfig>({
     sma50: false,
@@ -607,6 +678,7 @@ export const YahooCandleChart = ({ data }: Props) => {
     macd: false,
     vwap: false,
     obv: false,
+    stoch: false,
   });
 
   const chartData = toChartData(data).slice(200);
@@ -671,7 +743,8 @@ export const YahooCandleChart = ({ data }: Props) => {
   const rsiHeight = config.rsi ? 15 : 0;
   const macdHeight = config.macd ? 20 : 0;
   const obvHeight = config.obv ? 15 : 0;
-  const priceHeight = 100 - volumeHeight - natrHeight - bbwHeight - adrHeight - rsiHeight - macdHeight - obvHeight;
+  const stochHeight = config.stoch ? 15 : 0;
+  const priceHeight = 100 - volumeHeight - natrHeight - bbwHeight - adrHeight - rsiHeight - macdHeight - obvHeight - stochHeight;
 
   return (
     <div un-flex="~ col" un-h="140">
@@ -745,6 +818,16 @@ export const YahooCandleChart = ({ data }: Props) => {
                 <div un-flex="~ gap-3">
                   <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-yellow-600">
                     <input type="checkbox" checked={config.vwap} onChange={(e) => setConfig({ ...config, vwap: e.target.checked })} un-accent="yellow-600" />
+                    Show
+                  </label>
+                </div>
+              </div>
+              <div un-h="1px" un-bg="gray-100" />
+              <div un-flex="~ items-center justify-between">
+                <span un-text="sm font-semibold gray-700">Stoch</span>
+                <div un-flex="~ gap-3">
+                  <label un-flex="~ items-center gap-1.5 text-sm cursor-pointer hover:text-blue-500">
+                    <input type="checkbox" checked={config.stoch} onChange={(e) => setConfig({ ...config, stoch: e.target.checked })} un-accent="blue-500" />
                     Show
                   </label>
                 </div>
@@ -849,7 +932,7 @@ export const YahooCandleChart = ({ data }: Props) => {
             <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
             <XAxis
               dataKey="datetime"
-              hide={config.natr || config.bbWidth || config.adr || config.rsi || config.macd || config.obv || config.volume}
+              hide={config.natr || config.bbWidth || config.adr || config.rsi || config.macd || config.obv || config.stoch || config.volume}
               stroke="#666"
               fontSize={12}
               tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -894,7 +977,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
               <XAxis
                 dataKey="datetime"
-                hide={config.bbWidth || config.adr || config.rsi || config.macd || config.obv || config.volume}
+                hide={config.bbWidth || config.adr || config.rsi || config.macd || config.obv || config.stoch || config.volume}
                 stroke="#666"
                 fontSize={12}
                 tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -920,7 +1003,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
               <XAxis
                 dataKey="datetime"
-                hide={config.adr || config.rsi || config.macd || config.obv || config.volume}
+                hide={config.adr || config.rsi || config.macd || config.obv || config.stoch || config.volume}
                 stroke="#666"
                 fontSize={12}
                 tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -952,7 +1035,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
               <XAxis
                 dataKey="datetime"
-                hide={config.rsi || config.macd || config.obv || config.volume}
+                hide={config.rsi || config.macd || config.obv || config.stoch || config.volume}
                 stroke="#666"
                 fontSize={12}
                 tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -1006,7 +1089,7 @@ export const YahooCandleChart = ({ data }: Props) => {
               <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
               <XAxis
                 dataKey="datetime"
-                hide={config.obv || config.volume}
+                hide={config.obv || config.stoch || config.volume}
                 stroke="#666"
                 fontSize={12}
                 tickFormatter={(value) => dayjs(value).format('M/D')}
@@ -1053,6 +1136,35 @@ export const YahooCandleChart = ({ data }: Props) => {
               />
               {hoveredChart === 'obv' && tooltip(config)}
               <Line type="monotone" dataKey="indicator.obv" stroke="#0891b2" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        )}
+        {config.stoch && (
+          <ResponsiveContainer width="100%" height={`${stochHeight}%`}>
+            <ComposedChart
+              data={chartData}
+              syncId="yahoo-chart"
+              onMouseMove={() => setHoveredChart('stoch')}
+              onMouseLeave={() => setHoveredChart('')}
+            >
+              <CartesianGrid strokeDasharray="4" stroke="#f0f0f0" />
+              <XAxis
+                dataKey="datetime"
+                hide={config.volume}
+                stroke="#666"
+                fontSize={12}
+                tickFormatter={(value) => dayjs(value).format('M/D')}
+              />
+              <YAxis stroke="#666"
+                fontSize={12}
+                domain={[0, 100]}
+                ticks={[20, 50, 80]}
+              />
+              {hoveredChart === 'stoch' && tooltip(config)}
+              <ReferenceLine y={80} stroke="#ef4444" strokeDasharray="3 3" />
+              <ReferenceLine y={20} stroke="#22c55e" strokeDasharray="3 3" />
+              <Line type="monotone" dataKey="indicator.stoch.k" stroke="#3b82f6" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+              <Line type="monotone" dataKey="indicator.stoch.d" stroke="#f97316" dot={false} strokeWidth={1.5} isAnimationActive={false} />
             </ComposedChart>
           </ResponsiveContainer>
         )}

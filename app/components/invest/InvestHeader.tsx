@@ -34,6 +34,15 @@ export const InvestHeader = ({ user }: { user: User; }) => {
             Stock
           </div>}
         </NavLink>
+        <NavLink to="/invest/option" prefetch='render'>
+          {({ isActive }) => <div un-flex='~' un-text={`${isActive && 'red-400'} hover:red-400`} un-gap='0.5' un-p='2'
+            un-shadow='hover:[0_2px_2px_#51a2ff]'
+            un-border='rounded'
+          >
+            <div className="i-mdi:chart-bar" un-text='2xl' />
+            Option
+          </div>}
+        </NavLink>
       </div>
 
       <Popover>

@@ -6,7 +6,7 @@ import type { Route } from './+types/invest.stock';
 
 async function fetchStockData(request: Request, symbol: string): Promise<Yahoo.ChartResponse> {
   const baseUrl = new URL(request.url).origin;
-  const url = `${baseUrl}/api/yahoo/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=1y`;
+  const url = `${baseUrl}/api/yahoo/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=2y`;
   const response = await fetch(url);
 
   return response.json();

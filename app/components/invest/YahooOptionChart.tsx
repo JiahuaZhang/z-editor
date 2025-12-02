@@ -252,7 +252,7 @@ export function YahooOptionChart({ data }: YahooOptionChartProps) {
           </div>
 
           <div un-flex="~ items-center">
-            <h3 un-text="lg font-bold center" un-flex='1'>Volume Distribution</h3>
+            <h3 un-text="lg font-bold center" un-flex='1'>Volume</h3>
             <div un-flex="~ gap-2" un-bg="gray-100" un-p="1" un-rounded="lg">
               {(['all', 'call', 'put'] as const).map((type) => (
                 <button
@@ -292,6 +292,8 @@ export function YahooOptionChart({ data }: YahooOptionChartProps) {
           Select an expiration date to view chart
         </div>
       )}
+
+      {currentChain && <LastTradeDateSection currentChain={currentChain} />}
 
       <div un-bg="gray-50" un-rounded="lg" un-p="x-4 y-2" un-border="~ gray-200">
         <h3 un-text="lg font-bold mb-4 gray-800">Quote Details</h3>
@@ -387,6 +389,146 @@ function QuoteDisplay({ quote }: { quote: YahooQuote; }) {
           </div>
         )
       }
+    </div>
+  );
+}
+
+const format = (ts: number) => dayjs.unix(ts).format('YYYY-MM-DD');
+function LastTradeDateSection({ currentChain }: { currentChain: { calls: OptionContract[]; puts: OptionContract[]; }; }) {
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [oiFilter, setOiFilter] = useState<'all' | 'call' | 'put'>('all');
+  const [volFilter, setVolFilter] = useState<'all' | 'call' | 'put'>('all');
+
+  const tradeDates = useMemo(() => {
+    const dates = new Set<string>();
+
+    currentChain.calls.forEach(c => dates.add(format(c.lastTradeDate)));
+    currentChain.puts.forEach(c => dates.add(format(c.lastTradeDate)));
+
+    return Array.from(dates).sort().reverse();
+  }, [currentChain]);
+
+  useMemo(() => {
+    if (tradeDates.length > 0 && !tradeDates.includes(selectedDate)) {
+      setSelectedDate(tradeDates[0]);
+    }
+  }, [tradeDates, selectedDate]);
+
+  const chartData = useMemo(() => {
+    if (!selectedDate) return [];
+
+    const strikeMap = new Map<number, { strike: number; callOI: number; putOI: number; callVol: number; putVol: number; }>();
+
+    const processContract = (c: OptionContract, type: 'call' | 'put') => {
+      if (format(c.lastTradeDate) !== selectedDate) return;
+
+      if (!strikeMap.has(c.strike)) {
+        strikeMap.set(c.strike, { strike: c.strike, callOI: 0, putOI: 0, callVol: 0, putVol: 0 });
+      }
+      const item = strikeMap.get(c.strike)!;
+      if (type === 'call') {
+        item.callOI += c.openInterest;
+        item.callVol += c.volume;
+      } else {
+        item.putOI += c.openInterest;
+        item.putVol += c.volume;
+      }
+    };
+
+    currentChain.calls.forEach(c => processContract(c, 'call'));
+    currentChain.puts.forEach(c => processContract(c, 'put'));
+
+    return Array.from(strikeMap.values()).sort((a, b) => a.strike - b.strike);
+  }, [currentChain, selectedDate]);
+
+  if (!selectedDate) return null;
+
+  return (
+    <div un-flex="~ col" un-gap="6" un-border="t gray-200" un-pt="6">
+      <div un-flex="~ col" un-gap="2">
+        <div un-text="sm font-medium gray-700">Last Trade Date</div>
+        <div un-flex="~ wrap gap-2">
+          {tradeDates.map(date => (
+            <button
+              key={date}
+              onClick={() => setSelectedDate(date)}
+              un-p="x-3 y-1.5"
+              un-rounded="full"
+              un-border={`~ ${selectedDate === date ? 'blue-600' : 'gray-300'}`}
+              un-bg={`${selectedDate === date ? 'blue-600' : 'white'}`}
+              un-text={`sm ${selectedDate === date ? 'white' : 'gray-700'}`}
+            >
+              {date === dayjs().format('YYYY-MM-DD') ? 'Today' : date}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div un-flex="~ col" un-gap="2">
+        <div un-flex="~ items-center">
+          <h3 un-text="lg font-bold center" un-flex='1'>Open Interest (Traded on {selectedDate})</h3>
+          <div un-flex="~ gap-2" un-bg="gray-100" un-p="1" un-rounded="lg">
+            {(['all', 'call', 'put'] as const).map((type) => (
+              <button
+                key={type}
+                un-p="x-3 y-1"
+                un-rounded="md"
+                un-text={`sm capitalize ${oiFilter === type ? 'blue-600' : 'gray-500 hover:gray-700'}`}
+                un-bg={`${oiFilter === type ? 'white' : 'transparent'}`}
+                un-shadow={`${oiFilter === type ? 'sm' : 'none'}`}
+                onClick={() => setOiFilter(type)}
+              >
+                {type === 'all' ? 'All' : type + 's'}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div un-h="96" un-w="full" un-bg="white" un-p="4" un-rounded="lg" un-border="~ gray-200">
+          <ResponsiveContainer>
+            <BarChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="strike" interval="preserveStartEnd" minTickGap={30} />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {(oiFilter === 'all' || oiFilter === 'call') && <Bar dataKey="callOI" name="Call OI" fill="#10b981" stackId="a" />}
+              {(oiFilter === 'all' || oiFilter === 'put') && <Bar dataKey="putOI" name="Put OI" fill="#ef4444" stackId="a" />}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div un-flex="~ items-center">
+          <h3 un-text="lg font-bold center" un-flex='1'>Volume (Traded on {selectedDate})</h3>
+          <div un-flex="~ gap-2" un-bg="gray-100" un-p="1" un-rounded="lg">
+            {(['all', 'call', 'put'] as const).map((type) => (
+              <button
+                key={type}
+                un-p="x-3 y-1"
+                un-rounded="md"
+                un-text={`sm capitalize ${volFilter === type ? 'blue-600' : 'gray-500 hover:gray-700'}`}
+                un-bg={`${volFilter === type ? 'white' : 'transparent'}`}
+                un-shadow={`${volFilter === type ? 'sm' : 'none'}`}
+                onClick={() => setVolFilter(type)}
+              >
+                {type === 'all' ? 'All' : type + 's'}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div un-h="96" un-w="full" un-bg="white" un-p="4" un-rounded="lg" un-border="~ gray-200">
+          <ResponsiveContainer>
+            <BarChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="strike" interval="preserveStartEnd" minTickGap={30} />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {(volFilter === 'all' || volFilter === 'call') && <Bar dataKey="callVol" name="Call Vol" fill="#3b82f6" stackId="a" />}
+              {(volFilter === 'all' || volFilter === 'put') && <Bar dataKey="putVol" name="Put Vol" fill="#f59e0b" stackId="a" />}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
     </div>
   );
 }

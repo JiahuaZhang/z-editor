@@ -34,14 +34,14 @@ const POPULAR_STOCKS: StockSymbol[] = [
 ];
 
 type StockSymbolSearchProps = {
-  onSubmit: (symbol: string) => void;
+  onSubmit?: (symbol: string) => void;
   basePath?: string;
 };
 
 // todo:
 // search to hit api? If there's only 1, auto redirect to that symbol
 // default list, after typing, try to hit api as well? update new dropdown. (should cache api results -- backend)
-export function StockSymbolSearch({ onSubmit, basePath = '/invest/stock' }: StockSymbolSearchProps) {
+export function StockSymbolSearch({ onSubmit = () => {}, basePath = '/invest/stock', ...rest }: StockSymbolSearchProps) {
   const [searchParams] = useSearchParams();
   const [inputValue, setInputValue] = useState('^SPX');
   const [isOpen, setIsOpen] = useState(false);
@@ -99,7 +99,7 @@ export function StockSymbolSearch({ onSubmit, basePath = '/invest/stock' }: Stoc
   };
 
   return (
-    <div ref={containerRef} un-relative="~" un-w="md" >
+    <div ref={containerRef} un-relative="~" un-w="md" {...rest} >
       <form onSubmit={handleSubmit} un-flex="~" un-gap="2">
         <div un-relative="~" un-flex="1">
           <Input

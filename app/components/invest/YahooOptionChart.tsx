@@ -561,9 +561,10 @@ function OptionStatisticsSection({ currentChain }: { currentChain: { calls: Opti
 }
 
 const formatLargeCurrency = (val: number) => {
-  if (Math.abs(val) >= 1e9) return `$${(val / 1e9).toFixed(2)}B`;
-  if (Math.abs(val) >= 1e6) return `$${(val / 1e6).toFixed(2)}M`;
-  if (Math.abs(val) >= 1e3) return `$${(val / 1e3).toFixed(2)}K`;
+  // metric didn't * 100, adjust for it
+  if (Math.abs(val) >= 1e7) return `$${(val / 1e7).toFixed(2)}B`;
+  if (Math.abs(val) >= 1e4) return `$${(val / 1e4).toFixed(2)}M`;
+  if (Math.abs(val) >= 1e1) return `$${(val / 1e1).toFixed(2)}K`;
   return `$${val.toFixed(2)}`;
 };
 
@@ -577,25 +578,25 @@ function OptionFiscalAnalysisSection({ currentChain }: { currentChain: { calls: 
         <StatTable
           title="Traded Value (Price * Vol)"
           data={allContracts}
-          metric={(c) => c.lastPrice * 100 * (c.volume ?? 0)}
+          metric={(c) => c.lastPrice * (c.volume ?? 0)}
           formatVal={formatLargeCurrency}
         />
         <StatTable
           title="Position Value (Price * OI)"
           data={allContracts}
-          metric={(c) => c.lastPrice * 100 * (c.openInterest ?? 0)}
+          metric={(c) => c.lastPrice * (c.openInterest ?? 0)}
           formatVal={formatLargeCurrency}
         />
         <StatTable
           title="Momentum Value (Change * Vol)"
           data={allContracts}
-          metric={(c) => c.change * 100 * (c.volume ?? 0)}
+          metric={(c) => c.change * (c.volume ?? 0)}
           formatVal={formatLargeCurrency}
         />
         <StatTable
           title="Value Change (Change * OI)"
           data={allContracts}
-          metric={(c) => c.change * 100 * (c.openInterest ?? 0)}
+          metric={(c) => c.change * (c.openInterest ?? 0)}
           formatVal={formatLargeCurrency}
         />
       </div>

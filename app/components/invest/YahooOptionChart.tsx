@@ -295,6 +295,8 @@ export function YahooOptionChart({ data }: YahooOptionChartProps) {
 
       {currentChain && <LastTradeDateSection currentChain={currentChain} />}
 
+      {currentChain && <OptionStatisticsSection currentChain={currentChain} />}
+
       <div un-bg="gray-50" un-rounded="lg" un-p="x-4 y-2" un-border="~ gray-200">
         <h3 un-text="lg font-bold mb-4 gray-800">Quote Details</h3>
         <QuoteDisplay quote={data.quote} />
@@ -528,6 +530,96 @@ function LastTradeDateSection({ currentChain }: { currentChain: { calls: OptionC
             </BarChart>
           </ResponsiveContainer>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function OptionStatisticsSection({ currentChain }: { currentChain: { calls: OptionContract[]; puts: OptionContract[]; }; }) {
+  const allContracts = useMemo(() => [...currentChain.calls, ...currentChain.puts], [currentChain]);
+
+  const formatCurrency = (val: number) => `$${val.toFixed(2)}`;
+  const formatPercent = (val: number) => `${val.toFixed(2)}%`;
+  const formatNumber = (val: number) => val ? val.toLocaleString() : 'N/A';
+  const formatVol = (val: number) => `${(val * 100).toFixed(2)}%`;
+
+  return (
+    <div un-flex="~ col" un-gap="2">
+      <h3 un-text="lg font-bold gray-800">{dayjs.unix(allContracts[0].expiration).format('MM/DD')} Option Chain Statistics</h3>
+      <div un-grid="~ cols-1 md:cols-2 xl:cols-3 gap-4">
+        <StatTable title="Last Price" data={allContracts} metric="lastPrice" formatVal={formatCurrency} />
+        <StatTable title="Change $" data={allContracts} metric="change" formatVal={formatCurrency} />
+        <StatTable title="Change %" data={allContracts} metric="percentChange" formatVal={formatPercent} />
+        <StatTable title="Volume" data={allContracts} metric="volume" formatVal={formatNumber} />
+        <StatTable title="Open Interest" data={allContracts} metric="openInterest" formatVal={formatNumber} />
+        <StatTable title="Implied Volatility" data={allContracts} metric="impliedVolatility" formatVal={formatVol} />
+      </div>
+    </div>
+  );
+}
+
+function OptionContractPanel({ contract }: { contract: OptionContract; }) {
+  return (
+    <div un-text="xs font-medium gray-900 truncate">
+      <div un-flex="~ items-center gap-4">
+        ${contract.strike} {contract.contractSymbol.includes('C') ? 'Call' : 'Put'}
+        <div un-text="xs gray-500">{contract.inTheMoney ? 'ITM' : 'OTM'}</div>
+      </div>
+      {contract.impliedVolatility > 0.01 && <div un-text="xs gray-500">Implied Volatility: {(contract.impliedVolatility * 100).toFixed(2)}%</div>}
+      <div un-flex="~ items-center gap-2" un-text="xs gray-500">
+        ${contract.lastPrice}
+        {contract.openInterest > 0 && <div>OI: {contract.openInterest}</div>}
+        {contract.volume > 0 && <div>Vol: {contract.volume}</div>}
+      </div>
+    </div>
+  );
+}
+
+function StatTable({ title, data, metric, formatVal }: {
+  title: string;
+  data: OptionContract[];
+  metric: keyof OptionContract;
+  formatVal: (val: any) => string;
+}) {
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  const sortedData = useMemo(() => {
+    return [...data].sort((a, b) => {
+      const valA = a[metric] as number;
+      const valB = b[metric] as number;
+      return sortOrder === 'desc' ? valA - valB : valB - valA;
+    });
+  }, [data, metric, sortOrder]);
+
+  return (
+    <div un-flex="~ col" un-bg="white" un-rounded="lg" un-border="~ gray-200" un-overflow="hidden" un-h="80">
+      <div un-flex="~ justify-end gap-2"
+        un-p="x-3 y-2" un-bg="gray-50" un-border="b gray-200">
+        <div un-text="sm font-bold gray-700">{title}</div>
+        <button
+          onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+          un-text="xl blue-500 hover:blue-600"
+          un-flex='~'
+        >
+          <div className={sortOrder === 'asc' ? 'i-ph:sort-ascending-thin' : 'i-ph:sort-descending-thin'} />
+        </button>
+      </div>
+
+      <div un-overflow="y-auto" un-flex="1">
+        <table un-w="full" un-text="left sm">
+          <tbody un-divide="y gray-100">
+            {sortedData.map((contract) => (
+              <tr key={contract.contractSymbol} un-hover="bg-gray-50">
+                <td un-p="2">
+                  <OptionContractPanel contract={contract} />
+                </td>
+                <td un-px="2" un-text="right font-bold gray-900 text-xs">
+                  {formatVal(contract[metric])}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

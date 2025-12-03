@@ -631,9 +631,9 @@ function StatTable({ title, data, metric, formatVal }: {
 
   const sortedData = useMemo(() => {
     return [...data].sort((a, b) => {
-      const valA = typeof metric === 'function' ? metric(a) : (a[metric] ?? 0) as number;
-      const valB = typeof metric === 'function' ? metric(b) : (b[metric] ?? 0) as number;
-      return sortOrder === 'desc' ? valA - valB : valB - valA;
+      const valA = Math.abs(typeof metric === 'function' ? metric(a) : (a[metric] ?? 0) as number);
+      const valB = Math.abs(typeof metric === 'function' ? metric(b) : (b[metric] ?? 0) as number);
+      return sortOrder === 'asc' ? valA - valB : valB - valA;
     });
   }, [data, metric, sortOrder]);
 
@@ -670,4 +670,3 @@ function StatTable({ title, data, metric, formatVal }: {
     </div>
   );
 }
-

@@ -297,6 +297,8 @@ export function YahooOptionChart({ data }: YahooOptionChartProps) {
 
       {currentChain && <OptionStatisticsSection currentChain={currentChain} />}
 
+      {currentChain && <OptionFiscalAnalysisSection currentChain={currentChain} />}
+
       <div un-bg="gray-50" un-rounded="lg" un-p="x-4 y-2" un-border="~ gray-200">
         <h3 un-text="lg font-bold mb-4 gray-800">Quote Details</h3>
         <QuoteDisplay quote={data.quote} />
@@ -540,8 +542,8 @@ function OptionStatisticsSection({ currentChain }: { currentChain: { calls: Opti
 
   const formatCurrency = (val: number) => `$${val.toFixed(2)}`;
   const formatPercent = (val: number) => `${val.toFixed(2)}%`;
-  const formatNumber = (val: number) => val ? val.toLocaleString() : 'N/A';
-  const formatVol = (val: number) => `${(val * 100).toFixed(2)}%`;
+  const formatNumber = (val: number) => `${val}`;
+  const formatVolatility = (val: number) => `${(val * 100).toFixed(2)}%`;
 
   return (
     <div un-flex="~ col" un-gap="2">
@@ -552,7 +554,50 @@ function OptionStatisticsSection({ currentChain }: { currentChain: { calls: Opti
         <StatTable title="Change %" data={allContracts} metric="percentChange" formatVal={formatPercent} />
         <StatTable title="Volume" data={allContracts} metric="volume" formatVal={formatNumber} />
         <StatTable title="Open Interest" data={allContracts} metric="openInterest" formatVal={formatNumber} />
-        <StatTable title="Implied Volatility" data={allContracts} metric="impliedVolatility" formatVal={formatVol} />
+        <StatTable title="Implied Volatility" data={allContracts} metric="impliedVolatility" formatVal={formatVolatility} />
+      </div>
+    </div>
+  );
+}
+
+const formatLargeCurrency = (val: number) => {
+  if (Math.abs(val) >= 1e9) return `$${(val / 1e9).toFixed(2)}B`;
+  if (Math.abs(val) >= 1e6) return `$${(val / 1e6).toFixed(2)}M`;
+  if (Math.abs(val) >= 1e3) return `$${(val / 1e3).toFixed(2)}K`;
+  return `$${val.toFixed(2)}`;
+};
+
+function OptionFiscalAnalysisSection({ currentChain }: { currentChain: { calls: OptionContract[]; puts: OptionContract[]; }; }) {
+  const allContracts = useMemo(() => [...currentChain.calls, ...currentChain.puts], [currentChain]);
+
+  return (
+    <div un-flex="~ col" un-gap="2">
+      <h3 un-text="lg font-bold gray-800">Fiscal Analysis</h3>
+      <div un-grid="~ cols-1 md:cols-2 gap-4">
+        <StatTable
+          title="Traded Value (Price * Vol)"
+          data={allContracts}
+          metric={(c) => c.lastPrice * 100 * (c.volume ?? 0)}
+          formatVal={formatLargeCurrency}
+        />
+        <StatTable
+          title="Position Value (Price * OI)"
+          data={allContracts}
+          metric={(c) => c.lastPrice * 100 * (c.openInterest ?? 0)}
+          formatVal={formatLargeCurrency}
+        />
+        <StatTable
+          title="Momentum Value (Change * Vol)"
+          data={allContracts}
+          metric={(c) => c.change * 100 * (c.volume ?? 0)}
+          formatVal={formatLargeCurrency}
+        />
+        <StatTable
+          title="Value Change (Change * OI)"
+          data={allContracts}
+          metric={(c) => c.change * 100 * (c.openInterest ?? 0)}
+          formatVal={formatLargeCurrency}
+        />
       </div>
     </div>
   );
@@ -578,15 +623,15 @@ function OptionContractPanel({ contract }: { contract: OptionContract; }) {
 function StatTable({ title, data, metric, formatVal }: {
   title: string;
   data: OptionContract[];
-  metric: keyof OptionContract;
+  metric: keyof OptionContract | ((c: OptionContract) => number);
   formatVal: (val: any) => string;
 }) {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const sortedData = useMemo(() => {
     return [...data].sort((a, b) => {
-      const valA = a[metric] as number;
-      const valB = b[metric] as number;
+      const valA = typeof metric === 'function' ? metric(a) : (a[metric] ?? 0) as number;
+      const valB = typeof metric === 'function' ? metric(b) : (b[metric] ?? 0) as number;
       return sortOrder === 'desc' ? valA - valB : valB - valA;
     });
   }, [data, metric, sortOrder]);
@@ -614,7 +659,7 @@ function StatTable({ title, data, metric, formatVal }: {
                   <OptionContractPanel contract={contract} />
                 </td>
                 <td un-px="2" un-text="right font-bold gray-900 text-xs">
-                  {formatVal(contract[metric])}
+                  {formatVal(typeof metric === 'function' ? metric(contract) : contract[metric])}
                 </td>
               </tr>
             ))}
@@ -624,3 +669,4 @@ function StatTable({ title, data, metric, formatVal }: {
     </div>
   );
 }
+

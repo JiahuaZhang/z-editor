@@ -1,0 +1,2417 @@
+{
+  "items": "50",
+  "sentiment_score_definition": "x <= -0.35: Bearish; -0.35 < x <= -0.15: Somewhat-Bearish; -0.15 < x < 0.15: Neutral; 0.15 <= x < 0.35: Somewhat_Bullish; x >= 0.35: Bullish",
+  "relevance_score_definition": "0 < x <= 1, with a higher score indicating higher relevance.",
+  "feed": [
+    {
+      "title": "Apple Design Executive Alan Dye Poached by Meta in Major Coup",
+      "url": "https://finance.yahoo.com/news/apple-design-executive-alan-dye-194127030.html",
+      "time_published": "20251203T210900",
+      "authors": [
+        "Mark Gurman"
+      ],
+      "summary": "Meta Platforms Inc. has hired Alan Dye, Apple's head of user interface design since 2015, in a significant move highlighting Meta's push into AI-equipped consumer devices. Dye will lead a new design studio at Meta, focusing on hardware, software, and AI integration, reporting to CTO Andrew Bosworth. This departure is a major loss for Apple, following a series of high-profile resignations from its design and leadership teams.",
+      "banner_image": "https://s.yimg.com/ny/api/res/1.2/NKZLdgjcvEw1r3CdaUP6vA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTIzMDtoPTQ4O2NmPXdlYnA-/https://s.yimg.com/os/creatr-uploaded-images/2024-12/f47ae180-c22f-11ef-bb6b-8c68a34cf959",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.941161"
+        },
+        {
+          "topic": "mergers_and_acquisitions",
+          "relevance_score": "0.834489"
+        }
+      ],
+      "overall_sentiment_score": 0.049809,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.946113",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "0.887291",
+          "ticker_sentiment_score": "0.252626",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Intel: More Potential Ahead With New Likely Partnerships For Contract Chipmaking Business",
+      "url": "https://seekingalpha.com/article/4850074-intel-stock-potential-ahead-new-likely-partnerships-contract-chipmaking-business",
+      "time_published": "20251203T205600",
+      "authors": [
+        "Deep Value Investing"
+      ],
+      "summary": "The bull case for Intel Corporation hinges on its Foundry business securing tier-one external customers, with recent unconfirmed Apple deal rumors sparking market sentiment. While the 118% rally since August is notable, fundamental improvements for Intel are primarily seen in margins and earnings due to cost cuts in Foundry operations. The article suggests that INTC shares will remain susceptible to momentum traders until significant manufacturing contracts are secured, which could then re-rate its valuation.",
+      "banner_image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2235699136/image_2235699136.jpg?io=getty-c-w630",
+      "source": "Seeking Alpha",
+      "category_within_source": "General",
+      "source_domain": "Seeking Alpha",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.828532"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.738424"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.620783"
+        }
+      ],
+      "overall_sentiment_score": 0.200158,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.979552",
+          "ticker_sentiment_score": "0.257743",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.705572",
+          "ticker_sentiment_score": "0.111612",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Intel (INTC) Hits New Record on Apple Deal Hype",
+      "url": "https://finance.yahoo.com/news/intel-intc-hits-record-apple-154339299.html",
+      "time_published": "20251203T154300",
+      "authors": [
+        "Angelica Ballesteros"
+      ],
+      "summary": "Intel (INTC) reached a new record high due to speculation that it might supply chips to Apple Inc. Analyst Ming-Chi Kuo suggested Apple could tap Intel for its lowest-end M-series chips within two years, improving Intel's visibility as an advanced-node supplier. This development is part of Intel's broader turnaround efforts, which also include a $5 billion investment from Nvidia Corp. and a 10 percent stake acquisition by the US government.",
+      "banner_image": "https://s.yimg.com/ny/api/res/1.2/ztUvb5bBfSnEzDduOrwWyA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyNjtoPTQ4/https://s.yimg.com/os/creatr-uploaded-images/2020-12/d7df1000-34e4-11eb-b6ae-ac87660fe5ee",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.927739"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.837323"
+        },
+        {
+          "topic": "mergers_and_acquisitions",
+          "relevance_score": "0.613855"
+        }
+      ],
+      "overall_sentiment_score": 0.362169,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.915103",
+          "ticker_sentiment_score": "0.326305",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.987694",
+          "ticker_sentiment_score": "0.408541",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.565637",
+          "ticker_sentiment_score": "0.272917",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "The Zacks Analyst Blog Highlights Apple, Tesla, Micron Technology, Hamilton Beach Brands and Key Tronic",
+      "url": "https://finance.yahoo.com/news/zacks-analyst-blog-highlights-apple-150800093.html",
+      "time_published": "20251203T150800",
+      "authors": [
+        "Zacks Equity Research"
+      ],
+      "summary": "This Zacks Analyst Blog highlights research reports on major stocks including Apple, Tesla, and Micron Technology, along with micro-caps Hamilton Beach Brands and Key Tronic. The reports provide insights into each company's recent performance, financial outlook, and key market drivers. It covers topics like Apple's service revenue growth, Tesla's delivery records and challenges, and Micron Technology's benefits from the AI-driven memory market.",
+      "banner_image": "https://s.yimg.com/ny/api/res/1.2/zf_1wpp4e4lihErpE5wvzA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyNjtoPTQ4O2NmPXdlYnA-/https://s.yimg.com/os/creatr-uploaded-images/2020-11/3bc15d30-250e-11eb-bffb-472fe5eb11fe",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.913737"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.829141"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.725192"
+        },
+        {
+          "topic": "economy_fiscal",
+          "relevance_score": "0.614224"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.642432"
+        }
+      ],
+      "overall_sentiment_score": 0.174407,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MU",
+          "relevance_score": "0.977970",
+          "ticker_sentiment_score": "0.409933",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.916716",
+          "ticker_sentiment_score": "0.321913",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.875753",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Microsoft Stock Falls After Software Giant Reportedly Revises AI Sales Targets As Growth Falls Short Of Expectation",
+      "url": "https://stocktwits.com/news-articles/markets/equity/microsoft-stock-falls-after-software-giant-reportedly-revises-ai-sales-targets-as-growth-falls-short-of-expectation/cLIXtBYRE1l",
+      "time_published": "20251203T144600",
+      "authors": [
+        "Shivani Kumaresan"
+      ],
+      "summary": "Microsoft's stock fell over 2% after The Information reported that the tech giant revised its AI sales targets. Less than 20% of employees in the Azure cloud division met their projected Foundry sales growth for the fiscal year ending June, leading to scaled-back expectations for AI offerings. Microsoft had implemented new benchmarks in July, aiming for a 25% growth goal for AI products for fiscal year 2026.",
+      "banner_image": "https://news.stocktwits-cdn.com/Getty_Images_2189355808_jpg_b5ec521431.webp",
+      "source": "Stocktwits",
+      "category_within_source": "General",
+      "source_domain": "Stocktwits",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.936933"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.812847"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.744555"
+        }
+      ],
+      "overall_sentiment_score": 0.001,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.974504",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.618715",
+          "ticker_sentiment_score": "0.312233",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Guarantor: JPMorgan Chase & Co.",
+      "url": "https://www.streetinsider.com/SEC+Filings/Form+424B2+JPMORGAN+CHASE+%26amp%3B+CO/25693361.html",
+      "time_published": "20251203T142300",
+      "authors": [],
+      "summary": "JPMorgan Chase Financial Company LLC is offering Auto Callable Accelerated Barrier Notes linked to the performance of the Dow Jones Industrial Average®, Nasdaq-100® Technology Sector Index, and Russell 2000® Index, with payments fully guaranteed by JPMorgan Chase & Co. These structured investments target investors seeking early exit at a premium or uncapped appreciation, but also involve risks including potential loss of principal and credit risks. The notes are scheduled to price on or about December 10, 2025, and settle around December 15, 2025.",
+      "banner_image": null,
+      "source": "StreetInsider",
+      "category_within_source": "General",
+      "source_domain": "StreetInsider",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.977206"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.909352"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.823099"
+        }
+      ],
+      "overall_sentiment_score": 0.045251,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "JPM",
+          "relevance_score": "0.985633",
+          "ticker_sentiment_score": "0.110164",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.614861",
+          "ticker_sentiment_score": "0.049074",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.612031",
+          "ticker_sentiment_score": "0.032497",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.601958",
+          "ticker_sentiment_score": "0.043787",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple Inc. (AAPL) Analysts Update Coverage",
+      "url": "https://www.theglobeandmail.com/investing/markets/stocks/AAPL/pressreleases/36423077/apple-inc-aapl-analysts-update-coverage/",
+      "time_published": "20251203T065139",
+      "authors": [
+        "Stock Target Advisor"
+      ],
+      "summary": "Loop Capital reiterated its Buy rating on Apple (AAPL) and raised its price target to $325, citing strength in services, upcoming product cycles, an expanding installed base, and growing subscription revenue. Wedbush also reiterated an Outperform rating, believing Apple is poised for a major \"AI supercycle\" starting in late 2025 due to advancements in on-device AI and deeper product integration. Both firms emphasize Apple's strong ecosystem and brand equity as key competitive advantages.",
+      "banner_image": "https://www.stocktargetadvisor.com/blog/wp-content/uploads/2022/09/StockTargetAdvisor-Frame-19-1.jpg",
+      "source": "The Globe and Mail",
+      "category_within_source": "General",
+      "source_domain": "The Globe and Mail",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.923856"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.810593"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.717257"
+        }
+      ],
+      "overall_sentiment_score": 0.424224,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.979513",
+          "ticker_sentiment_score": "0.436996",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Turnberry, Simon Buy Miami Retail Asset for $131M",
+      "url": "https://www.commercialsearch.com/news/turnberry-simon-buy-miami-retail-asset-for-131m/",
+      "time_published": "20251203T000000",
+      "authors": [
+        "Matthew Kaufman"
+      ],
+      "summary": "Turnberry Associates and Simon Property Group have acquired Esplanade at Aventura, a 219,000-square-foot open-air mall in Aventura, Fla., for $131 million from Seritage Growth Properties. The property, now called The Abbey at Aventura, is adjacent to the Aventura Mall, which is also owned by the buyers. This acquisition highlights the strong Miami retail market, which had one of the lowest retail vacancy rates in the country at 3.1 percent through Q2 2025.",
+      "banner_image": "https://www.commercialsearch.com/news/wp-content/uploads/sites/46/2025/12/Aventura_Mall_FL_AdobeStock_488613233_Editorial_Use_Only.jpg",
+      "source": "Commercial Search",
+      "category_within_source": "General",
+      "source_domain": "Commercial Search",
+      "topics": [
+        {
+          "topic": "mergers_and_acquisitions",
+          "relevance_score": "0.949640"
+        },
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.907038"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.808558"
+        }
+      ],
+      "overall_sentiment_score": 0.200703,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "SPG",
+          "relevance_score": "0.972586",
+          "ticker_sentiment_score": "0.444562",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "SRE",
+          "relevance_score": "0.747956",
+          "ticker_sentiment_score": "0.144538",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "BAC",
+          "relevance_score": "0.628513",
+          "ticker_sentiment_score": "0.124827",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.600300",
+          "ticker_sentiment_score": "0.145804",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple Inc. $AAPL Shares Acquired by Everest Management Corp.",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-apple-inc-aapl-shares-acquired-by-everest-management-corp-2025-12-03/",
+      "time_published": "20251203T000000",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "Everest Management Corp. significantly increased its stake in Apple Inc. ($AAPL) by 47.9% in the second quarter, making it the firm's 9th-largest holding. This comes amidst considerable insider selling from Apple executives, though the company maintains strong fundamentals and a \"Moderate Buy\" analyst rating. The article also details recent institutional trading activity, dividend announcements, and stock performance metrics for Apple.",
+      "banner_image": "https://www.marketbeat.com/logos/apple-inc-logo-1200x675.png",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.946823"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.827043"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.760678"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.631758"
+        }
+      ],
+      "overall_sentiment_score": 0.088171,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.986826",
+          "ticker_sentiment_score": "0.295223",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.646015",
+          "ticker_sentiment_score": "0.039225",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AMZN",
+          "relevance_score": "0.630879",
+          "ticker_sentiment_score": "0.046395",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.601538",
+          "ticker_sentiment_score": "0.048655",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.635154",
+          "ticker_sentiment_score": "0.041623",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Google Stock (Alphabet GOOGL) Today, December 3, 2025: AI Chips, Gemini 3 and New $375 Price Targets",
+      "url": "https://ts2.tech/en/google-stock-alphabet-googl-today-december-3-2025-ai-chips-gemini-3-and-new-375-price-targets/",
+      "time_published": "20251203T000000",
+      "authors": [
+        "Marcin Frąckiewicz"
+      ],
+      "summary": "Alphabet (GOOGL) stock is trading near record highs, driven by AI optimism, new Wall Street upgrades, and the increasing belief that its in-house AI chips could rival Nvidia's dominance. The article covers GOOGL's price, momentum, valuation, the impact of Gemini 3 and TPU chips, Google Cloud's growth, and regulatory challenges, along with analyst price targets and institutional investment.",
+      "banner_image": null,
+      "source": "ts2.tech",
+      "category_within_source": "General",
+      "source_domain": "ts2.tech",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.926757"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.909869"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.933835"
+        }
+      ],
+      "overall_sentiment_score": 0.351147,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.976108",
+          "ticker_sentiment_score": "0.484261",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "GOOG",
+          "relevance_score": "0.878175",
+          "ticker_sentiment_score": "0.476542",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.726047",
+          "ticker_sentiment_score": "0.297565",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.612048",
+          "ticker_sentiment_score": "0.244600",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.598754",
+          "ticker_sentiment_score": "0.208961",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Intel (INTC) Stock Soars on Apple Chip Rumors and $208M Malaysia Expansion",
+      "url": "https://ts2.tech/en/intel-intc-stock-soars-on-apple-chip-rumors-and-208m-malaysia-expansion/",
+      "time_published": "20251203T000000",
+      "authors": [
+        "Shan Ahmed Khan"
+      ],
+      "summary": "Intel (INTC) stock has surged around 90-100% in 2025, reaching new 52-week highs, driven by a $208 million expansion in Malaysia, increasing speculation that Apple may become a foundry customer, and a 9.9% equity stake by the U.S. government. Despite the rally, analysts remain cautious, with average price targets suggesting a downside, reflecting concerns about execution risk, capital intensity, and political involvement. The company's turnaround hinges on successful execution of its 18A and 14A process nodes and securing external foundry customers like Microsoft and potentially Apple.",
+      "banner_image": null,
+      "source": "ts2.tech",
+      "category_within_source": "General",
+      "source_domain": "ts2.tech",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.932869"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.805456"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.745418"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.712503"
+        },
+        {
+          "topic": "economy_fiscal",
+          "relevance_score": "0.637012"
+        }
+      ],
+      "overall_sentiment_score": 0.247854,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.970695",
+          "ticker_sentiment_score": "0.468618",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.712068",
+          "ticker_sentiment_score": "0.340434",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.636197",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "American Century Companies Inc. Grows Stock Position in Skyworks Solutions, Inc. $SWKS",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-american-century-companies-inc-grows-stock-position-in-skyworks-solutions-inc-swks-2025-12-03/",
+      "time_published": "20251203T000000",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "American Century Companies Inc. increased its stake in Skyworks Solutions, Inc. by 12.0% in the second quarter, bringing its total holdings to 225,500 shares valued at $16.8 million. Several other institutional investors also adjusted their positions, and company insiders recently sold significant shares. Analyst ratings for Skyworks Solutions currently average a \"Hold\" with a consensus price target of $83.18.",
+      "banner_image": "https://www.marketbeat.com/logos/skyworks-solutions-inc-logo-1200x675.png?v=20240202075224",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.933323"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.809855"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.728778"
+        }
+      ],
+      "overall_sentiment_score": 0.195046,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "SWKS",
+          "relevance_score": "0.977388",
+          "ticker_sentiment_score": "0.282102",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.640807",
+          "ticker_sentiment_score": "0.149214",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Skyworks Solutions, Inc. $SWKS Shares Sold by Korea Investment CORP",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-skyworks-solutions-inc-swks-shares-sold-by-korea-investment-corp-2025-12-03/",
+      "time_published": "20251203T000000",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "Korea Investment CORP significantly reduced its stake in Skyworks Solutions (NASDAQ:SWKS) by 92.1% in Q2, selling 86,510 shares. Despite this, Skyworks reported strong quarterly earnings, beating expectations with impressive revenue growth and setting optimistic Q1 2026 guidance, alongside announcing a quarterly dividend. Analyst consensus remains a \"Hold\" with a target price of $83.18, and institutional ownership is high, led by Vanguard.",
+      "banner_image": "https://www.marketbeat.com/logos/skyworks-solutions-inc-logo-1200x675.png?v=20240202075224",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.914868"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.822922"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.727117"
+        }
+      ],
+      "overall_sentiment_score": 0.244859,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "SWKS",
+          "relevance_score": "0.972527",
+          "ticker_sentiment_score": "0.133604",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.725577",
+          "ticker_sentiment_score": "0.329768",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Intel (INTC) Stock Surges on Apple Chip Rumors and $208M Malaysia Expansion: 2025 Rally, Analyst Forecasts and What’s Next",
+      "url": "https://ts2.tech/en/intel-intc-stock-surges-on-apple-chip-rumors-and-208m-malaysia-expansion-2025-rally-analyst-forecasts-and-whats-next/",
+      "time_published": "20251203T000000",
+      "authors": [
+        "Khadija Saeed"
+      ],
+      "summary": "Intel (INTC) stock has surged due to rumors of Apple becoming an Intel Foundry customer and a new $208 million expansion in Malaysia. While analysts remain cautious with \"Hold\" ratings and price targets below current levels, the news validates Intel's 18A process and strengthens its position in global manufacturing and U.S. industrial policy. The company's Q3 2025 results showed early improvements, but challenges remain in foundry execution and competition.",
+      "banner_image": null,
+      "source": "ts2.tech",
+      "category_within_source": "General",
+      "source_domain": "ts2.tech",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.802391"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.923115"
+        },
+        {
+          "topic": "economy_fiscal",
+          "relevance_score": "0.632032"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.740851"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.985370"
+        }
+      ],
+      "overall_sentiment_score": 0.243366,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.987978",
+          "ticker_sentiment_score": "0.452137",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.745454",
+          "ticker_sentiment_score": "0.336332",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.611358",
+          "ticker_sentiment_score": "0.106044",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.636120",
+          "ticker_sentiment_score": "0.140298",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Qualcomm Snapdragon 8 Gen 5: 36% Faster Than Apple, AI-Enhanced for Mid-Range Androids",
+      "url": "https://www.webpronews.com/qualcomm-snapdragon-8-gen-5-36-faster-than-apple-ai-enhanced-for-mid-range-androids/",
+      "time_published": "20251203T000000",
+      "authors": [
+        "Juan Vasquez"
+      ],
+      "summary": "Qualcomm has unveiled its Snapdragon 8 Gen 5 chipset, co-developed with OnePlus, aiming to challenge Apple's silicon dominance. The new chip claims 36% better overall performance than its predecessor, enhanced AI capabilities via its Hexagon NPU, and 3nm efficiency, targeting mid-range Android devices. This strategic move by Qualcomm seeks to provide premium features more affordably, reshaping competition in the mobile market.",
+      "banner_image": null,
+      "source": "WebProNews",
+      "category_within_source": "General",
+      "source_domain": "WebProNews",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.916103"
+        }
+      ],
+      "overall_sentiment_score": 0.116346,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "QCOM",
+          "relevance_score": "0.978014",
+          "ticker_sentiment_score": "0.400066",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.916630",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple (AAPL) Appoints Microsoft Veteran Amar Subramanya as AI Chief",
+      "url": "https://www.tipranks.com/news/apple-aapl-hands-ai-wheel-to-microsoft-veteran-amar-subramanya-after-giannandrea-exits",
+      "time_published": "20251202T233556",
+      "authors": [
+        "Kirti Tak"
+      ],
+      "summary": "Apple has appointed Amar Subramanya, a former Microsoft and Google AI expert, as its new Vice President of AI, replacing John Giannandrea. This leadership change signals Apple's intensified focus on advancing its AI capabilities amid strong competition. Subramanya will lead key AI teams, including work on Apple Foundation Models and ML research, aiming to accelerate updates to products like Siri and Apple Intelligence.",
+      "banner_image": "https://blog.tipranks.com/wp-content/uploads/2025/12/shutterstock_2473920673-750x406.jpg",
+      "source": "TipRanks",
+      "category_within_source": "General",
+      "source_domain": "TipRanks",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.935551"
+        }
+      ],
+      "overall_sentiment_score": 0.120933,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.972483",
+          "ticker_sentiment_score": "0.294496",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.717212",
+          "ticker_sentiment_score": "0.136957",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.689643",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple’s AI chief paid the price for the company’s stalled progress",
+      "url": "https://www.fastcompany.com/91452240/apple-ai-chief-john-giannandrea-dismissed-google-ai",
+      "time_published": "20251202T195111",
+      "authors": [
+        "Mark Sullivan"
+      ],
+      "summary": "John Giannandrea, Apple's AI chief, is stepping down after seven years due to the company's perceived stalled progress in generative AI, affecting Siri and other devices. His departure, effective next spring, follows a reallocation of his AI group to Craig Federighi's software development team and signals Apple's new urgency to catch up in the AI race with the hiring of Amar Subramanya from Google. The news led to a slight boost in Apple's stock price, reflecting investor optimism for a renewed AI strategy.",
+      "banner_image": "https://images.fastcompany.com/image/upload/f_webp,c_fit,w_1920,q_auto/wp-cms-2/2025/12/p-1-91452240-why-was-apple-ai-chief-john-giannandrea-dismissed.jpg",
+      "source": "Fast Company",
+      "category_within_source": "General",
+      "source_domain": "Fast Company",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.930808"
+        }
+      ],
+      "overall_sentiment_score": 0.255588,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.985183",
+          "ticker_sentiment_score": "0.294407",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "INTC: Intel Shares Slide as Apple Bonanza Talk Faces Reality Check",
+      "url": "https://www.tradingview.com/news/gurufocus:88cd0a71f094b:0-intc-intel-shares-slide-as-apple-bonanza-talk-faces-reality-check/",
+      "time_published": "20251202T183641",
+      "authors": [],
+      "summary": "Intel shares dropped by 1.5% after an earlier 10% surge, as investors reevaluated an analyst's prediction about Intel supplying Apple with low-end M processors starting in 2027. While this potential deal could validate Intel's foundry efforts, analysts caution that volumes would be small, and Intel still faces challenges in consistent execution to compete with TSMC and Samsung. The company's road to recovery is fragile, marked by competitive and legal headwinds despite recent momentum.",
+      "banner_image": "https://s3.tradingview.com/news/image/gurufocus:88cd0a71f094b-19debf3303bccebf4fbdcc364241ce73-resized.jpeg",
+      "source": "TradingView",
+      "category_within_source": "General",
+      "source_domain": "TradingView",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.934752"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.846838"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.613386"
+        }
+      ],
+      "overall_sentiment_score": 0.001,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.981932",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.700614",
+          "ticker_sentiment_score": "0.140909",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Wall Street's Sleeping Giant: Is Amazon About to Wake Up?",
+      "url": "https://finviz.com/news/243748/wall-streets-sleeping-giant-is-amazon-about-to-wake-up",
+      "time_published": "20251202T182900",
+      "authors": [
+        "Sam Quirke"
+      ],
+      "summary": "Amazon's stock has traded sideways for much of 2025, but analysts see this consolidation as a strong setup for future growth, fueled by improving fundamentals and the strength of its AWS unit. Despite a flat year, the stock is considered cheaper than many tech peers, offering an appealing risk-reward profile for investors heading into 2026. Analyst price targets suggest significant upside, with some forecasting over 50% growth.",
+      "banner_image": "https://www.marketbeat.com/logos/articles/med_20251202122723_wall-streets-sleeping-giant-is-amazon-about-to-wak.png",
+      "source": "Finviz",
+      "category_within_source": "General",
+      "source_domain": "Finviz",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.902724"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.937820"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.830894"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.628018"
+        }
+      ],
+      "overall_sentiment_score": 0.25579,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AMZN",
+          "relevance_score": "0.979776",
+          "ticker_sentiment_score": "0.450130",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.729189",
+          "ticker_sentiment_score": "0.103666",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.711801",
+          "ticker_sentiment_score": "0.120617",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "KLA, IBD Stock Of The Day, Flashes Buy Signal Amid AI Demand",
+      "url": "https://www.investors.com/research/ibd-stock-of-the-day/kla-stock-buy-signal-ai-chip-demand/",
+      "time_published": "20251202T182000",
+      "authors": [
+        "REINHARDT KRAUSE"
+      ],
+      "summary": "KLA (KLAC) has been named IBD Stock Of The Day, flashing a buy signal as it bounces off its 50-day/10-week moving average amid strong AI chip demand. The company boasts a Composite Rating of 96/99 and an Industry Group Ranking of 14/197, indicating strong fundamentals and market position. While currently in an emerging base, analysts expect its actionable buy point to solidify by the end of next week.",
+      "banner_image": null,
+      "source": "Investor's Business Daily",
+      "category_within_source": "General",
+      "source_domain": "Investor's Business Daily",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.910938"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.831747"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.721328"
+        }
+      ],
+      "overall_sentiment_score": 0.27621,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "KLAC",
+          "relevance_score": "0.987342",
+          "ticker_sentiment_score": "0.404695",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AMZN",
+          "relevance_score": "0.635423",
+          "ticker_sentiment_score": "0.201298",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.725818",
+          "ticker_sentiment_score": "0.209395",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.615032",
+          "ticker_sentiment_score": "0.212274",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.617293",
+          "ticker_sentiment_score": "0.328180",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Apple continues gain for seven straight sessions (AAPL:NASDAQ)",
+      "url": "https://seekingalpha.com/news/4527795-apple-continues-gain-for-seven-straight-sessions",
+      "time_published": "20251202T160300",
+      "authors": [
+        "Tiyashi Datta"
+      ],
+      "summary": "Apple (AAPL) shares have experienced a gain for seven consecutive sessions, closing 1% higher at $286.15 on Tuesday. The tech giant's stock rose over 4% in the preceding six sessions and is up nearly 13% year-to-date.",
+      "banner_image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/458610713/image_458610713.jpg?io=getty-c-w630",
+      "source": "Seeking Alpha",
+      "category_within_source": "General",
+      "source_domain": "Seeking Alpha",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.945113"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.834704"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.637678"
+        }
+      ],
+      "overall_sentiment_score": 0.444144,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.978416",
+          "ticker_sentiment_score": "0.442332",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Buffett Bought Alphabet After I Named It My Top Tech Stock (GOOG, BRK.B)",
+      "url": "https://finance.yahoo.com/news/buffett-bought-alphabet-named-top-153433927.html",
+      "time_published": "20251202T153400",
+      "authors": [
+        "Douglas A. McIntyre"
+      ],
+      "summary": "The article discusses why Alphabet (GOOGL) is considered a top tech stock, highlighting its stable core businesses like Search and YouTube that fund AI and chip expansion. It notes Berkshire Hathaway's recent $2.4 billion investment in Alphabet, validating the thesis that Alphabet is a dominant, diversified tech company with strong product stickiness and growing AI and chip capabilities. The author argues that Alphabet's business model is like \"owning the house\" in a casino, providing durability and upside for investors.",
+      "banner_image": "https://s.yimg.com/ny/api/res/1.2/yZSgcN4dfnndZlwZVDHLqQ--/YXBwaWQ9aGlnaGxhbmRlcjt3PTQ4O2g9NDg7Y2Y=webp/https://s.yimg.com/os/creatr-uploaded-images/2025-10/4c1b1d40-ab89-11f0-8fcd-756508880954",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.932351"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.848847"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.731274"
+        }
+      ],
+      "overall_sentiment_score": 0.613886,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.972513",
+          "ticker_sentiment_score": "0.862166",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "GOOG",
+          "relevance_score": "0.942580",
+          "ticker_sentiment_score": "0.877715",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.614392",
+          "ticker_sentiment_score": "0.349882",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.591608",
+          "ticker_sentiment_score": "0.416924",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Meet Amar Subramanya, the 46-year-old Google and Microsoft veteran who will steer Apple AI strategy",
+      "url": "https://fortune.com/2025/12/02/amar-subramanya-apple-ai-veteran-google-microsoft-career-research-education-machine-learning/",
+      "time_published": "20251202T102100",
+      "authors": [
+        "Dave Smith"
+      ],
+      "summary": "Apple has appointed Amar Subramanya, a veteran of Google and Microsoft, as its new vice president of AI, succeeding John Giannandrea. Subramanya will oversee Apple Foundation Models, ML research, and AI Safety and Evaluation, taking charge of the company's crucial AI strategy. This leadership change comes as Apple faces scrutiny for trailing rivals in generative AI features.",
+      "banner_image": "https://fortune.com/img-assets/wp-content/uploads/2025/12/Screenshot-2025-12-02-at-100510-AM-e1764688008943.png?format=webp&w=1440&q=100",
+      "source": "Fortune",
+      "category_within_source": "General",
+      "source_domain": "Fortune",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.932134"
+        }
+      ],
+      "overall_sentiment_score": 0.15694,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.712330",
+          "ticker_sentiment_score": "0.101574",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.730308",
+          "ticker_sentiment_score": "0.112595",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOG",
+          "relevance_score": "0.728849",
+          "ticker_sentiment_score": "0.143926",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.976926",
+          "ticker_sentiment_score": "0.338385",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "From hey Siri to hey Subbu? Apple hires Amar Subramanya, taking a bite out of Google via Microsoft",
+      "url": "https://timesofindia.indiatimes.com/business/international-business/from-hey-siri-to-hey-subbu-apple-hires-amar-subramanya-taking-a-bite-out-of-google-via-microsoft/articleshow/125709125.cms",
+      "time_published": "20251202T095100",
+      "authors": [
+        "Chidanand Rajghatta"
+      ],
+      "summary": "Apple has hired Amar Subramanya, a former Google veteran who briefly led AI efforts at Microsoft, as its new vice president of AI. This strategic move aims to bolster Apple's lagging AI ambitions and intensify the talent war among Silicon Valley tech giants. Subramanya brings extensive expertise in foundation models and machine learning, crucial for Apple's efforts to revive Siri and develop its in-house AI models.",
+      "banner_image": "https://static.toiimg.com/thumb/msid-125709180,imgsize-934153,width-400,resizemode-4/-.jpg",
+      "source": "Times of India",
+      "category_within_source": "General",
+      "source_domain": "Times of India",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.973059"
+        },
+        {
+          "topic": "mergers_and_acquisitions",
+          "relevance_score": "0.833666"
+        }
+      ],
+      "overall_sentiment_score": 0.177425,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.977368",
+          "ticker_sentiment_score": "0.212528",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.724143",
+          "ticker_sentiment_score": "0.130461",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.643514",
+          "ticker_sentiment_score": "0.111117",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple Faces Class Action Threats After Defeat at Top EU Court",
+      "url": "https://www.bloomberg.com/news/articles/2025-12-02/apple-faces-class-action-threats-after-defeat-at-top-eu-court",
+      "time_published": "20251202T092800",
+      "authors": [
+        "Samuel Stolton"
+      ],
+      "summary": "Apple Inc. is facing increased threats of class action lawsuits in the European Union following a ruling by the bloc's top court. The EU Court of Justice stated that users of Apple's Dutch App Store can collectively sue in the Netherlands, irrespective of their location. This decision allows an Amsterdam court to consider claims from two foundations regarding allegedly anticompetitive App Store commissions, which can be as high as 30% per sale.",
+      "banner_image": null,
+      "source": "Bloomberg.com",
+      "category_within_source": "General",
+      "source_domain": "Bloomberg.com",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.828809"
+        }
+      ],
+      "overall_sentiment_score": 0.001,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.984829",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple mulls resisting India order to preload state-run cyber safety app: report",
+      "url": "https://seekingalpha.com/news/4527477-apple-mulls-resisting-india-order-to-preload-state-run-cyber-safety-app",
+      "time_published": "20251202T051800",
+      "authors": [
+        "Ravikash Bakolia"
+      ],
+      "summary": "Apple is reportedly considering resisting an Indian government order to preload a state-owned cyber safety app on its smartphones, citing privacy and security concerns. The company plans to convey its objections to the government regarding the \"Sanchar Saathi\" app, which has sparked surveillance concerns and political debate. This decision could impact Apple's business in India by conflicting with its global policies, while other manufacturers like Samsung and Xiaomi are reviewing the order's implications.",
+      "banner_image": "https://static.seekingalpha.com/cdn/s3/uploads/getty_images/2236259510/image_2236259510.jpg?io=getty-c-w630",
+      "source": "Seeking Alpha",
+      "category_within_source": "General",
+      "source_domain": "Seeking Alpha",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.914956"
+        },
+        {
+          "topic": "economy_fiscal",
+          "relevance_score": "0.618937"
+        }
+      ],
+      "overall_sentiment_score": 0.001,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.974453",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Who is Amar Subramanya? Indian-origin AI researcher Apple has appointed as AI chief",
+      "url": "https://indianexpress.com/article/world/who-is-amar-subramanya-indian-origin-ai-researcher-apple-appointed-ai-chief-10397572/",
+      "time_published": "20251202T014400",
+      "authors": [
+        "Express Web Desk"
+      ],
+      "summary": "Apple has appointed Indian-origin AI researcher Amar Subramanya as its new Vice President of AI, succeeding John Giannandrea. Subramanya brings over two decades of experience from companies like Google and Microsoft, where he led significant AI initiatives. In his new role at Apple, he will oversee critical areas including Foundation Models, ML research, and AI Safety and Evaluation, integral to Apple's future AI innovations.",
+      "banner_image": "https://images.indianexpress.com/2025/12/apple-ai-chief-subramanya.jpg?w=640",
+      "source": "The Indian Express",
+      "category_within_source": "General",
+      "source_domain": "The Indian Express",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.986653"
+        }
+      ],
+      "overall_sentiment_score": 0.313555,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.971939",
+          "ticker_sentiment_score": "0.424809",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.610308",
+          "ticker_sentiment_score": "0.240659",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.643061",
+          "ticker_sentiment_score": "0.218052",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Quadrant Capital Group LLC Has $991,000 Stock Position in VeriSign, Inc. $VRSN",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-quadrant-capital-group-llc-has-991000-stock-position-in-verisign-inc-vrsn-2025-12-01/",
+      "time_published": "20251202T000000",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "Quadrant Capital Group LLC increased its stake in VeriSign, Inc. (NASDAQ:VRSN) by 128% in the second quarter, bringing its total holdings to 3,432 shares valued at $991,000. Institutional investors now own approximately 92.9% of the company, which recently reported strong quarterly earnings with an EPS of $2.27 and revenue of $419.1 million, exceeding analyst estimates. Despite insider selling of roughly 47,839 shares, VeriSign continues to pay a quarterly dividend of $0.77.",
+      "banner_image": "https://www.marketbeat.com/logos/verisign-inc-logo-1200x675.png",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.914032"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.827811"
+        }
+      ],
+      "overall_sentiment_score": 0.154395,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "VRSN",
+          "relevance_score": "0.982288",
+          "ticker_sentiment_score": "0.289876",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.642663",
+          "ticker_sentiment_score": "0.043990",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.601687",
+          "ticker_sentiment_score": "0.130632",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Who is Amar Subramanya, Apple’s new VP of AI poached from Microsoft?",
+      "url": "https://capacityglobal.com/news/apple-ai-microsoft-new-hire-amar-subramanya/",
+      "time_published": "20251202T000000",
+      "authors": [
+        "Amber Jackson"
+      ],
+      "summary": "Apple has appointed Amar Subramanya, a former top executive at Microsoft and Google, as its new VP of AI. This move is seen as Apple's effort to accelerate its AI initiatives and catch up to competitors, replacing current senior VP John Giannandrea who will transition to an advisory role before retiring. Subramanya's extensive experience in AI is expected to bolster Apple's position in the global AI race.",
+      "banner_image": "https://capacityglobal.com/wp-content/uploads/2025/12/Apple-CM-1.png",
+      "source": "Capacity Media",
+      "category_within_source": "General",
+      "source_domain": "Capacity Media",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.903195"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.612922"
+        }
+      ],
+      "overall_sentiment_score": 0.238681,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.947628",
+          "ticker_sentiment_score": "0.328593",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.976054",
+          "ticker_sentiment_score": "0.411905",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "GOOG",
+          "relevance_score": "0.728540",
+          "ticker_sentiment_score": "0.123508",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.725558",
+          "ticker_sentiment_score": "0.119488",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "All 30 Dow Jones Stocks Ranked: Buy, Sell or Hold?",
+      "url": "https://www.kiplinger.com/investing/stocks/blue-chip-stocks/602319/all-30-dow-jones-stocks-ranked-the-pros-weigh-in",
+      "time_published": "20251202T000000",
+      "authors": [
+        "Dan Burrows"
+      ],
+      "summary": "The article ranks all 30 Dow Jones Industrial Average stocks based on analysts' consensus recommendations, from Strong Buy to Hold. It highlights the Dow's historical stability in down markets compared to growthier indices like the S&P 500 and Nasdaq, particularly emphasizing the shift in major tech companies within the index and the advantage of low-beta stocks for long-term investors. The ranking provides investors with insights into which Dow components Wall Street favors amid economic uncertainties.",
+      "banner_image": "https://cdn.mos.cms.futurecdn.net/Pr5wP9AaM44PMVGeS9fDSS.jpg",
+      "source": "Kiplinger",
+      "category_within_source": "General",
+      "source_domain": "Kiplinger",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.973293"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.820872"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.716965"
+        },
+        {
+          "topic": "life_sciences",
+          "relevance_score": "0.643077"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.634845"
+        }
+      ],
+      "overall_sentiment_score": 0.521336,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "DOW",
+          "relevance_score": "0.649023",
+          "ticker_sentiment_score": "0.110701",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.827016",
+          "ticker_sentiment_score": "0.720145",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.812184",
+          "ticker_sentiment_score": "0.736645",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AMZN",
+          "relevance_score": "0.725378",
+          "ticker_sentiment_score": "0.746580",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.723049",
+          "ticker_sentiment_score": "0.404974",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Apple Inc. $AAPL is UNIVEST FINANCIAL Corp's 4th Largest Position",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-apple-inc-aapl-is-univest-financial-corps-4th-largest-position-2025-12-02/",
+      "time_published": "20251202T000000",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "UNIVEST FINANCIAL Corp reduced its stake in Apple Inc. ($AAPL) by 4.0% in Q2, making Apple its 4th largest holding. Apple reported strong quarterly earnings, beating analyst estimates, and currently holds a \"Moderate Buy\" consensus rating with an average target price of $278.22. Recent insider selling has also been noted, while institutional investors own a significant portion of the company's stock.",
+      "banner_image": "https://www.marketbeat.com/logos/apple-inc-logo-1200x675.png",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.922630"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.926842"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.846692"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.706852"
+        }
+      ],
+      "overall_sentiment_score": 0.041358,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.983217",
+          "ticker_sentiment_score": "0.319101",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.631633",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Intel Stock (INTC) on December 2, 2025: Apple Foundry Buzz, Malaysia Expansion and Q3 Rebound Fuel a High‑Stakes Rally",
+      "url": "https://ts2.tech/en/intel-stock-intc-on-december-2-2025-apple-foundry-buzz-malaysia-expansion-and-q3-rebound-fuel-a-high%E2%80%91stakes-rally/",
+      "time_published": "20251202T000000",
+      "authors": [
+        "Khadija Saeed"
+      ],
+      "summary": "Intel (INTC) stock is trading near 52-week highs on December 2, 2025, fueled by rumors of an Apple foundry deal, a new $208 million Malaysia expansion, and a rebound to profitability in Q3 2025. While positive catalysts include significant capital injections and a renewed AI focus under a new CEO, the company faces execution risks, legal challenges, and cautious Wall Street forecasts, with analyst price targets generally below current trading levels. The article details the tug-of-war between strong momentum and valuation concerns as Intel heads into 2026.",
+      "banner_image": "https://ts2.tech/wp-content/uploads/2025/12/intel-stock-intc-on-december-2-2025-apple-foundry-buzz-malaysia-expansion-and-q3-rebound-fuel-a-highe28091stakes-rally-featured.jpg",
+      "source": "ts2.tech",
+      "category_within_source": "General",
+      "source_domain": "ts2.tech",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.917150"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.820593"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.746927"
+        },
+        {
+          "topic": "manufacturing",
+          "relevance_score": "0.616181"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.617471"
+        }
+      ],
+      "overall_sentiment_score": 0.222875,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.980485",
+          "ticker_sentiment_score": "0.228051",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.826194",
+          "ticker_sentiment_score": "0.261186",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.640657",
+          "ticker_sentiment_score": "0.340080",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AMD",
+          "relevance_score": "0.575784",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple Just Parted Ways With Its Head of AI Over a Key Feature That Still Frustrates Users",
+      "url": "https://www.inc.com/ben-sherry/apple-just-parted-ways-with-its-head-of-ai-over-a-key-feature-that-still-frustrates-users/91273006",
+      "time_published": "20251202T000000",
+      "authors": [
+        "BEN SHERRY"
+      ],
+      "summary": "John Giannandrea, Apple's head of machine learning and AI strategy, is departing the company after failing to deliver significant AI updates, particularly for Siri. His departure follows reports of internal conflicts and indecision that delayed key AI initiatives. Amar Subramanya, formerly of Microsoft and Google, will replace Giannandrea, reporting to Craig Federighi, as Apple prepares for major AI improvements in iOS 27 next year.",
+      "banner_image": "https://img-cdn.inc.com/image/upload/f_webp,c_fit,w_1920,q_auto/vip/2025/12/apple-ai-chief-exits-inc-2157001462.jpg",
+      "source": "Inc.com",
+      "category_within_source": "General",
+      "source_domain": "Inc.com",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.918104"
+        }
+      ],
+      "overall_sentiment_score": 0.001,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.970166",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.648882",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.630687",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Peter Thiel Sells All His Nvidia Shares and Buys Microsoft and Apple Instead",
+      "url": "https://247wallst.com/investing/2025/12/02/peter-thiel-sells-all-his-nvidia-shares-and-buys-microsoft-and-apple-instead/",
+      "time_published": "20251202T000000",
+      "authors": [
+        "Vandita Jadeja"
+      ],
+      "summary": "Billionaire investor Peter Thiel has divested his entire stake in NVIDIA Corp. (NASDAQ:NVDA), according to recent 13F filings. He subsequently reinvested these proceeds into Microsoft (NASDAQ:MSFT) and Apple (NASDAQ:AAPL). This move comes amidst concerns about an AI bubble and growing competition in the chipmaking sector, with Thiel seemingly favoring the established tech giants for their strong financial performance and AI integration strategies.",
+      "banner_image": "https://247wallst.com/wp-content/uploads/2018/02/peter-thiel-facebook-investor.jpg",
+      "source": "24/7 Wall St.",
+      "category_within_source": "General",
+      "source_domain": "24/7 Wall St.",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.909039"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.817263"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.733709"
+        }
+      ],
+      "overall_sentiment_score": 0.309606,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.957112",
+          "ticker_sentiment_score": "0.469353",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.891390",
+          "ticker_sentiment_score": "0.404447",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.838911",
+          "ticker_sentiment_score": "0.039225",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Walmart Supercharges Holiday Traditions with Biggest, Fastest Black Friday and Cyber Monday Yet",
+      "url": "https://corporate.walmart.com/news/2025/12/02/walmart-supercharges-holiday-traditions-with-biggest-fastest-black-friday-and-cyber-monday-yet",
+      "time_published": "20251202T000000",
+      "authors": [],
+      "summary": "Walmart announced record-breaking Black Friday and Cyber Monday sales in 2025, driven by strong growth in electronics, toys, fashion, and home categories, as well as unique Marketplace finds. The retailer significantly increased its same-day delivery orders, with some arriving in as little as 10 minutes. The company also highlighted the success of its AI-powered shopping assistant, Sparky, and the Walmart app in enhancing the customer experience.",
+      "banner_image": "https://corporate.walmart.com/content/dam/corporate/images/newsroom/2025/12/02/walmart-supercharges-holiday-traditions-with-biggest-fastest-black-friday-and-cyber-monday-yet/lead.jpg",
+      "source": "Walmart",
+      "category_within_source": "General",
+      "source_domain": "Walmart",
+      "topics": [
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.911907"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.846855"
+        }
+      ],
+      "overall_sentiment_score": 0.371756,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "WMT",
+          "relevance_score": "0.979544",
+          "ticker_sentiment_score": "0.455099",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.742473",
+          "ticker_sentiment_score": "0.342938",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.580508",
+          "ticker_sentiment_score": "0.322263",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Walmart credits AI, fast delivery for strong Black Friday-Cyber Monday",
+      "url": "https://chainstoreage.com/walmart-credits-ai-fast-delivery-strong-black-friday-cyber-monday",
+      "time_published": "20251202T000000",
+      "authors": [
+        "Dan Berthiaume"
+      ],
+      "summary": "Walmart reported strong sales growth, led by digital, over the Black Friday and Cyber Monday shopping period, attributing its success to advanced technology like its generative AI assistant \"Sparky\" and efficient ship-from-store operations. The company saw a significant increase in orders delivered from stores and utilized its app for in-store customer engagement, with top-selling items including Apple Airpods and gaming consoles. Walmart has extended some Cyber Monday deals and will offer last-minute deals throughout December.",
+      "banner_image": "https://assets1.chainstoreage.com/images/v/max_width_1440/2025-10/holiday_shopping_using_walmart_app.jpeg",
+      "source": "Chain Store Age",
+      "category_within_source": "General",
+      "source_domain": "Chain Store Age",
+      "topics": [
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.923817"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.837228"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.711385"
+        }
+      ],
+      "overall_sentiment_score": 0.361735,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "WMT",
+          "relevance_score": "0.979185",
+          "ticker_sentiment_score": "0.443430",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.748055",
+          "ticker_sentiment_score": "0.325454",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "BBY",
+          "relevance_score": "0.615031",
+          "ticker_sentiment_score": "0.333234",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "TGT",
+          "relevance_score": "0.620480",
+          "ticker_sentiment_score": "0.326800",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "3,347,921 Shares in Agilent Technologies, Inc. $A Acquired by Norges Bank",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-3347921-shares-in-agilent-technologies-inc-a-acquired-by-norges-bank-2025-12-01/",
+      "time_published": "20251202T000000",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "Norges Bank acquired 3,347,921 shares of Agilent Technologies, Inc. (NYSE:A) in Q2, valuing its stake at approximately $395.1 million and representing a 1.18% ownership. This acquisition follows positive analyst ratings and a recent narrow earnings beat by Agilent, which also raised its dividend and provided strong FY26 guidance. Other institutional investors like Massachusetts Financial Services Co. and Vanguard Group Inc. similarly increased their holdings in Agilent.",
+      "banner_image": "https://www.marketbeat.com/logos/agilent-technologies-inc-logo-1200x675.png?v=20221024144229",
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.914840"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.828784"
+        },
+        {
+          "topic": "life_sciences",
+          "relevance_score": "0.906548"
+        }
+      ],
+      "overall_sentiment_score": 0.186519,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "A",
+          "relevance_score": "0.993425",
+          "ticker_sentiment_score": "0.446748",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "MA",
+          "relevance_score": "0.606896",
+          "ticker_sentiment_score": "0.239057",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "V",
+          "relevance_score": "0.643035",
+          "ticker_sentiment_score": "0.113490",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.581399",
+          "ticker_sentiment_score": "0.116618",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.595979",
+          "ticker_sentiment_score": "0.142406",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple names Microsoft, Google veteran Amar Subramanya as AI chief",
+      "url": "https://americanbazaaronline.com/2025/12/02/apple-names-microsoft-google-veteran-amar-subramanya-as-ai-chief-470880/",
+      "time_published": "20251202T000000",
+      "authors": [
+        "Arun Kumar"
+      ],
+      "summary": "Apple has appointed Amar Subramanya, a veteran from Microsoft and Google's DeepMind, as its new AI chief, replacing John Giannandrea. This move comes as Apple aims to bolster its artificial intelligence efforts, which experts have suggested lagged behind competitors, especially after OpenAI's ChatGPT launch. Subramanya will lead critical areas including Apple Foundation Models, ML research, and AI Safety and Evaluation, reporting to software chief Craig Federighi.",
+      "banner_image": "https://americanbazaaronline.com/wp-content/uploads/2025/12/Amar-Subramanya-500x326.png",
+      "source": "The American Bazaar",
+      "category_within_source": "General",
+      "source_domain": "The American Bazaar",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.982082"
+        }
+      ],
+      "overall_sentiment_score": 0.267716,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.947082",
+          "ticker_sentiment_score": "0.347674",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.988684",
+          "ticker_sentiment_score": "0.319497",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "GOOG",
+          "relevance_score": "0.829891",
+          "ticker_sentiment_score": "0.206628",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.800792",
+          "ticker_sentiment_score": "0.233975",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "META",
+          "relevance_score": "0.619783",
+          "ticker_sentiment_score": "0.109691",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Top Research Reports for Apple, Tesla & Micron Technology",
+      "url": "https://www.tradingview.com/news/zacks:4f27851e8094b:0-top-research-reports-for-apple-tesla-micron-technology/",
+      "time_published": "20251202T000000",
+      "authors": [
+        "Mark Vickery"
+      ],
+      "summary": "This article presents Zacks' top research reports for major stocks like Apple, Tesla, and Micron Technology, along with micro-cap companies Hamilton Beach Brands and Key Tronic Corp, as of December 2, 2025. It details recent performance, future outlook, and key opportunities or concerns for each company. The reports highlight strong growth in Apple's services, challenges for Tesla's automotive division despite expansion into AI, and Micron's benefit from the AI-driven memory market.",
+      "banner_image": null,
+      "source": "TradingView",
+      "category_within_source": "General",
+      "source_domain": "TradingView",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.934165"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.801733"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.708908"
+        },
+        {
+          "topic": "economy_macro",
+          "relevance_score": "0.624679"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.642498"
+        }
+      ],
+      "overall_sentiment_score": 0.185683,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "MU",
+          "relevance_score": "0.979972",
+          "ticker_sentiment_score": "0.545111",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.945684",
+          "ticker_sentiment_score": "0.304348",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "TSLA",
+          "relevance_score": "0.815434",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Arrowstreet Capital Limited Partnership Has $412.29 Million Position in VeriSign, Inc. $VRSN",
+      "url": "https://www.marketbeat.com/instant-alerts/filing-arrowstreet-capital-limited-partnership-has-41229-million-position-in-verisign-inc-vrsn-2025-12-02/",
+      "time_published": "20251202T000000",
+      "authors": [
+        "MarketBeat"
+      ],
+      "summary": "Arrowstreet Capital Limited Partnership slightly reduced its stake in VeriSign, Inc. in Q2, but still holds a significant position valued at $412.29 million. VeriSign reported strong quarterly earnings, beating analyst estimates, and maintains a market capitalization of $23.27 billion with institutional investors owning 92.90% of the stock. The company also announced a quarterly dividend and saw some insider selling activity, while analysts largely maintain a \"Moderate Buy\" rating.",
+      "banner_image": null,
+      "source": "MarketBeat",
+      "category_within_source": "General",
+      "source_domain": "MarketBeat",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.907736"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.840535"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.702187"
+        }
+      ],
+      "overall_sentiment_score": 0.067657,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "VRSN",
+          "relevance_score": "0.990787",
+          "ticker_sentiment_score": "0.218851",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.611753",
+          "ticker_sentiment_score": "0.140797",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.554087",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple's AI chief abruptly steps down",
+      "url": "https://www.nbcnews.com/business/business-news/apples-ai-chief-abruptly-steps-rcna246877",
+      "time_published": "20251201T232300",
+      "authors": [
+        "Steve Kopack"
+      ],
+      "summary": "Apple's top artificial intelligence executive, John Giannandrea, is stepping down and will retire in 2026, to be replaced by Amar Subramanya. This unexpected change highlights Apple's struggles to compete in the AI revolution against companies like Google and OpenAI. The company has also faced delays in upgrading Siri with AI-powered features, impacting its stock performance although it remains the world's second-largest publicly traded company.",
+      "banner_image": "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-560w,f_auto,q_auto:best/rockcms/2025-12/251201-John-Giannandrea-ew-558p-edc3b0.jpg",
+      "source": "NBC News",
+      "category_within_source": "General",
+      "source_domain": "NBC News",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.981045"
+        },
+        {
+          "topic": "earnings",
+          "relevance_score": "0.830214"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.703653"
+        }
+      ],
+      "overall_sentiment_score": 0.033398,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.974433",
+          "ticker_sentiment_score": "0.001000",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.700531",
+          "ticker_sentiment_score": "0.146215",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.641661",
+          "ticker_sentiment_score": "0.147549",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.632839",
+          "ticker_sentiment_score": "0.116537",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple names former Microsoft, Google executive to replace current AI chief",
+      "url": "https://siliconangle.com/2025/12/01/apple-names-former-microsoft-google-executive-replace-current-ai-chief/",
+      "time_published": "20251201T212900",
+      "authors": [
+        "James Farrell"
+      ],
+      "summary": "Apple Inc. has announced a leadership change in its artificial intelligence division, replacing current AI chief John Giannandrea with former Google and Microsoft executive Amar Subramanya. Giannandrea, who will transition to an advisory role before retiring, is being replaced after reportedly failing to deliver promised AI upgrades for Siri, leading to a loss of confidence from CEO Tim Cook regarding the company's AI efforts. Subramanya will be responsible for leading Apple's foundational AI models, machine learning research, and AI safety and evaluation.",
+      "banner_image": "https://d15shllkswkct0.cloudfront.net/wp-content/blogs.dir/1/files/2025/12/zhiyue-7DOU5NlNIcE-unsplash-1.jpg",
+      "source": "SiliconANGLE",
+      "category_within_source": "General",
+      "source_domain": "SiliconANGLE",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.944737"
+        }
+      ],
+      "overall_sentiment_score": 0.044839,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.979352",
+          "ticker_sentiment_score": "0.032300",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.744939",
+          "ticker_sentiment_score": "0.049071",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.641829",
+          "ticker_sentiment_score": "0.048107",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Apple shares hit new all-time intraday and closing highs",
+      "url": "https://macdailynews.com/2025/12/01/apple-shares-hit-new-all-time-intraday-and-closing-highs-90/",
+      "time_published": "20251201T211100",
+      "authors": [],
+      "summary": "Apple Inc. (AAPL) reached new all-time intraday and closing highs in Nasdaq trading, with shares closing at $283.10. The company's market value now stands at $4.201 trillion, making it the world's second-most valuable company, close behind NVIDIA. The article also lists market values for other top U.S. publicly traded companies and selected global companies.",
+      "banner_image": "https://i0.wp.com/macdailynews.com/wp-content/uploads/2025/04/250409_stock_chart.png?resize=600%2C400&ssl=1",
+      "source": "MacDailyNews",
+      "category_within_source": "General",
+      "source_domain": "MacDailyNews",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.939381"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.810271"
+        }
+      ],
+      "overall_sentiment_score": 0.688711,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.976136",
+          "ticker_sentiment_score": "0.880381",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.615597",
+          "ticker_sentiment_score": "0.611202",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.591004",
+          "ticker_sentiment_score": "0.612704",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.575232",
+          "ticker_sentiment_score": "0.609389",
+          "ticker_sentiment_label": "Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Tech Moves: Ex-Payscale CEO Scott Torrey joins Smartsheet; Apple taps Microsoft VP to lead AI efforts",
+      "url": "https://www.geekwire.com/2025/tech-moves-ex-payscale-ceo-scott-torrey-joins-smartsheet-apple-taps-microsoft-vp-to-lead-ai-efforts/",
+      "time_published": "20251201T163700",
+      "authors": [
+        "Taylor Soper"
+      ],
+      "summary": "Scott Torrey, former CEO of Payscale, has been appointed chief revenue officer at Smartsheet, reuniting with Concur co-founder Rajeev Singh who is now CEO of Smartsheet. Concurrently, Amar Subramanya, a top AI researcher, is leaving Microsoft to become Apple's vice president of AI, where he will lead Apple Foundation Models, ML research, and AI Safety and Evaluation. These personnel changes highlight significant leadership shifts in prominent tech companies.",
+      "banner_image": "https://cdn.geekwire.com/wp-content/uploads/2025/12/Scott-Torrey-Smartsheet-FINAL-1.png",
+      "source": "GeekWire",
+      "category_within_source": "General",
+      "source_domain": "GeekWire",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.940764"
+        },
+        {
+          "topic": "mergers_and_acquisitions",
+          "relevance_score": "0.625903"
+        }
+      ],
+      "overall_sentiment_score": 0.121559,
+      "overall_sentiment_label": "Neutral",
+      "ticker_sentiment": [
+        {
+          "ticker": "MSFT",
+          "relevance_score": "0.748279",
+          "ticker_sentiment_score": "0.103234",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.914467",
+          "ticker_sentiment_score": "0.208994",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "BX",
+          "relevance_score": "0.642756",
+          "ticker_sentiment_score": "0.119081",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AMZN",
+          "relevance_score": "0.633211",
+          "ticker_sentiment_score": "0.034258",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Medical Care Technologies Inc. Moves Into Apple's Final TestFlight Testing Phase for Its Debut Consumer AI App",
+      "url": "https://finance.yahoo.com/news/medical-care-technologies-inc-moves-143000422.html",
+      "time_published": "20251201T143000",
+      "authors": [],
+      "summary": "Medical Care Technologies Inc. (MDCE) has advanced its first consumer-based mobile AI application into the final TestFlight testing phase with Apple, prior to its public release on the App Store. This move signals MDCE's entry into the global multi-billion-dollar food and cuisine app market, and the company plans to engage a leading marketing agency for its worldwide launch. CEO Marshall Perkins III highlighted the strength of their development team and anticipated the app's potential to generate revenue and expand their library of AI-driven applications.",
+      "banner_image": "https://s.yimg.com/ny/api/res/1.2/uUUnXAogzjeHGDG0y95TWw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTE4ODtoPTQ0O2NmPXdlYnA-/https://s.yimg.com/os/creatr-uploaded-images/2025-01/88364d00-d410-11ef-beff-b428e6fcfd64",
+      "source": "Yahoo Finance",
+      "category_within_source": "General",
+      "source_domain": "Yahoo Finance",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.971192"
+        },
+        {
+          "topic": "life_sciences",
+          "relevance_score": "0.716612"
+        }
+      ],
+      "overall_sentiment_score": 0.317383,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.744004",
+          "ticker_sentiment_score": "0.319340",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Three New MacBook Models to Launch Next Spring... Targeting Replacement Demand with the ‘M5 Generation’",
+      "url": "https://www.mk.co.kr/en/business/11481225",
+      "time_published": "20251201T133417",
+      "authors": [
+        "Seojin Ahn"
+      ],
+      "summary": "Apple Inc. plans to launch three new MacBook models in early 2026, including the MacBook Air with the Apple M5 chip, MacBook Pro models with M5 Pro and M5 Max chips, and a new 12.9-inch MacBook with the A18 Pro chip. These releases aim to target replacement demand for older MacBooks, enhance performance with improved AI and graphics processing, and expand Apple's budget-friendly lineup with diversified pricing. The company expects these new models to strengthen its annual upgrade cycle and accelerate its share in the premium laptop market.",
+      "banner_image": "https://wimg.mk.co.kr/news/cms/202512/01/news-p.v1.20251201.dc30c6ede2b2470fac518bc0ac841cf5_P1.png",
+      "source": "매일경제",
+      "category_within_source": "General",
+      "source_domain": "매일경제",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.924837"
+        }
+      ],
+      "overall_sentiment_score": 0.304336,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.986336",
+          "ticker_sentiment_score": "0.475268",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.600873",
+          "ticker_sentiment_score": "0.124071",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Federal Realty Announces the Acquisition of Village Pointe in Omaha, NE",
+      "url": "https://www.prnewswire.com/news-releases/federal-realty-announces-the-acquisition-of-village-pointe-in-omaha-ne-302626120.html",
+      "time_published": "20251201T123000",
+      "authors": [],
+      "summary": "Federal Realty Investment Trust acquired Village Pointe, a 453,000-square-foot open-air lifestyle center in Omaha, NE, for $153.3 million. This acquisition aligns with Federal Realty's strategy of investing in market-dominant retail assets in affluent areas with growth opportunities. The company plans to enhance merchandising and tenant mix to increase value, similar to its successful approach with other properties.",
+      "banner_image": null,
+      "source": "PR Newswire",
+      "category_within_source": "General",
+      "source_domain": "PR Newswire",
+      "topics": [
+        {
+          "topic": "real_estate",
+          "relevance_score": "0.989577"
+        },
+        {
+          "topic": "mergers_and_acquisitions",
+          "relevance_score": "0.924346"
+        },
+        {
+          "topic": "retail_wholesale",
+          "relevance_score": "0.716198"
+        }
+      ],
+      "overall_sentiment_score": 0.199118,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "FRT",
+          "relevance_score": "0.970691",
+          "ticker_sentiment_score": "0.450491",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.625344",
+          "ticker_sentiment_score": "0.147769",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "LULU",
+          "relevance_score": "0.606035",
+          "ticker_sentiment_score": "0.108691",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "UPS",
+          "relevance_score": "0.600809",
+          "ticker_sentiment_score": "0.103399",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    },
+    {
+      "title": "Intel Corp. (INTC) Climbs 10.3% on Apple Deal Hype",
+      "url": "https://www.insidermonkey.com/blog/intel-corp-intc-climbs-10-3-on-apple-deal-hype-1653397/",
+      "time_published": "20251201T091100",
+      "authors": [
+        "Angelica Ballesteros"
+      ],
+      "summary": "Intel Corp. (INTC) shares surged 10.3% following analyst optimism that the company could secure a deal to supply Apple Inc. with its lowest-end M-series chips within the next two years. This news comes after Intel secured a $5 billion investment from Nvidia Corp. in September, alongside a joint development partnership for AI infrastructure and personal computing products. These developments signal a more positive long-term outlook for Intel, despite remaining behind rival Taiwan Semiconductor Manufacturing Company.",
+      "banner_image": "https://imonkey-blog.imgix.net/blog/wp-content/uploads/2025/11/25095640/pexels-firmbee-com-22729701-6927086.jpg?auto=format&fit=clip&expires=1796083200&width=480&height=320",
+      "source": "Insider Monkey",
+      "category_within_source": "General",
+      "source_domain": "Insider Monkey",
+      "topics": [
+        {
+          "topic": "technology",
+          "relevance_score": "0.922216"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.839013"
+        }
+      ],
+      "overall_sentiment_score": 0.354066,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.927988",
+          "ticker_sentiment_score": "0.309038",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.975799",
+          "ticker_sentiment_score": "0.448750",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.618488",
+          "ticker_sentiment_score": "0.341232",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "Intel Corp. (INTC) Climbs 10.3% on Apple Deal Hype",
+      "url": "https://finviz.com/news/242071/intel-corp-intc-climbs-103-on-apple-deal-hype",
+      "time_published": "20251201T091100",
+      "authors": [
+        "Angelica Ballesteros"
+      ],
+      "summary": "Intel Corporation's stock surged 10.28% on Friday, finishing at $40.56, driven by analyst optimism that it could supply Apple Inc.'s lowest-end M-series chips within the next two years. This potential deal, alongside a recent $5 billion investment from Nvidia Corp., significantly improves Intel's long-term outlook despite competition from TSMC. The company's recent strategic moves aim to bolster its business and solidify its position in the chip market.",
+      "banner_image": "https://d2gr5kl7dt2z3t.cloudfront.net/blog/wp-content/uploads/2025/11/25095640/pexels-firmbee-com-22729701-6927086.jpg",
+      "source": "Finviz",
+      "category_within_source": "General",
+      "source_domain": "Finviz",
+      "topics": [
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.932955"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.986520"
+        },
+        {
+          "topic": "mergers_and_acquisitions",
+          "relevance_score": "0.805595"
+        }
+      ],
+      "overall_sentiment_score": 0.378938,
+      "overall_sentiment_label": "Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.901547",
+          "ticker_sentiment_score": "0.316105",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        },
+        {
+          "ticker": "INTC",
+          "relevance_score": "0.972950",
+          "ticker_sentiment_score": "0.441917",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.637076",
+          "ticker_sentiment_score": "0.342739",
+          "ticker_sentiment_label": "Somewhat-Bullish"
+        }
+      ]
+    },
+    {
+      "title": "META.USD Stock Price and Chart — SIX:META.USD",
+      "url": "https://www.tradingview.com/symbols/SIX-META.USD/?solution=43000713861",
+      "time_published": "20251201T072233",
+      "authors": [],
+      "summary": "This page provides a comprehensive overview of Meta Platforms Inc Class A (META.USD) stock traded on the SIX Swiss Exchange, including real-time quotes, charts, key financial stats, upcoming earnings, and company information. It features a collection of trading ideas and analyst ratings, along with information on related stocks, bonds, and ETFs. The article also includes a detailed FAQ section addressing common questions about Meta's stock performance and financials.",
+      "banner_image": null,
+      "source": "TradingView",
+      "category_within_source": "General",
+      "source_domain": "TradingView",
+      "topics": [
+        {
+          "topic": "earnings",
+          "relevance_score": "0.938522"
+        },
+        {
+          "topic": "financial_markets",
+          "relevance_score": "0.938967"
+        },
+        {
+          "topic": "technology",
+          "relevance_score": "0.831675"
+        },
+        {
+          "topic": "finance",
+          "relevance_score": "0.732842"
+        }
+      ],
+      "overall_sentiment_score": 0.173765,
+      "overall_sentiment_label": "Somewhat-Bullish",
+      "ticker_sentiment": [
+        {
+          "ticker": "META",
+          "relevance_score": "0.970656",
+          "ticker_sentiment_score": "0.426349",
+          "ticker_sentiment_label": "Bullish"
+        },
+        {
+          "ticker": "NVDA",
+          "relevance_score": "0.617067",
+          "ticker_sentiment_score": "0.149184",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOGL",
+          "relevance_score": "0.598115",
+          "ticker_sentiment_score": "0.109820",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "GOOG",
+          "relevance_score": "0.607894",
+          "ticker_sentiment_score": "0.114037",
+          "ticker_sentiment_label": "Neutral"
+        },
+        {
+          "ticker": "AAPL",
+          "relevance_score": "0.610496",
+          "ticker_sentiment_score": "0.108747",
+          "ticker_sentiment_label": "Neutral"
+        }
+      ]
+    }
+  ]
+}

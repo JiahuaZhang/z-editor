@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useState } from 'react';
 import { Form, useNavigation, useSearchParams } from 'react-router';
+import { AlphaVantageService } from '~/services/alphaVantage';
 import type { Route } from './+types/invest.news';
 
 dayjs.extend(relativeTime);
@@ -43,24 +44,8 @@ interface LoaderArgs {
   request: Request;
 }
 
-async function fetchNewsData(request: Request, topics: string | null, tickers: string | null, sort: string) {
-  const baseUrl = new URL(request.url).origin;
-  const apiUrl = new URL(`${baseUrl}/api/alphavantage`);
-
-  apiUrl.searchParams.append('function', 'NEWS_SENTIMENT');
-  apiUrl.searchParams.append('sort', sort);
-  apiUrl.searchParams.append('limit', '50');
-
-  if (tickers) {
-    apiUrl.searchParams.append('tickers', tickers);
-  } else if (topics) {
-    apiUrl.searchParams.append('topics', topics);
-  } else {
-    apiUrl.searchParams.append('topics', 'technology');
-  }
-
-  const response = await fetch(apiUrl.toString());
-  return response.json();
+async function fetchNewsData(topics: string | null, tickers: string | null, sort: string) {
+  return AlphaVantageService.fetchNewsSentiment({ topics, tickers, sort, limit: '50' });
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -70,7 +55,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const sort = url.searchParams.get('sort') || 'LATEST';
 
   try {
-    const data = await fetchNewsData(request, topics, tickers, sort);
+    const data = await fetchNewsData(topics, tickers, sort);
 
     if (data.feed) {
       return { feed: data.feed as NewsItem[], error: null };

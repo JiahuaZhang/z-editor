@@ -1,15 +1,12 @@
 import { useFetcher } from 'react-router';
 import { YahooCandleChart } from '~/components/chart/YahooCandleChart';
 import { StockSymbolSearch } from '~/components/invest/StockSymbolSearch';
+import { YahooFinanceService } from '~/services/yahooFinance';
 import type { Yahoo } from '~/types/YahooFinance';
 import type { Route } from './+types/invest.stock';
 
-async function fetchStockData(request: Request, symbol: string): Promise<Yahoo.ChartResponse> {
-  const baseUrl = new URL(request.url).origin;
-  const url = `${baseUrl}/api/yahoo/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=2y`;
-  const response = await fetch(url);
-
-  return response.json();
+async function fetchStockData(symbol: string): Promise<Yahoo.ChartResponse> {
+  return YahooFinanceService.fetchChart(symbol, '1d', '2y');
 }
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
@@ -17,7 +14,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const symbol = url.searchParams.get('symbol') || '^SPX';
 
   try {
-    const data = await fetchStockData(request, symbol);
+    const data = await fetchStockData(symbol);
 
     return {
       data,

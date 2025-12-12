@@ -1,12 +1,10 @@
 import { StockSymbolSearch } from '~/components/invest/StockSymbolSearch';
 import { YahooOptionChart } from '~/components/invest/YahooOptionChart';
+import { YahooFinanceService } from '~/services/yahooFinance';
 import type { Route } from './+types/invest.option';
 
-async function fetchOptionData(request: Request, symbol: string, date?: string) {
-  const baseUrl = new URL(request.url).origin;
-  const url = `${baseUrl}/api/yahoo/v7/finance/options/${encodeURIComponent(symbol)}${date ? `?date=${date}` : ''}`;
-  const response = await fetch(url);
-  return response.json();
+async function fetchOptionData(symbol: string, date?: string) {
+  return YahooFinanceService.fetchOptions(symbol, date);
 }
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
@@ -15,7 +13,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const date = url.searchParams.get('date');
 
   try {
-    const data = await fetchOptionData(request, symbol, date || undefined);
+    const data = await fetchOptionData(symbol, date || undefined);
 
     return {
       data,

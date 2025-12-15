@@ -541,7 +541,7 @@ function OptionStatisticsSection({ currentChain }: { currentChain: { calls: Opti
   const allContracts = useMemo(() => [...currentChain.calls, ...currentChain.puts], [currentChain]);
 
   const formatCurrency = (val: number) => `$${val.toFixed(2)}`;
-  const formatPercent = (val: number) => `${val.toFixed(2)}%`;
+  const formatPercent = (val: number | undefined) => `${val?.toFixed(2)}%`;
   const formatNumber = (val: number) => `${val}`;
   const formatVolatility = (val: number) => `${(val * 100).toFixed(2)}%`;
 
